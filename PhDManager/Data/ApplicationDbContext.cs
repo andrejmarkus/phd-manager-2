@@ -9,5 +9,6 @@ namespace PhDManager.Data
         public DbSet<Thesis> Theses { get; init; }
         public DbSet<Subject> Subjects { get; init; }
         public DbSet<StudyProgram> StudyPrograms { get; init; }
+        public DbSet<Registration> Registrations { get; init; }
     }
 }

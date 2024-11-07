@@ -1,8 +1,8 @@
 ﻿using PhDManager.Data;
-using PhDManager.IRepositories;
 using PhDManager.Models;
+using PhDManager.Services.IRepositories;
 
-namespace PhDManager.Api.Services.Repositories
+namespace PhDManager.Services.Repositories
 {
     public class ThesisRepository(ApplicationDbContext context, ILogger logger) : Repository<Thesis>(context, logger), IThesisRepository
     {

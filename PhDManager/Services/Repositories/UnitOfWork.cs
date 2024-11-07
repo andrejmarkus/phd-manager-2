@@ -1,7 +1,7 @@
 ﻿using PhDManager.Data;
-using PhDManager.IRepositories;
+using PhDManager.Services.IRepositories;
 
-namespace PhDManager.Api.Services.Repositories
+namespace PhDManager.Services.Repositories
 {
     public class UnitOfWork : IUnitOfWork, IDisposable
     {
@@ -9,6 +9,7 @@ namespace PhDManager.Api.Services.Repositories
         private readonly ILogger _logger;
 
         public IThesisRepository Theses { get; private set; }
+        public IRegistrationRepository Registrations { get; private set; }
 
         public UnitOfWork(ApplicationDbContext context, ILoggerFactory loggerFactory)
         {
@@ -16,6 +17,7 @@ namespace PhDManager.Api.Services.Repositories
             _logger = loggerFactory.CreateLogger("logs");
 
             Theses = new ThesisRepository(_context, _logger);
+            Registrations = new RegistrationRepository(_context, _logger);
         }
 
         public async Task CompleteAsync()

@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PhDManager.Data;
-using PhDManager.IRepositories;
+using PhDManager.Services.IRepositories;
 
-namespace PhDManager.Api.Services.Repositories
+namespace PhDManager.Services.Repositories
 {
     public class Repository<T> : IRepository<T> where T : class
     {
@@ -31,7 +31,7 @@ namespace PhDManager.Api.Services.Repositories
             }
         }
 
-        public async Task<bool> DeleteAsync(int id)
+        public async Task<bool> DeleteAsync(string id)
         {
             try
             {
@@ -56,7 +56,7 @@ namespace PhDManager.Api.Services.Repositories
 
         public async Task<IEnumerable<T>?> GetAllAsync() => await _dbSet.ToListAsync();
 
-        public async Task<T?> GetByIdAsync(int id)
+        public async Task<T?> GetByIdAsync(string id)
         {
             try
             {
@@ -69,7 +69,7 @@ namespace PhDManager.Api.Services.Repositories
             }
         }
 
-        public async Task<bool> UpdateAsync(int id, T entity)
+        public async Task<bool> UpdateAsync(string id, T entity)
         {
             try
             {

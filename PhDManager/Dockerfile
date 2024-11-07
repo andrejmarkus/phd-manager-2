@@ -2,6 +2,10 @@
 
 # This stage is used when running from VS in fast mode (Default for Debug configuration)
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
+USER root
+RUN apt-get update && \
+	apt-get install --upgrade -y libldap-2.5-0 && \
+	ln -s /usr/lib/x86_64-linux-gnu/libldap-2.5.so.0 /usr/lib/libldap.so.2
 USER app
 WORKDIR /app
 EXPOSE 8080

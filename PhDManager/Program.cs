@@ -2,13 +2,14 @@ using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using MudBlazor.Services;
-using PhDManager.Api.Services.Repositories;
 using PhDManager.Components;
 using PhDManager.Components.Account;
+using PhDManager.Core.Models;
 using PhDManager.Data;
-using PhDManager.IRepositories;
 using PhDManager.Models.Options;
 using PhDManager.Services;
+using PhDManager.Services.IRepositories;
+using PhDManager.Services.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +19,8 @@ builder.Services.AddMudServices();
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
+
+builder.Services.Configure<ActiveDirectoryOptions>(builder.Configuration.GetSection(ActiveDirectoryOptions.ActiveDirectory));
 
 builder.Services.AddCascadingAuthenticationState();
 builder.Services.AddScoped<IdentityUserAccessor>();

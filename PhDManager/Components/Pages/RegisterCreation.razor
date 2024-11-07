@@ -1,0 +1,31 @@
+﻿@page "/Account/Register"
+
+@using PhDManager.Models
+@using PhDManager.Services.IRepositories
+
+@inject NavigationManager NavigationManager
+@inject IUnitOfWork UnitOfWork
+
+<h3>Registration</h3>
+
+@if (Registration is not null)
+{
+    <MudLink Href="@(Registration.Url)">@(Registration.Url)</MudLink>
+}
+
+@code {
+    public Registration? Registration { get; set; } = null;
+
+    protected override async Task OnInitializedAsync()
+    {
+        string id = Guid.NewGuid().ToString();
+        Registration = new Registration
+        {
+            Id = id,
+            Url = NavigationManager.Uri + "/" + id,
+            Expiration = DateTime.UtcNow.AddHours(1)
+        };
+        await UnitOfWork.Registrations.AddAsync(Registration);
+        await UnitOfWork.CompleteAsync();
+    }
+}

@@ -1,6 +1,6 @@
 ﻿using PhDManager.Models;
 
-namespace PhDManager.IRepositories
+namespace PhDManager.Services.IRepositories
 {
     public interface IThesisRepository: IRepository<Thesis>
     {

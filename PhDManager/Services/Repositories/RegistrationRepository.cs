@@ -1,5 +1,4 @@
-﻿using PhDManager.Api.Services.Repositories;
-using PhDManager.Data;
+﻿using PhDManager.Data;
 using PhDManager.Models;
 using PhDManager.Services.IRepositories;
 

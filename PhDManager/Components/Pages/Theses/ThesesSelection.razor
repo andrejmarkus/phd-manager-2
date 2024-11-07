@@ -1,0 +1,16 @@
+﻿@page "/theses"
+@using PhDManager.Models
+@using PhDManager.Services.IRepositories
+
+@inject IUnitOfWork UnitOfWork
+
+<MudText Typo="Typo.h3" GutterBottom="true">Theses</MudText>
+
+@code {
+    IEnumerable<Thesis>? Theses;
+
+    protected override async Task OnInitializedAsync()
+    {
+        Theses = await UnitOfWork.Theses.GetAllAsync();
+    }
+}

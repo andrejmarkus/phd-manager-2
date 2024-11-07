@@ -1,0 +1,33 @@
+﻿@page "/admin"
+
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Identity
+@using PhDManager.Data
+
+@inject UserManager<ApplicationUser> UserManager
+
+@attribute [Authorize(Roles = "Admin")]
+
+<PageTitle>Admin</PageTitle>
+
+<MudText Typo="Typo.h3" GutterBottom="true">Admin</MudText>
+
+<MudDataGrid T="ApplicationUser" Items="@Users" Hover="true" SortMode="SortMode.Single" Filterable="true">
+    <ToolBarContent>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary">Add user</MudButton>
+    </ToolBarContent>
+    <Columns>
+        <PropertyColumn Property="u => u.UserName" Title="Username" />
+        <PropertyColumn Property="u => u.Email" Title="Email" />
+        <PropertyColumn Property="u => u.EmailConfirmed" Title="Email confirmed" />
+    </Columns>
+</MudDataGrid>
+
+@code {
+    IEnumerable<ApplicationUser> Users;
+
+    protected override void OnInitialized()
+    {
+        Users = UserManager.Users;
+    }
+}

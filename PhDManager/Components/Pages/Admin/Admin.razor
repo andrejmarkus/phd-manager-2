@@ -1,9 +1,14 @@
 ﻿@page "/admin"
 
+@using LdapForNet
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Identity
 @using PhDManager.Data
+@using PhDManager.Services
+@using PhDManager.Services.IRepositories
 
+@inject ActiveDirectoryService ActiveDirectoryService
+@inject UsersService UsersService
 @inject UserManager<ApplicationUser> UserManager
 
 @attribute [Authorize(Roles = "Admin")]
@@ -12,22 +17,126 @@
 
 <MudText Typo="Typo.h3" GutterBottom="true">Admin</MudText>
 
-<MudDataGrid T="ApplicationUser" Items="@Users" Hover="true" SortMode="SortMode.Single" Filterable="true">
+<MudDataGrid T="ApplicationUser" Items="@Users" Hover="true" SortMode="SortMode.Multiple" QuickFilter="@_quickFilter" ReadOnly="false" EditMode="DataGridEditMode.Form" CommittedItemChanges="CommittedItemChanges">
     <ToolBarContent>
-        <MudButton Variant="Variant.Filled" Color="Color.Primary">Add user</MudButton>
+        <MudText Typo="Typo.h6" GutterBottom="false">Users</MudText>
+        <MudSpacer />
+        <MudTextField Class="mr-4" @bind-Value="_search" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium"></MudTextField>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@AddUsersDialog">Add user</MudButton>
     </ToolBarContent>
     <Columns>
-        <PropertyColumn Property="u => u.UserName" Title="Username" />
-        <PropertyColumn Property="u => u.Email" Title="Email" />
-        <PropertyColumn Property="u => u.EmailConfirmed" Title="Email confirmed" />
+        <PropertyColumn Property="u => u.UserName" Title="Username" Editable="false" />
+        <PropertyColumn Property="u => u.Email" Title="Email" Editable="false" />
+        <PropertyColumn Property="u => u.EmailConfirmed" Title="Email confirmed" Editable="false" />
+        <TemplateColumn CellClass="d-flex justify-end">
+            <CellTemplate>
+                <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" OnClick="@context.Actions.StartEditingItemAsync" />
+            </CellTemplate>
+        </TemplateColumn>
     </Columns>
+    <PagerContent>
+        <MudDataGridPager T="ApplicationUser" />
+    </PagerContent>
 </MudDataGrid>
 
+<MudDialog @bind-Visible="@_visible" Options="@(new() { FullWidth = true })">
+    <TitleContent>
+        <MudText Typo="Typo.h6">Add user</MudText>
+    </TitleContent>
+    <DialogContent>
+        <MudDataGrid T="LdapEntry" Items="LdapEntries" MultiSelection="true" SortMode="SortMode.Multiple" SelectedItemsChanged="@SelectedItemsChangedLdap">
+            <ToolBarContent>
+                <MudText Typo="Typo.h6" GutterBottom="false">LDAP users</MudText>
+                <MudSpacer />
+                <MudTextField @bind-Value="@_searchLdap" Class="mr-4" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium"></MudTextField>
+                <MudButton OnClick="GetUsers">Search</MudButton>
+            </ToolBarContent>
+            <Columns>
+                <SelectColumn T="LdapEntry" />
+                <PropertyColumn Property="@(e => e.DirectoryAttributes["uid"].GetValue<string>())" Title="Username" />
+                <PropertyColumn Property="@(e => e.DirectoryAttributes["mail"].GetValue<string>())" Title="Email" />
+                <PropertyColumn Property="@(e => e.DirectoryAttributes["cn"].GetValue<string>())" Title="Display Name" />
+                <PropertyColumn Property="@(e => e.DirectoryAttributes["givenName"].GetValue<string>())" Title="First Name" />
+                <PropertyColumn Property="@(e => e.DirectoryAttributes["sn"].GetValue<string>())" Title="Last Name" />
+            </Columns>
+            <PagerContent>
+                <MudDataGridPager T="LdapEntry" />
+            </PagerContent>
+        </MudDataGrid>
+    </DialogContent>
+    <DialogActions>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@AddUsers">Add</MudButton>
+        <MudButton Variant="Variant.Outlined" Color="Color.Secondary" OnClick="@AddUsersCancel">Cancel</MudButton>
+    </DialogActions>
+</MudDialog>
+
 @code {
-    IEnumerable<ApplicationUser> Users;
+    IEnumerable<ApplicationUser>? Users;
+    LdapEntry[] LdapEntries;
+    LdapEntry[] SelectedLdapEntries;
+    private string _search;
+    private string _searchLdap;
+    private bool _visible = false;
+
+    private Func<ApplicationUser, bool> _quickFilter => u =>
+    {
+        if (string.IsNullOrWhiteSpace(_search))
+            return true;
+
+        if (u.UserName.Contains(_search, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        if (u.Email.Contains(_search, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        if ($"{u.UserName} {u.Email}".Contains(_search))
+            return true;
+
+        return false;
+    };
+
+
 
     protected override void OnInitialized()
     {
         Users = UserManager.Users;
+    }
+
+    private void CommittedItemChanges(ApplicationUser user)
+    {
+
+    }
+
+    private async Task GetUsers()
+    {
+        LdapEntries = (await ActiveDirectoryService.SearchUserAsync(_searchLdap)).ToArray();
+    }
+
+    private void AddUsersDialog()
+    {
+        SelectedLdapEntries = [];
+        LdapEntries = [];
+        _visible = true;
+    }
+
+    private async Task AddUsers()
+    {
+        foreach (var entry in SelectedLdapEntries)
+        {
+            await UsersService.RegisterLdapUserWithoutPasswordAsync(entry);
+        }
+        _visible = false;
+    }
+
+    private void AddUsersCancel()
+    {
+        SelectedLdapEntries = [];
+        LdapEntries = [];
+        _visible = false;
+    }
+
+    private void SelectedItemsChangedLdap(IEnumerable<LdapEntry> entries)
+    {
+        SelectedLdapEntries = entries.ToArray();
     }
 }

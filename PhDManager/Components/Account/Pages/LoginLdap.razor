@@ -8,14 +8,16 @@
 @using Microsoft.Extensions.Options
 @using PhDManager.Core.Models
 @using PhDManager.Data
+@using PhDManager.Services
 
 @inject SignInManager<ApplicationUser> SignInManager
 @inject ILogger<Login> Logger
 @inject NavigationManager NavigationManager
 @inject IdentityRedirectManager RedirectManager
 @inject IOptions<ActiveDirectoryOptions> ActiveDirectoryOptions
-@inject IUserStore<ApplicationUser> UserStore
 @inject UserManager<ApplicationUser> UserManager
+@inject ActiveDirectoryService ActiveDirectoryService
+@inject UsersService UsersService
 
 <PageTitle>Log in</PageTitle>
 
@@ -81,76 +83,31 @@
 
     public async Task LoginUser()
     {
-        IEnumerable<LdapEntry> entries;
-
-        try
-        {
-            using var connection = new LdapConnection();
-            connection.Connect(ActiveDirectoryOptions.Value.LdapPath, 389, LdapSchema.LDAP);
-            connection.SetOption(LdapOption.LDAP_OPT_REFERRALS, nint.Zero);
-            await connection.BindAsync(LdapAuthType.Simple, new LdapCredential
-            {
-                UserName = $"{Input.Username}@{ActiveDirectoryOptions.Value.LdapPath}",
-                Password = Input.Password
-            });
-            entries = await connection.SearchAsync(ActiveDirectoryOptions.Value.LdapDomain, $"(uid={Input.Username})");
-        } catch (Exception e)
-        {
-            errorMessage = "Error: Invalid login attempt.";
-            Logger.LogError(e, errorMessage);
-            return;
-        }
-
-        var entry = entries.FirstOrDefault();
+        var entry = await ActiveDirectoryService.AuthenticateUserAsync(Input.Username, Input.Password);
         if (entry is null)
         {
-            errorMessage = "Error: Invalid login attempt.";
-            Logger.LogError("Entry in LDAP wasn't found.");
+            errorMessage = "Invalid username or password.";
             return;
         }
 
         var user = await UserManager.FindByNameAsync(Input.Username);
         if (user is null)
         {
-            user = CreateUser();
-            var mail = entry.DirectoryAttributes["mail"].GetValue<string>();
-
-            await UserStore.SetUserNameAsync(user, Input.Username, CancellationToken.None);
-            var emailStore = GetEmailStore();
-            await emailStore.SetEmailAsync(user, mail, CancellationToken.None);
-            user.EmailConfirmed = true;
-            var result = await UserManager.CreateAsync(user, Input.Password);
-            await UserManager.AddToRoleAsync(user, "User");
-
-            await UserManager.CreateAsync(user);
+            await UsersService.RegisterLdapUserAsync(entry, Input.Password);
+        } 
+        else
+        {
+            if (user.PasswordHash is null)
+            {
+                user.PasswordHash = UserManager.PasswordHasher.HashPassword(user, Input.Password);
+                await UserManager.UpdateAsync(user);
+            }
         }
 
         await SignInManager.PasswordSignInAsync(user, Input.Password, Input.RememberMe, lockoutOnFailure: false);
 
         Logger.LogInformation("User logged in.");
         RedirectManager.RedirectTo(ReturnUrl);
-    }
-
-    private IUserEmailStore<ApplicationUser> GetEmailStore()
-    {
-        if (!UserManager.SupportsUserEmail)
-        {
-            throw new NotSupportedException("The default UI requires a user store with email support.");
-        }
-        return (IUserEmailStore<ApplicationUser>)UserStore;
-    }
-
-    private ApplicationUser CreateUser()
-    {
-        try
-        {
-            return Activator.CreateInstance<ApplicationUser>();
-        }
-        catch
-        {
-            throw new InvalidOperationException($"Can't create an instance of '{nameof(ApplicationUser)}'. " +
-                $"Ensure that '{nameof(ApplicationUser)}' is not an abstract class and has a parameterless constructor.");
-        }
     }
 
     private sealed class InputModel

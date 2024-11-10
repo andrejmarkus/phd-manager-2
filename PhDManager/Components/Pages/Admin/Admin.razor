@@ -7,9 +7,9 @@
 @using PhDManager.Services
 @using PhDManager.Services.IRepositories
 
-@inject ActiveDirectoryService ActiveDirectoryService
-@inject UsersService UsersService
 @inject UserManager<ApplicationUser> UserManager
+@inject RoleManager<IdentityRole> RoleManager
+@inject IServiceProvider ServiceProvider
 
 @attribute [Authorize(Roles = "Admin")]
 
@@ -17,19 +17,30 @@
 
 <MudText Typo="Typo.h3" GutterBottom="true">Admin</MudText>
 
-<MudDataGrid T="ApplicationUser" Items="@Users" Hover="true" SortMode="SortMode.Multiple" QuickFilter="@_quickFilter" ReadOnly="false" EditMode="DataGridEditMode.Form" CommittedItemChanges="CommittedItemChanges">
+<MudDataGrid T="UserInfo" Items="@_users" Hover="true" SortMode="SortMode.Multiple" QuickFilter="@_quickFilter" ReadOnly="false" EditMode="DataGridEditMode.Form" CommittedItemChanges="@UpdateUser">
     <ToolBarContent>
         <MudText Typo="Typo.h6" GutterBottom="false">Users</MudText>
         <MudSpacer />
         <MudTextField Class="mr-4" @bind-Value="_search" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium"></MudTextField>
-        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@AddUsersDialog">Add user</MudButton>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@(() => _visible = true)">Add user</MudButton>
     </ToolBarContent>
     <Columns>
-        <PropertyColumn Property="u => u.UserName" Title="Username" Editable="false" />
-        <PropertyColumn Property="u => u.Email" Title="Email" Editable="false" />
-        <PropertyColumn Property="u => u.EmailConfirmed" Title="Email confirmed" Editable="false" />
+        <PropertyColumn Property="u => u.User.UserName" Title="Username" Editable="false" />
+        <PropertyColumn Property="u => u.User.Email" Title="Email" Editable="false" />
+        <PropertyColumn Property="u => u.User.EmailConfirmed" Title="Email confirmed" Editable="false" />
+        <PropertyColumn Property="u => u.Role" Title="Role" Editable="true">
+            <EditTemplate>
+                <MudSelect @bind-Value="context.Item.Role" Required>
+                    @foreach (var role in _roles)
+                    {
+                        <MudSelectItem Value="@role.Name">@role.Name</MudSelectItem>
+                    }
+                </MudSelect>
+            </EditTemplate>
+        </PropertyColumn>
         <TemplateColumn CellClass="d-flex justify-end">
             <CellTemplate>
+                <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Delete" OnClick="@(() => DeleteUser(context.Item))" />
                 <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" OnClick="@context.Actions.StartEditingItemAsync" />
             </CellTemplate>
         </TemplateColumn>
@@ -39,104 +50,70 @@
     </PagerContent>
 </MudDataGrid>
 
-<MudDialog @bind-Visible="@_visible" Options="@(new() { FullWidth = true })">
-    <TitleContent>
-        <MudText Typo="Typo.h6">Add user</MudText>
-    </TitleContent>
-    <DialogContent>
-        <MudDataGrid T="LdapEntry" Items="LdapEntries" MultiSelection="true" SortMode="SortMode.Multiple" SelectedItemsChanged="@SelectedItemsChangedLdap">
-            <ToolBarContent>
-                <MudText Typo="Typo.h6" GutterBottom="false">LDAP users</MudText>
-                <MudSpacer />
-                <MudTextField @bind-Value="@_searchLdap" Class="mr-4" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium"></MudTextField>
-                <MudButton OnClick="GetUsers">Search</MudButton>
-            </ToolBarContent>
-            <Columns>
-                <SelectColumn T="LdapEntry" />
-                <PropertyColumn Property="@(e => e.DirectoryAttributes["uid"].GetValue<string>())" Title="Username" />
-                <PropertyColumn Property="@(e => e.DirectoryAttributes["mail"].GetValue<string>())" Title="Email" />
-                <PropertyColumn Property="@(e => e.DirectoryAttributes["cn"].GetValue<string>())" Title="Display Name" />
-                <PropertyColumn Property="@(e => e.DirectoryAttributes["givenName"].GetValue<string>())" Title="First Name" />
-                <PropertyColumn Property="@(e => e.DirectoryAttributes["sn"].GetValue<string>())" Title="Last Name" />
-            </Columns>
-            <PagerContent>
-                <MudDataGridPager T="LdapEntry" />
-            </PagerContent>
-        </MudDataGrid>
-    </DialogContent>
-    <DialogActions>
-        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@AddUsers">Add</MudButton>
-        <MudButton Variant="Variant.Outlined" Color="Color.Secondary" OnClick="@AddUsersCancel">Cancel</MudButton>
-    </DialogActions>
-</MudDialog>
+<AddUsersDialog Visible=_visible />
 
 @code {
-    IEnumerable<ApplicationUser>? Users;
-    LdapEntry[] LdapEntries;
-    LdapEntry[] SelectedLdapEntries;
-    private string _search;
-    private string _searchLdap;
+    private List<UserInfo> _users = new List<UserInfo>();
+    private IdentityRole[] _roles = { };
+    private string _search = "";
     private bool _visible = false;
 
-    private Func<ApplicationUser, bool> _quickFilter => u =>
+    private Func<UserInfo, bool> _quickFilter => u =>
     {
         if (string.IsNullOrWhiteSpace(_search))
             return true;
 
-        if (u.UserName.Contains(_search, StringComparison.OrdinalIgnoreCase))
+        if (u.User.UserName.Contains(_search, StringComparison.OrdinalIgnoreCase))
             return true;
 
-        if (u.Email.Contains(_search, StringComparison.OrdinalIgnoreCase))
+        if (u.User.Email.Contains(_search, StringComparison.OrdinalIgnoreCase))
             return true;
 
-        if ($"{u.UserName} {u.Email}".Contains(_search))
+        if ($"{u.User.UserName} {u.User.Email}".Contains(_search))
             return true;
 
         return false;
     };
 
-
-
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
-        Users = UserManager.Users;
-    }
-
-    private void CommittedItemChanges(ApplicationUser user)
-    {
-
-    }
-
-    private async Task GetUsers()
-    {
-        LdapEntries = (await ActiveDirectoryService.SearchUserAsync(_searchLdap)).ToArray();
-    }
-
-    private void AddUsersDialog()
-    {
-        SelectedLdapEntries = [];
-        LdapEntries = [];
-        _visible = true;
-    }
-
-    private async Task AddUsers()
-    {
-        foreach (var entry in SelectedLdapEntries)
+        _roles = RoleManager.Roles.ToArray();
+        var users = UserManager.Users;
+        using (var scope = ServiceProvider.CreateScope())
         {
-            await UsersService.RegisterLdapUserWithoutPasswordAsync(entry);
+            var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+            foreach (var user in users)
+            {
+                var role = (await userManager.GetRolesAsync(user)).First();
+                _users.Add(new UserInfo(user, role));
+            }
         }
-        _visible = false;
     }
 
-    private void AddUsersCancel()
+    private async Task UpdateUser(UserInfo userInfo)
     {
-        SelectedLdapEntries = [];
-        LdapEntries = [];
-        _visible = false;
+        // TODO: Make update user role working
+        using (var scope = ServiceProvider.CreateScope())
+        {
+            var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+            var userRole = (await userManager.GetRolesAsync(userInfo.User)).First();
+            await userManager.RemoveFromRoleAsync(userInfo.User, userRole);
+            await userManager.AddToRoleAsync(userInfo.User, userInfo.Role);
+        }
     }
 
-    private void SelectedItemsChangedLdap(IEnumerable<LdapEntry> entries)
+    private async Task DeleteUser(UserInfo userInfo)
     {
-        SelectedLdapEntries = entries.ToArray();
+        using (var scope = ServiceProvider.CreateScope())
+        {
+            var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+            await userManager.DeleteAsync(userInfo.User);
+        }
+    }
+
+    private sealed class UserInfo(ApplicationUser user, string role)
+    {
+        public ApplicationUser User { get; set; } = user;
+        public string Role { get; set; } = role;
     }
 }

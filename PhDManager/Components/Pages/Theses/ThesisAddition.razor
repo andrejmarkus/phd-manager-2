@@ -1,0 +1,24 @@
+﻿@page "/theses/add"
+
+@using Microsoft.AspNetCore.Authorization
+@using PhDManager.Models
+
+@attribute [Authorize(Roles = "Teacher")]
+
+<PageTitle>Thesis Addition</PageTitle>
+
+<MudForm @ref="_form">
+    <MudTextField T="string" Label="Title of dissertation work" />
+    <MudTextField T="string" Label="Supervisor" />
+    <MudTextField T="string" Label="Field of study" />
+    <div class="d-flex gap-1">
+        <MudCheckBox T="bool">Internal</MudCheckBox>
+        <MudCheckBox T="bool">External</MudCheckBox>
+    </div>
+    <MudTextField T="string" Label="Description" AutoGrow Lines="3" />
+</MudForm>
+
+@code {
+    private MudForm _form;
+    private Thesis _thesis;
+}

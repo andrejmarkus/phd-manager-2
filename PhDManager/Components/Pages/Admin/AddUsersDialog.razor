@@ -1,0 +1,88 @@
+﻿@using LdapForNet
+@using PhDManager.Services
+
+@inject ActiveDirectoryService ActiveDirectoryService
+@inject UsersService UsersService
+@inject NavigationManager NavigationManager
+
+<MudDialog @bind-Visible="@_visible" Options="@(new() { FullWidth = true })">
+    <TitleContent>
+        <MudText Typo="Typo.h6">Add users</MudText>
+    </TitleContent>
+    <DialogContent>
+        <MudDataGrid T="LdapEntry" Items="_entries" MultiSelection="true" SortMode="SortMode.Multiple" SelectedItemsChanged="@SelectedItemsChangedLdap">
+            <ToolBarContent>
+                <MudText Typo="Typo.h6" GutterBottom="false">LDAP users</MudText>
+                <MudSpacer />
+                <MudTextField @bind-Value="@_search" OnKeyUp="@HandleSearch" Class="mr-4" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium"></MudTextField>
+                @* <MudButton OnClick="GetUsers">Search</MudButton> *@
+            </ToolBarContent>
+            <Columns>
+                <SelectColumn T="LdapEntry" />
+                <PropertyColumn Property="@(e => e.DirectoryAttributes["uid"].GetValue<string>())" Title="Username" />
+                <PropertyColumn Property="@(e => e.DirectoryAttributes["mail"].GetValue<string>())" Title="Email" />
+                <PropertyColumn Property="@(e => e.DirectoryAttributes["cn"].GetValue<string>())" Title="Display Name" />
+                <PropertyColumn Property="@(e => e.DirectoryAttributes["givenName"].GetValue<string>())" Title="First Name" />
+                <PropertyColumn Property="@(e => e.DirectoryAttributes["sn"].GetValue<string>())" Title="Last Name" />
+            </Columns>
+            <PagerContent>
+                <MudDataGridPager T="LdapEntry" />
+            </PagerContent>
+        </MudDataGrid>
+    </DialogContent>
+    <DialogActions>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@AddUsers">Add</MudButton>
+        <MudButton Variant="Variant.Outlined" Color="Color.Secondary" OnClick="@(() => Visible = false)">Cancel</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [Parameter]
+    public bool Visible { 
+        get => _visible;
+        set
+        {
+            _visible = value;
+            if (_visible)
+            {
+                _search = "";
+                _entries = [];
+                _selectedEntries = [];
+            }
+        }
+    }
+
+    private LdapEntry[] _entries;
+    private LdapEntry[] _selectedEntries;
+
+    private string _search;
+    private bool _visible;
+
+    private async Task GetUsers()
+    {
+        _entries = (await ActiveDirectoryService.SearchUsersAsync(_search)).ToArray();
+    }
+
+    private async Task AddUsers()
+    {
+        foreach (var entry in _selectedEntries)
+        {
+            await UsersService.RegisterLdapUserWithoutPasswordAsync(entry);
+        }
+        Visible = false;
+        NavigationManager.NavigateTo(NavigationManager.Uri, true);
+    }
+
+    private void SelectedItemsChangedLdap(IEnumerable<LdapEntry> entries)
+    {
+        _selectedEntries = entries.ToArray();
+    }
+
+    private async Task HandleSearch(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter")
+        {
+            await GetUsers();
+        }
+    }
+}

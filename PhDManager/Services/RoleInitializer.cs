@@ -8,7 +8,7 @@ namespace PhDManager.Services
 
         public async Task InitializeAsync()
         {
-            string[] roles = { "Admin", "User", "Officer", "Vicedean", "Graduant", "Reviewer" };
+            string[] roles = { "Admin", "User", "Teacher", "Officer", "Vicedean", "Graduant", "Reviewer" };
 
             foreach (string role in roles)
             {

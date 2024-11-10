@@ -39,7 +39,7 @@ namespace PhDManager.Services
             return entry;
         }
 
-        public async Task<IEnumerable<LdapEntry>?> SearchUserAsync(string username)
+        public async Task<IEnumerable<LdapEntry>?> SearchUsersAsync(string username)
         {
             IEnumerable<LdapEntry> entries;
 
@@ -53,7 +53,7 @@ namespace PhDManager.Services
                     UserName = $"{_options.Username}@{_options.LdapPath}",
                     Password = _options.Password
                 });
-                entries = await connection.SearchAsync(_options.LdapDomain, $"(uid={username})");
+                entries = await connection.SearchAsync(_options.LdapDomain, $"(uid={username}*)");
             }
             catch (Exception e)
             {

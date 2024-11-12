@@ -40,6 +40,11 @@
 
                     <MudGrid>
                         <MudItem md="12">
+                            <MudStaticTextField For="@(() => Input.DisplayName)" @bind-Value="Input.DisplayName"
+                            Label="Display Name" Placeholder="display name"
+                            UserAttributes="@(new() { { "autocomplete", "true" }, { "aria-required", "true" } } )" />
+                        </MudItem>
+                        <MudItem md="12">
                             <MudStaticTextField For="@(() => Input.Username)" @bind-Value="Input.Username"
                             Label="Username" Placeholder="username"
                             UserAttributes="@(new() { { "autocomplete", "true" }, { "aria-required", "true" } } )" />
@@ -110,6 +115,10 @@
         await UserStore.SetUserNameAsync(user, Input.Username, CancellationToken.None);
         var emailStore = GetEmailStore();
         await emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
+
+        // TODO: Change to real name from Google
+        user.DisplayName = Input.DisplayName;
+
         var result = await UserManager.CreateAsync(user, Input.Password);
         await UserManager.AddToRoleAsync(user, "Reviewer");
 
@@ -165,6 +174,10 @@
 
     private sealed class InputModel
     {
+        [Required]
+        [Display(Name = "Display Name")]
+        public string DisplayName { get; set; } = "";
+
         [Required]
         [Display(Name = "Username")]
         public string Username { get; set; } = "";

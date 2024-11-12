@@ -45,6 +45,7 @@
 </div>
 
 @code {
+
     public const string LoginCallbackAction = "LoginCallback";
 
     private string? message;
@@ -132,6 +133,8 @@
 
         await UserStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
         await emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
+
+        user.DisplayName = ProviderDisplayName;
 
         var result = await UserManager.CreateAsync(user);
         await UserManager.AddToRoleAsync(user, "Reviewer");

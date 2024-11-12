@@ -1,0 +1,84 @@
+﻿@page "/theses/{ThesisGuid}"
+
+@using Microsoft.AspNetCore.Identity
+@using PhDManager.Data
+@using PhDManager.Models
+@using PhDManager.Services.IRepositories
+
+@inject IUnitOfWork UnitOfWork
+@inject UserManager<ApplicationUser> UserManager
+
+<PageTitle>Title</PageTitle>
+
+@if (_thesis is not null)
+{
+    <MudContainer>
+        <div>
+            <MudText Typo="Typo.h5">Názov témy dizertačnej práce</MudText>
+            <MudText Typo="Typo.body1">@_thesis.Title</MudText>
+        </div>
+        @if (_thesis.TitleEnglish is not null)
+        {
+            <div>
+                <MudText Typo="Typo.h5">Title of the dissertation thesis</MudText>
+                <MudText Typo="Typo.body1">@_thesis.TitleEnglish</MudText>
+            </div>
+        }
+        <div>
+            <MudText Typo="Typo.h5">Školiteľ</MudText>
+            <MudText Typo="Typo.body1">@_supervisor.DisplayName</MudText>
+        </div>
+        <div>
+            <MudText Typo="Typo.h5">Študijný odbor</MudText>
+            <MudText Typo="Typo.body1">@_studyProgram.Name</MudText>
+        </div>
+        <div>
+            <MudText Typo="Typo.h5">Detailnejší opis problému</MudText>
+            <MudText Typo="Typo.body1">@_thesis.Description</MudText>
+        </div>
+        @if (_thesis.DescriptionEnglish is not null)
+        {
+            <div>
+                <MudText Typo="Typo.h5">Detailed description of the problem</MudText>
+                <MudText Typo="Typo.body1">@_thesis.DescriptionEnglish</MudText>
+            </div>
+        }
+        <div>
+            <MudText Typo="Typo.h5">Predpokladaný vedecký prínos</MudText>
+            <MudText Typo="Typo.body1">@_thesis.ScientificContribution</MudText>
+        </div>
+        <div>
+            <MudText Typo="Typo.h5">Odporučány postup vedeckého bádania</MudText>
+            <MudText Typo="Typo.body1">@_thesis.ScientificProgress</MudText>
+        </div>
+        <div>
+            <MudText Typo="Typo.h5">Druh výskumu</MudText>
+            <MudText Typo="Typo.body1">@_thesis.ResearchType</MudText>
+        </div>
+        <div>
+            <MudText Typo="Typo.h5">Výskumná úloha, ktorej súčasťou bude riešená téma</MudText>
+            <MudText Typo="Typo.body1">@_thesis.ResearchTask</MudText>
+        </div>
+        <div>
+            <MudText Typo="Typo.h5">Doterajšie výsledky riešenia na školiacom pracovisku, vrátane odkazov na dostupné zdroje</MudText>
+            <MudText Typo="Typo.body1">@_thesis.SolutionResults</MudText>
+        </div>
+    </MudContainer>
+}
+
+@code {
+    [Parameter]
+    public string ThesisGuid { get; set; }
+
+    private Thesis _thesis;
+    private ApplicationUser _supervisor;
+    private StudyProgram _studyProgram;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // TODO: Make model return supervisor and study program
+        _thesis = await UnitOfWork.Theses.GetByGuidAsync(ThesisGuid);
+        _supervisor = await UserManager.FindByIdAsync(_thesis.SupervisorId);
+        _studyProgram = await UnitOfWork.StudyPrograms.GetByIdAsync(_thesis.StudyProgramId);
+    }
+}

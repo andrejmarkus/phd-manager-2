@@ -2,6 +2,7 @@
 
 @using Microsoft.AspNetCore.Authorization
 @using PhDManager.Models
+@using PhDManager.Services
 @using PhDManager.Services.IRepositories
 
 @inject IUnitOfWork UnitOfWork
@@ -12,21 +13,29 @@
 
 <div class="d-flex justify-space-between">
     <MudText Typo="Typo.h6">Theses</MudText>
-    <AuthorizeView Roles="Teacher, Admin">
-        <Authorized>
-            <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="/theses/add">Add thesis</MudButton>
-        </Authorized>
-    </AuthorizeView>
+    <div class="d-flex gap-1">
+        <AuthorizeView Roles="Teacher, Admin">
+            <Authorized>
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="/theses/add">Add thesis</MudButton>
+            </Authorized>
+        </AuthorizeView>
+        <AuthorizeView Roles="Teacher, Admin, Reviewer">
+            <Authorized>
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="/theses/review">Review Theses</MudButton>
+            </Authorized>
+        </AuthorizeView>
+    </div>
 </div>
-<MudGrid Justify="Justify.Center">
+<MudGrid>
     @if (Theses is not null)
     {
         @foreach (var thesis in Theses)
         {
             <MudItem xs="12" md="6">
-                <MudPaper>
+                <MudPaper Class="pa-2">
                     <MudText Typo="Typo.h6">@thesis.Title</MudText>
                     <MudText Typo="Typo.body2">@thesis.Description</MudText>
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="@($"/theses/{thesis.Guid}")">Detail</MudButton>
                 </MudPaper>
             </MudItem>
         }
@@ -38,6 +47,6 @@
 
     protected override async Task OnInitializedAsync()
     {
-        Theses = await UnitOfWork.Theses.GetAllAsync();
+        Theses = (await UnitOfWork.Theses.GetAllAsync()).Where(t => t.IsApproved).ToArray();
     }
 }

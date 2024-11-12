@@ -4,6 +4,7 @@
     {
         IThesisRepository Theses { get; }
         IRegistrationRepository Registrations { get; }
+        IStudyProgramRepository StudyPrograms { get; }
         Task CompleteAsync();
     }
 }

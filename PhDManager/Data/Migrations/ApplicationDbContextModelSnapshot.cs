@@ -220,11 +220,18 @@ namespace PhDManager.Data.Migrations
 
             modelBuilder.Entity("PhDManager.Models.Registration", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("text");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("Expiration")
                         .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Guid")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<string>("Url")
                         .IsRequired()
@@ -237,11 +244,11 @@ namespace PhDManager.Data.Migrations
 
             modelBuilder.Entity("PhDManager.Models.StudyProgram", b =>
                 {
-                    b.Property<int>("StudyProgramId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("StudyProgramId"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Code")
                         .IsRequired()
@@ -251,18 +258,18 @@ namespace PhDManager.Data.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.HasKey("StudyProgramId");
+                    b.HasKey("Id");
 
                     b.ToTable("StudyPrograms");
                 });
 
             modelBuilder.Entity("PhDManager.Models.Subject", b =>
                 {
-                    b.Property<int>("SubjectId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("SubjectId"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Code")
                         .IsRequired()
@@ -279,10 +286,10 @@ namespace PhDManager.Data.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int?>("StudyProgramId")
+                    b.Property<int>("StudyProgramId")
                         .HasColumnType("integer");
 
-                    b.HasKey("SubjectId");
+                    b.HasKey("Id");
 
                     b.HasIndex("StudyProgramId");
 
@@ -291,13 +298,49 @@ namespace PhDManager.Data.Migrations
 
             modelBuilder.Entity("PhDManager.Models.Thesis", b =>
                 {
-                    b.Property<int>("ThesisId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ThesisId"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("DailyStudy")
+                        .HasColumnType("boolean");
 
                     b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("DescriptionEnglish")
+                        .HasColumnType("text");
+
+                    b.Property<bool>("ExternalStudy")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("ResearchTask")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("ResearchType")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("ScientificContribution")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("ScientificProgress")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("SolutionResults")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("StudyProgramId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("SupervisorId")
                         .IsRequired()
                         .HasColumnType("text");
 
@@ -305,12 +348,32 @@ namespace PhDManager.Data.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("Year")
-                        .HasColumnType("integer");
+                    b.Property<string>("TitleEnglish")
+                        .HasColumnType("text");
 
-                    b.HasKey("ThesisId");
+                    b.HasKey("Id");
+
+                    b.HasIndex("StudyProgramId");
+
+                    b.HasIndex("SupervisorId")
+                        .IsUnique();
 
                     b.ToTable("Theses");
+                });
+
+            modelBuilder.Entity("SubjectThesis", b =>
+                {
+                    b.Property<int>("SubjectsId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("ThesesId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("SubjectsId", "ThesesId");
+
+                    b.HasIndex("ThesesId");
+
+                    b.ToTable("SubjectThesis");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -366,14 +429,59 @@ namespace PhDManager.Data.Migrations
 
             modelBuilder.Entity("PhDManager.Models.Subject", b =>
                 {
-                    b.HasOne("PhDManager.Models.StudyProgram", null)
+                    b.HasOne("PhDManager.Models.StudyProgram", "StudyProgram")
                         .WithMany("Subjects")
-                        .HasForeignKey("StudyProgramId");
+                        .HasForeignKey("StudyProgramId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("StudyProgram");
+                });
+
+            modelBuilder.Entity("PhDManager.Models.Thesis", b =>
+                {
+                    b.HasOne("PhDManager.Models.StudyProgram", "StudyProgram")
+                        .WithMany("Thesis")
+                        .HasForeignKey("StudyProgramId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("PhDManager.Data.ApplicationUser", "Supervisor")
+                        .WithOne("SupervisorThesis")
+                        .HasForeignKey("PhDManager.Models.Thesis", "SupervisorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("StudyProgram");
+
+                    b.Navigation("Supervisor");
+                });
+
+            modelBuilder.Entity("SubjectThesis", b =>
+                {
+                    b.HasOne("PhDManager.Models.Subject", null)
+                        .WithMany()
+                        .HasForeignKey("SubjectsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("PhDManager.Models.Thesis", null)
+                        .WithMany()
+                        .HasForeignKey("ThesesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("PhDManager.Data.ApplicationUser", b =>
+                {
+                    b.Navigation("SupervisorThesis");
                 });
 
             modelBuilder.Entity("PhDManager.Models.StudyProgram", b =>
                 {
                     b.Navigation("Subjects");
+
+                    b.Navigation("Thesis");
                 });
 #pragma warning restore 612, 618
         }

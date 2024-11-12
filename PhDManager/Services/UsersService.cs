@@ -6,6 +6,25 @@ namespace PhDManager.Services
 {
     public class UsersService(IUserStore<ApplicationUser> UserStore, UserManager<ApplicationUser> UserManager)
     {
+        public async Task<string?> GetUserRoleAsync(ApplicationUser user)
+        {
+            return (await UserManager.GetRolesAsync(user)).First();
+        }
+
+        public async Task UpdateUserRoleAsync(ApplicationUser user, string role)
+        {
+            var unusedUser = await UserManager.FindByIdAsync(user.Id);
+            var userRoles = await UserManager.GetRolesAsync(unusedUser);
+            await UserManager.RemoveFromRolesAsync(unusedUser, userRoles);
+            await UserManager.AddToRoleAsync(unusedUser, role);
+        }
+
+        public async Task DeleteUserAsync(ApplicationUser user)
+        {
+            var unusedUser = await UserManager.FindByIdAsync(user.Id);
+            await UserManager.DeleteAsync(unusedUser);
+        }
+
         public async Task<ApplicationUser> RegisterLdapUserWithoutPasswordAsync(LdapEntry entry)
         {
             var user = await CreateLdapUserAsync(entry);

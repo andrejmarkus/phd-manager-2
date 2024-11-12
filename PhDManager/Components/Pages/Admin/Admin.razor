@@ -7,9 +7,8 @@
 @using PhDManager.Services
 @using PhDManager.Services.IRepositories
 
-@inject UserManager<ApplicationUser> UserManager
-@inject RoleManager<IdentityRole> RoleManager
 @inject IServiceProvider ServiceProvider
+@inject UsersService UsersService
 
 @attribute [Authorize(Roles = "Admin")]
 
@@ -53,10 +52,21 @@
 <AddUsersDialog Visible=_visible />
 
 @code {
-    private List<UserInfo> _users = new List<UserInfo>();
+    private UserInfo[] _users = { };
     private IdentityRole[] _roles = { };
     private string _search = "";
     private bool _visible = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        using (var scope = ServiceProvider.CreateScope())
+        {
+            var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+            var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+            _roles = roleManager.Roles.ToArray();
+            _users = await userManager.Users.ToAsyncEnumerable().SelectAwait(async u => new UserInfo(u, await UsersService.GetUserRoleAsync(u))).ToArrayAsync();
+        }
+    }
 
     private Func<UserInfo, bool> _quickFilter => u =>
     {
@@ -75,40 +85,14 @@
         return false;
     };
 
-    protected override async Task OnInitializedAsync()
-    {
-        _roles = RoleManager.Roles.ToArray();
-        var users = UserManager.Users;
-        using (var scope = ServiceProvider.CreateScope())
-        {
-            var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
-            foreach (var user in users)
-            {
-                var role = (await userManager.GetRolesAsync(user)).First();
-                _users.Add(new UserInfo(user, role));
-            }
-        }
-    }
-
     private async Task UpdateUser(UserInfo userInfo)
     {
-        // TODO: Make update user role working
-        using (var scope = ServiceProvider.CreateScope())
-        {
-            var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
-            var userRole = (await userManager.GetRolesAsync(userInfo.User)).First();
-            await userManager.RemoveFromRoleAsync(userInfo.User, userRole);
-            await userManager.AddToRoleAsync(userInfo.User, userInfo.Role);
-        }
+        await UsersService.UpdateUserRoleAsync(userInfo.User, userInfo.Role);
     }
 
     private async Task DeleteUser(UserInfo userInfo)
     {
-        using (var scope = ServiceProvider.CreateScope())
-        {
-            var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
-            await userManager.DeleteAsync(userInfo.User);
-        }
+        await UsersService.DeleteUserAsync(userInfo.User);
     }
 
     private sealed class UserInfo(ApplicationUser user, string role)

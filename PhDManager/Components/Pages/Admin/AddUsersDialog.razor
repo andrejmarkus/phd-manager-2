@@ -1,9 +1,12 @@
 ﻿@using LdapForNet
+@using Microsoft.AspNetCore.Identity
+@using PhDManager.Data
 @using PhDManager.Services
 
 @inject ActiveDirectoryService ActiveDirectoryService
 @inject UsersService UsersService
 @inject NavigationManager NavigationManager
+@inject IServiceProvider ServiceProvider
 
 <MudDialog @bind-Visible="@_visible" Options="@(new() { FullWidth = true })">
     <TitleContent>
@@ -15,7 +18,6 @@
                 <MudText Typo="Typo.h6" GutterBottom="false">LDAP users</MudText>
                 <MudSpacer />
                 <MudTextField @bind-Value="@_search" OnKeyUp="@HandleSearch" Class="mr-4" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium"></MudTextField>
-                @* <MudButton OnClick="GetUsers">Search</MudButton> *@
             </ToolBarContent>
             <Columns>
                 <SelectColumn T="LdapEntry" />
@@ -60,7 +62,12 @@
 
     private async Task GetUsers()
     {
-        _entries = (await ActiveDirectoryService.SearchUsersAsync(_search)).ToArray();
+        var searchEntries = await ActiveDirectoryService.SearchUsersAsync(_search);
+        using (var scope = ServiceProvider.CreateScope())
+        {
+            var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+            _entries = await searchEntries.ToAsyncEnumerable().WhereAwait(async e => (await userManager.FindByNameAsync(e.DirectoryAttributes["uid"].GetValue<string>()) is null)).ToArrayAsync();
+        }
     }
 
     private async Task AddUsers()

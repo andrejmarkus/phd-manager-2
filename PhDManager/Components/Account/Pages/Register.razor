@@ -1,4 +1,4 @@
-﻿@page "/Account/Register/{RegistrationId}"
+﻿@page "/Account/Register/{RegistrationGuid}"
 
 @using System.ComponentModel.DataAnnotations
 @using System.Text
@@ -81,7 +81,7 @@
     private IEnumerable<IdentityError>? identityErrors;
 
     [Parameter]
-    public string RegistrationId { get; set; }
+    public string RegistrationGuid { get; set; }
 
     [SupplyParameterFromForm]
     private InputModel Input { get; set; } = new();
@@ -93,12 +93,12 @@
 
     protected override async Task OnInitializedAsync()
     {
-        Registration = await UnitOfWork.Registrations.GetByIdAsync(RegistrationId);
+        Registration = await UnitOfWork.Registrations.GetByGuidAsync(RegistrationGuid);
         RegistrationExpired = DateTime.UtcNow > Registration?.Expiration;
 
         if (RegistrationExpired)
         {
-            await UnitOfWork.Registrations.DeleteAsync(RegistrationId);
+            await UnitOfWork.Registrations.DeleteAsync(Registration.Id);
             await UnitOfWork.CompleteAsync();
         }
     }

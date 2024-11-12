@@ -86,14 +86,14 @@
         var entry = await ActiveDirectoryService.AuthenticateUserAsync(Input.Username, Input.Password);
         if (entry is null)
         {
-            errorMessage = "Invalid username or password.";
+            errorMessage = "Error: Invalid username or password.";
             return;
         }
 
         var user = await UserManager.FindByNameAsync(Input.Username);
         if (user is null)
         {
-            await UsersService.RegisterLdapUserAsync(entry, Input.Password);
+            user = await UsersService.RegisterLdapUserAsync(entry, Input.Password);
         } 
         else
         {

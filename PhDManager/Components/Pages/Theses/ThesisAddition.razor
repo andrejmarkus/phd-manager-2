@@ -1,24 +1,83 @@
 ﻿@page "/theses/add"
 
 @using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Identity
+@using PhDManager.Data
 @using PhDManager.Models
+@using PhDManager.Services
+@using PhDManager.Services.IRepositories
 
-@attribute [Authorize(Roles = "Teacher")]
+@inject IServiceProvider ServiceProvider
+@inject UsersService UsersService
+@inject IUnitOfWork UnitOfWork
+
+@attribute [Authorize(Roles = "Teacher, Admin")]
 
 <PageTitle>Thesis Addition</PageTitle>
 
+<MudText Typo="Typo.h3">Návrh témy doktorandského štúdia</MudText>
+
 <MudForm @ref="_form">
-    <MudTextField T="string" Label="Title of dissertation work" />
-    <MudTextField T="string" Label="Supervisor" />
-    <MudTextField T="string" Label="Field of study" />
+    <MudText Typo="Typo.h5">Zadanie témy</MudText>
+    <MudCheckBox T="bool" @bind-Value="_isEnglish">Je možné vypracovať tému v angličtine?</MudCheckBox>
+    <MudTextField T="string" Label="Názov témy dizertačnej práce" Variant="Variant.Outlined" @bind-Value="_thesis.Title" />
+    @if (_isEnglish)
+    {
+        <MudTextField T="string" Label="Title of the dissertation thesis" Variant="Variant.Outlined" @bind-Value="_thesis.TitleEnglish" />
+    }
+    <MudAutocomplete T="ApplicationUser" Label="Školiteľ" SearchFunc="SearchTeachers" @bind-Value="_thesis.Supervisor" Variant="Variant.Outlined" />
+    
+    <MudText Typo="Typo.h5">Zaradenie témy</MudText>
+    <MudAutocomplete T="StudyProgram" Label="Študijný odbor" Variant="Variant.Outlined" SearchFunc="SearchStudyPrograms" @bind-Value="_thesis.StudyProgram" />
     <div class="d-flex gap-1">
-        <MudCheckBox T="bool">Internal</MudCheckBox>
-        <MudCheckBox T="bool">External</MudCheckBox>
+        <MudCheckBox T="bool" @bind-bind-Value="_thesis.DailyStudy">denná</MudCheckBox>
+        <MudCheckBox T="bool" @bind-Value="_thesis.ExternalStudy">externá</MudCheckBox>
     </div>
-    <MudTextField T="string" Label="Description" AutoGrow Lines="3" />
+
+    <MudText Typo="Typo.h5">Špecifikácia témy</MudText>
+    <MudTextField T="string" Label="Detailnejší opis problému" AutoGrow Lines="5" Variant="Variant.Outlined" @bind-Value="_thesis.Description" />
+    @if (_isEnglish)
+    {
+        <MudTextField T="string" Label="Detailed description of the problem" AutoGrow Lines="5" Variant="Variant.Outlined" @bind-Value="_thesis.DescriptionEnglish" />
+    }
+    <MudTextField T="string" Label="Predpokladaný vedecký prínos (algoritmy, metodológie, ...)" AutoGrow Lines="3" Variant="Variant.Outlined" @bind-Value="_thesis.ScientificContribution" />
+    <MudTextField T="string" Label="Odporučány postup vedeckého bádania" AutoGrow Lines="3" Variant="Variant.Outlined" @bind-Value="_thesis.ScientificProgress" />
+
+    <MudText Typo="Typo.h5">Ďalšie informácie</MudText>
+    <MudSelect T="string" Label="Druh výskumu" Variant="Variant.Outlined" @bind-Value="_thesis.ResearchType">
+        <MudSelectItem T="string">Aplikovaný výskum a experimentálny vývoj</MudSelectItem>
+        <MudSelectItem T="string">Aplikovaný výskum</MudSelectItem>
+        <MudSelectItem T="string">Základný výskum</MudSelectItem>
+    </MudSelect>
+    <MudTextField T="string" Label="Výskumná úloha, ktorej súčasťou bude riešená téma" AutoGrow Lines="4" Variant="Variant.Outlined" @bind-Value="_thesis.ResearchTask" />
+    <MudTextField T="string" Label="Doterajšie výsledky riešenia na školiacom pracovisku, vrátane odkazov na dostupné zdroje" AutoGrow Lines="6" Variant="Variant.Outlined" @bind-Value="_thesis.SolutionResults" />
+    <MudButton Variant="Variant.Filled" Color="Color.Primary">Pridať</MudButton>
 </MudForm>
 
 @code {
-    private MudForm _form;
-    private Thesis _thesis;
+    private MudForm? _form;
+    private Thesis _thesis = new Thesis();
+    private IEnumerable<ApplicationUser> _teachers;
+    private IEnumerable<StudyProgram>? _studyPrograms;
+    private bool _isEnglish = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        using (var scope = ServiceProvider.CreateScope())
+        {
+            var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+            _teachers = await userManager.Users.ToAsyncEnumerable().WhereAwait(async u => (await UsersService.GetUserRoleAsync(u)) == "Teacher").ToArrayAsync();
+            _studyPrograms = await UnitOfWork.StudyPrograms.GetAllAsync();
+        }
+    }
+
+    private async Task<IEnumerable<ApplicationUser>> SearchTeachers(string search, CancellationToken token)
+    {
+        return _teachers.Where(t => t.UserName.Contains(search, StringComparison.OrdinalIgnoreCase));
+    }
+
+    private async Task<IEnumerable<StudyProgram>> SearchStudyPrograms(string search, CancellationToken token)
+    {
+        return _studyPrograms.Where(sp => sp.Name.Contains(search, StringComparison.OrdinalIgnoreCase));
+    }
 }

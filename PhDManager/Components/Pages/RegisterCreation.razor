@@ -18,11 +18,11 @@
 
     protected override async Task OnInitializedAsync()
     {
-        string id = Guid.NewGuid().ToString();
+        string guid = Guid.NewGuid().ToString();
         Registration = new Registration
         {
-            Id = id,
-            Url = NavigationManager.Uri + "/" + id,
+            Guid = guid,
+            Url = NavigationManager.Uri + "/" + guid,
             Expiration = DateTime.UtcNow.AddHours(1)
         };
         await UnitOfWork.Registrations.AddAsync(Registration);

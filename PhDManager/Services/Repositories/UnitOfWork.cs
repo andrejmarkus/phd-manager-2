@@ -10,6 +10,7 @@ namespace PhDManager.Services.Repositories
 
         public IThesisRepository Theses { get; private set; }
         public IRegistrationRepository Registrations { get; private set; }
+        public IStudyProgramRepository StudyPrograms { get; private set; }
 
         public UnitOfWork(ApplicationDbContext context, ILoggerFactory loggerFactory)
         {
@@ -18,6 +19,7 @@ namespace PhDManager.Services.Repositories
 
             Theses = new ThesisRepository(_context, _logger);
             Registrations = new RegistrationRepository(_context, _logger);
+            StudyPrograms = new StudyProgramRepository(_context, _logger);
         }
 
         public async Task CompleteAsync()

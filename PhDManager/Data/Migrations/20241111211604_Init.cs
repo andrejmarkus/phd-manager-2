@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace PhDManager.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class CreateIdentitySchema : Migration
+    public partial class Init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -52,32 +52,32 @@ namespace PhDManager.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Registrations",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Guid = table.Column<string>(type: "text", nullable: false),
+                    Url = table.Column<string>(type: "text", nullable: false),
+                    Expiration = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Registrations", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "StudyPrograms",
                 columns: table => new
                 {
-                    StudyProgramId = table.Column<int>(type: "integer", nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Code = table.Column<string>(type: "text", nullable: false),
                     Name = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_StudyPrograms", x => x.StudyProgramId);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Theses",
-                columns: table => new
-                {
-                    ThesisId = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Year = table.Column<int>(type: "integer", nullable: false),
-                    Title = table.Column<string>(type: "text", nullable: false),
-                    Description = table.Column<string>(type: "text", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Theses", x => x.ThesisId);
+                    table.PrimaryKey("PK_StudyPrograms", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -190,22 +190,84 @@ namespace PhDManager.Data.Migrations
                 name: "Subjects",
                 columns: table => new
                 {
-                    SubjectId = table.Column<int>(type: "integer", nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Code = table.Column<string>(type: "text", nullable: false),
                     Name = table.Column<string>(type: "text", nullable: false),
                     Semester = table.Column<string>(type: "text", nullable: false),
                     Credits = table.Column<int>(type: "integer", nullable: false),
-                    StudyProgramId = table.Column<int>(type: "integer", nullable: true)
+                    StudyProgramId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Subjects", x => x.SubjectId);
+                    table.PrimaryKey("PK_Subjects", x => x.Id);
                     table.ForeignKey(
                         name: "FK_Subjects_StudyPrograms_StudyProgramId",
                         column: x => x.StudyProgramId,
                         principalTable: "StudyPrograms",
-                        principalColumn: "StudyProgramId");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Theses",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Title = table.Column<string>(type: "text", nullable: false),
+                    TitleEnglish = table.Column<string>(type: "text", nullable: true),
+                    Description = table.Column<string>(type: "text", nullable: false),
+                    DescriptionEnglish = table.Column<string>(type: "text", nullable: true),
+                    ScientificContribution = table.Column<string>(type: "text", nullable: false),
+                    ScientificProgress = table.Column<string>(type: "text", nullable: false),
+                    ResearchType = table.Column<string>(type: "text", nullable: false),
+                    ResearchTask = table.Column<string>(type: "text", nullable: false),
+                    SolutionResults = table.Column<string>(type: "text", nullable: false),
+                    DailyStudy = table.Column<bool>(type: "boolean", nullable: false),
+                    ExternalStudy = table.Column<bool>(type: "boolean", nullable: false),
+                    SupervisorId = table.Column<string>(type: "text", nullable: false),
+                    StudyProgramId = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Theses", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Theses_AspNetUsers_SupervisorId",
+                        column: x => x.SupervisorId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Theses_StudyPrograms_StudyProgramId",
+                        column: x => x.StudyProgramId,
+                        principalTable: "StudyPrograms",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "SubjectThesis",
+                columns: table => new
+                {
+                    SubjectsId = table.Column<int>(type: "integer", nullable: false),
+                    ThesesId = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SubjectThesis", x => new { x.SubjectsId, x.ThesesId });
+                    table.ForeignKey(
+                        name: "FK_SubjectThesis_Subjects_SubjectsId",
+                        column: x => x.SubjectsId,
+                        principalTable: "Subjects",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_SubjectThesis_Theses_ThesesId",
+                        column: x => x.ThesesId,
+                        principalTable: "Theses",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
@@ -249,6 +311,22 @@ namespace PhDManager.Data.Migrations
                 name: "IX_Subjects_StudyProgramId",
                 table: "Subjects",
                 column: "StudyProgramId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SubjectThesis_ThesesId",
+                table: "SubjectThesis",
+                column: "ThesesId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Theses_StudyProgramId",
+                table: "Theses",
+                column: "StudyProgramId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Theses_SupervisorId",
+                table: "Theses",
+                column: "SupervisorId",
+                unique: true);
         }
 
         /// <inheritdoc />
@@ -270,13 +348,19 @@ namespace PhDManager.Data.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "Registrations");
+
+            migrationBuilder.DropTable(
+                name: "SubjectThesis");
+
+            migrationBuilder.DropTable(
+                name: "AspNetRoles");
+
+            migrationBuilder.DropTable(
                 name: "Subjects");
 
             migrationBuilder.DropTable(
                 name: "Theses");
-
-            migrationBuilder.DropTable(
-                name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");

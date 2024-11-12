@@ -12,8 +12,8 @@ using PhDManager.Data;
 namespace PhDManager.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241112100832_ThesisUpdate")]
-    partial class ThesisUpdate
+    [Migration("20241112173300_Init")]
+    partial class Init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -358,8 +358,7 @@ namespace PhDManager.Data.Migrations
 
                     b.HasIndex("StudyProgramId");
 
-                    b.HasIndex("SupervisorId")
-                        .IsUnique();
+                    b.HasIndex("SupervisorId");
 
                     b.ToTable("Theses");
                 });
@@ -450,8 +449,8 @@ namespace PhDManager.Data.Migrations
                         .IsRequired();
 
                     b.HasOne("PhDManager.Data.ApplicationUser", "Supervisor")
-                        .WithOne("SupervisorThesis")
-                        .HasForeignKey("PhDManager.Models.Thesis", "SupervisorId")
+                        .WithMany("SupervisorTheses")
+                        .HasForeignKey("SupervisorId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -477,7 +476,7 @@ namespace PhDManager.Data.Migrations
 
             modelBuilder.Entity("PhDManager.Data.ApplicationUser", b =>
                 {
-                    b.Navigation("SupervisorThesis");
+                    b.Navigation("SupervisorTheses");
                 });
 
             modelBuilder.Entity("PhDManager.Models.StudyProgram", b =>

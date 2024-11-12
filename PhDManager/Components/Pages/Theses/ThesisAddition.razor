@@ -10,6 +10,7 @@
 @inject IServiceProvider ServiceProvider
 @inject UsersService UsersService
 @inject IUnitOfWork UnitOfWork
+@inject NavigationManager NavigationManager
 
 @attribute [Authorize(Roles = "Teacher, Admin")]
 
@@ -20,38 +21,38 @@
 <MudForm @ref="_form">
     <MudText Typo="Typo.h5">Zadanie témy</MudText>
     <MudCheckBox T="bool" @bind-Value="_isEnglish">Je možné vypracovať tému v angličtine?</MudCheckBox>
-    <MudTextField T="string" Label="Názov témy dizertačnej práce" Variant="Variant.Outlined" @bind-Value="_thesis.Title" />
+    <MudTextField T="string" Required RequiredError="Je nutné zadať názov témy!" Label="Názov témy dizertačnej práce" Variant="Variant.Outlined" @bind-Value="_thesis.Title" />
     @if (_isEnglish)
     {
         <MudTextField T="string" Label="Title of the dissertation thesis" Variant="Variant.Outlined" @bind-Value="_thesis.TitleEnglish" />
     }
-    <MudAutocomplete T="ApplicationUser" Label="Školiteľ" SearchFunc="SearchTeachers" @bind-Value="_thesis.Supervisor" Variant="Variant.Outlined" />
+    <MudAutocomplete T="ApplicationUser" Required RequiredError="Je zvoliť školiteľa!" Label="Školiteľ" ToStringFunc="@(u => u is null ? null : u.UserName)" SearchFunc="SearchTeachers" Variant="Variant.Outlined" @bind-Value="_selectedSupervisor" />
     
     <MudText Typo="Typo.h5">Zaradenie témy</MudText>
-    <MudAutocomplete T="StudyProgram" Label="Študijný odbor" Variant="Variant.Outlined" SearchFunc="SearchStudyPrograms" @bind-Value="_thesis.StudyProgram" />
+    <MudAutocomplete T="StudyProgram" Required RequiredError="Je nutné zvoliť študijný odbor!" Label="Študijný odbor" ToStringFunc="@(sp => sp is null ? null : sp.Name)" Variant="Variant.Outlined" SearchFunc="SearchStudyPrograms" @bind-Value="_selectedStudyProgram" />
     <div class="d-flex gap-1">
         <MudCheckBox T="bool" @bind-bind-Value="_thesis.DailyStudy">denná</MudCheckBox>
         <MudCheckBox T="bool" @bind-Value="_thesis.ExternalStudy">externá</MudCheckBox>
     </div>
 
     <MudText Typo="Typo.h5">Špecifikácia témy</MudText>
-    <MudTextField T="string" Label="Detailnejší opis problému" AutoGrow Lines="5" Variant="Variant.Outlined" @bind-Value="_thesis.Description" />
+    <MudTextField T="string" Required RequiredError="Je nutné zadať opis problému!" Label="Detailnejší opis problému" AutoGrow Lines="5" Variant="Variant.Outlined" @bind-Value="_thesis.Description" />
     @if (_isEnglish)
     {
         <MudTextField T="string" Label="Detailed description of the problem" AutoGrow Lines="5" Variant="Variant.Outlined" @bind-Value="_thesis.DescriptionEnglish" />
     }
-    <MudTextField T="string" Label="Predpokladaný vedecký prínos (algoritmy, metodológie, ...)" AutoGrow Lines="3" Variant="Variant.Outlined" @bind-Value="_thesis.ScientificContribution" />
-    <MudTextField T="string" Label="Odporučány postup vedeckého bádania" AutoGrow Lines="3" Variant="Variant.Outlined" @bind-Value="_thesis.ScientificProgress" />
+    <MudTextField T="string" Required RequiredError="Je nutné zadať predpokladaný vedecký prínos!" Label="Predpokladaný vedecký prínos (algoritmy, metodológie, ...)" AutoGrow Lines="3" Variant="Variant.Outlined" @bind-Value="_thesis.ScientificContribution" />
+    <MudTextField T="string" Required RequiredError="Je nutné zadať odporúčaný postup vedeckého bádania!" Label="Odporučány postup vedeckého bádania" AutoGrow Lines="3" Variant="Variant.Outlined" @bind-Value="_thesis.ScientificProgress" />
 
     <MudText Typo="Typo.h5">Ďalšie informácie</MudText>
-    <MudSelect T="string" Label="Druh výskumu" Variant="Variant.Outlined" @bind-Value="_thesis.ResearchType">
-        <MudSelectItem T="string">Aplikovaný výskum a experimentálny vývoj</MudSelectItem>
-        <MudSelectItem T="string">Aplikovaný výskum</MudSelectItem>
-        <MudSelectItem T="string">Základný výskum</MudSelectItem>
+    <MudSelect T="string" Required RequiredError="Je nutné zvoliť druh výskumu!" Label="Druh výskumu" Variant="Variant.Outlined" @bind-Value="_thesis.ResearchType">
+        <MudSelectItem T="string" Value="@("Aplikovaný výskum a experimentálny vývoj")">Aplikovaný výskum a experimentálny vývoj</MudSelectItem>
+        <MudSelectItem T="string" Value="@("Aplikovaný výskum")">Aplikovaný výskum</MudSelectItem>
+        <MudSelectItem T="string" Value="@("Základný výskum")">Základný výskum</MudSelectItem>
     </MudSelect>
-    <MudTextField T="string" Label="Výskumná úloha, ktorej súčasťou bude riešená téma" AutoGrow Lines="4" Variant="Variant.Outlined" @bind-Value="_thesis.ResearchTask" />
-    <MudTextField T="string" Label="Doterajšie výsledky riešenia na školiacom pracovisku, vrátane odkazov na dostupné zdroje" AutoGrow Lines="6" Variant="Variant.Outlined" @bind-Value="_thesis.SolutionResults" />
-    <MudButton Variant="Variant.Filled" Color="Color.Primary">Pridať</MudButton>
+    <MudTextField T="string" Required RequiredError="Je nutné zadať výskumnú úlohu" Label="Výskumná úloha, ktorej súčasťou bude riešená téma" AutoGrow Lines="4" Variant="Variant.Outlined" @bind-Value="_thesis.ResearchTask" />
+    <MudTextField T="string" Required RequiredError="Je nutné zadať doterajšie výsledky riešenia na školiacom pracovisku!" Label="Doterajšie výsledky riešenia na školiacom pracovisku, vrátane odkazov na dostupné zdroje" AutoGrow Lines="6" Variant="Variant.Outlined" @bind-Value="_thesis.SolutionResults" />
+    <MudButton OnClick="AddThesis" Variant="Variant.Filled" Color="Color.Primary">Pridať</MudButton>
 </MudForm>
 
 @code {
@@ -60,6 +61,9 @@
     private IEnumerable<ApplicationUser> _teachers;
     private IEnumerable<StudyProgram>? _studyPrograms;
     private bool _isEnglish = false;
+
+    private ApplicationUser? _selectedSupervisor;
+    private StudyProgram? _selectedStudyProgram;
 
     protected override async Task OnInitializedAsync()
     {
@@ -73,11 +77,32 @@
 
     private async Task<IEnumerable<ApplicationUser>> SearchTeachers(string search, CancellationToken token)
     {
+        if (string.IsNullOrWhiteSpace(search))
+            return _teachers;
+
         return _teachers.Where(t => t.UserName.Contains(search, StringComparison.OrdinalIgnoreCase));
     }
 
     private async Task<IEnumerable<StudyProgram>> SearchStudyPrograms(string search, CancellationToken token)
     {
+        if (string.IsNullOrWhiteSpace(search))
+            return _studyPrograms;
+
         return _studyPrograms.Where(sp => sp.Name.Contains(search, StringComparison.OrdinalIgnoreCase));
+    }
+
+    private async Task AddThesis()
+    {
+        await _form.Validate();
+
+        if (_form.IsValid)
+        {
+            _thesis.SupervisorId = _selectedSupervisor.Id;
+            _thesis.StudyProgramId = _selectedStudyProgram.Id;
+
+            await UnitOfWork.Theses.AddAsync(_thesis);
+            await UnitOfWork.CompleteAsync();
+            NavigationManager.NavigateTo("/theses");
+        }
     }
 }

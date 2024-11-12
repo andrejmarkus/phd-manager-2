@@ -18,10 +18,11 @@ namespace PhDManager.Models
         public bool DailyStudy { get; set; } = false;
         public bool ExternalStudy { get; set; } = false;
 
-        public string SupervisorId { get; set; }
+        public string SupervisorId { get; set; } = string.Empty;
         public ApplicationUser? Supervisor { get; set; }
 
-        public StudyProgram StudyProgram { get; set; }
+        public int StudyProgramId { get; set; }
+        public StudyProgram? StudyProgram { get; set; }
 
         public Subject[] Subjects { get; set; } = { };
     }

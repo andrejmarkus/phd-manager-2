@@ -325,8 +325,7 @@ namespace PhDManager.Data.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Theses_SupervisorId",
                 table: "Theses",
-                column: "SupervisorId",
-                unique: true);
+                column: "SupervisorId");
         }
 
         /// <inheritdoc />

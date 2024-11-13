@@ -5,6 +5,7 @@
         IThesisRepository Theses { get; }
         IRegistrationRepository Registrations { get; }
         IStudyProgramRepository StudyPrograms { get; }
+        ICommentRepository Comments { get; }
         Task CompleteAsync();
     }
 }

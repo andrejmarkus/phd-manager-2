@@ -9,5 +9,6 @@ namespace PhDManager.Data
         public string? DisplayName { get; set; }
 
         public List<Thesis> SupervisorTheses { get; set; }
+        public List<Comment> Comments { get; set; }
     }
 }

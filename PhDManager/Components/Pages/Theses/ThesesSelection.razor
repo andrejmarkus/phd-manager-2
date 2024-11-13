@@ -1,11 +1,14 @@
 ﻿@page "/theses"
 
 @using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Identity
+@using PhDManager.Data
 @using PhDManager.Models
 @using PhDManager.Services
 @using PhDManager.Services.IRepositories
 
 @inject IUnitOfWork UnitOfWork
+@inject UserManager<ApplicationUser> UserManager
 
 <PageTitle>Theses</PageTitle>
 
@@ -35,7 +38,17 @@
                 <MudPaper Class="pa-2">
                     <MudText Typo="Typo.h6">@thesis.Title</MudText>
                     <MudText Typo="Typo.body2">@thesis.Description</MudText>
-                    <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="@($"/theses/{thesis.Guid}")">Detail</MudButton>
+                    <div class="d-flex justify-space-between">
+                        <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="@($"/theses/{thesis.Guid}")">Detail</MudButton>
+                        <AuthorizeView Roles="Admin, Teacher">
+                            <Authorized>
+                                <div class="d-flex gap-1">
+                                    <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="@($"/theses/{thesis.Guid}/edit")">Edit</MudButton>
+                                    <MudButton Variant="Variant.Filled" Color="Color.Error" OnClick="@(() => DeleteThesis(thesis.Id))">Delete</MudButton>
+                                </div>
+                            </Authorized>
+                        </AuthorizeView>
+                    </div>
                 </MudPaper>
             </MudItem>
         }
@@ -48,5 +61,11 @@
     protected override async Task OnInitializedAsync()
     {
         Theses = (await UnitOfWork.Theses.GetAllAsync()).Where(t => t.IsApproved).ToArray();
+    }
+
+    private async Task DeleteThesis(int id)
+    {
+        await UnitOfWork.Theses.DeleteAsync(id);
+        await UnitOfWork.CompleteAsync();
     }
 }

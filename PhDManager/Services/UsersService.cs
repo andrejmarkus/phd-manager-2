@@ -1,11 +1,24 @@
 ﻿using LdapForNet;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using PhDManager.Data;
 
 namespace PhDManager.Services
 {
-    public class UsersService(IUserStore<ApplicationUser> UserStore, UserManager<ApplicationUser> UserManager)
+    public class UsersService(IUserStore<ApplicationUser> UserStore, UserManager<ApplicationUser> UserManager, AuthenticationStateProvider AuthenticationStateProvider)
     {
+        public async Task<ApplicationUser?> GetCurrentUserAsync()
+        {
+            var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+            return await UserManager.GetUserAsync(authState.User);
+        }
+
+        public async Task<string?> GetCurrentUserIdAsync()
+        {
+            var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+            return (await UserManager.GetUserAsync(authState.User))?.Id;
+        }
+
         public async Task<string?> GetUserRoleAsync(ApplicationUser user)
         {
             return (await UserManager.GetRolesAsync(user)).First();

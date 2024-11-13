@@ -3,12 +3,15 @@
 @using Microsoft.AspNetCore.Identity
 @using PhDManager.Data
 @using PhDManager.Models
+@using PhDManager.Services
 @using PhDManager.Services.IRepositories
 
 @inject IUnitOfWork UnitOfWork
 @inject UserManager<ApplicationUser> UserManager
+@inject UsersService UsersService
+@inject NavigationManager NavigationManager
 
-<PageTitle>Title</PageTitle>
+<PageTitle>Thesis</PageTitle>
 
 @if (_thesis is not null)
 {
@@ -63,7 +66,38 @@
             <MudText Typo="Typo.h5">Doterajšie výsledky riešenia na školiacom pracovisku, vrátane odkazov na dostupné zdroje</MudText>
             <MudText Typo="Typo.body1">@_thesis.SolutionResults</MudText>
         </div>
+        <AuthorizeView Roles="Admin, Teacher">
+            <Authorized>
+                <div class="d-flex gap-1">
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="@($"/theses/{_thesis.Guid}/edit")">Edit</MudButton>
+                    <MudButton Variant="Variant.Filled" Color="Color.Error" OnClick="@(() => DeleteThesis(_thesis.Id))">Delete</MudButton>
+                </div>
+            </Authorized>
+        </AuthorizeView>
     </MudContainer>
+    @if (!_thesis.IsApproved)
+    {
+        <AuthorizeView Roles="Admin, Teacher, Reviewer">
+            <Authorized>
+                <MudContainer>
+                    @if (_comments is not null) {
+                        @foreach (var comment in _thesis.Comments)
+                        {
+                            <MudPaper Class="pa-2">
+                                    <MudText Typo="Typo.h6">@comment.Reviewer.DisplayName</MudText>
+                                    <MudText Typo="Typo.body1">@comment.Text</MudText>
+                            </MudPaper>
+                        }
+                    }
+                    <AuthorizeView Roles="Reviewer" Context="reviewerContext">
+                        <Authorized>
+                            <MudTextField @bind-Value="_commentText" Label="Comment" Variant="Variant.Outlined" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Send" OnAdornmentClick="PostComment"></MudTextField>
+                        </Authorized>
+                    </AuthorizeView>
+                </MudContainer>
+            </Authorized>
+        </AuthorizeView>
+    }
 }
 
 @code {
@@ -73,12 +107,42 @@
     private Thesis _thesis;
     private ApplicationUser _supervisor;
     private StudyProgram _studyProgram;
+    private IEnumerable<Comment>? _comments;
+
+    private string _commentText;
 
     protected override async Task OnInitializedAsync()
     {
-        // TODO: Make model return supervisor and study program
+        // TODO: Make model return supervisor, study program, comments
         _thesis = await UnitOfWork.Theses.GetByGuidAsync(ThesisGuid);
         _supervisor = await UserManager.FindByIdAsync(_thesis.SupervisorId);
         _studyProgram = await UnitOfWork.StudyPrograms.GetByIdAsync(_thesis.StudyProgramId);
+        _comments = await UnitOfWork.Comments.GetAllByThesisAsync(_thesis.Id);
     }
+
+    private async Task PostComment()
+    {
+        Comment comment = new Comment
+        {
+            Text = _commentText,
+            ThesisId = _thesis.Id,
+            ReviewerId = await UsersService.GetCurrentUserIdAsync()
+        };
+        await UnitOfWork.Comments.AddAsync(comment);
+        await UnitOfWork.CompleteAsync();
+    }
+
+    private async Task DeleteThesis(int id)
+    {
+        await UnitOfWork.Theses.DeleteAsync(id);
+        await UnitOfWork.CompleteAsync();
+        NavigationManager.NavigateTo("/theses");
+    }
+
+    private async Task UpdateComment(Comment comment)
+    {
+        await UnitOfWork.Comments.UpdateAsync(comment.Id, comment);
+        await UnitOfWork.CompleteAsync();
+    }
+
 }

@@ -1,9 +1,12 @@
 ﻿@page "/theses/review"
 
+@using Microsoft.AspNetCore.Authorization
 @using PhDManager.Models
 @using PhDManager.Services.IRepositories
 
 @inject IUnitOfWork UnitOfWork
+
+@attribute [Authorize(Roles = "Admin, Teacher, Reviewer")]
 
 <PageTitle>Theses Review</PageTitle>
 
@@ -18,7 +21,14 @@
                 <MudPaper Class="pa-2">
                     <MudText Typo="Typo.h6">@thesis.Title</MudText>
                     <MudText Typo="Typo.body2">@thesis.Description</MudText>
-                    <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="@($"/theses/{thesis.Guid}")">Detail</MudButton>
+                    <div class="d-flex justify-space-between">
+                        <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="@($"/theses/{thesis.Guid}")">Detail</MudButton>
+                        <AuthorizeView Roles="Admin, Reviewer">
+                            <Authorized>
+                                    <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@(() => AcceptThesis(thesis))">Accept</MudButton>
+                            </Authorized>
+                        </AuthorizeView>
+                    </div>
                 </MudPaper>
             </MudItem>
         }
@@ -31,5 +41,12 @@
     protected override async Task OnInitializedAsync()
     {
         Theses = (await UnitOfWork.Theses.GetAllAsync()).Where(t => !t.IsApproved).ToArray();
+    }
+
+    private async Task AcceptThesis(Thesis thesis)
+    {
+        thesis.IsApproved = true;
+        await UnitOfWork.Theses.UpdateAsync(thesis.Id, thesis);
+        await UnitOfWork.CompleteAsync();
     }
 }

@@ -27,5 +27,7 @@ namespace PhDManager.Models
         public StudyProgram StudyProgram { get; set; }
 
         public Subject[] Subjects { get; set; } = { };
+
+        public List<Comment> Comments { get; set; }
     }
 }

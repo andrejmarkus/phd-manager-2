@@ -1,14 +1,16 @@
 ﻿@inherits LayoutComponentBase
 
-<MudThemeProvider />
+<MudThemeProvider Theme="FriTheme" />
 <MudPopoverProvider />
 <MudDialogProvider />
 <MudSnackbarProvider />
 
 <MudLayout>
     <MudAppBar Elevation="1">
-        <MudIconButton Size="@Size.Medium" Icon="@Icons.Material.Outlined.Menu" OnClick="DrawerToggle" />
-        <MudText Typo="Typo.h5" Class="ml-3">PhD Manager</MudText>
+        <MudIconButton Class="mr-2" Color="Color.Surface" Size="@Size.Medium" Icon="@Icons.Material.Outlined.Menu" OnClick="DrawerToggle" />
+        <MudLink Href="/">
+            <MudImage Src="uniza_logo.png" Height="40" />
+        </MudLink>
     </MudAppBar>
     <MudDrawer @bind-Open="_drawerOpen" ClipMode="DrawerClipMode.Always" Elevation="2">
         <NavMenu />
@@ -33,6 +35,14 @@
         _drawerOpen = !_drawerOpen;
     }
 
+    MudTheme FriTheme = new MudTheme()
+    {
+        PaletteLight = new PaletteLight()
+        {
+            Primary = Colors.Yellow.Accent3,
+            AppbarBackground = Colors.Yellow.Accent3
+        }
+    };
 }
 
 

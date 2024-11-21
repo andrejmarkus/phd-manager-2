@@ -4,11 +4,11 @@
 }
 
 .underline {
-    text-decoration: underline var(--rz-primary) 0.5rem;
+    text-decoration: underline var(--mud-palette-primary) 0.5rem;
 }
 
 .circle-image {
-    background-color: var(--rz-primary);
+    background-color: var(--mud-palette-primary);
     filter: contrast(75%);
     border-radius: 50%;
     width: 90%;
@@ -33,11 +33,15 @@
 }
 
 .circle-bottom {
-    background-image: radial-gradient(circle at 0% 100%, var(--rz-primary) 25%, rgba(0, 0, 0, 0) 25%);
+    background-image: radial-gradient(circle at 0% 100%, var(--mud-palette-primary) 25%, rgba(0, 0, 0, 0) 25%);
 }
 
 .circle-top {
-    background-image: radial-gradient(circle at 100% 0%, var(--rz-primary) 25%, rgba(0, 0, 0, 0) 25%);
+    background-image: radial-gradient(circle at 100% 0%, var(--mud-palette-primary) 25%, rgba(0, 0, 0, 0) 25%);
+}
+
+.landing-basis {
+    flex-basis: 40%;
 }
 
 .logo-size {

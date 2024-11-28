@@ -69,6 +69,18 @@
     height: 100%;
 }
 
+.height-half {
+    height: 50vh;
+}
+
+.height-third {
+    height: 33vh;
+}
+
+.height-screen {
+    height: 90vh;
+}
+
 .absolute {
     position: absolute;
 }

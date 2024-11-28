@@ -22,33 +22,26 @@
 <PageTitle>Log in</PageTitle>
 
 <MudStack AlignItems="AlignItems.Center" Justify="Justify.Center">
-    <MudText Typo="Typo.h3" GutterBottom="true">Log in (LDAP)</MudText>
-    <MudImage Class="width-half" Src="fingerprint.svg" />
-    <MudStack>
+    <MudText Typo="Typo.h3" GutterBottom="true">Log in</MudText>
+    <MudImage Class="height-half" Src="fingerprint.svg" />
+
+    <MudStack Class="width-half" Spacing="5">
         <StatusMessage Message="@errorMessage" />
         <EditForm Model="Input" method="post" OnValidSubmit="LoginUser" FormName="login">
             <DataAnnotationsValidator />
 
             <MudText GutterBottom="true" Typo="Typo.body1">Use a local account to log in.</MudText>
 
-            <MudGrid>
-                <MudItem md="12">
-                    <MudStaticTextField For="@(() => Input.Username)" @bind-Value="Input.Username" 
-                        Label="Username" Placeholder="username"
-                        UserAttributes="@(new() { { "autocomplete", "true" }, { "aria-required", "true" } } )" />
-                </MudItem>
-                <MudItem md="12">
-                    <MudStaticTextField For="@(() => Input.Password)" @bind-Value="Input.Password" 
-                        Label="Password" InputType="InputType.Password" Placeholder="password" 
-                        UserAttributes="@(new() { { "autocomplete", "current-password" }, { "aria-required", "true" } } )" />
-                </MudItem>
-                <MudItem md="12">
-                    <MudStaticCheckBox For="@(() => Input.RememberMe)" @bind-Value="Input.RememberMe">Remember me</MudStaticCheckBox>
-                </MudItem>
-                <MudItem md="12">
-                    <MudStaticButton Variant="Variant.Filled" Color="Color.Primary" FullWidth="true" FormAction="FormAction.Submit">Log in</MudStaticButton>
-                </MudItem>
-            </MudGrid>
+            <MudStack Spacing="3">
+                <MudStaticTextField For="@(() => Input.Username)" @bind-Value="Input.Username" 
+                    Label="Username" Placeholder="username"
+                    UserAttributes="@(new() { { "autocomplete", "true" }, { "aria-required", "true" } } )" />
+                <MudStaticTextField For="@(() => Input.Password)" @bind-Value="Input.Password" 
+                    Label="Password" InputType="InputType.Password" Placeholder="password" 
+                    UserAttributes="@(new() { { "autocomplete", "current-password" }, { "aria-required", "true" } } )" />
+                <MudStaticCheckBox For="@(() => Input.RememberMe)" @bind-Value="Input.RememberMe">Remember me</MudStaticCheckBox>
+                <MudStaticButton Variant="Variant.Filled" Color="Color.Primary" FullWidth="true" FormAction="FormAction.Submit">Log in</MudStaticButton>
+            </MudStack>
         </EditForm>
 
         <MudStack Class="mt-4">

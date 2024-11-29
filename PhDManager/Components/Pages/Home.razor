@@ -9,8 +9,10 @@
     <div class="full-size circle circle-top"></div>
     <AuthorizeView>
         <Authorized>
-            <MudText Typo="Typo.h3">Welcome, @context.User.Identity.Name</MudText>
-            <MudText>Use sidebar to navigate around.</MudText>
+            <MudStack Class="height-full" Justify="Justify.Center" AlignItems="AlignItems.Center">
+                <MudText Typo="Typo.h3">Welcome, @context.User.Identity.Name</MudText>
+                <MudText>Use sidebar to navigate around.</MudText>
+            </MudStack>
         </Authorized>
         <NotAuthorized>
             <div class="full-size responsive-row">

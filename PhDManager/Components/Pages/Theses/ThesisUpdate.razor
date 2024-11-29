@@ -16,7 +16,7 @@
 
 <PageTitle>Thesis Addition</PageTitle>
 
-<MudText Typo="Typo.h3">Návrh témy doktorandského štúdia</MudText>
+<MudText class="mb-5" Typo="Typo.h3">Návrh témy doktorandského štúdia</MudText>
 
 @if (_thesis is not null)
 {
@@ -54,7 +54,7 @@
         </MudSelect>
         <MudTextField T="string" Required RequiredError="Je nutné zadať výskumnú úlohu" Label="Výskumná úloha, ktorej súčasťou bude riešená téma" AutoGrow Lines="4" Variant="Variant.Outlined" @bind-Value="_thesis.ResearchTask" />
         <MudTextField T="string" Required RequiredError="Je nutné zadať doterajšie výsledky riešenia na školiacom pracovisku!" Label="Doterajšie výsledky riešenia na školiacom pracovisku, vrátane odkazov na dostupné zdroje" AutoGrow Lines="6" Variant="Variant.Outlined" @bind-Value="_thesis.SolutionResults" />
-        <MudButton OnClick="UpdateThesis" Variant="Variant.Filled" Color="Color.Primary">Pridať</MudButton>
+        <MudButton class="mt-5" OnClick="UpdateThesis" Variant="Variant.Filled" Color="Color.Primary">Pridať</MudButton>
     </MudForm>
 }
 

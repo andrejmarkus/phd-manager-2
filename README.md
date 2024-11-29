@@ -1,4 +1,5 @@
-# PhD Manager
+# PhD Manager 2
+**Projekt prešiel reštartom, nakoľko som nebol spokojný so stavom a reštart bol časovo menej náročný ako úprava pôvodného.**
 Táto aplikácia je tvorená ako bakalárska práca. Výledkom bude informačný sytém pre správu doktorantského štúdia.
 
 ## Spustenie aplikácie

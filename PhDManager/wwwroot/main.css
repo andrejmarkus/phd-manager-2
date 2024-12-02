@@ -61,6 +61,10 @@
     width: 50vw;
 }
 
+.width-three-quarters {
+    width: 75vw;
+}
+
 .width-full {
     width: 100%;
 }

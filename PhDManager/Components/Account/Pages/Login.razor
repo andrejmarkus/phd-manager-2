@@ -16,7 +16,7 @@
     <MudText Typo="Typo.h3" GutterBottom="true">External Log in</MudText>
     <MudImage Class="height-half" Src="fingerprint.svg" />
 
-    <MudStack Class="width-half" Spacing="5">
+    <MudStack Class="width-three-quarters" Spacing="5">
         <StatusMessage Message="@errorMessage" />
         <EditForm Model="Input" method="post" OnValidSubmit="LoginUser" FormName="login">
             <DataAnnotationsValidator />

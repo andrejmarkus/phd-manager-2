@@ -11,7 +11,8 @@ Po úspešnom prihlásení do aplikácie je potrebné v databáze (napr. cez pro
 ### Prístup admina:
 1. Pridávanie, mazanie a úprava rolí uživateľov v položke Admin
 2. Pridávanie, mazanie a úprava dizertačných tém v položke Theses (Pre pridanie témy je nutné mať aspoň jedného uživateľa s rolou Teacher)
-3. Potvrdzovanie dizertačných tém
+3. Mazanie a úprava komentárov pri nepotvrdených dizertačných prácach (Pre pridávanie komentárov je potrebné mať rolu Reviewer)
+4. Potvrdzovanie dizertačných tém
 
 ## Momentálny stav aplikácie
 V súčasnom stave aplikácia obsahuje:
@@ -23,7 +24,9 @@ V súčasnom stave aplikácia obsahuje:
 6. Mazanie dizertačných tém - tému dokáže zmazať admin alebo učiteľ
 7. Potvrdzovanie dizertačných tém - téma po pridaní nie je potvrdená a je nutné aby bola potvrdená adminom
 8. Komentovanie dizertačných tém - téma, ktorá čaká na pridanie môže byť okomentovaná uživateľom s rolou Reviewer (Potrebné pre výhrady a možné úpravy k téme)
-9. Zobrazovanie potvrdených dizertačných tém - potvrdené témy si môže zobraziť ktokoľvek
+9. Mazanie komentárov dizertačných prác
+10. Úprava komentárov dizertačných prác
+11. Zobrazovanie potvrdených dizertačných tém - potvrdené témy si môže zobraziť ktokoľvek
 
 ## Použité technológie
 1. Aplikácia - Blazor Web App (Server)

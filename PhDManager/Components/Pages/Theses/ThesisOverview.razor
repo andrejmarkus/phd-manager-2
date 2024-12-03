@@ -10,82 +10,95 @@
 @inject UserManager<ApplicationUser> UserManager
 @inject UsersService UsersService
 @inject NavigationManager NavigationManager
+@inject IDialogService DialogService
 
 <PageTitle>Thesis</PageTitle>
 
 @if (_thesis is not null)
 {
-    <MudContainer>
-        <div>
-            <MudText Typo="Typo.h5">Názov témy dizertačnej práce</MudText>
-            <MudText Typo="Typo.body1">@_thesis.Title</MudText>
-        </div>
-        @if (_thesis.TitleEnglish is not null)
-        {
-            <div>
-                <MudText Typo="Typo.h5">Title of the dissertation thesis</MudText>
-                <MudText Typo="Typo.body1">@_thesis.TitleEnglish</MudText>
-            </div>
-        }
-        <div>
-            <MudText Typo="Typo.h5">Školiteľ</MudText>
-            <MudText Typo="Typo.body1">@_supervisor.DisplayName</MudText>
-        </div>
-        <div>
-            <MudText Typo="Typo.h5">Študijný odbor</MudText>
-            <MudText Typo="Typo.body1">@_studyProgram.Name</MudText>
-        </div>
-        <div>
-            <MudText Typo="Typo.h5">Detailnejší opis problému</MudText>
-            <MudText Typo="Typo.body1">@_thesis.Description</MudText>
-        </div>
-        @if (_thesis.DescriptionEnglish is not null)
-        {
-            <div>
-                <MudText Typo="Typo.h5">Detailed description of the problem</MudText>
-                <MudText Typo="Typo.body1">@_thesis.DescriptionEnglish</MudText>
-            </div>
-        }
-        <div>
-            <MudText Typo="Typo.h5">Predpokladaný vedecký prínos</MudText>
-            <MudText Typo="Typo.body1">@_thesis.ScientificContribution</MudText>
-        </div>
-        <div>
-            <MudText Typo="Typo.h5">Odporučány postup vedeckého bádania</MudText>
-            <MudText Typo="Typo.body1">@_thesis.ScientificProgress</MudText>
-        </div>
-        <div>
-            <MudText Typo="Typo.h5">Druh výskumu</MudText>
-            <MudText Typo="Typo.body1">@_thesis.ResearchType</MudText>
-        </div>
-        <div>
-            <MudText Typo="Typo.h5">Výskumná úloha, ktorej súčasťou bude riešená téma</MudText>
-            <MudText Typo="Typo.body1">@_thesis.ResearchTask</MudText>
-        </div>
-        <div>
-            <MudText Typo="Typo.h5">Doterajšie výsledky riešenia na školiacom pracovisku, vrátane odkazov na dostupné zdroje</MudText>
-            <MudText Typo="Typo.body1">@_thesis.SolutionResults</MudText>
-        </div>
-        <AuthorizeView Roles="Admin, Teacher">
-            <Authorized>
-                <div class="d-flex gap-1">
-                    <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="@($"/theses/{_thesis.Guid}/edit")">Edit</MudButton>
-                    <MudButton Variant="Variant.Filled" Color="Color.Error" OnClick="@(() => DeleteThesis(_thesis.Id))">Delete</MudButton>
+    <MudText Align="Align.Center" Typo="Typo.h4">@_thesis.Title</MudText>
+    <MudPaper Class="pa-2">
+        <MudStack Spacing="5">
+            @if (_thesis.TitleEnglish is not null)
+            {
+                <div>
+                    <MudText Typo="Typo.h6">Title of the dissertation thesis</MudText>
+                    <MudText Typo="Typo.body1">@_thesis.TitleEnglish</MudText>
                 </div>
-            </Authorized>
-        </AuthorizeView>
-    </MudContainer>
+            }
+            <div>
+                <MudText Typo="Typo.h6">Školiteľ</MudText>
+                <MudText Typo="Typo.body1">@_supervisor.DisplayName</MudText>
+            </div>
+            <div>
+                <MudText Typo="Typo.h6">Študijný odbor</MudText>
+                <MudText Typo="Typo.body1">@_studyProgram.Name</MudText>
+            </div>
+            <div>
+                <MudText Typo="Typo.h6">Detailnejší opis problému</MudText>
+                <MudText Typo="Typo.body1">@_thesis.Description</MudText>
+            </div>
+            @if (_thesis.DescriptionEnglish is not null)
+            {
+                <div>
+                    <MudText Typo="Typo.h6">Detailed description of the problem</MudText>
+                    <MudText Typo="Typo.body1">@_thesis.DescriptionEnglish</MudText>
+                </div>
+            }
+            <div>
+                <MudText Typo="Typo.h6">Predpokladaný vedecký prínos</MudText>
+                <MudText Typo="Typo.body1">@_thesis.ScientificContribution</MudText>
+            </div>
+            <div>
+                <MudText Typo="Typo.h6">Odporučány postup vedeckého bádania</MudText>
+                <MudText Typo="Typo.body1">@_thesis.ScientificProgress</MudText>
+            </div>
+            <div>
+                <MudText Typo="Typo.h6">Druh výskumu</MudText>
+                <MudText Typo="Typo.body1">@_thesis.ResearchType</MudText>
+            </div>
+            <div>
+                <MudText Typo="Typo.h6">Výskumná úloha, ktorej súčasťou bude riešená téma</MudText>
+                <MudText Typo="Typo.body1">@_thesis.ResearchTask</MudText>
+            </div>
+            <div>
+                <MudText Typo="Typo.h6">Doterajšie výsledky riešenia na školiacom pracovisku, vrátane odkazov na dostupné zdroje</MudText>
+                <MudText Typo="Typo.body1">@_thesis.SolutionResults</MudText>
+            </div>
+            <AuthorizeView Roles="Admin, Teacher">
+                <Authorized>
+                    <div class="d-flex gap-1">
+                        <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="@($"/theses/{_thesis.Guid}/edit")">Edit</MudButton>
+                        <MudButton Variant="Variant.Filled" Color="Color.Error" OnClick="@(() => DeleteThesis(_thesis.Id))">Delete</MudButton>
+                    </div>
+                </Authorized>
+            </AuthorizeView>
+        </MudStack>
+    </MudPaper>
     @if (!_thesis.IsApproved)
     {
         <AuthorizeView Roles="Admin, Teacher, Reviewer">
             <Authorized>
-                <MudContainer>
-                    @if (_comments is not null) {
+                <MudStack Class="mt-5">
+                    <MudText Typo="Typo.h6">Comments</MudText>
+                    @if (_comments?.Count() > 0) {
                         @foreach (var comment in _thesis.Comments)
                         {
                             <MudPaper Class="pa-2">
-                                    <MudText Typo="Typo.h6">@comment.Reviewer.DisplayName</MudText>
-                                    <MudText Typo="Typo.body1">@comment.Text</MudText>
+                                <MudStack Row Justify="Justify.SpaceBetween" AlignItems="AlignItems.Center">
+                                    <div>
+                                        <MudText Typo="Typo.h6">@comment.Reviewer.DisplayName</MudText>
+                                        <MudText Typo="Typo.body1">@comment.Text</MudText>
+                                    </div>
+                                    <AuthorizeView Roles="Admin, Reviewer" Context="editContext">
+                                        <Authorized>
+                                            <div>
+                                                <MudIconButton Size="@Size.Medium" Icon="@Icons.Material.Outlined.Delete" OnClick="@(() => DeleteComment(comment))" />
+                                                <MudIconButton Size="@Size.Medium" Icon="@Icons.Material.Outlined.Edit" OnClick="@(() => UpdateComment(comment))" />
+                                            </div>
+                                        </Authorized>
+                                    </AuthorizeView>
+                                </MudStack>
                             </MudPaper>
                         }
                     }
@@ -94,7 +107,7 @@
                             <MudTextField @bind-Value="_commentText" Label="Comment" Variant="Variant.Outlined" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Send" OnAdornmentClick="PostComment"></MudTextField>
                         </Authorized>
                     </AuthorizeView>
-                </MudContainer>
+                </MudStack>
             </Authorized>
         </AuthorizeView>
     }
@@ -120,6 +133,20 @@
         _comments = await UnitOfWork.Comments.GetAllByThesisAsync(_thesis.Id);
     }
 
+    private async Task UpdateComment(Comment comment)
+    {
+        var parameters = new DialogParameters<EditCommentDialog> { { x => x.Comment, comment } };
+        var dialog = await DialogService.ShowAsync<EditCommentDialog>("Edit Comment", parameters);
+        var result = await dialog.Result;
+
+        if (!result.Canceled) {
+            var updatedComment = result.Data as Comment;
+            await UnitOfWork.Comments.UpdateAsync(updatedComment.Id, updatedComment);
+            await UnitOfWork.CompleteAsync();
+            _comments = await UnitOfWork.Comments.GetAllByThesisAsync(_thesis.Id);
+        }
+    }
+
     private async Task PostComment()
     {
         Comment comment = new Comment
@@ -130,6 +157,8 @@
         };
         await UnitOfWork.Comments.AddAsync(comment);
         await UnitOfWork.CompleteAsync();
+        _comments = _comments?.Append(comment);
+        _commentText = string.Empty;
     }
 
     private async Task DeleteThesis(int id)
@@ -139,10 +168,11 @@
         NavigationManager.NavigateTo("/theses");
     }
 
-    private async Task UpdateComment(Comment comment)
+    private async Task DeleteComment(Comment comment)
     {
-        await UnitOfWork.Comments.UpdateAsync(comment.Id, comment);
+        await UnitOfWork.Comments.DeleteAsync(comment.Id);
         await UnitOfWork.CompleteAsync();
+        _comments = _comments?.Where(c => c.Id != comment.Id);
     }
 
 }

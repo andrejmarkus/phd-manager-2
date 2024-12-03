@@ -1,0 +1,30 @@
+﻿@using PhDManager.Models
+@using PhDManager.Services.IRepositories
+
+<MudDialog>
+    <TitleContent>
+        <MudText Typo="Typo.h6">Edit comment</MudText>
+    </TitleContent>
+    <DialogContent>
+        <MudTextField @bind-Value="@Comment.Text" Label="Comment" />
+    </DialogContent>
+    <DialogActions>
+        <MudButton Color="Color.Primary" OnClick="UpdateComment">Edit</MudButton>
+        <MudButton OnClick="Cancel">Cancel</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter]
+    private MudDialogInstance MudDialog { get; set; }
+
+    [Parameter]
+    public Comment Comment { get; set; } = new Comment();
+
+    private void Cancel() => MudDialog.Cancel();
+
+    private void UpdateComment()
+    {
+        MudDialog.Close(DialogResult.Ok(Comment));
+    }
+}

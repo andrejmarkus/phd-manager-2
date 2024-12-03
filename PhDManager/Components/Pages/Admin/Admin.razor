@@ -94,6 +94,7 @@
     private async Task DeleteUser(UserInfo userInfo)
     {
         await UsersService.DeleteUserAsync(userInfo.User);
+        _users = _users.Where(u => u.User.Id != userInfo.User.Id).ToArray();
     }
 
     private sealed class UserInfo(ApplicationUser user, string role)

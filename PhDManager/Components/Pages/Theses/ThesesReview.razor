@@ -5,6 +5,7 @@
 @using PhDManager.Services.IRepositories
 
 @inject IUnitOfWork UnitOfWork
+@inject NavigationManager NavigationManager
 
 @attribute [Authorize(Roles = "Admin, Teacher, Reviewer")]
 
@@ -25,7 +26,7 @@
                         <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="@($"/theses/{thesis.Guid}")">Detail</MudButton>
                         <AuthorizeView Roles="Admin, Reviewer">
                             <Authorized>
-                                    <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@(() => AcceptThesis(thesis))">Accept</MudButton>
+                                <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@(() => AcceptThesis(thesis))">Accept</MudButton>
                             </Authorized>
                         </AuthorizeView>
                     </div>
@@ -48,5 +49,6 @@
         thesis.IsApproved = true;
         await UnitOfWork.Theses.UpdateAsync(thesis.Id, thesis);
         await UnitOfWork.CompleteAsync();
+        Theses = Theses?.Where(t => t.Id != thesis.Id);
     }
 }

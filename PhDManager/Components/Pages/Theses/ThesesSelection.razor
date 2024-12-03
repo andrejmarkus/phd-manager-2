@@ -67,5 +67,6 @@
     {
         await UnitOfWork.Theses.DeleteAsync(id);
         await UnitOfWork.CompleteAsync();
+        Theses = Theses?.Where(t => t.Id != id);
     }
 }

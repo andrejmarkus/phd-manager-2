@@ -134,7 +134,8 @@
         await UserStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
         await emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
 
-        user.DisplayName = ProviderDisplayName;
+        // TODO: Make it work for all providers
+        user.DisplayName = externalLoginInfo.Principal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
 
         var result = await UserManager.CreateAsync(user);
         await UserManager.AddToRoleAsync(user, "Reviewer");

@@ -8,7 +8,7 @@
         public string Semester { get; set; } = string.Empty;
         public int Credits { get; set; }
 
-        public StudyProgram StudyProgram { get; set; } = default!;
-        public List<Thesis> Theses { get; set; } = new List<Thesis>();
+        public virtual StudyProgram StudyProgram { get; set; } = default!;
+        public virtual List<Thesis> Theses { get; set; } = new List<Thesis>();
     }
 }

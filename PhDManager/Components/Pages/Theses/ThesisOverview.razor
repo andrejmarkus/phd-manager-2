@@ -28,11 +28,11 @@
             }
             <div>
                 <MudText Typo="Typo.h6">Školiteľ</MudText>
-                <MudText Typo="Typo.body1">@_supervisor.DisplayName</MudText>
+                <MudText Typo="Typo.body1">@_thesis.Supervisor.DisplayName</MudText>
             </div>
             <div>
                 <MudText Typo="Typo.h6">Študijný odbor</MudText>
-                <MudText Typo="Typo.body1">@_studyProgram.Name</MudText>
+                <MudText Typo="Typo.body1">@_thesis.StudyProgram.Name</MudText>
             </div>
             <div>
                 <MudText Typo="Typo.h6">Detailnejší opis problému</MudText>
@@ -81,7 +81,7 @@
             <Authorized>
                 <MudStack Class="mt-5">
                     <MudText Typo="Typo.h6">Comments</MudText>
-                    @if (_comments?.Count() > 0) {
+                    @if (_thesis.Comments?.Count() > 0) {
                         @foreach (var comment in _thesis.Comments)
                         {
                             <MudPaper Class="pa-2">
@@ -118,9 +118,6 @@
     public string ThesisGuid { get; set; }
 
     private Thesis _thesis;
-    private ApplicationUser _supervisor;
-    private StudyProgram _studyProgram;
-    private IEnumerable<Comment>? _comments;
 
     private string _commentText;
 
@@ -128,9 +125,6 @@
     {
         // TODO: Make model return supervisor, study program, comments
         _thesis = await UnitOfWork.Theses.GetByGuidAsync(ThesisGuid);
-        _supervisor = await UserManager.FindByIdAsync(_thesis.SupervisorId);
-        _studyProgram = await UnitOfWork.StudyPrograms.GetByIdAsync(_thesis.StudyProgramId);
-        _comments = await UnitOfWork.Comments.GetAllByThesisAsync(_thesis.Id);
     }
 
     private async Task UpdateComment(Comment comment)
@@ -143,7 +137,7 @@
             var updatedComment = result.Data as Comment;
             await UnitOfWork.Comments.UpdateAsync(updatedComment.Id, updatedComment);
             await UnitOfWork.CompleteAsync();
-            _comments = await UnitOfWork.Comments.GetAllByThesisAsync(_thesis.Id);
+            _thesis = await UnitOfWork.Theses.GetByGuidAsync(ThesisGuid);
         }
     }
 
@@ -157,8 +151,8 @@
         };
         await UnitOfWork.Comments.AddAsync(comment);
         await UnitOfWork.CompleteAsync();
-        _comments = _comments?.Append(comment);
         _commentText = string.Empty;
+        _thesis = await UnitOfWork.Theses.GetByGuidAsync(ThesisGuid);
     }
 
     private async Task DeleteThesis(int id)
@@ -172,7 +166,7 @@
     {
         await UnitOfWork.Comments.DeleteAsync(comment.Id);
         await UnitOfWork.CompleteAsync();
-        _comments = _comments?.Where(c => c.Id != comment.Id);
+        _thesis = await UnitOfWork.Theses.GetByGuidAsync(ThesisGuid);
     }
 
 }

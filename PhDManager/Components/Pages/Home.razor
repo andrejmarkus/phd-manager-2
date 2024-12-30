@@ -11,20 +11,20 @@
         <Authorized>
             <MudStack Class="height-full" Justify="Justify.Center" AlignItems="AlignItems.Center">
                 <MudText Typo="Typo.h3">Welcome, @context.User.Identity.Name</MudText>
-                <MudText>Use sidebar to navigate around.</MudText>
+                <MudText>Pre navigáciu použite bočný panel.</MudText>
             </MudStack>
         </Authorized>
         <NotAuthorized>
             <div class="full-size responsive-row">
                 <div>
-                    <MudText Typo="Typo.h3">Make your study <span class="underline">easier</span></MudText>
-                    <MudText Typo="Typo.h4">Join now and see the difference!</MudText>
-                    <MudButton Class="mr-2" Variant="Variant.Filled" Color="Color.Primary" OnClick="@(() => NavigationManager.NavigateTo("Account/Login"))">Log In</MudButton>
-                    <MudButton Variant="Variant.Filled" Color="Color.Info" OnClick="@(() => NavigationManager.NavigateTo("theses"))">Search Theses</MudButton>
+                    <MudText Typo="Typo.h3"><span class="underline">Uľahčite</span> si štúdium.</MudText>
+                    <MudText Typo="Typo.h5">Prihláste sa a zahoďte papiere za hlavu!</MudText>
+                    <MudButton Class="mr-2" Variant="Variant.Filled" Color="Color.Primary" OnClick="@(() => NavigationManager.NavigateTo("Account/Login"))">Prihlásiť sa</MudButton>
+                    <MudButton Variant="Variant.Filled" Color="Color.Info" OnClick="@(() => NavigationManager.NavigateTo("theses"))">Nájdi tému</MudButton>
                 </div>
                 <div class="container-image landing-basis">
                     <div class="circle-image"></div>
-                    <MudImage Class="full-size" Src="digital-nomad.svg" />
+                    <MudImage Class="full-size" Src="@Assets["digital-nomad.svg"]" />
                 </div>
             </div>
         </NotAuthorized>

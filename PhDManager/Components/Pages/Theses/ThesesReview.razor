@@ -9,9 +9,9 @@
 
 @attribute [Authorize(Roles = "Admin, Teacher, Reviewer")]
 
-<PageTitle>Theses Review</PageTitle>
+<PageTitle>Dizertačné témy čakajúce na potvrdenie</PageTitle>
 
-<MudText Typo="Typo.h3" GutterBottom="true">Theses Review</MudText>
+<MudText Typo="Typo.h3" GutterBottom="true">Dizertačné témy čakajúce na potvrdenie</MudText>
 
 <MudGrid>
     @if (Theses is not null)
@@ -26,7 +26,7 @@
                         <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="@($"/theses/{thesis.Guid}")">Detail</MudButton>
                         <AuthorizeView Roles="Admin, Reviewer">
                             <Authorized>
-                                <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@(() => AcceptThesis(thesis))">Accept</MudButton>
+                                <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@(() => AcceptThesis(thesis))">Potvrdiť</MudButton>
                             </Authorized>
                         </AuthorizeView>
                     </div>

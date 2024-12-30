@@ -10,5 +10,11 @@ namespace PhDManager.Data
         public DbSet<Subject> Subjects { get; init; }
         public DbSet<StudyProgram> StudyPrograms { get; init; }
         public DbSet<Registration> Registrations { get; init; }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            base.OnConfiguring(optionsBuilder);
+            optionsBuilder.UseLazyLoadingProxies();
+        }
     }
 }

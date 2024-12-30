@@ -22,30 +22,30 @@
 <PageTitle>Log in</PageTitle>
 
 <MudStack AlignItems="AlignItems.Center" Justify="Justify.Center">
-    <MudText Typo="Typo.h3" GutterBottom="true">Log in</MudText>
-    <MudImage Class="height-half" Src="fingerprint.svg" />
+    <MudText Typo="Typo.h3" GutterBottom="true">Prihlásenie</MudText>
+    <MudImage Class="height-half" Src="@Assets["fingerprint.svg"]" />
 
     <MudStack Class="width-three-quarters" Spacing="5">
         <StatusMessage Message="@errorMessage" />
         <EditForm Model="Input" method="post" OnValidSubmit="LoginUser" FormName="login">
             <DataAnnotationsValidator />
 
-            <MudText GutterBottom="true" Typo="Typo.body1">Use a local account to log in.</MudText>
+            <MudText GutterBottom="true" Typo="Typo.body1">Použi LDAP účet na prihlásenie.</MudText>
 
             <MudStack Spacing="3">
                 <MudStaticTextField For="@(() => Input.Username)" @bind-Value="Input.Username" 
-                    Label="Username" Placeholder="username"
+                    Label="Uživateľské meno" Placeholder="uživateľské meno"
                     UserAttributes="@(new() { { "autocomplete", "true" }, { "aria-required", "true" } } )" />
                 <MudStaticTextField For="@(() => Input.Password)" @bind-Value="Input.Password" 
-                    Label="Password" InputType="InputType.Password" Placeholder="password" 
+                    Label="Heslo" InputType="InputType.Password" Placeholder="heslo" 
                     UserAttributes="@(new() { { "autocomplete", "current-password" }, { "aria-required", "true" } } )" />
-                <MudStaticCheckBox For="@(() => Input.RememberMe)" @bind-Value="Input.RememberMe">Remember me</MudStaticCheckBox>
-                <MudStaticButton Variant="Variant.Filled" Color="Color.Primary" FullWidth="true" FormAction="FormAction.Submit">Log in</MudStaticButton>
+                <MudStaticCheckBox For="@(() => Input.RememberMe)" @bind-Value="Input.RememberMe">Zapamätať si prihlásenie</MudStaticCheckBox>
+                <MudStaticButton Variant="Variant.Filled" Color="Color.Primary" FullWidth="true" FormAction="FormAction.Submit">Prihlásiť sa</MudStaticButton>
             </MudStack>
         </EditForm>
 
         <MudStack Class="mt-4">
-            <MudLink Href="Account/LoginExtern">Are you an extern?</MudLink>
+            <MudLink Href="Account/LoginExtern">Som externista.</MudLink>
         </MudStack>
     </MudStack>
 </MudStack>

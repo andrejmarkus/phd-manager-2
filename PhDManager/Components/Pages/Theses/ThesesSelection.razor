@@ -12,19 +12,19 @@
 
 <PageTitle>Theses</PageTitle>
 
-<MudText Typo="Typo.h3" GutterBottom="true">Theses</MudText>
+<MudText Typo="Typo.h3" GutterBottom="true">Dizertačné témy</MudText>
 
 <div class="d-flex justify-space-between">
-    <MudText Typo="Typo.h6">Theses</MudText>
+    <MudText Typo="Typo.h6">Dizertačné témy</MudText>
     <div class="d-flex gap-1">
         <AuthorizeView Roles="Teacher, Admin">
             <Authorized>
-                <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="/theses/add">Add thesis</MudButton>
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="/theses/add">Pridať tému</MudButton>
             </Authorized>
         </AuthorizeView>
         <AuthorizeView Roles="Teacher, Admin, Reviewer">
             <Authorized>
-                <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="/theses/review">Review Theses</MudButton>
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="/theses/review">Potvrdiť tému</MudButton>
             </Authorized>
         </AuthorizeView>
     </div>
@@ -38,13 +38,13 @@
                 <MudPaper Class="pa-2">
                     <MudText Typo="Typo.h6">@thesis.Title</MudText>
                     <MudText Typo="Typo.body2">@thesis.Description</MudText>
-                    <div class="d-flex justify-space-between">
+                    <div class="d-flex justify-space-between mt-2">
                         <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="@($"/theses/{thesis.Guid}")">Detail</MudButton>
                         <AuthorizeView Roles="Admin, Teacher">
                             <Authorized>
                                 <div class="d-flex gap-1">
-                                    <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="@($"/theses/{thesis.Guid}/edit")">Edit</MudButton>
-                                    <MudButton Variant="Variant.Filled" Color="Color.Error" OnClick="@(() => DeleteThesis(thesis.Id))">Delete</MudButton>
+                                    <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="@($"/theses/{thesis.Guid}/edit")">Uprav</MudButton>
+                                    <MudButton Variant="Variant.Filled" Color="Color.Error" OnClick="@(() => DeleteThesis(thesis.Id))">Vymaž</MudButton>
                                 </div>
                             </Authorized>
                         </AuthorizeView>

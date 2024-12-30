@@ -10,9 +10,9 @@ namespace PhDManager.Models
         public DateTime Created { get; set; }
 
         public string ReviewerId { get; set; }
-        public ApplicationUser Reviewer { get; set; }
+        public virtual ApplicationUser Reviewer { get; set; }
 
         public int ThesisId { get; set; }
-        public Thesis Thesis { get; set; }
+        public virtual Thesis Thesis { get; set; }
     }
 }

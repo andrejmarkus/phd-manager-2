@@ -3,14 +3,14 @@
 
 <MudDialog>
     <TitleContent>
-        <MudText Typo="Typo.h6">Edit comment</MudText>
+        <MudText Typo="Typo.h6">Uprav komentár</MudText>
     </TitleContent>
     <DialogContent>
-        <MudTextField @bind-Value="@Comment.Text" Label="Comment" />
+        <MudTextField @bind-Value="@Comment.Text" Label="Komentár" />
     </DialogContent>
     <DialogActions>
-        <MudButton Color="Color.Primary" OnClick="UpdateComment">Edit</MudButton>
-        <MudButton OnClick="Cancel">Cancel</MudButton>
+        <MudButton Color="Color.Primary" OnClick="UpdateComment">Uprav</MudButton>
+        <MudButton OnClick="Cancel">Zrušiť</MudButton>
     </DialogActions>
 </MudDialog>
 

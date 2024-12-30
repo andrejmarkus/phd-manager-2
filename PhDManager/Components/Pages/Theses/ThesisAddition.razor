@@ -26,10 +26,10 @@
     {
         <MudTextField T="string" Label="Title of the dissertation thesis" Variant="Variant.Outlined" @bind-Value="_thesis.TitleEnglish" />
     }
-    <MudAutocomplete T="ApplicationUser" Required RequiredError="Je zvoliť školiteľa!" Label="Školiteľ" ToStringFunc="@(u => u is null ? null : u.DisplayName)" SearchFunc="SearchTeachers" Variant="Variant.Outlined" @bind-Value="_selectedSupervisor" />
+    <MudAutocomplete T="ApplicationUser" Required RequiredError="Je zvoliť školiteľa!" Label="Školiteľ" ToStringFunc="@(u => u is null ? null : u.DisplayName)" SearchFunc="SearchTeachers" Variant="Variant.Outlined" @bind-Value="_thesis.Supervisor" />
     
     <MudText Typo="Typo.h5">Zaradenie témy</MudText>
-    <MudAutocomplete T="StudyProgram" Required RequiredError="Je nutné zvoliť študijný odbor!" Label="Študijný odbor" ToStringFunc="@(sp => sp is null ? null : sp.Name)" Variant="Variant.Outlined" SearchFunc="SearchStudyPrograms" @bind-Value="_selectedStudyProgram" />
+    <MudAutocomplete T="StudyProgram" Required RequiredError="Je nutné zvoliť študijný odbor!" Label="Študijný odbor" ToStringFunc="@(sp => sp is null ? null : sp.Name)" Variant="Variant.Outlined" SearchFunc="SearchStudyPrograms" @bind-Value="_thesis.StudyProgram" />
     <div class="d-flex gap-1">
         <MudCheckBox T="bool" @bind-bind-Value="_thesis.DailyStudy">denná</MudCheckBox>
         <MudCheckBox T="bool" @bind-Value="_thesis.ExternalStudy">externá</MudCheckBox>
@@ -57,13 +57,11 @@
 
 @code {
     private MudForm? _form;
-    private Thesis _thesis = new Thesis();
     private IEnumerable<ApplicationUser> _teachers;
     private IEnumerable<StudyProgram>? _studyPrograms;
-    private bool _isEnglish = false;
 
-    private ApplicationUser? _selectedSupervisor;
-    private StudyProgram? _selectedStudyProgram;
+    private Thesis _thesis = new Thesis();
+    private bool _isEnglish = false;
 
     protected override async Task OnInitializedAsync()
     {
@@ -97,9 +95,6 @@
 
         if (_form.IsValid)
         {
-            _thesis.SupervisorId = _selectedSupervisor.Id;
-            _thesis.StudyProgramId = _selectedStudyProgram.Id;
-
             await UnitOfWork.Theses.AddAsync(_thesis);
             await UnitOfWork.CompleteAsync();
             NavigationManager.NavigateTo("/theses");

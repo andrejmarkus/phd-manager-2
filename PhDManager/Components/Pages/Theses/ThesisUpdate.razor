@@ -28,10 +28,10 @@
         {
             <MudTextField T="string" Label="Title of the dissertation thesis" Variant="Variant.Outlined" @bind-Value="_thesis.TitleEnglish" />
         }
-        <MudAutocomplete T="ApplicationUser" Required RequiredError="Je zvoliť školiteľa!" Label="Školiteľ" ToStringFunc="@(u => u is null ? null : u.DisplayName)" SearchFunc="SearchTeachers" Variant="Variant.Outlined" @bind-Value="_selectedSupervisor" />
+        <MudAutocomplete T="ApplicationUser" Required RequiredError="Je zvoliť školiteľa!" Label="Školiteľ" ToStringFunc="@(u => u is null ? null : u.DisplayName)" SearchFunc="SearchTeachers" Variant="Variant.Outlined" @bind-Value="_thesis.Supervisor" />
 
         <MudText Typo="Typo.h5">Zaradenie témy</MudText>
-        <MudAutocomplete T="StudyProgram" Required RequiredError="Je nutné zvoliť študijný odbor!" Label="Študijný odbor" ToStringFunc="@(sp => sp is null ? null : sp.Name)" Variant="Variant.Outlined" SearchFunc="SearchStudyPrograms" @bind-Value="_selectedStudyProgram" />
+        <MudAutocomplete T="StudyProgram" Required RequiredError="Je nutné zvoliť študijný odbor!" Label="Študijný odbor" ToStringFunc="@(sp => sp is null ? null : sp.Name)" Variant="Variant.Outlined" SearchFunc="SearchStudyPrograms" @bind-Value="_thesis.StudyProgram" />
         <div class="d-flex gap-1">
             <MudCheckBox T="bool" @bind-bind-Value="_thesis.DailyStudy">denná</MudCheckBox>
             <MudCheckBox T="bool" @bind-Value="_thesis.ExternalStudy">externá</MudCheckBox>
@@ -60,31 +60,31 @@
 
 @code {
     [Parameter]
-    public string ThesisGuid { get; set; }
+    public string ThesisGuid { get; set; } = default!;
 
     private MudForm? _form;
-    private IEnumerable<ApplicationUser> _teachers;
+    private IEnumerable<ApplicationUser> _teachers = default!;
     private IEnumerable<StudyProgram>? _studyPrograms;
 
     private Thesis? _thesis;
     private bool _isEnglish;
 
-    private ApplicationUser? _selectedSupervisor;
-    private StudyProgram? _selectedStudyProgram;
-
     protected override async Task OnInitializedAsync()
     {
+        _thesis = await UnitOfWork.Theses.GetByGuidAsync(ThesisGuid);
+        _isEnglish = _thesis?.TitleEnglish is not null;
+
+        if ((await UsersService.GetCurrentUserIdAsync())?.Equals(_thesis?.SupervisorId) == false)
+        {
+            NavigationManager.NavigateTo("/theses");
+        }
+
         using (var scope = ServiceProvider.CreateScope())
         {
             var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
             _teachers = await userManager.Users.ToAsyncEnumerable().WhereAwait(async u => (await UsersService.GetUserRoleAsync(u)) == "Teacher").ToArrayAsync();
             _studyPrograms = await UnitOfWork.StudyPrograms.GetAllAsync();
         }
-
-        _thesis = await UnitOfWork.Theses.GetByGuidAsync(ThesisGuid);
-        _isEnglish = !string.IsNullOrWhiteSpace(_thesis.TitleEnglish);
-        _selectedSupervisor = _teachers.FirstOrDefault(t => t.Id == _thesis.SupervisorId);
-        _selectedStudyProgram = _studyPrograms.FirstOrDefault(sp => sp.Id == _thesis.StudyProgramId);
     }
 
     private async Task<IEnumerable<ApplicationUser>> SearchTeachers(string search, CancellationToken token)
@@ -109,9 +109,6 @@
 
         if (_form.IsValid)
         {
-            _thesis.SupervisorId = _selectedSupervisor.Id;
-            _thesis.StudyProgramId = _selectedStudyProgram.Id;
-
             await UnitOfWork.Theses.UpdateAsync(_thesis.Id, _thesis);
             await UnitOfWork.CompleteAsync();
             NavigationManager.NavigateTo("/theses");

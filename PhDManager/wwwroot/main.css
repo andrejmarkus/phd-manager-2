@@ -93,6 +93,10 @@
     margin: 0 !important;
 }
 
+.gap-3 {
+    gap: 0.75rem;
+}
+
 .responsive-row {
     display: flex;
     flex-direction: row;

@@ -14,15 +14,15 @@
 <MudText Typo="Typo.h3" GutterBottom="true">Dizertačné témy čakajúce na potvrdenie</MudText>
 
 <MudGrid>
-    @if (Theses is not null)
+    @if (_theses is not null)
     {
-        @foreach (var thesis in Theses)
+        @foreach (var thesis in _theses)
         {
             <MudItem xs="12" md="6">
                 <MudPaper Class="pa-2">
                     <MudText Typo="Typo.h6">@thesis.Title</MudText>
                     <MudText Typo="Typo.body2">@thesis.Description</MudText>
-                    <div class="d-flex justify-space-between">
+                    <div class="d-flex justify-space-between mt-2">
                         <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="@($"/theses/{thesis.Guid}")">Detail</MudButton>
                         <AuthorizeView Roles="Admin, Reviewer">
                             <Authorized>
@@ -37,11 +37,11 @@
 </MudGrid>
 
 @code {
-    IEnumerable<Thesis>? Theses;
+    private IEnumerable<Thesis>? _theses;
 
     protected override async Task OnInitializedAsync()
     {
-        Theses = (await UnitOfWork.Theses.GetAllAsync()).Where(t => !t.IsApproved).ToArray();
+        _theses = (await UnitOfWork.Theses.GetAllAsync()).Where(t => !t.IsApproved).ToArray();
     }
 
     private async Task AcceptThesis(Thesis thesis)
@@ -49,6 +49,6 @@
         thesis.IsApproved = true;
         await UnitOfWork.Theses.UpdateAsync(thesis.Id, thesis);
         await UnitOfWork.CompleteAsync();
-        Theses = Theses?.Where(t => t.Id != thesis.Id);
+        _theses = _theses?.Where(t => t.Id != thesis.Id);
     }
 }

@@ -90,12 +90,23 @@
                                         <MudText Typo="Typo.h6">@comment.Reviewer.DisplayName</MudText>
                                         <MudText Typo="Typo.body1">@comment.Text</MudText>
                                     </div>
-                                    <AuthorizeView Roles="Admin, Reviewer" Context="editContext">
+                                    <AuthorizeView Roles="Admin" Context="editContext">
                                         <Authorized>
                                             <div>
                                                 <MudIconButton Size="@Size.Medium" Icon="@Icons.Material.Outlined.Delete" OnClick="@(() => DeleteComment(comment))" />
                                                 <MudIconButton Size="@Size.Medium" Icon="@Icons.Material.Outlined.Edit" OnClick="@(() => UpdateComment(comment))" />
                                             </div>
+                                        </Authorized>
+                                    </AuthorizeView>
+                                    <AuthorizeView Roles="Reviewer" Context="editContext">
+                                        <Authorized>
+                                            @if (_currentUserId?.Equals(comment.ReviewerId) == true)
+                                            {
+                                                <div>
+                                                    <MudIconButton Size="@Size.Medium" Icon="@Icons.Material.Outlined.Delete" OnClick="@(() => DeleteComment(comment))" />
+                                                    <MudIconButton Size="@Size.Medium" Icon="@Icons.Material.Outlined.Edit" OnClick="@(() => UpdateComment(comment))" />
+                                                </div>
+                                            }
                                         </Authorized>
                                     </AuthorizeView>
                                 </MudStack>
@@ -118,13 +129,14 @@
     public string ThesisGuid { get; set; }
 
     private Thesis _thesis;
+    private string? _currentUserId;
 
     private string _commentText;
 
     protected override async Task OnInitializedAsync()
     {
-        // TODO: Make model return supervisor, study program, comments
         _thesis = await UnitOfWork.Theses.GetByGuidAsync(ThesisGuid);
+        _currentUserId = await UsersService.GetCurrentUserIdAsync();
     }
 
     private async Task UpdateComment(Comment comment)

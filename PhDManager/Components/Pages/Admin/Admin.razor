@@ -26,11 +26,11 @@
         <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@(() => _visible = true)">Add user</MudButton>
     </ToolBarContent>
     <Columns>
-        <PropertyColumn Property="u => u.User.UserName" Title="Username" Editable="false" />
-        <PropertyColumn Property="u => u.User.DisplayName" Title="Display name" Editable="false" />
+        <PropertyColumn Property="u => u.User.UserName" Title="Používateľské meno" Editable="false" />
+        <PropertyColumn Property="u => u.User.DisplayName" Title="Celé meno" Editable="false" />
         <PropertyColumn Property="u => u.User.Email" Title="Email" Editable="false" />
-        <PropertyColumn Property="u => u.User.EmailConfirmed" Title="Email confirmed" Editable="false" />
-        <PropertyColumn Property="u => u.Role" Title="Role" Editable="true">
+        <PropertyColumn Property="u => u.User.EmailConfirmed" Title="Potvrdený email" Editable="false" />
+        <PropertyColumn Property="u => u.Role" Title="Rola" Editable="true">
             <EditTemplate>
                 <MudSelect @bind-Value="context.Item.Role" Required>
                     @foreach (var role in _roles)
@@ -40,6 +40,13 @@
                 </MudSelect>
             </EditTemplate>
         </PropertyColumn>
+        <PropertyColumn Property="u => u.User.Birthdate" Title="Dátum narodenia" Editable="true" Hidden Required="false" />
+        <PropertyColumn Property="u => u.User.PhoneNumber" Title="Telefónne číslo" Editable="true" Hidden Required="false" />
+        <PropertyColumn Property="u => u.User.Address.Street" Title="Ulica" Editable="true" Hidden Required="false" />
+        <PropertyColumn Property="u => u.User.Address.HouseNumber" Title="Číslo domu" Editable="true" Hidden Required="false" />
+        <PropertyColumn Property="u => u.User.Address.City" Title="Obec" Editable="true" Hidden Required="false" />
+        <PropertyColumn Property="u => u.User.Address.PostalCode" Title="PSČ" Editable="true" Hidden Required="false" />
+        <PropertyColumn Property="u => u.User.Address.Country" Title="Štát" Editable="true" Hidden Required="false" />
         <TemplateColumn CellClass="d-flex justify-end">
             <CellTemplate>
                 <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Delete" OnClick="@(() => DeleteUser(context.Item))" />

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using PhDManager.Data;
+using PhDManager.Models;
 
 namespace PhDManager.Services
 {
@@ -42,6 +43,7 @@ namespace PhDManager.Services
         public async Task<ApplicationUser> RegisterLdapUserWithoutPasswordAsync(LdapEntry entry)
         {
             var user = await CreateLdapUserAsync(entry);
+            user.Address = new Address();
             var result = await UserManager.CreateAsync(user);
             await UserManager.AddToRoleAsync(user, "User");
 
@@ -51,6 +53,7 @@ namespace PhDManager.Services
         public async Task<ApplicationUser> RegisterLdapUserAsync(LdapEntry entry, string password)
         {
             var user = await CreateLdapUserAsync(entry);
+            user.Address = new Address();
             var result = await UserManager.CreateAsync(user, password);
             await UserManager.AddToRoleAsync(user, "User");
 

@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using PhDManager.Data;
@@ -11,9 +12,11 @@ using PhDManager.Data;
 namespace PhDManager.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250101210757_ChangedUserPhoneNumber")]
+    partial class ChangedUserPhoneNumber
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -165,6 +168,9 @@ namespace PhDManager.Data.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("integer");
 
+                    b.Property<int>("AddressId")
+                        .HasColumnType("integer");
+
                     b.Property<DateTime?>("Birthdate")
                         .HasColumnType("timestamp with time zone");
 
@@ -220,6 +226,8 @@ namespace PhDManager.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("AddressId");
+
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
 
@@ -241,28 +249,26 @@ namespace PhDManager.Data.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("City")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Country")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("HouseNumber")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("PostalCode")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Street")
-                        .HasColumnType("text");
-
-                    b.Property<string>("UserId")
                         .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("UserId")
-                        .IsUnique();
 
                     b.ToTable("Address");
                 });
@@ -515,22 +521,19 @@ namespace PhDManager.Data.Migrations
 
             modelBuilder.Entity("PhDManager.Data.ApplicationUser", b =>
                 {
+                    b.HasOne("PhDManager.Models.Address", "Address")
+                        .WithMany("Users")
+                        .HasForeignKey("AddressId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("PhDManager.Models.StudyProgram", "StudyProgram")
                         .WithMany()
                         .HasForeignKey("StudyProgramId");
 
+                    b.Navigation("Address");
+
                     b.Navigation("StudyProgram");
-                });
-
-            modelBuilder.Entity("PhDManager.Models.Address", b =>
-                {
-                    b.HasOne("PhDManager.Data.ApplicationUser", "User")
-                        .WithOne("Address")
-                        .HasForeignKey("PhDManager.Models.Address", "UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("PhDManager.Models.Comment", b =>
@@ -599,12 +602,14 @@ namespace PhDManager.Data.Migrations
 
             modelBuilder.Entity("PhDManager.Data.ApplicationUser", b =>
                 {
-                    b.Navigation("Address")
-                        .IsRequired();
-
                     b.Navigation("Comments");
 
                     b.Navigation("SupervisorTheses");
+                });
+
+            modelBuilder.Entity("PhDManager.Models.Address", b =>
+                {
+                    b.Navigation("Users");
                 });
 
             modelBuilder.Entity("PhDManager.Models.StudyProgram", b =>

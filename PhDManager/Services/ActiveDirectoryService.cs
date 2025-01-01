@@ -1,6 +1,6 @@
 ﻿using LdapForNet;
 using Microsoft.Extensions.Options;
-using PhDManager.Core.Models;
+using PhDManager.Models.Options;
 using static LdapForNet.Native.Native;
 
 namespace PhDManager.Services

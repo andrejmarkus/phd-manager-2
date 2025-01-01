@@ -10,7 +10,7 @@ using PhDManager.Data;
 using System.Security.Claims;
 using System.Text.Json;
 
-namespace Microsoft.AspNetCore.Routing
+namespace PhDManager.Components.Account
 {
     internal static class IdentityComponentsEndpointRouteBuilderExtensions
     {

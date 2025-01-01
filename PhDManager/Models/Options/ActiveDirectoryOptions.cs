@@ -1,4 +1,4 @@
-﻿namespace PhDManager.Core.Models
+﻿namespace PhDManager.Models.Options
 {
     public class ActiveDirectoryOptions
     {

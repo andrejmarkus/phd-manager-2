@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace PhDManager.Core.ValidationModels
+namespace PhDManager.Models.Validation
 {
     public class ThesisData
     {

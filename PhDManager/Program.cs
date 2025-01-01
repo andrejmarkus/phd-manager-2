@@ -4,7 +4,6 @@ using Microsoft.EntityFrameworkCore;
 using MudBlazor.Services;
 using PhDManager.Components;
 using PhDManager.Components.Account;
-using PhDManager.Core.Models;
 using PhDManager.Data;
 using PhDManager.Models.Options;
 using PhDManager.Services;

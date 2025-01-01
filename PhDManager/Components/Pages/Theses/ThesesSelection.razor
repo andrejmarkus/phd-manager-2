@@ -8,6 +8,7 @@
 @using PhDManager.Services.IRepositories
 
 @inject IUnitOfWork UnitOfWork
+@inject IServiceProvider ServiceProvider
 @inject UsersService UsersService
 @inject UserManager<ApplicationUser> UserManager
 
@@ -28,13 +29,24 @@
     </AuthorizeView>
 </div>
 <div class="d-flex gap-3">
-    <MudTextField Class="flex-1" T="string" @bind-Value="@_search" @bind-Value:after="@(() => SearchTheses(_search))" Label="Vyhľadaj" Variant="Variant.Outlined" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Search" />
+    <MudTextField FullWidth T="string" @bind-Value="@_search" @bind-Value:after="UpdateSearch" Immediate="true" Label="Vyhľadaj" Variant="Variant.Outlined" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Search" />
     @if (_studyPrograms is not null)
     {
-        <MudSelect T="StudyProgram" @bind-Value="@_selectedStudyProgram" Label="Študíjny odbor" Variant="Variant.Outlined">
+        <MudSelect T="StudyProgram" @bind-Value="@_selectedStudyProgram" @bind-Value:after="UpdateSearch" Immediate="true" Label="Študíjny odbor" Variant="Variant.Outlined">
+            <MudSelectItem T="StudyProgram" Value="null">Všetky</MudSelectItem>
             @foreach (var studyProgram in _studyPrograms)
             {
                 <MudSelectItem Value="@studyProgram">@studyProgram.Name</MudSelectItem>
+            }
+        </MudSelect>
+    }
+    @if (_teachers is not null)
+    {
+        <MudSelect T="ApplicationUser" @bind-Value="@_selectedTeacher" @bind-Value:after="UpdateSearch" Immediate="true" Label="Školiteľ" Variant="Variant.Outlined">
+            <MudSelectItem T="ApplicationUser" Value="null">Všetci</MudSelectItem>
+            @foreach (var teacher in _teachers)
+            {
+                <MudSelectItem Value="@teacher">@teacher.DisplayName</MudSelectItem>
             }
         </MudSelect>
     }
@@ -79,16 +91,25 @@
 @code {
     private IEnumerable<Thesis>? _theses;
     private IEnumerable<StudyProgram>? _studyPrograms;
+    private IEnumerable<ApplicationUser>? _teachers;
     private string? _currentUserId;
 
-    private string _search;
+    private string _search = "";
     private StudyProgram? _selectedStudyProgram;
+    private ApplicationUser? _selectedTeacher;
 
     protected override async Task OnInitializedAsync()
     {
         var theses = await UnitOfWork.Theses.GetAllAsync();
-        _theses = theses.Where(t => t.IsApproved).ToArray();
+        _theses = theses?.Where(t => t.IsApproved).ToArray();
         _studyPrograms = await UnitOfWork.StudyPrograms.GetAllAsync();
+        _teachers = await UserManager.Users.ToAsyncEnumerable().WhereAwait(async u =>
+        {
+            using var scope = ServiceProvider.CreateScope();
+            var usersService = scope.ServiceProvider.GetRequiredService<UsersService>();
+            var role = await usersService.GetUserRoleAsync(u);
+            return role == "Teacher";
+        }).ToArrayAsync();
         _currentUserId = await UsersService.GetCurrentUserIdAsync();
     }
 
@@ -99,9 +120,15 @@
         _theses = _theses?.Where(t => t.Id != id);
     }
 
-    private async Task SearchTheses(string search)
+    private async Task UpdateSearch()
     {
         var theses = await UnitOfWork.Theses.GetAllAsync();
-        _theses = theses?.Where(t => t.IsApproved).Where(t => t.Title.ToLower().Contains(search.ToLower()) || t.TitleEnglish?.ToLower().Contains(search.ToLower()) == true).ToArray();
+        _theses = theses?.Where(t => t.IsApproved).Where(t => t.Title.ToLower().Contains(_search.ToLower()) || t.TitleEnglish?.ToLower().Contains(_search.ToLower()) == true).ToArray();
+        if (_selectedStudyProgram is not null) {
+            _theses = _theses?.Where(t => t.StudyProgram == _selectedStudyProgram).ToArray();
+        }
+        if (_selectedTeacher is not null) {
+            _theses = _theses?.Where(t => t.Supervisor == _selectedTeacher).ToArray();
+        }
     }
 }

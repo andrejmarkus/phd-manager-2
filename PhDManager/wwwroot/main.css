@@ -101,11 +101,6 @@
     padding: 2rem;
 }
 
-.flex-col {
-    display: flex;
-    flex-direction: column;
-}
-
 @media (max-width: 1024px) {
     .responsive-row {
         justify-content: center;

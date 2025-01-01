@@ -93,16 +93,17 @@
     margin: 0 !important;
 }
 
-.gap-3 {
-    gap: 0.75rem;
-}
-
 .responsive-row {
     display: flex;
     flex-direction: row;
     justify-content: space-around;
     align-items: center;
     padding: 2rem;
+}
+
+.flex-col {
+    display: flex;
+    flex-direction: column;
 }
 
 @media (max-width: 1024px) {

@@ -11,6 +11,7 @@
 @inject UsersService UsersService
 @inject IUnitOfWork UnitOfWork
 @inject NavigationManager NavigationManager
+@inject UserManager<ApplicationUser> UserManager;
 
 @attribute [Authorize(Roles = "Teacher, Admin")]
 
@@ -74,17 +75,20 @@
         _thesis = await UnitOfWork.Theses.GetByGuidAsync(ThesisGuid);
         _isEnglish = _thesis?.TitleEnglish is not null;
 
-        if ((await UsersService.GetCurrentUserIdAsync())?.Equals(_thesis?.SupervisorId) == false)
-        {
-            NavigationManager.NavigateTo("/theses");
-        }
+        // var currentUserId = await UsersService.GetCurrentUserIdAsync();
+        // if (currentUserId?.Equals(_thesis?.SupervisorId) == false)
+        // {
+        //     NavigationManager.NavigateTo("/theses");
+        // }
 
-        using (var scope = ServiceProvider.CreateScope())
+        _teachers = await UserManager.Users.ToAsyncEnumerable().WhereAwait(async u =>
         {
-            var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
-            _teachers = await userManager.Users.ToAsyncEnumerable().WhereAwait(async u => (await UsersService.GetUserRoleAsync(u)) == "Teacher").ToArrayAsync();
-            _studyPrograms = await UnitOfWork.StudyPrograms.GetAllAsync();
-        }
+            using var scope = ServiceProvider.CreateScope();
+            var usersService = scope.ServiceProvider.GetRequiredService<UsersService>();
+            var role = await usersService.GetUserRoleAsync(u);
+            return role == "Teacher";
+        }).ToArrayAsync();
+        _studyPrograms = await UnitOfWork.StudyPrograms.GetAllAsync();
     }
 
     private async Task<IEnumerable<ApplicationUser>> SearchTeachers(string search, CancellationToken token)

@@ -9,6 +9,8 @@
 
 @inject IServiceProvider ServiceProvider
 @inject UsersService UsersService
+@inject UserManager<ApplicationUser> UserManager;
+@inject RoleManager<IdentityRole> RoleManager;
 
 @attribute [Authorize(Roles = "Admin")]
 
@@ -53,6 +55,7 @@
 <AddUsersDialog Visible=_visible />
 
 @code {
+
     private UserInfo[] _users = { };
     private IdentityRole[] _roles = { };
     private string _search = "";
@@ -60,13 +63,17 @@
 
     protected override async Task OnInitializedAsync()
     {
-        using (var scope = ServiceProvider.CreateScope())
+        _roles = RoleManager.Roles.ToArray();
+
+        var usersTask = UserManager.Users.ToList().Select(async u =>
         {
-            var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
-            var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-            _roles = roleManager.Roles.ToArray();
-            _users = await userManager.Users.ToAsyncEnumerable().SelectAwait(async u => new UserInfo(u, await UsersService.GetUserRoleAsync(u))).ToArrayAsync();
-        }
+            using var scope = ServiceProvider.CreateScope();
+            var usersService = scope.ServiceProvider.GetRequiredService<UsersService>();
+            var role = await usersService.GetUserRoleAsync(u);
+            return new UserInfo(u, role);
+        });
+
+        _users = await Task.WhenAll(usersTask);
     }
 
     private Func<UserInfo, bool> _quickFilter => u =>

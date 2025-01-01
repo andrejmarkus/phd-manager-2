@@ -21,7 +21,8 @@ namespace PhDManager.Services
 
         public async Task<string?> GetUserRoleAsync(ApplicationUser user)
         {
-            return (await UserManager.GetRolesAsync(user)).First();
+            var roles = await UserManager.GetRolesAsync(user);
+            return roles.First();
         }
 
         public async Task UpdateUserRoleAsync(ApplicationUser user, string role)

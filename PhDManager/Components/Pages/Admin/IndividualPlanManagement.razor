@@ -1,0 +1,132 @@
+﻿@page "/admin/individual-plan/add"
+@page "/admin/individual-plan/edit/{IndividualPlanGuid}"
+
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Identity
+@using PhDManager.Data
+@using PhDManager.Models
+@using PhDManager.Services
+@using PhDManager.Services.IRepositories
+
+@inject IServiceProvider ServiceProvider
+@inject IUnitOfWork UnitOfWork
+@inject UserManager<ApplicationUser> UserManager
+@inject NavigationManager NavigationManager
+
+@attribute [Authorize(Roles = "Admin")]
+
+<PageTitle>Vytvorenie individualného plánu</PageTitle>
+
+<MudText Typo="Typo.h3">Individuálny študijný plán doktoranda</MudText>
+
+<MudForm @ref="_form">
+    <MudAutocomplete T="ApplicationUser" Required RequiredError="Je nutné zvoliť študenta!" Label="Meno a priezvisko, titul" ToStringFunc="@(s => s is null ? null : s.DisplayName)" SearchFunc="SearchStudents" Variant="Variant.Outlined" @bind-Value="@_selectedStudent" />
+    @if (_selectedStudent is not null)
+    {
+        @if (_selectedStudent.HasInfo)
+        {
+            <MudDatePicker ShowToolbar="false" Label="Dátum narodenia" Variant="Variant.Outlined" @bind-Date="_selectedStudent.Birthdate" ReadOnly />
+            <MudField T="string" Label="Trvalé bydlisko" Variant="Variant.Outlined">@_selectedStudent.Address.FullAddress</MudField>
+            <MudField T="string" Label="Telefónne číslo" Variant="Variant.Outlined">@_selectedStudent.PhoneNumber</MudField>
+        } 
+        else
+        {
+            <MudText>Uživateľ nemá vyplnené profilové informácie.</MudText>
+        }
+    }
+
+    <MudText Typo="Typo.h5">Termíny</MudText>
+    <div class="d-flex gap-3 align-center">
+        <MudText Class="width-half">Termín podania žiadosti o dizertačnú skúšku vrátane odovzdania písomnej práce k diz. skúške (zvyčajne prvá polovica septembra v 2. ročníku)</MudText>
+        <MudDatePicker ShowToolbar="false" Required RequiredError="Je nutné zadať termín podania žiadosti!" Label="Termín podania žiadosti" Variant="Variant.Outlined" @bind-Date="_individualPlan.DissertationExamDate" />
+    </div>
+    <div class="d-flex gap-3 align-center">
+        <MudText Class="width-half">Termín odovzdania dizertačnej práce (zvyčajne apríl v roku ukončenia štúdia)</MudText>
+        <MudDatePicker ShowToolbar="false" Required RequiredError="Je nutné zadať termín odovzdania!" Label="Termín odovzdania" Variant="Variant.Outlined" @bind-Date="_individualPlan.DissertationSubmissionDate" />
+    </div>
+    <div class="d-flex gap-3 align-center">
+        <MudText Class="width-half">Termín ukončenia doktorandského štúdia vrátane obhajoby dizertačnej práce (zvyčajne 31.8. po 3 rokoch štúdia interní doktorandi a po 4 rokoch externí doktorandi)</MudText>
+        <MudDatePicker ShowToolbar="false" Required RequiredError="Je nutné zadať termín ukončenia štúdia!" Label="Termín ukončenia štúdia" Variant="Variant.Outlined" @bind-Date="_individualPlan.StudyEndDate" />
+    </div>
+
+    <MudText Typo="Typo.h5">Študijná časť</MudText>
+    <MudAutocomplete T="Thesis" Required RequiredError="Je nutné zvoliť dizertačnú tému!" Label="Dizertačná téma" ToStringFunc="@(t => t is null ? null : t.Title)" SearchFunc="SearchTheses" Variant="Variant.Outlined" @bind-Value="_selectedThesis" />
+    <MudButton class="mt-4" OnClick="HandleIndividualPlan" Variant="Variant.Filled" Color="Color.Primary">@(IndividualPlanGuid is null ? "Pridať" : "Upraviť")</MudButton>
+</MudForm>
+
+@code {
+    [Parameter]
+    public string? IndividualPlanGuid { get; set; }
+
+    private MudForm? _form;
+    private IEnumerable<ApplicationUser>? _students;
+    private IEnumerable<Thesis>? _theses;
+
+    private IndividualPlan _individualPlan = new();
+    private ApplicationUser? _selectedStudent;
+    private Thesis? _selectedThesis;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (IndividualPlanGuid is not null)
+        {
+            var individualPlan = await UnitOfWork.IndividualPlans.GetByGuidAsync(IndividualPlanGuid);
+            if (individualPlan is not null)
+            {
+                _individualPlan = individualPlan;
+                _selectedStudent = _individualPlan.User;
+                _selectedThesis = _individualPlan.Thesis;
+            }
+        }
+
+        _students = await UserManager.Users.ToAsyncEnumerable().WhereAwait(async u =>
+        {
+            using var scope = ServiceProvider.CreateScope();
+            var userService = scope.ServiceProvider.GetRequiredService<UsersService>();
+            var role = await userService.GetUserRoleAsync(u);
+            return role == "User";
+        }).ToArrayAsync();
+        _theses = await UnitOfWork.Theses.GetAllAsync();
+    }
+
+    private async Task<IEnumerable<ApplicationUser>> SearchStudents(string search, CancellationToken token)
+    {
+        if (string.IsNullOrWhiteSpace(search))
+            return _students;
+
+        return _students.Where(s => s.DisplayName.Contains(search, StringComparison.OrdinalIgnoreCase));
+    }
+
+    private async Task<IEnumerable<Thesis>> SearchTheses(string search, CancellationToken token)
+    {
+        if (string.IsNullOrWhiteSpace(search))
+            return _theses;
+
+        return _theses.Where(t => t.Title.Contains(search, StringComparison.OrdinalIgnoreCase));
+    }
+
+    private async Task HandleIndividualPlan()
+    {
+        await _form.Validate();
+
+        if (_form.IsValid)
+        {
+
+            _individualPlan.DissertationExamDate = _individualPlan.DissertationExamDate?.ToUniversalTime();
+            _individualPlan.DissertationSubmissionDate = _individualPlan.DissertationSubmissionDate?.ToUniversalTime();
+            _individualPlan.StudyEndDate = _individualPlan.StudyEndDate?.ToUniversalTime();
+            _individualPlan.User = _selectedStudent;
+            _individualPlan.Thesis = _selectedThesis;
+            if (IndividualPlanGuid is null)
+            {
+                await UnitOfWork.IndividualPlans.AddAsync(_individualPlan);
+            }
+            else
+            {
+                await UnitOfWork.IndividualPlans.UpdateAsync(_individualPlan.Id, _individualPlan);
+            }
+            await UnitOfWork.CompleteAsync();
+            NavigationManager.NavigateTo("/admin/users");
+        }
+    }
+}

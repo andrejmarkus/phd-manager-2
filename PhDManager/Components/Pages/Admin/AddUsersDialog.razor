@@ -17,7 +17,7 @@
             <ToolBarContent>
                 <MudText Typo="Typo.h6" GutterBottom="false">LDAP users</MudText>
                 <MudSpacer />
-                <MudTextField @bind-Value="@_search" OnKeyUp="@HandleSearch" Class="mr-4" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium"></MudTextField>
+                <MudTextField @bind-Value="@_search" @bind-Value:after="@GetUsers" Immediate="true" Class="mr-4" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium"></MudTextField>
             </ToolBarContent>
             <Columns>
                 <SelectColumn T="LdapEntry" />
@@ -83,13 +83,5 @@
     private void SelectedItemsChangedLdap(IEnumerable<LdapEntry> entries)
     {
         _selectedEntries = entries.ToArray();
-    }
-
-    private async Task HandleSearch(KeyboardEventArgs e)
-    {
-        if (e.Key == "Enter")
-        {
-            await GetUsers();
-        }
     }
 }

@@ -6,7 +6,15 @@
     <MudNavLink Href="" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Home">Domov</MudNavLink>
     <AuthorizeView Roles="Admin">
         <Authorized>
-            <MudNavLink Href="admin" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.AdminPanelSettings">Admin</MudNavLink>
+            <MudNavGroup Title="Admin" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.AdminPanelSettings">
+                <MudNavLink Href="/admin/users" Icon="@Icons.Material.Filled.Group">Použivatelia</MudNavLink>
+                <MudNavLink Href="/admin/individual-plan/add" Icon="@Icons.Material.Filled.ContactPage">Individuálny plán</MudNavLink>
+            </MudNavGroup>
+        </Authorized>
+    </AuthorizeView>
+    <AuthorizeView Roles="User">
+        <Authorized>
+            <MudNavLink Href="/individual-plan" Icon="@Icons.Material.Filled.ContactPage">Individuálny plán</MudNavLink>
         </Authorized>
     </AuthorizeView>
     <MudNavLink Href="auth" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Lock">Potrebné prihlásenie</MudNavLink>

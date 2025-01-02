@@ -19,7 +19,7 @@
 @inject ActiveDirectoryService ActiveDirectoryService
 @inject UsersService UsersService
 
-<PageTitle>Log in</PageTitle>
+<PageTitle>Prihlásenie</PageTitle>
 
 <MudStack AlignItems="AlignItems.Center" Justify="Justify.Center">
     <MudText Typo="Typo.h3" GutterBottom="true">Prihlásenie</MudText>
@@ -34,7 +34,7 @@
 
             <MudStack Spacing="3">
                 <MudStaticTextField For="@(() => Input.Username)" @bind-Value="Input.Username" 
-                    Label="Uživateľské meno" Placeholder="uživateľské meno"
+                    Label="Použivateľské meno" Placeholder="použivateľské meno"
                     UserAttributes="@(new() { { "autocomplete", "true" }, { "aria-required", "true" } } )" />
                 <MudStaticTextField For="@(() => Input.Password)" @bind-Value="Input.Password" 
                     Label="Heslo" InputType="InputType.Password" Placeholder="heslo" 
@@ -104,10 +104,12 @@
     private sealed class InputModel
     {
         [Required]
+        [Display(Name = "Použivateľské meno")]
         public string Username { get; set; } = "";
 
         [Required]
         [DataType(DataType.Password)]
+        [Display(Name = "Heslo")]
         public string Password { get; set; } = "";
 
         [Display(Name = "Remember me?")]

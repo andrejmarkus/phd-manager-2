@@ -10,7 +10,7 @@
 @inject NavigationManager NavigationManager
 @inject IdentityRedirectManager RedirectManager
 
-<PageTitle>Log in</PageTitle>
+<PageTitle>Externé prihlásenie</PageTitle>
 
 <MudStack AlignItems="AlignItems.Center" Justify="Justify.Center">
     <MudText Typo="Typo.h3" GutterBottom="true">Externé prihlásenie</MudText>
@@ -24,8 +24,8 @@
             <MudText GutterBottom="true" Typo="Typo.body1">Použi lokálny účet na prihlásenie.</MudText>
 
             <MudStack Spacing="3">
-                <MudStaticTextField For="@(() => Input.Email)" @bind-Value="Input.Email" 
-                    Label="Email" Placeholder="email" 
+                <MudStaticTextField For="@(() => Input.Username)" @bind-Value="Input.Username" 
+                    Label="Používateľské meno" Placeholder="používateľské meno" 
                     UserAttributes="@(new() { { "autocomplete", "true" }, { "aria-required", "true" } } )" />
                 <MudStaticTextField For="@(() => Input.Password)" @bind-Value="Input.Password" 
                     Label="Heslo" InputType="InputType.Password" Placeholder="heslo" 
@@ -72,7 +72,7 @@
     {
         // This doesn't count login failures towards account lockout
         // To enable password failures to trigger account lockout, set lockoutOnFailure: true
-        var result = await SignInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
+        var result = await SignInManager.PasswordSignInAsync(Input.Username, Input.Password, Input.RememberMe, lockoutOnFailure: false);
         if (result.Succeeded)
         {
             Logger.LogInformation("User logged in.");
@@ -98,14 +98,15 @@
     private sealed class InputModel
     {
         [Required]
-        [EmailAddress]
-        public string Email { get; set; } = "";
+        [Display(Name = "Použivateľské meno")]
+        public string Username { get; set; } = "";
 
         [Required]
         [DataType(DataType.Password)]
+        [Display(Name = "Heslo")]
         public string Password { get; set; } = "";
 
-        [Display(Name = "Remember me?")]
+        [Display(Name = "Zapamäatať si prihlásenie")]
         public bool RememberMe { get; set; }
     }
 }

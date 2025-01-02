@@ -17,8 +17,6 @@ namespace PhDManager.Models
         public virtual ApplicationUser User { get; set; }
 
         [NotMapped]
-        public string FullAddress { 
-            get => $"{Street} {HouseNumber}, {PostalCode} {City}, {Country}";
-        }
+        public string FullAddress => $"{Street} {HouseNumber}, {PostalCode} {City}, {Country}";
     }
 }

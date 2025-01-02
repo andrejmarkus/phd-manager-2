@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using PhDManager.Models;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PhDManager.Data
 {
@@ -12,13 +13,17 @@ namespace PhDManager.Data
         [DataType(DataType.Date)]
         public DateTime? Birthdate { get; set; }
 
-        public virtual Address Address { get; set; }
+        public virtual Address? Address { get; set; }
         public virtual StudyProgram? StudyProgram { get; set; }
+        public virtual IndividualPlan? IndividualPlan { get; set; }
 
         // Supervisor
         public virtual List<Thesis> SupervisorTheses { get; set; }
 
         // Reviewer
         public virtual List<Comment> Comments { get; set; }
+
+        [NotMapped]
+        public bool HasInfo => Birthdate is not null && Address is not null;
     }
 }

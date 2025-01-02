@@ -65,7 +65,7 @@
                         <AuthorizeView Roles="Admin">
                             <Authorized>
                                 <div class="d-flex gap-1">
-                                    <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="@($"/theses/{thesis.Guid}/edit")">Uprav</MudButton>
+                                    <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="@($"/theses/edit/{thesis.Guid}")">Uprav</MudButton>
                                     <MudButton Variant="Variant.Filled" Color="Color.Error" OnClick="@(() => DeleteThesis(thesis.Id))">Vymaž</MudButton>
                                 </div>
                             </Authorized>
@@ -75,7 +75,7 @@
                                 @if (_currentUserId?.Equals(thesis.SupervisorId) == true)
                                 {
                                     <div class="d-flex gap-1">
-                                        <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="@($"/theses/{thesis.Guid}/edit")">Uprav</MudButton>
+                                        <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="@($"/theses/edit/{thesis.Guid}")">Uprav</MudButton>
                                         <MudButton Variant="Variant.Filled" Color="Color.Error" OnClick="@(() => DeleteThesis(thesis.Id))">Vymaž</MudButton>
                                     </div>
                                 }

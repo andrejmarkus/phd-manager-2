@@ -1,4 +1,5 @@
 ﻿@page "/theses/add"
+@page "/theses/edit/{ThesisGuid}"
 
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Identity
@@ -15,7 +16,7 @@
 
 @attribute [Authorize(Roles = "Teacher, Admin")]
 
-<PageTitle>Thesis Addition</PageTitle>
+<PageTitle>@(ThesisGuid is null ? "Pridanie dizertačnej témy" : "Úprava dizertačnej témy")</PageTitle>
 
 <MudText Class="mb-5" Typo="Typo.h3">Návrh témy doktorandského štúdia</MudText>
 
@@ -28,7 +29,7 @@
         <MudTextField T="string" Label="Title of the dissertation thesis" Variant="Variant.Outlined" @bind-Value="_thesis.TitleEnglish" />
     }
     <MudAutocomplete T="ApplicationUser" Required RequiredError="Je zvoliť školiteľa!" Label="Školiteľ" ToStringFunc="@(u => u is null ? null : u.DisplayName)" SearchFunc="SearchTeachers" Variant="Variant.Outlined" @bind-Value="_thesis.Supervisor" />
-    
+
     <MudText Typo="Typo.h5">Zaradenie témy</MudText>
     <MudAutocomplete T="StudyProgram" Required RequiredError="Je nutné zvoliť študijný odbor!" Label="Študijný odbor" ToStringFunc="@(sp => sp is null ? null : sp.Name)" Variant="Variant.Outlined" SearchFunc="SearchStudyPrograms" @bind-Value="_thesis.StudyProgram" />
     <div class="d-flex gap-1">
@@ -53,19 +54,32 @@
     </MudSelect>
     <MudTextField T="string" Required RequiredError="Je nutné zadať výskumnú úlohu" Label="Výskumná úloha, ktorej súčasťou bude riešená téma" AutoGrow Lines="4" Variant="Variant.Outlined" @bind-Value="_thesis.ResearchTask" />
     <MudTextField T="string" Required RequiredError="Je nutné zadať doterajšie výsledky riešenia na školiacom pracovisku!" Label="Doterajšie výsledky riešenia na školiacom pracovisku, vrátane odkazov na dostupné zdroje" AutoGrow Lines="6" Variant="Variant.Outlined" @bind-Value="_thesis.SolutionResults" />
-    <MudButton class="mt-4" OnClick="AddThesis" Variant="Variant.Filled" Color="Color.Primary">Pridať</MudButton>
+    <MudButton class="mt-4" OnClick="HandleThesis" Variant="Variant.Filled" Color="Color.Primary">@(ThesisGuid is null ? "Pridať" : "Upraviť")</MudButton>
 </MudForm>
 
 @code {
+    [Parameter]
+    public string? ThesisGuid { get; set; }
+
     private MudForm? _form;
     private IEnumerable<ApplicationUser> _teachers;
     private IEnumerable<StudyProgram>? _studyPrograms;
 
-    private Thesis _thesis = new Thesis();
+    private Thesis _thesis = new();
     private bool _isEnglish = false;
 
     protected override async Task OnInitializedAsync()
     {
+        if (ThesisGuid is not null)
+        {
+            var thesis = await UnitOfWork.Theses.GetByGuidAsync(ThesisGuid);
+            if (thesis is not null)
+            {
+                _thesis = thesis;
+                _isEnglish = _thesis?.TitleEnglish is not null;
+            }
+        }
+
         _teachers = await UserManager.Users.ToAsyncEnumerable().WhereAwait(async u =>
         {
             using var scope = ServiceProvider.CreateScope();
@@ -92,13 +106,21 @@
         return _studyPrograms.Where(sp => sp.Name.Contains(search, StringComparison.OrdinalIgnoreCase));
     }
 
-    private async Task AddThesis()
+    private async Task HandleThesis()
     {
         await _form.Validate();
 
         if (_form.IsValid)
         {
-            await UnitOfWork.Theses.AddAsync(_thesis);
+            if (ThesisGuid is null) 
+            {
+                _thesis.Id = 1;
+                await UnitOfWork.Theses.AddAsync(_thesis);
+            } 
+            else
+            {
+                await UnitOfWork.Theses.UpdateAsync(_thesis.Id, _thesis);
+            }
             await UnitOfWork.CompleteAsync();
             NavigationManager.NavigateTo("/theses");
         }

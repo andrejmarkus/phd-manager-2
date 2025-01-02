@@ -68,7 +68,7 @@
             <AuthorizeView Roles="Admin, Teacher">
                 <Authorized>
                     <div class="d-flex gap-1">
-                        <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="@($"/theses/{_thesis.Guid}/edit")">Edit</MudButton>
+                        <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="@($"/theses/edit/{_thesis.Guid}")">Edit</MudButton>
                         <MudButton Variant="Variant.Filled" Color="Color.Error" OnClick="@(() => DeleteThesis(_thesis.Id))">Delete</MudButton>
                     </div>
                 </Authorized>

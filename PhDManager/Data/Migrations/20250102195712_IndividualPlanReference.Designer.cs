@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using PhDManager.Data;
@@ -11,9 +12,11 @@ using PhDManager.Data;
 namespace PhDManager.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250102195712_IndividualPlanReference")]
+    partial class IndividualPlanReference
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -307,17 +310,16 @@ namespace PhDManager.Data.Migrations
             modelBuilder.Entity("PhDManager.Models.IndividualPlan", b =>
                 {
                     b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime?>("DissertationExamDate")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime?>("DissertationSubmissionDate")
                         .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("Guid")
-                        .IsRequired()
-                        .HasColumnType("text");
 
                     b.Property<DateTime?>("StudyEndDate")
                         .HasColumnType("timestamp with time zone");
@@ -408,10 +410,7 @@ namespace PhDManager.Data.Migrations
             modelBuilder.Entity("PhDManager.Models.Thesis", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<bool>("DailyStudy")
                         .HasColumnType("boolean");
@@ -587,17 +586,6 @@ namespace PhDManager.Data.Migrations
                     b.Navigation("Thesis");
                 });
 
-            modelBuilder.Entity("PhDManager.Models.IndividualPlan", b =>
-                {
-                    b.HasOne("PhDManager.Models.Thesis", "Thesis")
-                        .WithOne("IndividualPlan")
-                        .HasForeignKey("PhDManager.Models.IndividualPlan", "Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Thesis");
-                });
-
             modelBuilder.Entity("PhDManager.Models.Subject", b =>
                 {
                     b.HasOne("PhDManager.Models.StudyProgram", "StudyProgram")
@@ -611,6 +599,12 @@ namespace PhDManager.Data.Migrations
 
             modelBuilder.Entity("PhDManager.Models.Thesis", b =>
                 {
+                    b.HasOne("PhDManager.Models.IndividualPlan", "IndividualPlan")
+                        .WithOne("Thesis")
+                        .HasForeignKey("PhDManager.Models.Thesis", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("PhDManager.Models.StudyProgram", "StudyProgram")
                         .WithMany("Thesis")
                         .HasForeignKey("StudyProgramId")
@@ -622,6 +616,8 @@ namespace PhDManager.Data.Migrations
                         .HasForeignKey("SupervisorId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("IndividualPlan");
 
                     b.Navigation("StudyProgram");
 
@@ -645,7 +641,8 @@ namespace PhDManager.Data.Migrations
 
             modelBuilder.Entity("PhDManager.Data.ApplicationUser", b =>
                 {
-                    b.Navigation("Address");
+                    b.Navigation("Address")
+                        .IsRequired();
 
                     b.Navigation("Comments");
 
@@ -654,6 +651,9 @@ namespace PhDManager.Data.Migrations
 
             modelBuilder.Entity("PhDManager.Models.IndividualPlan", b =>
                 {
+                    b.Navigation("Thesis")
+                        .IsRequired();
+
                     b.Navigation("User")
                         .IsRequired();
                 });
@@ -668,8 +668,6 @@ namespace PhDManager.Data.Migrations
             modelBuilder.Entity("PhDManager.Models.Thesis", b =>
                 {
                     b.Navigation("Comments");
-
-                    b.Navigation("IndividualPlan");
                 });
 #pragma warning restore 612, 618
         }

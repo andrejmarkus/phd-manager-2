@@ -6,6 +6,7 @@
         IRegistrationRepository Registrations { get; }
         IStudyProgramRepository StudyPrograms { get; }
         ICommentRepository Comments { get; }
+        IIndividualPlanRepository IndividualPlans { get; }
         Task CompleteAsync();
     }
 }

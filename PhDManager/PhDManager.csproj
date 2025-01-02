@@ -28,16 +28,4 @@
     <PackageReference Include="System.Linq.Async" Version="6.0.1" />
   </ItemGroup>
 
-
-  <ItemGroup>
-    <Content Update="Components\Pages\Theses\ThesisUpdate.razor">
-      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-    </Content>
-  </ItemGroup>
-
-
-  <ItemGroup>
-    <Folder Include="Components\Pages\IndividualPlan\" />
-  </ItemGroup>
-
 </Project>

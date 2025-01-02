@@ -18,7 +18,7 @@
 @inject IdentityRedirectManager RedirectManager
 @inject IUnitOfWork UnitOfWork
 
-<PageTitle>Register</PageTitle>
+<PageTitle>Registerácia</PageTitle>
 
 @if (Registration is not null)
 {
@@ -72,7 +72,6 @@
 }
 
 @code {
-
     public Registration? Registration { get; set; } = null;
     public bool RegistrationExpired { get; set; } = false;
 
@@ -103,22 +102,23 @@
 
     public async Task RegisterUser(EditContext editContext)
     {
+        var emailStore = GetEmailStore();
         var user = CreateUser();
 
         await UserStore.SetUserNameAsync(user, Input.Username, CancellationToken.None);
-        var emailStore = GetEmailStore();
         await emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
 
         user.DisplayName = Input.DisplayName;
 
         var result = await UserManager.CreateAsync(user, Input.Password);
-        await UserManager.AddToRoleAsync(user, "Reviewer");
 
         if (!result.Succeeded)
         {
             identityErrors = result.Errors;
             return;
         }
+
+        await UserManager.AddToRoleAsync(user, "Reviewer");
 
         Logger.LogInformation("User created a new account with password.");
 
@@ -167,11 +167,11 @@
     private sealed class InputModel
     {
         [Required]
-        [Display(Name = "Display Name")]
+        [Display(Name = "Celé meno")]
         public string DisplayName { get; set; } = "";
 
         [Required]
-        [Display(Name = "Username")]
+        [Display(Name = "Používateľské meno")]
         public string Username { get; set; } = "";
 
         [Required]
@@ -180,14 +180,15 @@
         public string Email { get; set; } = "";
 
         [Required]
-        [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+        [StringLength(100, ErrorMessage = "{0} musí byť {2} až {1} znakov dlhé.", MinimumLength = 6)]
         [DataType(DataType.Password)]
-        [Display(Name = "Password")]
+        [Display(Name = "Heslo")]
         public string Password { get; set; } = "";
 
+        [Required]
         [DataType(DataType.Password)]
-        [Display(Name = "Confirm password")]
-        [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
+        [Display(Name = "Potvrdzujúce heslo")]
+        [Compare("Password", ErrorMessage = "Heslá sa nezhodujú.")]
         public string ConfirmPassword { get; set; } = "";
     }
 }

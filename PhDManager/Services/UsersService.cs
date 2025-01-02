@@ -29,9 +29,26 @@ namespace PhDManager.Services
         public async Task UpdateUserRoleAsync(ApplicationUser user, string role)
         {
             var unusedUser = await UserManager.FindByIdAsync(user.Id);
-            var userRoles = await UserManager.GetRolesAsync(unusedUser);
-            await UserManager.RemoveFromRolesAsync(unusedUser, userRoles);
-            await UserManager.AddToRoleAsync(unusedUser, role);
+            if (unusedUser is not null)
+            {
+                var userRoles = await UserManager.GetRolesAsync(unusedUser);
+                await UserManager.RemoveFromRolesAsync(unusedUser, userRoles);
+                await UserManager.AddToRoleAsync(unusedUser, role);
+            }
+        }
+
+        public async Task UpdateUserInfo(ApplicationUser user)
+        {
+            var unusedUser = await UserManager.FindByIdAsync(user.Id);
+            if (unusedUser is not null) {
+                unusedUser.DisplayName = user.DisplayName;
+                unusedUser.Birthdate = user.Birthdate?.ToUniversalTime();
+                unusedUser.Address = user.Address;
+                unusedUser.StudyProgram = user.StudyProgram;
+                await UserManager.UpdateAsync(unusedUser);
+                var token = await UserManager.GenerateChangePhoneNumberTokenAsync(unusedUser, user.PhoneNumber);
+                await UserManager.ChangePhoneNumberAsync(unusedUser, user.PhoneNumber, token);
+            }
         }
 
         public async Task DeleteUserAsync(ApplicationUser user)
@@ -43,7 +60,6 @@ namespace PhDManager.Services
         public async Task<ApplicationUser> RegisterLdapUserWithoutPasswordAsync(LdapEntry entry)
         {
             var user = await CreateLdapUserAsync(entry);
-            user.Address = new Address();
             var result = await UserManager.CreateAsync(user);
             await UserManager.AddToRoleAsync(user, "User");
 
@@ -53,7 +69,6 @@ namespace PhDManager.Services
         public async Task<ApplicationUser> RegisterLdapUserAsync(LdapEntry entry, string password)
         {
             var user = await CreateLdapUserAsync(entry);
-            user.Address = new Address();
             var result = await UserManager.CreateAsync(user, password);
             await UserManager.AddToRoleAsync(user, "User");
 

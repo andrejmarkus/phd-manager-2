@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using PhDManager.Data;
@@ -11,9 +12,11 @@ using PhDManager.Data;
 namespace PhDManager.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250103163128_DatabaseInitialization")]
+    partial class DatabaseInitialization
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -24,21 +27,6 @@ namespace PhDManager.Data.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
-
-            modelBuilder.Entity("IndividualPlanSubject", b =>
-                {
-                    b.Property<int>("IndividualPlansId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("SubjectsId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("IndividualPlansId", "SubjectsId");
-
-                    b.HasIndex("SubjectsId");
-
-                    b.ToTable("IndividualPlanSubject");
-                });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
@@ -496,69 +484,6 @@ namespace PhDManager.Data.Migrations
                             Name = "Dizertačný projekt 2",
                             Semester = "letný",
                             StudyProgramId = 1
-                        },
-                        new
-                        {
-                            Id = 8,
-                            Code = "ManT",
-                            Credits = 5,
-                            Name = "Manažérske teórie",
-                            Semester = "zimný",
-                            StudyProgramId = 2
-                        },
-                        new
-                        {
-                            Id = 9,
-                            Code = "MVM",
-                            Credits = 5,
-                            Name = "Metodológia výskumu v manažmente",
-                            Semester = "zimný",
-                            StudyProgramId = 2
-                        },
-                        new
-                        {
-                            Id = 10,
-                            Code = "JAD1",
-                            Credits = 5,
-                            Name = "Jazyk anglický PhD. 1",
-                            Semester = "zimný",
-                            StudyProgramId = 2
-                        },
-                        new
-                        {
-                            Id = 11,
-                            Code = "DPR1",
-                            Credits = 5,
-                            Name = "Dizertačný projekt 1",
-                            Semester = "zimný",
-                            StudyProgramId = 2
-                        },
-                        new
-                        {
-                            Id = 12,
-                            Code = "VPub1",
-                            Credits = 10,
-                            Name = "Vedecká a publikačná činnosť 1",
-                            Semester = "letný",
-                            StudyProgramId = 2
-                        },
-                        new
-                        {
-                            Id = 13,
-                            Code = "JAD2",
-                            Credits = 5,
-                            Name = "Jazyk anglický PhD. 2",
-                            Semester = "letný",
-                            StudyProgramId = 2
-                        },
-                        new
-                        {
-                            Id = 14,
-                            Code = "DPR2",
-                            Credits = 5,
-                            Name = "Dizertačný projekt 2",
-                            Semester = "letný",
-                            StudyProgramId = 2
                         });
                 });
 
@@ -646,21 +571,6 @@ namespace PhDManager.Data.Migrations
                     b.HasIndex("ThesesId");
 
                     b.ToTable("SubjectThesis");
-                });
-
-            modelBuilder.Entity("IndividualPlanSubject", b =>
-                {
-                    b.HasOne("PhDManager.Models.IndividualPlan", null)
-                        .WithMany()
-                        .HasForeignKey("IndividualPlansId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("PhDManager.Models.Subject", null)
-                        .WithMany()
-                        .HasForeignKey("SubjectsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

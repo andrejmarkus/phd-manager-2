@@ -42,6 +42,20 @@
                 </MudSelect>
             </EditTemplate>
         </PropertyColumn>
+        <PropertyColumn Property="u => u.User.StudyProgram" Title="Študijný program" Editable="true" Hidden>
+            <EditTemplate>
+                <MudText Class="mt-4">Študijný odbor</MudText>
+                <MudSelect T="StudyProgram" Class="mt-1" Variant="Variant.Outlined" @bind-Value="context.Item.User.StudyProgram" ToStringFunc="@(sp => sp is null ? null : sp.Name)">
+                    @if (_studyPrograms is not null)
+                    {
+                        @foreach (var studyProgram in _studyPrograms)
+                        {
+                            <MudSelectItem Value="@studyProgram">@studyProgram.Name</MudSelectItem>
+                        }
+                    }
+                </MudSelect>
+            </EditTemplate>
+        </PropertyColumn>
         <PropertyColumn Property="u => u.User.Birthdate" Title="Dátum narodenia" Editable="true" Hidden Required="false">
             <EditTemplate>
                 <MudText Class="mt-4">Osobné údaje</MudText>
@@ -53,21 +67,23 @@
         <PropertyColumn Property="u => u.User.Address.HouseNumber" Title="Číslo domu" Editable="true" Hidden Required="false" />
         <PropertyColumn Property="u => u.User.Address.City" Title="Obec" Editable="true" Hidden Required="false" />
         <PropertyColumn Property="u => u.User.Address.PostalCode" Title="PSČ" Editable="true" Hidden Required="false" />
-        <PropertyColumn Property="u => u.User.Address.Country" Title="Štát" Editable="true" Hidden Required="false">
-
-        </PropertyColumn>
-        <TemplateColumn CellClass="d-flex justify-end">
+        <PropertyColumn Property="u => u.User.Address.Country" Title="Štát" Editable="true" Hidden Required="false" />
+        <TemplateColumn Title="Individuálny plán">
             <CellTemplate>
                 <div class="d-flex">
                     @if (context.Item.User.IndividualPlan is not null)
                     {
-                        <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Delete" OnClick="@(async () => await DeleteIndividualPlan(context.Item.User.IndividualPlan))" />
-                        <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" Href="@($"/admin/individual-plan/edit/{context.Item.User.IndividualPlan.Guid}")" />
+                        <MudIconButton Size="@Size.Small" Color="Color.Error" Icon="@Icons.Material.Outlined.Delete" OnClick="@(async () => await DeleteIndividualPlan(context.Item.User.IndividualPlan))" />
+                        <MudIconButton Size="@Size.Small" Color="Color.Info" Icon="@Icons.Material.Outlined.Edit" Href="@($"/admin/individual-plan/edit/{context.Item.User.IndividualPlan.Guid}")" />
                     }
                 </div>
+            </CellTemplate>
+        </TemplateColumn>
+        <TemplateColumn Title="Úprava profilu">
+            <CellTemplate>
                 <div class="d-flex">
-                    <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Delete" OnClick="@(() => DeleteUser(context.Item))" />
-                    <MudIconButton Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" OnClick="@context.Actions.StartEditingItemAsync" />
+                    <MudIconButton Size="@Size.Small" Color="Color.Error" Icon="@Icons.Material.Outlined.Delete" OnClick="@(() => DeleteUser(context.Item))" />
+                    <MudIconButton Size="@Size.Small" Color="Color.Info" Icon="@Icons.Material.Outlined.Edit" OnClick="@context.Actions.StartEditingItemAsync" />
                 </div>
             </CellTemplate>
         </TemplateColumn>
@@ -82,12 +98,14 @@
 @code {
     private UserInfo[] _users = { };
     private IdentityRole[] _roles = { };
+    private IEnumerable<StudyProgram>? _studyPrograms;
     private string _search = "";
     private bool _visible = false;
 
     protected override async Task OnInitializedAsync()
     {
         _roles = RoleManager.Roles.ToArray();
+        _studyPrograms = await UnitOfWork.StudyPrograms.GetAllAsync();
 
         var usersTask = UserManager.Users.ToList().Select(async u =>
         {

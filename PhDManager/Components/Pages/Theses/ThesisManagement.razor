@@ -114,9 +114,8 @@
         {
             if (ThesisGuid is null) 
             {
-                _thesis.Id = 1;
                 await UnitOfWork.Theses.AddAsync(_thesis);
-            } 
+            }
             else
             {
                 await UnitOfWork.Theses.UpdateAsync(_thesis.Id, _thesis);

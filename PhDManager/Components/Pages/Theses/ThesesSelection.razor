@@ -66,7 +66,7 @@
                             <Authorized>
                                 <div class="d-flex gap-1">
                                     <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="@($"/theses/edit/{thesis.Guid}")">Uprav</MudButton>
-                                    <MudButton Variant="Variant.Filled" Color="Color.Error" OnClick="@(() => DeleteThesis(thesis.Id))">Vymaž</MudButton>
+                                    <MudButton Variant="Variant.Filled" Color="Color.Error" OnClick="@(() => DeleteThesis(thesis))">Vymaž</MudButton>
                                 </div>
                             </Authorized>
                         </AuthorizeView>
@@ -76,7 +76,7 @@
                                 {
                                     <div class="d-flex gap-1">
                                         <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="@($"/theses/edit/{thesis.Guid}")">Uprav</MudButton>
-                                        <MudButton Variant="Variant.Filled" Color="Color.Error" OnClick="@(() => DeleteThesis(thesis.Id))">Vymaž</MudButton>
+                                        <MudButton Variant="Variant.Filled" Color="Color.Error" OnClick="@(() => DeleteThesis(thesis))">Vymaž</MudButton>
                                     </div>
                                 }
                             </Authorized>
@@ -113,11 +113,15 @@
         _currentUserId = await UsersService.GetCurrentUserIdAsync();
     }
 
-    private async Task DeleteThesis(int id)
+    private async Task DeleteThesis(Thesis thesis)
     {
-        await UnitOfWork.Theses.DeleteAsync(id);
+        if (thesis.IndividualPlan is not null)
+        {
+            await UnitOfWork.IndividualPlans.DeleteAsync(thesis.IndividualPlan.Id);
+        }
+        await UnitOfWork.Theses.DeleteAsync(thesis.Id);
         await UnitOfWork.CompleteAsync();
-        _theses = _theses?.Where(t => t.Id != id);
+        _theses = _theses?.Where(t => t.Id != thesis.Id);
     }
 
     private async Task UpdateSearch()

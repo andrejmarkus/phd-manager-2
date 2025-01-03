@@ -69,7 +69,7 @@
                 <Authorized>
                     <div class="d-flex gap-1">
                         <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="@($"/theses/edit/{_thesis.Guid}")">Edit</MudButton>
-                        <MudButton Variant="Variant.Filled" Color="Color.Error" OnClick="@(() => DeleteThesis(_thesis.Id))">Delete</MudButton>
+                        <MudButton Variant="Variant.Filled" Color="Color.Error" OnClick="@(() => DeleteThesis(_thesis))">Delete</MudButton>
                     </div>
                 </Authorized>
             </AuthorizeView>
@@ -93,8 +93,8 @@
                                     <AuthorizeView Roles="Admin" Context="editContext">
                                         <Authorized>
                                             <div>
-                                                <MudIconButton Size="@Size.Medium" Icon="@Icons.Material.Outlined.Delete" OnClick="@(() => DeleteComment(comment))" />
-                                                <MudIconButton Size="@Size.Medium" Icon="@Icons.Material.Outlined.Edit" OnClick="@(() => UpdateComment(comment))" />
+                                                <MudIconButton Size="@Size.Medium" Color="Color.Error" Icon="@Icons.Material.Outlined.Delete" OnClick="@(() => DeleteComment(comment))" />
+                                                <MudIconButton Size="@Size.Medium" Color="Color.Info" Icon="@Icons.Material.Outlined.Edit" OnClick="@(() => UpdateComment(comment))" />
                                             </div>
                                         </Authorized>
                                     </AuthorizeView>
@@ -103,8 +103,8 @@
                                             @if (_currentUserId?.Equals(comment.ReviewerId) == true)
                                             {
                                                 <div>
-                                                    <MudIconButton Size="@Size.Medium" Icon="@Icons.Material.Outlined.Delete" OnClick="@(() => DeleteComment(comment))" />
-                                                    <MudIconButton Size="@Size.Medium" Icon="@Icons.Material.Outlined.Edit" OnClick="@(() => UpdateComment(comment))" />
+                                                    <MudIconButton Size="@Size.Medium" Color="Color.Error" Icon="@Icons.Material.Outlined.Delete" OnClick="@(() => DeleteComment(comment))" />
+                                                    <MudIconButton Size="@Size.Medium" Color="Color.Info" Icon="@Icons.Material.Outlined.Edit" OnClick="@(() => UpdateComment(comment))" />
                                                 </div>
                                             }
                                         </Authorized>
@@ -167,9 +167,13 @@
         _thesis = await UnitOfWork.Theses.GetByGuidAsync(ThesisGuid);
     }
 
-    private async Task DeleteThesis(int id)
+    private async Task DeleteThesis(Thesis thesis)
     {
-        await UnitOfWork.Theses.DeleteAsync(id);
+        if (thesis.IndividualPlan is not null)
+        {
+            await UnitOfWork.IndividualPlans.DeleteAsync(thesis.IndividualPlan.Id);
+        }
+        await UnitOfWork.Theses.DeleteAsync(thesis.Id);
         await UnitOfWork.CompleteAsync();
         NavigationManager.NavigateTo("/theses");
     }

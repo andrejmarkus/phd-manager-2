@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using PhDManager.Models;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace PhDManager.Data
 {
@@ -24,6 +25,6 @@ namespace PhDManager.Data
         public virtual List<Comment> Comments { get; set; }
 
         [NotMapped]
-        public bool HasInfo => Birthdate is not null && Address is not null;
+        public bool HasInfo => Birthdate is not null && Address is not null && StudyProgram is not null;
     }
 }

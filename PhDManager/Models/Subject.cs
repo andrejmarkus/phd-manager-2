@@ -1,4 +1,6 @@
-﻿namespace PhDManager.Models
+﻿using System.Text.Json.Serialization;
+
+namespace PhDManager.Models
 {
     public class Subject
     {
@@ -8,7 +10,11 @@
         public string Semester { get; set; } = string.Empty;
         public int Credits { get; set; }
 
-        public virtual StudyProgram StudyProgram { get; set; } = default!;
-        public virtual List<Thesis> Theses { get; set; } = new List<Thesis>();
+        public int StudyProgramId { get; set; }
+
+        [JsonIgnore]
+        public virtual StudyProgram StudyProgram { get; set; }
+        public virtual List<Thesis> Theses { get; set; }
+        public virtual List<IndividualPlan> IndividualPlans { get; set; }
     }
 }

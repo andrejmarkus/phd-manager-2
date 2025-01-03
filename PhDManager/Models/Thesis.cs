@@ -1,5 +1,5 @@
 ﻿using PhDManager.Data;
-using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace PhDManager.Models
 {
@@ -24,9 +24,11 @@ namespace PhDManager.Models
         public int StudyProgramId { get; set; }
         public virtual StudyProgram StudyProgram { get; set; }
 
-        public virtual Subject[] Subjects { get; set; } = { };
+        public virtual List<Subject> Subjects { get; set; } = new List<Subject>();
 
         public virtual List<Comment> Comments { get; set; } = new List<Comment>();
+
+        [JsonIgnore]
         public virtual IndividualPlan? IndividualPlan { get; set; }
     }
 }

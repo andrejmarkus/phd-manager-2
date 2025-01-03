@@ -51,6 +51,9 @@
 
     <MudText Typo="Typo.h5">Študijná časť</MudText>
     <MudAutocomplete T="Thesis" Required RequiredError="Je nutné zvoliť dizertačnú tému!" Label="Dizertačná téma" ToStringFunc="@(t => t is null ? null : t.Title)" SearchFunc="SearchTheses" Variant="Variant.Outlined" @bind-Value="_selectedThesis" />
+    <MudAutocomplete T="Subject" Required RequiredError="Je nutné zvoliť predmet!" Label="Predmet" ToStringFunc="@(s => s is null ? null : s.Name)" SearchFunc="SearchSubjects" Variant="Variant.Outlined" @bind-Value="_selectedSubjects[0]" />
+    <MudAutocomplete T="Subject" Required RequiredError="Je nutné zvoliť predmet!" Label="Predmet" ToStringFunc="@(s => s is null ? null : s.Name)" SearchFunc="SearchSubjects" Variant="Variant.Outlined" @bind-Value="_selectedSubjects[1]" />
+    <MudAutocomplete T="Subject" Required RequiredError="Je nutné zvoliť predmet!" Label="Predmet" ToStringFunc="@(s => s is null ? null : s.Name)" SearchFunc="SearchSubjects" Variant="Variant.Outlined" @bind-Value="_selectedSubjects[2]" />
     <MudButton class="mt-4" OnClick="HandleIndividualPlan" Variant="Variant.Filled" Color="Color.Primary">@(IndividualPlanGuid is null ? "Pridať" : "Upraviť")</MudButton>
 </MudForm>
 
@@ -61,10 +64,12 @@
     private MudForm? _form;
     private IEnumerable<ApplicationUser>? _students;
     private IEnumerable<Thesis>? _theses;
+    private IEnumerable<Subject>? _subjects;
 
     private IndividualPlan _individualPlan = new();
     private ApplicationUser? _selectedStudent;
     private Thesis? _selectedThesis;
+    private Subject?[] _selectedSubjects = new Subject[3];
 
     protected override async Task OnInitializedAsync()
     {
@@ -76,6 +81,7 @@
                 _individualPlan = individualPlan;
                 _selectedStudent = _individualPlan.User;
                 _selectedThesis = _individualPlan.Thesis;
+                _selectedSubjects = _individualPlan.Subjects.ToArray();
             }
         }
 
@@ -87,22 +93,31 @@
             return role == "User";
         }).ToArrayAsync();
         _theses = await UnitOfWork.Theses.GetAllAsync();
+        _subjects = await UnitOfWork.Subjects.GetAllAsync();
     }
 
     private async Task<IEnumerable<ApplicationUser>> SearchStudents(string search, CancellationToken token)
     {
         if (string.IsNullOrWhiteSpace(search))
-            return _students;
+            return _students.Where(s => s.IndividualPlan is null);
 
-        return _students.Where(s => s.DisplayName.Contains(search, StringComparison.OrdinalIgnoreCase));
+        return _students.Where(s => s.IndividualPlan is null).Where(s => s.DisplayName.Contains(search, StringComparison.OrdinalIgnoreCase));
     }
 
     private async Task<IEnumerable<Thesis>> SearchTheses(string search, CancellationToken token)
     {
         if (string.IsNullOrWhiteSpace(search))
-            return _theses;
+            return _theses.Where(t => t.StudyProgram == _selectedStudent?.StudyProgram);
 
-        return _theses.Where(t => t.Title.Contains(search, StringComparison.OrdinalIgnoreCase));
+        return _theses.Where(t => t.StudyProgram == _selectedStudent?.StudyProgram).Where(t => t.Title.Contains(search, StringComparison.OrdinalIgnoreCase));
+    }
+
+    private async Task<IEnumerable<Subject>> SearchSubjects(string search, CancellationToken token)
+    {
+        if (string.IsNullOrWhiteSpace(search))
+            return _subjects.Where(t => t.StudyProgram == _selectedStudent?.StudyProgram);
+
+        return _subjects.Where(s => s.StudyProgram == _selectedStudent?.StudyProgram).Where(s => s.Name.Contains(search, StringComparison.OrdinalIgnoreCase));
     }
 
     private async Task HandleIndividualPlan()
@@ -111,12 +126,12 @@
 
         if (_form.IsValid)
         {
-
             _individualPlan.DissertationExamDate = _individualPlan.DissertationExamDate?.ToUniversalTime();
             _individualPlan.DissertationSubmissionDate = _individualPlan.DissertationSubmissionDate?.ToUniversalTime();
             _individualPlan.StudyEndDate = _individualPlan.StudyEndDate?.ToUniversalTime();
             _individualPlan.User = _selectedStudent;
             _individualPlan.Thesis = _selectedThesis;
+            _individualPlan.Subjects = _selectedSubjects.ToList();
             if (IndividualPlanGuid is null)
             {
                 await UnitOfWork.IndividualPlans.AddAsync(_individualPlan);

@@ -9,7 +9,7 @@
     <MudAppBar Elevation="1">
         <MudIconButton Class="mr-2" Color="Color.Surface" Size="@Size.Medium" Icon="@Icons.Material.Outlined.Menu" OnClick="DrawerToggle" />
         <MudLink Href="/">
-            <MudImage Src="@Assets["uniza_logo.png"]" Height="40" />
+            <MudImage Class="logo" Src="@Assets["uniza_logo.png"]" Height="40" />
         </MudLink>
     </MudAppBar>
     <MudDrawer @bind-Open="_drawerOpen" ClipMode="DrawerClipMode.Always" Elevation="2">

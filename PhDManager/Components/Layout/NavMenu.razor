@@ -9,9 +9,11 @@
             <MudNavGroup Title="Admin" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.AdminPanelSettings">
                 <MudNavLink Href="/admin/users" Icon="@Icons.Material.Filled.Group">Použivatelia</MudNavLink>
                 <MudNavLink Href="/admin/individual-plan/add" Icon="@Icons.Material.Filled.ContactPage">Individuálny plán</MudNavLink>
+                <MudNavLink Href="/admin/create-register" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Person">Vytvor registráciu</MudNavLink>
             </MudNavGroup>
         </Authorized>
     </AuthorizeView>
+    <MudNavLink Href="theses" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.List">Dizertačné témy</MudNavLink>
     <AuthorizeView Roles="User">
         <Authorized>
             <MudNavLink Href="/individual-plan" Icon="@Icons.Material.Filled.ContactPage">Individuálny plán</MudNavLink>
@@ -30,11 +32,9 @@
             </form>
         </Authorized>
         <NotAuthorized>
-            <MudNavLink Href="Account/Register" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Person">Registrácia</MudNavLink>
             <MudNavLink Href="Account/Login" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Password">Prihlásenie</MudNavLink>
         </NotAuthorized>
     </AuthorizeView>
-    <MudNavLink Href="theses" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.List">Dizertačné témy</MudNavLink>
 </MudNavMenu>
 
 

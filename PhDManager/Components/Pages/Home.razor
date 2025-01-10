@@ -10,23 +10,23 @@
     <AuthorizeView>
         <Authorized>
             <MudStack Class="height-full" Justify="Justify.Center" AlignItems="AlignItems.Center">
-                <MudText Typo="Typo.h3">Welcome, @context.User.Identity.Name</MudText>
-                <MudText>Pre navigáciu použite bočný panel.</MudText>
+                <MudText Class="text-rotate" Typo="Typo.h3">Vitaj @context.User.Identity.Name</MudText>
+                <MudText>Pre navigáciu použi bočný panel.</MudText>
             </MudStack>
         </Authorized>
         <NotAuthorized>
             <div class="full-size responsive-row">
                 <div class="d-flex flex-column gap-3">
-                    <MudText Typo="Typo.h3"><span class="underline">Uľahčite</span> si štúdium.</MudText>
+                    <MudText Class="text-opacity" Typo="Typo.h3"><span class="underline">Uľahčite</span> si štúdium.</MudText>
                     <MudText Typo="Typo.h5">Prihláste sa a zahoďte papiere za hlavu!</MudText>
                     <div>
-                        <MudButton Class="mr-2" Variant="Variant.Filled" Color="Color.Primary" OnClick="@(() => NavigationManager.NavigateTo("Account/Login"))">Prihlásiť sa</MudButton>
-                        <MudButton Variant="Variant.Filled" Color="Color.Info" OnClick="@(() => NavigationManager.NavigateTo("theses"))">Nájdi tému</MudButton>
+                        <MudButton Class="mr-2 button-shake" Variant="Variant.Filled" Color="Color.Primary" OnClick="@(() => NavigationManager.NavigateTo("Account/Login"))">Prihlásiť sa</MudButton>
+                        <MudButton Class="button-shake" Variant="Variant.Filled" Color="Color.Info" OnClick="@(() => NavigationManager.NavigateTo("theses"))">Nájdi tému</MudButton>
                     </div>
                 </div>
                 <div class="container-image landing-basis">
                     <div class="circle-image"></div>
-                    <MudImage Class="full-size" Src="@Assets["digital-nomad.svg"]" />
+                    <MudImage Class="full-size landing-image" Src="@Assets["digital-nomad.svg"]" />
                 </div>
             </div>
         </NotAuthorized>

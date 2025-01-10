@@ -1,9 +1,4 @@
-﻿#body {
-    padding: 0;
-    margin: 0;
-}
-
-.underline {
+﻿.underline {
     text-decoration: underline var(--mud-palette-primary) 0.5rem;
 }
 
@@ -19,6 +14,15 @@
     bottom: 0;
     transform: translate(-50%, 0);
     z-index: -1;
+}
+
+.text-opacity {
+    opacity: 1;
+    transition: opacity 0.2s ease;
+}
+
+.text-opacity:hover {
+    opacity: 0.8;
 }
 
 .container-image {
@@ -40,21 +44,34 @@
     background-image: radial-gradient(circle at 100% 0%, var(--mud-palette-primary) 25%, rgba(0, 0, 0, 0) 25%);
 }
 
+.landing-image {
+    transition: transform 0.5s ease, filter 0.5s ease;
+}
+
+.landing-image:hover {
+    transform: scale(1.1);
+    filter: brightness(1.05);
+}
+
 .landing-basis {
     flex-basis: 40%;
 }
 
-.logo-size {
-    height: 40px;
+.button-shake:hover {
+    animation: shake 0.5s ease-in-out;
+}
+
+.text-rotate {
+    animation: rotate 0.5s ease;
+}
+
+.logo:hover {
+    animation: scale 0.5s ease-in-out;
 }
 
 .full-size {
     width: 100%;
     height: 100%;
-}
-
-.width-fit {
-    width: fit-content;
 }
 
 .width-half {
@@ -65,32 +82,16 @@
     width: 75vw;
 }
 
-.width-full {
-    width: 100%;
-}
-
-.height-full {
-    height: 100%;
-}
-
 .height-half {
     height: 50vh;
 }
 
-.height-third {
-    height: 33vh;
+.height-full {
+    height: 100vh;
 }
 
 .height-screen {
     height: 90vh;
-}
-
-.absolute {
-    position: absolute;
-}
-
-.margin-none {
-    margin: 0 !important;
 }
 
 .responsive-row {
@@ -107,5 +108,59 @@
         text-align: center;
         flex-direction: column;
         gap: 2rem;
+    }
+}
+
+@keyframes shake {
+    0% { 
+        transform: translateX(0);
+    }
+    25% {
+        transform: translateX(-0.1rem);
+    }
+    50% {
+        transform: translateX(0.1rem);
+    }
+    75% {
+        transform: translateX(-0.1rem);
+    }
+    100% {
+        transform: translateX(0);
+    }
+}
+
+@keyframes rotate {
+    0% { 
+        transform: rotateZ(0deg);
+    }
+    33% { 
+        transform: rotateZ(-2deg);
+    }
+    66% {
+        transform: rotateZ(2deg);
+    }
+    100% {
+        transform: rotateZ(0deg);
+    }
+}
+
+@keyframes scale {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+@keyframes reveal {
+    from {
+        transform: scale(0);
+    }
+    to {
+        transform: scale(1);
     }
 }

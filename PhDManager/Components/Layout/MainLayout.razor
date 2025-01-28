@@ -1,21 +1,13 @@
 ﻿@inherits LayoutComponentBase
 
-<MudThemeProvider Theme="FriTheme" />
-<MudPopoverProvider />
-<MudDialogProvider />
-<MudSnackbarProvider />
+<MudThemeProvider @rendermode="InteractiveServer" Theme="FriTheme" />
+<MudPopoverProvider @rendermode="InteractiveServer" />
+<MudDialogProvider @rendermode="InteractiveServer" />
+<MudSnackbarProvider @rendermode="InteractiveServer" />
 
 <MudLayout>
-    <MudAppBar Elevation="1">
-        <MudIconButton Class="mr-2" Color="Color.Surface" Size="@Size.Medium" Icon="@Icons.Material.Outlined.Menu" OnClick="DrawerToggle" />
-        <MudLink Href="/">
-            <MudImage Class="logo" Src="@Assets["uniza_logo.png"]" Height="40" />
-        </MudLink>
-    </MudAppBar>
-    <MudDrawer @bind-Open="_drawerOpen" ClipMode="DrawerClipMode.Always" Elevation="2">
-        <NavMenu />
-    </MudDrawer>
-    <MudMainContent Class="mt-16 pa-4">
+    <MainLayoutNavigation />
+    <MudMainContent Class="pa-4 mt-16 ml-14">
         @Body
     </MudMainContent>
 </MudLayout>
@@ -28,13 +20,6 @@
 </div>
 
 @code {
-    private bool _drawerOpen = true;
-
-    private void DrawerToggle()
-    {
-        _drawerOpen = !_drawerOpen;
-    }
-
     MudTheme FriTheme = new MudTheme()
     {
         PaletteLight = new PaletteLight()

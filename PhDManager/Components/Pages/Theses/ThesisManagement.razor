@@ -1,6 +1,8 @@
 ﻿@page "/theses/add"
 @page "/theses/edit/{ThesisGuid}"
 
+@rendermode InteractiveServer
+
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Identity
 @using PhDManager.Data
@@ -33,7 +35,7 @@
     <MudText Typo="Typo.h5">Zaradenie témy</MudText>
     <MudAutocomplete T="StudyProgram" Required RequiredError="Je nutné zvoliť študijný odbor!" Label="Študijný odbor" ToStringFunc="@(sp => sp is null ? null : sp.Name)" Variant="Variant.Outlined" SearchFunc="SearchStudyPrograms" @bind-Value="_thesis.StudyProgram" />
     <div class="d-flex gap-1">
-        <MudCheckBox T="bool" @bind-bind-Value="_thesis.DailyStudy">denná</MudCheckBox>
+        <MudCheckBox T="bool" @bind-Value="_thesis.DailyStudy">denná</MudCheckBox>
         <MudCheckBox T="bool" @bind-Value="_thesis.ExternalStudy">externá</MudCheckBox>
     </div>
 

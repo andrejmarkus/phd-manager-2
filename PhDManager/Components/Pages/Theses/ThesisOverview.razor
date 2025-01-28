@@ -6,6 +6,8 @@
 @using PhDManager.Services
 @using PhDManager.Services.IRepositories
 
+@rendermode InteractiveServer
+
 @inject IUnitOfWork UnitOfWork
 @inject UserManager<ApplicationUser> UserManager
 @inject UsersService UsersService
@@ -36,22 +38,22 @@
             </div>
             <div>
                 <MudText Typo="Typo.h6">Detailnejší opis problému</MudText>
-                <MudText Typo="Typo.body1">@_thesis.Description</MudText>
+                <MudText Typo="Typo.body1" Class="break-lines">@_thesis.Description</MudText>
             </div>
             @if (_thesis.DescriptionEnglish is not null)
             {
                 <div>
                     <MudText Typo="Typo.h6">Detailed description of the problem</MudText>
-                    <MudText Typo="Typo.body1">@_thesis.DescriptionEnglish</MudText>
+                    <MudText Typo="Typo.body1" Class="break-lines">@_thesis.DescriptionEnglish</MudText>
                 </div>
             }
             <div>
                 <MudText Typo="Typo.h6">Predpokladaný vedecký prínos</MudText>
-                <MudText Typo="Typo.body1">@_thesis.ScientificContribution</MudText>
+                <MudText Typo="Typo.body1" Class="break-lines">@_thesis.ScientificContribution</MudText>
             </div>
             <div>
                 <MudText Typo="Typo.h6">Odporučány postup vedeckého bádania</MudText>
-                <MudText Typo="Typo.body1">@_thesis.ScientificProgress</MudText>
+                <MudText Typo="Typo.body1" Class="break-lines">@_thesis.ScientificProgress</MudText>
             </div>
             <div>
                 <MudText Typo="Typo.h6">Druh výskumu</MudText>
@@ -59,11 +61,11 @@
             </div>
             <div>
                 <MudText Typo="Typo.h6">Výskumná úloha, ktorej súčasťou bude riešená téma</MudText>
-                <MudText Typo="Typo.body1">@_thesis.ResearchTask</MudText>
+                <MudText Typo="Typo.body1" Class="break-lines">@_thesis.ResearchTask</MudText>
             </div>
             <div>
                 <MudText Typo="Typo.h6">Doterajšie výsledky riešenia na školiacom pracovisku, vrátane odkazov na dostupné zdroje</MudText>
-                <MudText Typo="Typo.body1">@_thesis.SolutionResults</MudText>
+                <MudText Typo="Typo.body1" Class="break-lines">@_thesis.SolutionResults</MudText>
             </div>
             <AuthorizeView Roles="Admin, Teacher">
                 <Authorized>

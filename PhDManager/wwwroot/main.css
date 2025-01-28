@@ -16,11 +16,6 @@
     z-index: -1;
 }
 
-.text-opacity {
-    opacity: 1;
-    transition: opacity 0.2s ease;
-}
-
 .text-opacity:hover {
     opacity: 0.8;
 }
@@ -100,6 +95,10 @@
     justify-content: space-around;
     align-items: center;
     padding: 2rem;
+}
+
+.break-lines {
+    white-space: pre-line;
 }
 
 @media (max-width: 1024px) {

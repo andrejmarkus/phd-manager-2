@@ -24,10 +24,12 @@
             <MudText GutterBottom="true" Typo="Typo.body1">Použi lokálny účet na prihlásenie.</MudText>
 
             <MudStack Spacing="3">
-                <MudStaticTextField For="@(() => Input.Username)" @bind-Value="Input.Username" 
-                    Label="Používateľské meno" Placeholder="používateľské meno" 
+                <MudStaticTextField For="@(() => Input.Username)" @bind-Value="Input.Username"
+                    Variant="Variant.Outlined"
+                    Label="Používateľské meno" Placeholder="používateľské meno"
                     UserAttributes="@(new() { { "autocomplete", "true" }, { "aria-required", "true" } } )" />
-                <MudStaticTextField For="@(() => Input.Password)" @bind-Value="Input.Password" 
+                <MudStaticTextField For="@(() => Input.Password)" @bind-Value="Input.Password"
+                    Variant="Variant.Outlined"
                     Label="Heslo" InputType="InputType.Password" Placeholder="heslo" 
                     UserAttributes="@(new() { { "autocomplete", "current-password" }, { "aria-required", "true" } } )" />
                 <MudStaticCheckBox For="@(() => Input.RememberMe)" @bind-Value="Input.RememberMe">Remember me</MudStaticCheckBox>

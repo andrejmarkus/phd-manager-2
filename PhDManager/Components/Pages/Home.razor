@@ -1,12 +1,14 @@
 ﻿@page "/"
 
+@rendermode InteractiveServer
+
 @inject NavigationManager NavigationManager
 
 <PageTitle>Home</PageTitle>
 
 <MudStack class="height-screen" StretchItems="StretchItems.Middle">
-    <div class="full-size circle circle-bottom"></div>
-    <div class="full-size circle circle-top"></div>
+    @* <div class="full-size circle circle-bottom"></div>
+    <div class="full-size circle circle-top"></div> *@
     <AuthorizeView>
         <Authorized>
             <MudStack Class="height-full" Justify="Justify.Center" AlignItems="AlignItems.Center">
@@ -17,7 +19,7 @@
         <NotAuthorized>
             <div class="full-size responsive-row">
                 <div class="d-flex flex-column gap-3">
-                    <MudText Class="text-opacity" Typo="Typo.h3"><span class="underline">Uľahčite</span> si štúdium.</MudText>
+                    <MudText Typo="Typo.h3"><span class="underline">Uľahčite</span> si štúdium.</MudText>
                     <MudText Typo="Typo.h5">Prihláste sa a zahoďte papiere za hlavu!</MudText>
                     <div>
                         <MudButton Class="mr-2 button-shake" Variant="Variant.Filled" Color="Color.Primary" OnClick="@(() => NavigationManager.NavigateTo("Account/Login"))">Prihlásiť sa</MudButton>

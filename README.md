@@ -10,9 +10,11 @@ Pre spustenie je potrebné mať nainštalovaný Docker. Projekt je potom spustit
 Po úspešnom prihlásení do aplikácie je potrebné v databáze (napr. cez program DBeaver zmeniť rolu uživateľa v tabuľke AspNetUserRoles na ID role admina). Po zmene je tento uživateľ definovaný ako **admin** a má prístup k všetkým funkciam aplikácie.
 ### Prístup admina:
 1. Pridávanie, mazanie a úprava rolí uživateľov v položke Admin
-2. Pridávanie, mazanie a úprava dizertačných tém v položke Theses (Pre pridanie témy je nutné mať aspoň jedného uživateľa s rolou Teacher)
-3. Mazanie a úprava komentárov pri nepotvrdených dizertačných prácach (Pre pridávanie komentárov je potrebné mať rolu Reviewer)
-4. Potvrdzovanie dizertačných tém
+2. Úprava informácií o užívateľoch
+3. Pridávanie, mazanie a úprava dizertačných tém v položke Theses (Pre pridanie témy je nutné mať aspoň jedného uživateľa s rolou Teacher)
+4. Mazanie a úprava komentárov pri nepotvrdených dizertačných prácach (Pre pridávanie komentárov je potrebné mať rolu Reviewer)
+5. Potvrdzovanie dizertačných tém
+6. Vytváranie, priradzovanie, úprava a mazanie študijného plánu.
 
 ## Momentálny stav aplikácie
 V súčasnom stave aplikácia obsahuje:
@@ -27,6 +29,9 @@ V súčasnom stave aplikácia obsahuje:
 9. Mazanie komentárov dizertačných prác
 10. Úprava komentárov dizertačných prác
 11. Zobrazovanie potvrdených dizertačných tém - potvrdené témy si môže zobraziť ktokoľvek
+12. Vytvorenie a priradenie štúdijného plánu študentovi - študentovi je možné priradiť dizertačnú tému do štúdijného plánu
+13. Mazanie študijného plánu študenta
+14. Úprava študijného plánu študenta
 
 ## Použité technológie
 1. Aplikácia - Blazor Web App (Server)

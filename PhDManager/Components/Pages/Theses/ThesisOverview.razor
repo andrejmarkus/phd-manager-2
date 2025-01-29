@@ -5,78 +5,80 @@
 @using PhDManager.Models
 @using PhDManager.Services
 @using PhDManager.Services.IRepositories
+@using System.Net.Mime
 
 @rendermode InteractiveServer
 
+@inject IJSRuntime JSRuntime
 @inject IUnitOfWork UnitOfWork
 @inject UserManager<ApplicationUser> UserManager
 @inject UsersService UsersService
 @inject NavigationManager NavigationManager
 @inject IDialogService DialogService
+@inject DocumentService DocumentService
 
 <PageTitle>Thesis</PageTitle>
 
 @if (_thesis is not null)
 {
     <MudText Align="Align.Center" Typo="Typo.h4">@_thesis.Title</MudText>
-    <MudPaper Class="pa-2">
-        <MudStack Spacing="5">
-            @if (_thesis.TitleEnglish is not null)
-            {
-                <div>
-                    <MudText Typo="Typo.h6">Title of the dissertation thesis</MudText>
-                    <MudText Typo="Typo.body1">@_thesis.TitleEnglish</MudText>
+    <MudStack Spacing="5">
+        @if (_thesis.TitleEnglish is not null)
+        {
+            <div>
+                <MudText Typo="Typo.h6">Title of the dissertation thesis</MudText>
+                <MudText Typo="Typo.body1">@_thesis.TitleEnglish</MudText>
+            </div>
+        }
+        <div>
+            <MudText Typo="Typo.h6">Školiteľ</MudText>
+            <MudText Typo="Typo.body1">@_thesis.Supervisor.DisplayName</MudText>
+        </div>
+        <div>
+            <MudText Typo="Typo.h6">Študijný odbor</MudText>
+            <MudText Typo="Typo.body1">@_thesis.StudyProgram.Name</MudText>
+        </div>
+        <div>
+            <MudText Typo="Typo.h6">Detailnejší opis problému</MudText>
+            <MudText Typo="Typo.body1" Class="break-lines">@_thesis.Description</MudText>
+        </div>
+        @if (_thesis.DescriptionEnglish is not null)
+        {
+            <div>
+                <MudText Typo="Typo.h6">Detailed description of the problem</MudText>
+                <MudText Typo="Typo.body1" Class="break-lines">@_thesis.DescriptionEnglish</MudText>
+            </div>
+        }
+        <div>
+            <MudText Typo="Typo.h6">Predpokladaný vedecký prínos</MudText>
+            <MudText Typo="Typo.body1" Class="break-lines">@_thesis.ScientificContribution</MudText>
+        </div>
+        <div>
+            <MudText Typo="Typo.h6">Odporučány postup vedeckého bádania</MudText>
+            <MudText Typo="Typo.body1" Class="break-lines">@_thesis.ScientificProgress</MudText>
+        </div>
+        <div>
+            <MudText Typo="Typo.h6">Druh výskumu</MudText>
+            <MudText Typo="Typo.body1">@_thesis.ResearchType</MudText>
+        </div>
+        <div>
+            <MudText Typo="Typo.h6">Výskumná úloha, ktorej súčasťou bude riešená téma</MudText>
+            <MudText Typo="Typo.body1" Class="break-lines">@_thesis.ResearchTask</MudText>
+        </div>
+        <div>
+            <MudText Typo="Typo.h6">Doterajšie výsledky riešenia na školiacom pracovisku, vrátane odkazov na dostupné zdroje</MudText>
+            <MudText Typo="Typo.body1" Class="break-lines">@_thesis.SolutionResults</MudText>
+        </div>
+        <AuthorizeView Roles="Admin, Teacher">
+            <Authorized>
+                <div class="d-flex gap-1">
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@(() => GenerateDocument())">Dokument</MudButton>
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="@($"/theses/edit/{_thesis.Guid}")">Uprav</MudButton>
+                    <MudButton Variant="Variant.Filled" Color="Color.Error" OnClick="@(() => DeleteThesis(_thesis))">Vymaž</MudButton>
                 </div>
-            }
-            <div>
-                <MudText Typo="Typo.h6">Školiteľ</MudText>
-                <MudText Typo="Typo.body1">@_thesis.Supervisor.DisplayName</MudText>
-            </div>
-            <div>
-                <MudText Typo="Typo.h6">Študijný odbor</MudText>
-                <MudText Typo="Typo.body1">@_thesis.StudyProgram.Name</MudText>
-            </div>
-            <div>
-                <MudText Typo="Typo.h6">Detailnejší opis problému</MudText>
-                <MudText Typo="Typo.body1" Class="break-lines">@_thesis.Description</MudText>
-            </div>
-            @if (_thesis.DescriptionEnglish is not null)
-            {
-                <div>
-                    <MudText Typo="Typo.h6">Detailed description of the problem</MudText>
-                    <MudText Typo="Typo.body1" Class="break-lines">@_thesis.DescriptionEnglish</MudText>
-                </div>
-            }
-            <div>
-                <MudText Typo="Typo.h6">Predpokladaný vedecký prínos</MudText>
-                <MudText Typo="Typo.body1" Class="break-lines">@_thesis.ScientificContribution</MudText>
-            </div>
-            <div>
-                <MudText Typo="Typo.h6">Odporučány postup vedeckého bádania</MudText>
-                <MudText Typo="Typo.body1" Class="break-lines">@_thesis.ScientificProgress</MudText>
-            </div>
-            <div>
-                <MudText Typo="Typo.h6">Druh výskumu</MudText>
-                <MudText Typo="Typo.body1">@_thesis.ResearchType</MudText>
-            </div>
-            <div>
-                <MudText Typo="Typo.h6">Výskumná úloha, ktorej súčasťou bude riešená téma</MudText>
-                <MudText Typo="Typo.body1" Class="break-lines">@_thesis.ResearchTask</MudText>
-            </div>
-            <div>
-                <MudText Typo="Typo.h6">Doterajšie výsledky riešenia na školiacom pracovisku, vrátane odkazov na dostupné zdroje</MudText>
-                <MudText Typo="Typo.body1" Class="break-lines">@_thesis.SolutionResults</MudText>
-            </div>
-            <AuthorizeView Roles="Admin, Teacher">
-                <Authorized>
-                    <div class="d-flex gap-1">
-                        <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="@($"/theses/edit/{_thesis.Guid}")">Uprav</MudButton>
-                        <MudButton Variant="Variant.Filled" Color="Color.Error" OnClick="@(() => DeleteThesis(_thesis))">Vymaž</MudButton>
-                    </div>
-                </Authorized>
-            </AuthorizeView>
-        </MudStack>
-    </MudPaper>
+            </Authorized>
+        </AuthorizeView>
+    </MudStack>
     @if (!_thesis.IsApproved)
     {
         <AuthorizeView Roles="Admin, Teacher, Reviewer">
@@ -187,4 +189,32 @@
         _thesis = await UnitOfWork.Theses.GetByGuidAsync(ThesisGuid);
     }
 
+    private async Task GenerateDocument()
+    {
+        var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "templates", "thesis_template.docx");
+        var replacements = new Dictionary<string, string>()
+        {
+            {"{Title}", _thesis.Title},
+            {"{Supervisor}", _thesis.Supervisor.DisplayName},
+            {"{StudyProgram}", _thesis.StudyProgram.Name},
+            {"{DailyStudy}", _thesis.DailyStudy ? "☑" : "☐"},
+            {"{ExternalStudy}", _thesis.ExternalStudy ? "☑" : "☐"},
+            {"{Description}", _thesis.Description},
+            {"{ScientificContribution}", _thesis.ScientificContribution},
+            {"{ScientificProgress}", _thesis.ScientificProgress},
+            {"{ResearchType}", _thesis.ResearchType},
+            {"{ResearchTask}", _thesis.ResearchTask},
+            {"{SolutionResults}", _thesis.SolutionResults}
+        };
+
+        using (var documentStream = DocumentService.GenerateDocument(path, replacements))
+        {
+            var documentBytes = documentStream.ToArray();
+
+            var documentName = DocumentService.NormalizeName(_thesis.Title) + ".docx";
+            var contentType = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+
+            await JSRuntime.InvokeVoidAsync("saveAsFile", documentName, documentBytes, contentType);
+        }
+    }
 }

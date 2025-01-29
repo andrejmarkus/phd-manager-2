@@ -85,7 +85,7 @@ namespace PhDManager.Services
             var emailStore = GetEmailStore();
             await emailStore.SetEmailAsync(user, mail, CancellationToken.None);
             user.EmailConfirmed = true;
-            user.DisplayName = entry.DirectoryAttributes["cn"].GetValue<string>();
+            user.DisplayName = entry.DirectoryAttributes["displayName"].GetValue<string>();
 
             return user;
         }

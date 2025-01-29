@@ -3,6 +3,8 @@
 @using PhDManager.Data
 @using PhDManager.Services
 
+@rendermode InteractiveServer
+
 @inject ActiveDirectoryService ActiveDirectoryService
 @inject UsersService UsersService
 @inject NavigationManager NavigationManager
@@ -23,7 +25,7 @@
                 <SelectColumn T="LdapEntry" />
                 <PropertyColumn Property="@(e => e.DirectoryAttributes["uid"].GetValue<string>())" Title="Username" />
                 <PropertyColumn Property="@(e => e.DirectoryAttributes["mail"].GetValue<string>())" Title="Email" />
-                <PropertyColumn Property="@(e => e.DirectoryAttributes["cn"].GetValue<string>())" Title="Display Name" />
+                <PropertyColumn Property="@(e => e.DirectoryAttributes["displayName"].GetValue<string>())" Title="Display Name" />
                 <PropertyColumn Property="@(e => e.DirectoryAttributes["givenName"].GetValue<string>())" Title="First Name" />
                 <PropertyColumn Property="@(e => e.DirectoryAttributes["sn"].GetValue<string>())" Title="Last Name" />
             </Columns>

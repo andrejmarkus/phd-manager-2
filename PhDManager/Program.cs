@@ -56,6 +56,7 @@ builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<RoleInitializer>();
 builder.Services.AddScoped<ActiveDirectoryService>();
 builder.Services.AddScoped<UsersService>();
+builder.Services.AddScoped<DocumentService>();
 
 var app = builder.Build();
 

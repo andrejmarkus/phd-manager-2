@@ -1,5 +1,7 @@
 ﻿@page "/admin/users"
 
+@rendermode InteractiveServer
+
 @using LdapForNet
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Identity
@@ -24,7 +26,7 @@
     <ToolBarContent>
         <MudText Typo="Typo.h6" GutterBottom="false">Uživatelia</MudText>
         <MudSpacer />
-        <MudTextField Class="mr-4" @bind-Value="_search" Placeholder="Vyhľadaj" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium"></MudTextField>
+        <MudTextField Class="mr-4" @bind-Value="_search" Variant="Variant.Outlined" Placeholder="Vyhľadaj" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium"></MudTextField>
         <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@(() => _visible = true)">Pridaj uživateľa</MudButton>
     </ToolBarContent>
     <Columns>
@@ -148,8 +150,14 @@
 
     private async Task DeleteUser(UserInfo userInfo)
     {
-        await UsersService.DeleteUserAsync(userInfo.User);
-        _users = _users.Where(u => u.User.Id != userInfo.User.Id).ToArray();
+        var user = userInfo.User;
+        if (user.Address is not null) await UnitOfWork.Addresses.DeleteAsync(user.Address.Id);
+        if (user.IndividualPlan is not null) await UnitOfWork.IndividualPlans.DeleteAsync(user.IndividualPlan.Id);
+        user.SupervisorTheses.ForEach(async st => await UnitOfWork.Theses.DeleteAsync(st.Id));
+        user.Comments.ForEach(async c => await UnitOfWork.Comments.DeleteAsync(c.Id));
+        await UsersService.DeleteUserAsync(user);
+
+        _users = _users.Where(u => u.User.Id != user.Id).ToArray();
     }
 
     private async Task DeleteIndividualPlan(IndividualPlan individualPlan)

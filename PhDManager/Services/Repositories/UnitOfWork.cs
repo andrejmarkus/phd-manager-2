@@ -14,6 +14,7 @@ namespace PhDManager.Services.Repositories
         public ISubjectRepository Subjects { get; private set; }
         public ICommentRepository Comments { get; private set; }
         public IIndividualPlanRepository IndividualPlans { get; private set; }
+        public IAddressRepository Addresses { get; private set; }
 
         public UnitOfWork(ApplicationDbContext context, ILoggerFactory loggerFactory)
         {
@@ -26,6 +27,7 @@ namespace PhDManager.Services.Repositories
             Subjects = new SubjectRepository(_context, _logger);
             Comments = new CommentRepository(_context, _logger);
             IndividualPlans = new IndividualPlanRepository(_context, _logger);
+            Addresses = new AddressRepository(_context, _logger);
         }
 
         public async Task CompleteAsync()

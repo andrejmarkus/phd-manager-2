@@ -8,6 +8,7 @@
         ISubjectRepository Subjects { get; }
         ICommentRepository Comments { get; }
         IIndividualPlanRepository IndividualPlans { get; }
+        IAddressRepository Addresses { get; }
         Task CompleteAsync();
     }
 }

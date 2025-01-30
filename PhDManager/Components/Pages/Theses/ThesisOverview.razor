@@ -72,7 +72,7 @@
         <AuthorizeView Roles="Admin, Teacher">
             <Authorized>
                 <div class="d-flex gap-1">
-                    <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@(() => GenerateDocument())">Dokument</MudButton>
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@(() => DownloadDocument())">Dokument</MudButton>
                     <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="@($"/theses/edit/{_thesis.Guid}")">Uprav</MudButton>
                     <MudButton Variant="Variant.Filled" Color="Color.Error" OnClick="@(() => DeleteThesis(_thesis))">Vymaž</MudButton>
                 </div>
@@ -189,8 +189,9 @@
         _thesis = await UnitOfWork.Theses.GetByGuidAsync(ThesisGuid);
     }
 
-    private async Task GenerateDocument()
+    private async Task DownloadDocument()
     {
+        var documentName = DocumentService.NormalizeName(_thesis.Title) + ".docx";
         var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "templates", "thesis_template.docx");
         var replacements = new Dictionary<string, string>()
         {
@@ -207,14 +208,9 @@
             {"{SolutionResults}", _thesis.SolutionResults}
         };
 
-        using (var documentStream = DocumentService.GenerateDocument(path, replacements))
-        {
-            var documentBytes = documentStream.ToArray();
+        var document = DocumentService.GenerateDocumentData(path, replacements);
+        using var documentStream = new DotNetStreamReference(document);
 
-            var documentName = DocumentService.NormalizeName(_thesis.Title) + ".docx";
-            var contentType = "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
-
-            await JSRuntime.InvokeVoidAsync("saveAsFile", documentName, documentBytes, contentType);
-        }
+        await JSRuntime.InvokeVoidAsync("saveAsFile", documentName, documentStream);
     }
 }

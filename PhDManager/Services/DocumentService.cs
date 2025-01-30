@@ -7,14 +7,19 @@ namespace PhDManager.Services
 {
     public class DocumentService
     {
-        public MemoryStream GenerateDocument(string path, Dictionary<string, string> replacements)
+        public string NormalizeName(string name)
         {
-            var memoryStream = new MemoryStream();
+            return new string(name.Normalize(NormalizationForm.FormD).Where(c => CharUnicodeInfo.GetUnicodeCategory(c) != UnicodeCategory.NonSpacingMark).Select(c => c == ' ' ? '_' : c).ToArray());
+        }
+
+        public Stream GenerateDocumentData(string path, Dictionary<string, string> replacements)
+        {
+            var documentStream = new MemoryStream();
 
             using (WordprocessingDocument document = WordprocessingDocument.CreateFromTemplate(path))
             {
                 var body = document.MainDocumentPart?.Document.Body;
-                if (body is null) return memoryStream;
+                if (body is null) return documentStream;
 
                 foreach (var replacement in replacements)
                 {
@@ -27,16 +32,11 @@ namespace PhDManager.Services
                     }
                 }
 
-                document.Clone(memoryStream);
+                document.Clone(documentStream);
             }
             
-            memoryStream.Seek(0, SeekOrigin.Begin);
-            return memoryStream;
-        }
-
-        public string NormalizeName(string name)
-        {
-            return new string(name.Normalize(NormalizationForm.FormD).Where(c => CharUnicodeInfo.GetUnicodeCategory(c) != UnicodeCategory.NonSpacingMark).Select(c => c == ' ' ? '_' : c).ToArray());
+            documentStream.Seek(0, SeekOrigin.Begin);
+            return documentStream;
         }
     }
 }

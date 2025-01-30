@@ -1,15 +1,16 @@
 ﻿@implements IDisposable
 
 @inject NavigationManager NavigationManager
+@inject IJSRuntime JSRuntime
 
 <MudNavMenu>
     <MudNavLink Href="" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Home">Domov</MudNavLink>
     <AuthorizeView Roles="Admin">
         <Authorized>
-            <MudNavGroup Title="Admin" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.AdminPanelSettings">
+            <MudNavGroup Title="Admin" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.AdminPanelSettings" HideExpandIcon>
                 <MudNavLink Href="/admin/users" Icon="@Icons.Material.Filled.Group">Použivatelia</MudNavLink>
                 <MudNavLink Href="/admin/individual-plan/add" Icon="@Icons.Material.Filled.ContactPage">Individuálny plán</MudNavLink>
-                <MudNavLink Href="/admin/create-register" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Person">Vytvor registráciu</MudNavLink>
+                <MudNavLink Href="/admin/create-register" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.PersonAdd">Vytvor registráciu</MudNavLink>
             </MudNavGroup>
         </Authorized>
     </AuthorizeView>
@@ -23,12 +24,11 @@
     <AuthorizeView>
         <Authorized>
             <MudNavLink Href="Account/Manage" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Person">@context.User.Identity?.Name</MudNavLink>
-            <form action="Account/Logout" method="post">
+            <MudNavLink OnClick="Logout" IconColor="Color.Error" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Logout">Odhlásiť sa</MudNavLink>
+
+            <form id="logoutForm" action="Account/Logout" method="post">
                 <AntiforgeryToken />
                 <input type="hidden" name="ReturnUrl" value="@currentUrl" />
-                <button type="submit" class="mud-nav-link mud-ripple">
-                    <MudIcon Icon="@Icons.Material.Filled.Logout" Color="Color.Info" Class="mr-3"></MudIcon> Odhlásiť sa
-                </button>
             </form>
         </Authorized>
         <NotAuthorized>
@@ -45,6 +45,11 @@
     {
         currentUrl = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
         NavigationManager.LocationChanged += OnLocationChanged;
+    }
+
+    private async Task Logout()
+    {
+        await JSRuntime.InvokeVoidAsync("logout");
     }
 
     private void OnLocationChanged(object? sender, LocationChangedEventArgs e)

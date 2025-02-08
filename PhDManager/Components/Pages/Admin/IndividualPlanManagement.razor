@@ -42,7 +42,7 @@
     </div>
     <div class="d-flex gap-3 align-center">
         <MudText Class="width-half">Termín odovzdania dizertačnej práce (zvyčajne apríl v roku ukončenia štúdia)</MudText>
-        <MudDatePicker ShowToolbar="false" Required RequiredError="Je nutné zadať termín odovzdania!" Label="Termín odovzdania" Variant="Variant.Outlined" @bind-Date="_individualPlan.DissertationSubmissionDate" />
+        <MudDatePicker ShowToolbar="false" Required RequiredError="Je nutné zadať termín odovzdania!" Label="Termín odovzdania" Variant="Variant.Outlined" FixDay="1" OpenTo="OpenTo.Month" @bind-Date="_individualPlan.DissertationSubmissionDate" />
     </div>
     <div class="d-flex gap-3 align-center">
         <MudText Class="width-half">Termín ukončenia doktorandského štúdia vrátane obhajoby dizertačnej práce (zvyčajne 31.8. po 3 rokoch štúdia interní doktorandi a po 4 rokoch externí doktorandi)</MudText>

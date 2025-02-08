@@ -16,7 +16,7 @@
 @inject NavigationManager NavigationManager
 @inject UserManager<ApplicationUser> UserManager;
 
-@attribute [Authorize(Roles = "Teacher, Admin")]
+@attribute [Authorize(Roles = "Admin, Učiteľ")]
 
 <PageTitle>@(ThesisGuid is null ? "Pridanie dizertačnej témy" : "Úprava dizertačnej témy")</PageTitle>
 
@@ -33,11 +33,18 @@
     <MudAutocomplete T="ApplicationUser" Required RequiredError="Je zvoliť školiteľa!" Label="Školiteľ" ToStringFunc="@(u => u is null ? null : u.DisplayName)" SearchFunc="SearchTeachers" Variant="Variant.Outlined" @bind-Value="_thesis.Supervisor" />
 
     <MudText Typo="Typo.h5">Zaradenie témy</MudText>
-    <MudAutocomplete T="StudyProgram" Required RequiredError="Je nutné zvoliť študijný odbor!" Label="Študijný odbor" ToStringFunc="@(sp => sp is null ? null : sp.Name)" Variant="Variant.Outlined" SearchFunc="SearchStudyPrograms" @bind-Value="_thesis.StudyProgram" />
-    <div class="d-flex gap-1">
+    <MudAutocomplete T="StudyProgram" Required RequiredError="Je nutné zvoliť študijný odbor!" Label="Študijný program" ToStringFunc="@(sp => sp is null ? null : sp.Name)" Variant="Variant.Outlined" SearchFunc="SearchStudyPrograms" @bind-Value="_thesis.StudyProgram" />
+    <MudTextField T="string" Label="Študijný odbor" Variant="Variant.Outlined" @bind-Value="_thesis.StudyFieldName" />
+    <MudStack Row>
         <MudCheckBox T="bool" @bind-Value="_thesis.DailyStudy">denná</MudCheckBox>
         <MudCheckBox T="bool" @bind-Value="_thesis.ExternalStudy">externá</MudCheckBox>
-    </div>
+    </MudStack>
+    <MudStack Spacing="0">
+        <MudText>Povinné študijné jednotky</MudText>
+        <MudTextField T="string" Variant="Variant.Outlined" Label="@($"1. jednotka")" @bind-Value="@_thesis.SubjectNames[0]" />
+        <MudTextField T="string" Variant="Variant.Outlined" Label="@($"2. jednotka")" @bind-Value="@_thesis.SubjectNames[1]" />
+        <MudTextField T="string" Variant="Variant.Outlined" Label="@($"3. jednotka")" @bind-Value="@_thesis.SubjectNames[2]" />
+    </MudStack>
 
     <MudText Typo="Typo.h5">Špecifikácia témy</MudText>
     <MudTextField T="string" Required RequiredError="Je nutné zadať opis problému!" Label="Detailnejší opis problému" AutoGrow Lines="5" Variant="Variant.Outlined" @bind-Value="_thesis.Description" />
@@ -49,13 +56,19 @@
     <MudTextField T="string" Required RequiredError="Je nutné zadať odporúčaný postup vedeckého bádania!" Label="Odporučány postup vedeckého bádania" AutoGrow Lines="3" Variant="Variant.Outlined" @bind-Value="_thesis.ScientificProgress" />
 
     <MudText Typo="Typo.h5">Ďalšie informácie</MudText>
-    <MudSelect T="string" Required RequiredError="Je nutné zvoliť druh výskumu!" Label="Druh výskumu" Variant="Variant.Outlined" @bind-Value="_thesis.ResearchType">
-        <MudSelectItem T="string" Value="@("Aplikovaný výskum a experimentálny vývoj")">Aplikovaný výskum a experimentálny vývoj</MudSelectItem>
-        <MudSelectItem T="string" Value="@("Aplikovaný výskum")">Aplikovaný výskum</MudSelectItem>
-        <MudSelectItem T="string" Value="@("Základný výskum")">Základný výskum</MudSelectItem>
-    </MudSelect>
+    <MudStack>
+        <MudSelect T="string" Required RequiredError="Je nutné zvoliť druh výskumu!" Label="Druh výskumu" Variant="Variant.Outlined" @bind-Value="_thesis.ResearchType">
+            <MudSelectItem T="string" Value="@("Aplikovaný výskum a experimentálny vývoj")">Aplikovaný výskum a experimentálny vývoj</MudSelectItem>
+            <MudSelectItem T="string" Value="@("Aplikovaný výskum")">Aplikovaný výskum</MudSelectItem>
+            <MudSelectItem T="string" Value="@("Základný výskum")">Základný výskum</MudSelectItem>
+        </MudSelect>
+        <MudText>Zadajte druh výskumu, v ktorom bude téma riešená.</MudText>
+    </MudStack>
     <MudTextField T="string" Required RequiredError="Je nutné zadať výskumnú úlohu" Label="Výskumná úloha, ktorej súčasťou bude riešená téma" AutoGrow Lines="4" Variant="Variant.Outlined" @bind-Value="_thesis.ResearchTask" />
-    <MudTextField T="string" Required RequiredError="Je nutné zadať doterajšie výsledky riešenia na školiacom pracovisku!" Label="Doterajšie výsledky riešenia na školiacom pracovisku, vrátane odkazov na dostupné zdroje" AutoGrow Lines="6" Variant="Variant.Outlined" @bind-Value="_thesis.SolutionResults" />
+    <MudStack>
+        <MudTextField T="string" Required RequiredError="Je nutné zadať doterajšie výsledky riešenia na školiacom pracovisku!" Label="Doterajšie výsledky riešenia na školiacom pracovisku, vrátane odkazov na dostupné zdroje" AutoGrow Lines="6" Variant="Variant.Outlined" @bind-Value="_thesis.SolutionResults" />
+        <MudText>Uveďte zoznam literatúry v rovnakom štýle, v akom je zobrazovaná v univerzitnej knižnici ŽU.</MudText>
+    </MudStack>
     <MudButton class="mt-4" OnClick="HandleThesis" Variant="Variant.Filled" Color="Color.Primary">@(ThesisGuid is null ? "Pridať" : "Upraviť")</MudButton>
 </MudForm>
 
@@ -67,7 +80,7 @@
     private IEnumerable<ApplicationUser> _teachers;
     private IEnumerable<StudyProgram>? _studyPrograms;
 
-    private Thesis _thesis = new();
+    private Thesis _thesis = new() { SubjectNames = new List<string> { "", "", "" } };
     private bool _isEnglish = false;
 
     protected override async Task OnInitializedAsync()
@@ -87,8 +100,9 @@
             using var scope = ServiceProvider.CreateScope();
             var usersService = scope.ServiceProvider.GetRequiredService<UsersService>();
             var role = await usersService.GetUserRoleAsync(u);
-            return role == "Teacher";
+            return role == "Učiteľ";
         }).ToArrayAsync();
+
         _studyPrograms = await UnitOfWork.StudyPrograms.GetAllAsync();
     }
 

@@ -17,16 +17,16 @@ namespace PhDManager.Models
         public string ResearchType { get; set; } = string.Empty;
         public string ResearchTask { get; set; } = string.Empty;
         public string SolutionResults { get; set; } = string.Empty;
+        public string StudyFieldName { get; set; } = string.Empty;
         public bool DailyStudy { get; set; } = false;
         public bool ExternalStudy { get; set; } = false;
+        public List<string> SubjectNames { get; set; } = new();
         public string SupervisorId { get; set; } = string.Empty;
         public virtual ApplicationUser Supervisor { get; set; }
         public int StudyProgramId { get; set; }
         public virtual StudyProgram StudyProgram { get; set; }
 
-        public virtual List<Subject> Subjects { get; set; } = new List<Subject>();
-
-        public virtual List<Comment> Comments { get; set; } = new List<Comment>();
+        public virtual List<Comment> Comments { get; set; } = new();
 
         [JsonIgnore]
         public virtual IndividualPlan? IndividualPlan { get; set; }

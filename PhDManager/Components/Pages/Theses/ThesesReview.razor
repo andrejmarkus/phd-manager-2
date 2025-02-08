@@ -9,7 +9,7 @@
 @inject IUnitOfWork UnitOfWork
 @inject NavigationManager NavigationManager
 
-@attribute [Authorize(Roles = "Admin, Teacher, Reviewer")]
+@attribute [Authorize(Roles = "Admin, Učiteľ, Externista")]
 
 <PageTitle>Dizertačné témy čakajúce na potvrdenie</PageTitle>
 
@@ -23,10 +23,11 @@
             <MudItem xs="12" md="6">
                 <MudPaper Class="pa-2">
                     <MudText Typo="Typo.h6">@thesis.Title</MudText>
-                    <MudText Typo="Typo.body2">@thesis.Description</MudText>
+                    <MudText Typo="Typo.body2"><b>Školiteľ: </b> @thesis.Supervisor.DisplayName</MudText>
+                    <MudText Typo="Typo.body2"><b>Študijný program: </b> @thesis.StudyProgram.Name</MudText>
                     <div class="d-flex justify-space-between mt-2">
                         <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="@($"/theses/{thesis.Guid}")">Detail</MudButton>
-                        <AuthorizeView Roles="Admin, Reviewer">
+                        <AuthorizeView Roles="Admin, Externista">
                             <Authorized>
                                 <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@(() => AcceptThesis(thesis))">Potvrdiť</MudButton>
                             </Authorized>

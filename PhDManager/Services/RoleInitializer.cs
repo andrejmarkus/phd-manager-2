@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using PhDManager.Services.IRepositories;
 
 namespace PhDManager.Services
 {
@@ -9,7 +8,7 @@ namespace PhDManager.Services
 
         public async Task InitializeAsync()
         {
-            string[] roles = { "Admin", "User", "Teacher", "Officer", "Vicedean", "Graduant", "Reviewer" };
+            string[] roles = { "Admin", "Študent", "Učiteľ", "Referent", "Prodekan", "Externista" };
 
             foreach (string role in roles)
             {

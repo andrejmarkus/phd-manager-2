@@ -69,7 +69,7 @@
             <MudText Typo="Typo.h6">Doterajšie výsledky riešenia na školiacom pracovisku, vrátane odkazov na dostupné zdroje</MudText>
             <MudText Typo="Typo.body1" Class="break-lines">@_thesis.SolutionResults</MudText>
         </div>
-        <AuthorizeView Roles="Admin, Teacher">
+        <AuthorizeView Roles="Admin, Učiteľ">
             <Authorized>
                 <div class="d-flex gap-1">
                     <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@(() => DownloadDocument())">Dokument</MudButton>
@@ -81,11 +81,12 @@
     </MudStack>
     @if (!_thesis.IsApproved)
     {
-        <AuthorizeView Roles="Admin, Teacher, Reviewer">
+        <AuthorizeView Roles="Admin, Učiteľ, Externista">
             <Authorized>
                 <MudStack Class="mt-5">
-                    <MudText Typo="Typo.h6">Komentáre</MudText>
-                    @if (_thesis.Comments?.Count() > 0) {
+                    @if (_thesis.Comments?.Count() > 0)
+                    {
+                        <MudText Typo="Typo.h6">Komentáre</MudText>
                         @foreach (var comment in _thesis.Comments)
                         {
                             <MudPaper Class="pa-2">
@@ -102,7 +103,7 @@
                                             </div>
                                         </Authorized>
                                     </AuthorizeView>
-                                    <AuthorizeView Roles="Reviewer" Context="editContext">
+                                    <AuthorizeView Roles="Externista" Context="editContext">
                                         <Authorized>
                                             @if (_currentUserId?.Equals(comment.ReviewerId) == true)
                                             {
@@ -117,7 +118,7 @@
                             </MudPaper>
                         }
                     }
-                    <AuthorizeView Roles="Reviewer" Context="reviewerContext">
+                    <AuthorizeView Roles="Externista" Context="reviewerContext">
                         <Authorized>
                             <MudTextField @bind-Value="_commentText" Label="Komentár" Variant="Variant.Outlined" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Send" OnAdornmentClick="PostComment"></MudTextField>
                         </Authorized>
@@ -198,8 +199,12 @@
             {"{Title}", _thesis.Title},
             {"{Supervisor}", _thesis.Supervisor.DisplayName},
             {"{StudyProgram}", _thesis.StudyProgram.Name},
+            {"{StudyField}", _thesis.StudyFieldName},
             {"{DailyStudy}", _thesis.DailyStudy ? "☑" : "☐"},
             {"{ExternalStudy}", _thesis.ExternalStudy ? "☑" : "☐"},
+            {"{Subject1}", _thesis.SubjectNames[0]},
+            {"{Subject2}", _thesis.SubjectNames[1]},
+            {"{Subject3}", _thesis.SubjectNames[2]},
             {"{Description}", _thesis.Description},
             {"{ScientificContribution}", _thesis.ScientificContribution},
             {"{ScientificProgress}", _thesis.ScientificProgress},

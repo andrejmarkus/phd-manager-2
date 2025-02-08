@@ -33,7 +33,7 @@
         <PropertyColumn Property="u => u.User.UserName" Title="Používateľské meno" Editable="false" />
         <PropertyColumn Property="u => u.User.DisplayName" Title="Celé meno" Editable="false" />
         <PropertyColumn Property="u => u.User.Email" Title="Email" Editable="false" />
-        <PropertyColumn Property="u => u.User.EmailConfirmed" Title="Potvrdený email" Editable="false" />
+        <PropertyColumn Property="@(u => u.User.EmailConfirmed ? "Áno" : "Nie")" Title="Potvrdený email" Editable="false" />
         <PropertyColumn Property="u => u.Role" Title="Rola" Editable="true">
             <EditTemplate>
                 <MudSelect Class="mt-2" Variant="Variant.Outlined" @bind-Value="context.Item.Role" Required>

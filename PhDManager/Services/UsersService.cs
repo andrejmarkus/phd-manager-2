@@ -61,7 +61,7 @@ namespace PhDManager.Services
         {
             var user = await CreateLdapUserAsync(entry);
             var result = await UserManager.CreateAsync(user);
-            await UserManager.AddToRoleAsync(user, "User");
+            await UserManager.AddToRoleAsync(user, "Študent");
 
             return user;
         }
@@ -70,7 +70,7 @@ namespace PhDManager.Services
         {
             var user = await CreateLdapUserAsync(entry);
             var result = await UserManager.CreateAsync(user, password);
-            await UserManager.AddToRoleAsync(user, "User");
+            await UserManager.AddToRoleAsync(user, "Študent");
 
             return user;
         }

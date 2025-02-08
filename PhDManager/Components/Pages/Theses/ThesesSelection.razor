@@ -19,12 +19,12 @@
 <MudText Typo="Typo.h3" GutterBottom="true">Dizertačné témy</MudText>
 
 <div class="d-flex gap-3">
-    <AuthorizeView Roles="Teacher, Admin">
+    <AuthorizeView Roles="Admin, Učiteľ">
         <Authorized>
             <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="/theses/add">Pridať tému</MudButton>
         </Authorized>
     </AuthorizeView>
-    <AuthorizeView Roles="Teacher, Admin, Reviewer">
+    <AuthorizeView Roles="Admin, Učiteľ, Externista">
         <Authorized>
             <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="/theses/review">Potvrdiť tému</MudButton>
         </Authorized>
@@ -73,7 +73,7 @@
                                 </div>
                             </Authorized>
                         </AuthorizeView>
-                        <AuthorizeView Roles="Teacher">
+                        <AuthorizeView Roles="Učiteľ">
                             <Authorized>
                                 @if (_currentUserId?.Equals(thesis.SupervisorId) == true)
                                 {
@@ -111,7 +111,7 @@
             using var scope = ServiceProvider.CreateScope();
             var usersService = scope.ServiceProvider.GetRequiredService<UsersService>();
             var role = await usersService.GetUserRoleAsync(u);
-            return role == "Teacher";
+            return role == "Učiteľ";
         }).ToArrayAsync();
         _currentUserId = await UsersService.GetCurrentUserIdAsync();
     }

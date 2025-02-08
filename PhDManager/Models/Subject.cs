@@ -14,7 +14,6 @@ namespace PhDManager.Models
 
         [JsonIgnore]
         public virtual StudyProgram StudyProgram { get; set; }
-        public virtual List<Thesis> Theses { get; set; }
         public virtual List<IndividualPlan> IndividualPlans { get; set; }
     }
 }

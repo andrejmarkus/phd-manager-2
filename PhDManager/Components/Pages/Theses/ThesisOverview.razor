@@ -11,10 +11,10 @@
 
 @inject IJSRuntime JSRuntime
 @inject IUnitOfWork UnitOfWork
+@inject IDialogService DialogService
 @inject UserManager<ApplicationUser> UserManager
 @inject UsersService UsersService
 @inject NavigationManager NavigationManager
-@inject IDialogService DialogService
 @inject DocumentService DocumentService
 
 <PageTitle>Thesis</PageTitle>
@@ -147,7 +147,7 @@
     private async Task UpdateComment(Comment comment)
     {
         var parameters = new DialogParameters<EditCommentDialog> { { x => x.Comment, comment } };
-        var dialog = await DialogService.ShowAsync<EditCommentDialog>("Edit Comment", parameters);
+        var dialog = await DialogService.ShowAsync<EditCommentDialog>("Uprav komentár", parameters);
         var result = await dialog.Result;
 
         if (!result.Canceled) {

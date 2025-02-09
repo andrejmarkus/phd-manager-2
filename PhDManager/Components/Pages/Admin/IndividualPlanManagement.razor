@@ -8,6 +8,8 @@
 @using PhDManager.Services
 @using PhDManager.Services.IRepositories
 
+@rendermode InteractiveServer
+
 @inject IServiceProvider ServiceProvider
 @inject IUnitOfWork UnitOfWork
 @inject UserManager<ApplicationUser> UserManager
@@ -90,7 +92,7 @@
             using var scope = ServiceProvider.CreateScope();
             var userService = scope.ServiceProvider.GetRequiredService<UsersService>();
             var role = await userService.GetUserRoleAsync(u);
-            return role == "User";
+            return role == "Študent";
         }).ToArrayAsync();
         _theses = await UnitOfWork.Theses.GetAllAsync();
         _subjects = await UnitOfWork.Subjects.GetAllAsync();

@@ -18,7 +18,7 @@
 
 <MudText Typo="Typo.h3" GutterBottom="true">Dizertačné témy</MudText>
 
-<div class="d-flex gap-3">
+<MudStack Row>
     <AuthorizeView Roles="Admin, Učiteľ">
         <Authorized>
             <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="/theses/add">Pridať tému</MudButton>
@@ -29,8 +29,9 @@
             <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="/theses/review">Potvrdiť tému</MudButton>
         </Authorized>
     </AuthorizeView>
-</div>
-<div class="d-flex gap-3">
+</MudStack>
+
+<MudStack Row>
     <MudTextField FullWidth T="string" @bind-Value="@_search" @bind-Value:after="UpdateSearch" Immediate="true" Label="Vyhľadaj" Variant="Variant.Outlined" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Search" />
     @if (_studyPrograms is not null)
     {
@@ -52,7 +53,8 @@
             }
         </MudSelect>
     }
-</div>
+</MudStack>
+
 <MudGrid Class="mt-1">
     @if (_theses is not null)
     {

@@ -133,7 +133,7 @@
     [Parameter]
     public string ThesisGuid { get; set; }
 
-    private Thesis _thesis;
+    private Thesis? _thesis;
     private string? _currentUserId;
 
     private string _commentText;
@@ -141,6 +141,8 @@
     protected override async Task OnInitializedAsync()
     {
         _thesis = await UnitOfWork.Theses.GetByGuidAsync(ThesisGuid);
+        if (_thesis is null) NavigationManager.NavigateTo("/notfound");
+
         _currentUserId = await UsersService.GetCurrentUserIdAsync();
     }
 

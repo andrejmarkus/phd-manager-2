@@ -26,17 +26,16 @@ namespace PhDManager.Services
                     var lines = replacement.Value.Split('\n');
                     foreach (var text in body.Descendants<Text>().ToList())
                     {
-                        if (text.Text.Contains(replacement.Key))
+                        if (!text.Text.Contains(replacement.Key)) break;
+
+                        var run = new Run();
+                        for (int i = 0; i < lines.Length; i++)
                         {
-                            var run = new Run();
-                            for (int i = 0; i < lines.Length; i++)
-                            {
-                                run.AppendChild(new Text(lines[i]));
-                                if (i < lines.Length - 1) run.AppendChild(new Break());
-                            }
-                            text.Parent.AppendChild(run);
-                            text.Remove();
+                            run.AppendChild(new Text(lines[i]));
+                            if (i < lines.Length - 1) run.AppendChild(new Break());
                         }
+                        text.Parent?.AppendChild(run);
+                        text.Remove();
                     }
                 }
 

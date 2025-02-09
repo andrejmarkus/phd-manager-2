@@ -18,17 +18,17 @@
     <MudText Align="Align.Center" Typo="Typo.h4">Individuálny plán</MudText>
     <MudPaper Class="pa-2">
         <MudStack Spacing="5">
-            <div>
+            <MudStack>
                 <MudText Typo="Typo.h6">Dizertačná práca</MudText>
                 <MudLink Typo="Typo.body1" Href="@($"/theses/{_individualPlan.Thesis.Guid}")">@_individualPlan.Thesis.Title</MudLink>
-            </div>
-            <div>
+            </MudStack>
+            <MudStack>
                 <MudText Typo="Typo.h6">Predmety</MudText>
                 @foreach (var subject in _individualPlan.Subjects)
                 {
                     <MudText>@subject.Name</MudText>
                 }
-            </div>
+            </MudStack>
         </MudStack>
     </MudPaper>
 }

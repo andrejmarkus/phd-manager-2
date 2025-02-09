@@ -22,6 +22,7 @@ namespace PhDManager.Models
         public bool ExternalStudy { get; set; } = false;
         public List<string> SubjectNames { get; set; } = new();
         public string SupervisorId { get; set; } = string.Empty;
+        [JsonIgnore]
         public virtual ApplicationUser Supervisor { get; set; }
         public int StudyProgramId { get; set; }
         public virtual StudyProgram StudyProgram { get; set; }

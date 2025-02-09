@@ -88,11 +88,10 @@
         if (ThesisGuid is not null)
         {
             var thesis = await UnitOfWork.Theses.GetByGuidAsync(ThesisGuid);
-            if (thesis is not null)
-            {
-                _thesis = thesis;
-                _isEnglish = _thesis?.TitleEnglish is not null;
-            }
+            if (thesis is null) NavigationManager.NavigateTo("/notfound");
+
+            _thesis = thesis;
+            _isEnglish = _thesis?.TitleEnglish is not null;
         }
 
         _teachers = await UserManager.Users.ToAsyncEnumerable().WhereAwait(async u =>

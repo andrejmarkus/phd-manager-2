@@ -1,0 +1,78 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using PhDManager.Models
+@using PhDManager.Models.DTOs
+@using PhDManager.Services.IRepositories
+
+@rendermode InteractiveServer
+
+@inject IUnitOfWork UnitOfWork
+@inject RoleManager<IdentityRole> RoleManager;
+
+<MudDialog>
+    <TitleContent>
+        <MudText Typo="Typo.h6">Uprav užívateľa</MudText>
+    </TitleContent>
+    <DialogContent>
+        <MudSelect T="string" Variant="Variant.Outlined" Label="Rola" @bind-Value="UserInfo.Role" Required>
+            @foreach (var role in _roles)
+            {
+                <MudSelectItem Value="@role.Name">@role.Name</MudSelectItem>
+            }
+        </MudSelect>
+        @if (UserInfo.Role == "Študent")
+        {
+            <MudText Class="mt-4">Študijné informácie</MudText>
+            <MudSelect T="StudyProgram" Variant="Variant.Outlined" Label="Študijný program" @bind-Value="UserInfo.User.StudyProgram" ToStringFunc="@(sp => sp is null ? "" : sp.Name)">
+                @if (_studyPrograms is not null)
+                {
+                    @foreach (var studyProgram in _studyPrograms)
+                    {
+                        <MudSelectItem Value="@studyProgram">@studyProgram.Name</MudSelectItem>
+                    }
+                }
+            </MudSelect>
+            <MudSelect T="bool" Variant="Variant.Outlined" Label="Forma štúdia" @bind-Value="UserInfo.User.IsExternal" ToStringFunc="@(ie => ie ? "Externá" : "Denná")">
+                <MudSelectItem Value="true">Externá</MudSelectItem>
+                <MudSelectItem Value="false">Denná</MudSelectItem>
+            </MudSelect>
+
+            @if (UserInfo.User.Address is not null)
+            {
+                <MudText Class="mt-4">Osobné údaje</MudText>
+                <MudDatePicker ShowToolbar="false" Variant="Variant.Outlined" Label="Dátum narodenia" @bind-Date="UserInfo.User.Birthdate" />
+                <MudTextField T="string" Variant="Variant.Outlined" Label="Telefónne číslo" @bind-Value="UserInfo.User.PhoneNumber" />
+                <MudTextField T="string" Variant="Variant.Outlined" Label="Ulica" @bind-Value="UserInfo.User.Address.Street" />
+                <MudTextField T="string" Variant="Variant.Outlined" Label="Číslo domu" @bind-Value="UserInfo.User.Address.HouseNumber" />
+                <MudTextField T="string" Variant="Variant.Outlined" Label="Mesto" @bind-Value="UserInfo.User.Address.City" />
+                <MudTextField T="string" Variant="Variant.Outlined" Label="PSČ" @bind-Value="UserInfo.User.Address.PostalCode" />
+                <MudTextField T="string" Variant="Variant.Outlined" Label="Štát" @bind-Value="UserInfo.User.Address.Country" />
+            }
+        }
+    </DialogContent>
+    <DialogActions>
+        <MudButton Color="Color.Primary" OnClick="UpdateUser">Uprav</MudButton>
+        <MudButton OnClick="@(() => MudDialog.Cancel())">Zrušiť</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter]
+    private IMudDialogInstance MudDialog { get; set; }
+
+    [Parameter]
+    public UserInfo UserInfo { get; set; }
+
+    private IEnumerable<IdentityRole>? _roles;
+    private IEnumerable<StudyProgram>? _studyPrograms;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _roles = RoleManager.Roles.ToArray();
+        _studyPrograms = await UnitOfWork.StudyPrograms.GetAllAsync();
+    }
+
+    private void UpdateUser()
+    {
+        MudDialog.Close(DialogResult.Ok(UserInfo));
+    }
+}

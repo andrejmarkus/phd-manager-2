@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using PhDManager.Data;
@@ -12,9 +13,11 @@ using PhDManager.Data;
 namespace PhDManager.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250213152032_StudyField")]
+    partial class StudyField
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -201,9 +204,6 @@ namespace PhDManager.Data.Migrations
                     b.Property<int?>("IndividualPlanId")
                         .HasColumnType("integer");
 
-                    b.Property<bool>("IsExternal")
-                        .HasColumnType("boolean");
-
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("boolean");
 
@@ -320,7 +320,7 @@ namespace PhDManager.Data.Migrations
 
                     b.HasIndex("ThesisId");
 
-                    b.ToTable("Comments");
+                    b.ToTable("Comment");
                 });
 
             modelBuilder.Entity("PhDManager.Models.IndividualPlan", b =>
@@ -343,7 +343,7 @@ namespace PhDManager.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("IndividualPlans");
+                    b.ToTable("IndividualPlan");
                 });
 
             modelBuilder.Entity("PhDManager.Models.Registration", b =>

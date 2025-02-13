@@ -34,7 +34,10 @@
 
     <MudText Typo="Typo.h5">Zaradenie témy</MudText>
     <MudAutocomplete T="StudyProgram" Required RequiredError="Je nutné zvoliť študijný odbor!" Label="Študijný program" ToStringFunc="@(sp => sp is null ? null : sp.Name)" Variant="Variant.Outlined" SearchFunc="SearchStudyPrograms" @bind-Value="_thesis.StudyProgram" />
-    <MudTextField T="string" Label="Študijný odbor" Variant="Variant.Outlined" @bind-Value="_thesis.StudyFieldName" />
+    @if (_thesis.StudyProgram is not null)
+    {
+        <MudTextField T="string" Label="Študijný odbor" Variant="Variant.Outlined" @bind-Value="_thesis.StudyProgram.StudyFieldName" ReadOnly />
+    }
     <MudStack Row>
         <MudCheckBox T="bool" @bind-Value="_thesis.DailyStudy">denná</MudCheckBox>
         <MudCheckBox T="bool" @bind-Value="_thesis.ExternalStudy">externá</MudCheckBox>

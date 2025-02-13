@@ -25,57 +25,61 @@
     <MudStack Spacing="5">
         @if (_thesis.TitleEnglish is not null)
         {
-            <div>
+            <MudStack>
                 <MudText Typo="Typo.h6">Title of the dissertation thesis</MudText>
                 <MudText Typo="Typo.body1">@_thesis.TitleEnglish</MudText>
-            </div>
+            </MudStack>
         }
-        <div>
+        <MudStack>
             <MudText Typo="Typo.h6">Školiteľ</MudText>
             <MudText Typo="Typo.body1">@_thesis.Supervisor.DisplayName</MudText>
-        </div>
-        <div>
-            <MudText Typo="Typo.h6">Študijný odbor</MudText>
+        </MudStack>
+        <MudStack>
+            <MudText Typo="Typo.h6">Študijný program</MudText>
             <MudText Typo="Typo.body1">@_thesis.StudyProgram.Name</MudText>
-        </div>
-        <div>
+        </MudStack>
+        <MudStack>
+            <MudText Typo="Typo.h6">Študijný odbor</MudText>
+            <MudText Typo="Typo.body1">@_thesis.StudyProgram.StudyFieldName</MudText>
+        </MudStack>
+        <MudStack>
             <MudText Typo="Typo.h6">Detailnejší opis problému</MudText>
             <MudText Typo="Typo.body1" Class="break-lines">@_thesis.Description</MudText>
-        </div>
+        </MudStack>
         @if (_thesis.DescriptionEnglish is not null)
         {
-            <div>
+            <MudStack>
                 <MudText Typo="Typo.h6">Detailed description of the problem</MudText>
                 <MudText Typo="Typo.body1" Class="break-lines">@_thesis.DescriptionEnglish</MudText>
-            </div>
+            </MudStack>
         }
-        <div>
+        <MudStack>
             <MudText Typo="Typo.h6">Predpokladaný vedecký prínos</MudText>
             <MudText Typo="Typo.body1" Class="break-lines">@_thesis.ScientificContribution</MudText>
-        </div>
-        <div>
+        </MudStack>
+        <MudStack>
             <MudText Typo="Typo.h6">Odporučány postup vedeckého bádania</MudText>
             <MudText Typo="Typo.body1" Class="break-lines">@_thesis.ScientificProgress</MudText>
-        </div>
-        <div>
+        </MudStack>
+        <MudStack>
             <MudText Typo="Typo.h6">Druh výskumu</MudText>
             <MudText Typo="Typo.body1">@_thesis.ResearchType</MudText>
-        </div>
-        <div>
+        </MudStack>
+        <MudStack>
             <MudText Typo="Typo.h6">Výskumná úloha, ktorej súčasťou bude riešená téma</MudText>
             <MudText Typo="Typo.body1" Class="break-lines">@_thesis.ResearchTask</MudText>
-        </div>
-        <div>
+        </MudStack>
+        <MudStack>
             <MudText Typo="Typo.h6">Doterajšie výsledky riešenia na školiacom pracovisku, vrátane odkazov na dostupné zdroje</MudText>
             <MudText Typo="Typo.body1" Class="break-lines">@_thesis.SolutionResults</MudText>
-        </div>
+        </MudStack>
         <AuthorizeView Roles="Admin, Učiteľ">
             <Authorized>
-                <div class="d-flex gap-1">
+                <MudStack Row>
                     <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@(() => DownloadDocument())">Dokument</MudButton>
                     <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="@($"/theses/edit/{_thesis.Guid}")">Uprav</MudButton>
                     <MudButton Variant="Variant.Filled" Color="Color.Error" OnClick="@(() => DeleteThesis(_thesis))">Vymaž</MudButton>
-                </div>
+                </MudStack>
             </Authorized>
         </AuthorizeView>
     </MudStack>
@@ -152,12 +156,12 @@
         var dialog = await DialogService.ShowAsync<EditCommentDialog>("Uprav komentár", parameters);
         var result = await dialog.Result;
 
-        if (!result.Canceled) {
-            var updatedComment = result.Data as Comment;
-            await UnitOfWork.Comments.UpdateAsync(updatedComment.Id, updatedComment);
-            await UnitOfWork.CompleteAsync();
-            _thesis = await UnitOfWork.Theses.GetByGuidAsync(ThesisGuid);
-        }
+        if (result.Canceled) return;
+
+        var updatedComment = result.Data as Comment;
+        await UnitOfWork.Comments.UpdateAsync(updatedComment.Id, updatedComment);
+        await UnitOfWork.CompleteAsync();
+        _thesis = await UnitOfWork.Theses.GetByGuidAsync(ThesisGuid);
     }
 
     private async Task PostComment()
@@ -201,7 +205,7 @@
             {"{Title}", _thesis.Title},
             {"{Supervisor}", _thesis.Supervisor.DisplayName},
             {"{StudyProgram}", _thesis.StudyProgram.Name},
-            {"{StudyField}", _thesis.StudyFieldName},
+            {"{StudyField}", _thesis.StudyProgram.StudyFieldName},
             {"{DailyStudy}", _thesis.DailyStudy ? "☑" : "☐"},
             {"{ExternalStudy}", _thesis.ExternalStudy ? "☑" : "☐"},
             {"{Subject1}", _thesis.SubjectNames[0]},

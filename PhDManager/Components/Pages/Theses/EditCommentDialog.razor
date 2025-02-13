@@ -12,7 +12,7 @@
     </DialogContent>
     <DialogActions>
         <MudButton Color="Color.Primary" OnClick="UpdateComment">Uprav</MudButton>
-        <MudButton OnClick="Cancel">Zrušiť</MudButton>
+        <MudButton OnClick="@(() => MudDialog.Cancel())">Zrušiť</MudButton>
     </DialogActions>
 </MudDialog>
 
@@ -21,9 +21,7 @@
     private IMudDialogInstance MudDialog { get; set; }
 
     [Parameter]
-    public Comment Comment { get; set; } = new Comment();
-
-    private void Cancel() => MudDialog.Cancel();
+    public Comment Comment { get; set; } = new();
 
     private void UpdateComment()
     {

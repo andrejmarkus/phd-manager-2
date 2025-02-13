@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using PhDManager.Data;
@@ -12,9 +13,11 @@ using PhDManager.Data;
 namespace PhDManager.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250213153546_IsExternalUser")]
+    partial class IsExternalUser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -320,7 +323,7 @@ namespace PhDManager.Data.Migrations
 
                     b.HasIndex("ThesisId");
 
-                    b.ToTable("Comments");
+                    b.ToTable("Comment");
                 });
 
             modelBuilder.Entity("PhDManager.Models.IndividualPlan", b =>
@@ -343,7 +346,7 @@ namespace PhDManager.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("IndividualPlans");
+                    b.ToTable("IndividualPlan");
                 });
 
             modelBuilder.Entity("PhDManager.Models.Registration", b =>

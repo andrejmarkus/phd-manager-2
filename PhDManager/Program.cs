@@ -39,6 +39,7 @@ builder.Services.AddAuthentication()
         var googleOptions = builder.Configuration.GetSection(GoogleOptions.Google).Get<GoogleOptions>() ?? throw new InvalidOperationException("Google options not found.");
         options.ClientId = googleOptions.ClientId;
         options.ClientSecret = googleOptions.ClientSecret;
+        options.SaveTokens = true;
     });
 
 var connectionString = builder.Configuration.GetSection(DatabaseOptions.Database).Get<DatabaseOptions>()?.ConnectionString ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");

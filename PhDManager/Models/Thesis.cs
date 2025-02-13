@@ -17,7 +17,6 @@ namespace PhDManager.Models
         public string ResearchType { get; set; } = string.Empty;
         public string ResearchTask { get; set; } = string.Empty;
         public string SolutionResults { get; set; } = string.Empty;
-        public string StudyFieldName { get; set; } = string.Empty;
         public bool DailyStudy { get; set; } = false;
         public bool ExternalStudy { get; set; } = false;
         public List<string> SubjectNames { get; set; } = new();

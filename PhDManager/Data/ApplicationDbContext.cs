@@ -10,6 +10,8 @@ namespace PhDManager.Data
         public DbSet<Subject> Subjects { get; init; }
         public DbSet<StudyProgram> StudyPrograms { get; init; }
         public DbSet<Registration> Registrations { get; init; }
+        public DbSet<IndividualPlan> IndividualPlans { get; init; }
+        public DbSet<Comment> Comments { get; init; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -38,8 +40,8 @@ namespace PhDManager.Data
 
             builder.Entity<StudyProgram>()
                 .HasData(
-                    new StudyProgram { Id = 1, Code = "AI", Name = "Aplikovaná informatika" },
-                    new StudyProgram { Id = 2, Code = "MAN", Name = "Manažment" }
+                    new StudyProgram { Id = 1, Code = "AI", Name = "Aplikovaná informatika", StudyFieldName = "Informatika" },
+                    new StudyProgram { Id = 2, Code = "MAN", Name = "Manažment", StudyFieldName = "Ekonómia a manažment" }
                 );
 
             builder.Entity<Subject>()

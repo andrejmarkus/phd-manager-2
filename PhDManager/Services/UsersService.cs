@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using PhDManager.Data;
-using PhDManager.Models;
 
 namespace PhDManager.Services
 {
@@ -37,7 +36,7 @@ namespace PhDManager.Services
             }
         }
 
-        public async Task UpdateUserInfo(ApplicationUser user)
+        public async Task UpdateUserInfoAsync(ApplicationUser user)
         {
             var unusedUser = await UserManager.FindByIdAsync(user.Id);
             if (unusedUser is not null) {

@@ -7,14 +7,15 @@
 @using Microsoft.AspNetCore.Identity
 @using PhDManager.Data
 @using PhDManager.Models
+@using PhDManager.Models.DTOs
 @using PhDManager.Services
 @using PhDManager.Services.IRepositories
 
 @inject IServiceProvider ServiceProvider
+@inject IDialogService DialogService
 @inject IUnitOfWork UnitOfWork
 @inject UsersService UsersService
 @inject UserManager<ApplicationUser> UserManager;
-@inject RoleManager<IdentityRole> RoleManager;
 
 @attribute [Authorize(Roles = "Admin")]
 
@@ -22,7 +23,7 @@
 
 <MudText Typo="Typo.h3" GutterBottom="true">Admin</MudText>
 
-<MudDataGrid T="UserInfo" Items="@_users" Hover="true" SortMode="SortMode.Multiple" QuickFilter="@_quickFilter" ReadOnly="false" EditMode="DataGridEditMode.Form" StartedEditingItem="@CreateAddress" CommittedItemChanges="@UpdateUser">
+<MudDataGrid T="UserInfo" Items="@_users" Hover="true" SortMode="SortMode.Multiple" QuickFilter="@_quickFilter">
     <ToolBarContent>
         <MudText Typo="Typo.h6" GutterBottom="false">Uživatelia</MudText>
         <MudSpacer />
@@ -30,63 +31,28 @@
         <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@(() => _visible = true)">Pridaj uživateľa</MudButton>
     </ToolBarContent>
     <Columns>
-        <PropertyColumn Property="u => u.User.UserName" Title="Používateľské meno" Editable="false" />
-        <PropertyColumn Property="u => u.User.DisplayName" Title="Celé meno" Editable="false" />
-        <PropertyColumn Property="u => u.User.Email" Title="Email" Editable="false" />
-        <PropertyColumn Property="@(u => u.User.EmailConfirmed ? "Áno" : "Nie")" Title="Potvrdený email" Editable="false" />
-        <PropertyColumn Property="u => u.Role" Title="Rola" Editable="true">
-            <EditTemplate>
-                <MudSelect Class="mt-2" Variant="Variant.Outlined" @bind-Value="context.Item.Role" Required>
-                    @foreach (var role in _roles)
-                    {
-                        <MudSelectItem Value="@role.Name">@role.Name</MudSelectItem>
-                    }
-                </MudSelect>
-            </EditTemplate>
-        </PropertyColumn>
-        <PropertyColumn Property="u => u.User.StudyProgram" Title="Študijný program" Editable="true" Hidden>
-            <EditTemplate>
-                <MudText Class="mt-4">Študijný odbor</MudText>
-                <MudSelect T="StudyProgram" Class="mt-1" Variant="Variant.Outlined" @bind-Value="context.Item.User.StudyProgram" ToStringFunc="@(sp => sp is null ? null : sp.Name)">
-                    @if (_studyPrograms is not null)
-                    {
-                        @foreach (var studyProgram in _studyPrograms)
-                        {
-                            <MudSelectItem Value="@studyProgram">@studyProgram.Name</MudSelectItem>
-                        }
-                    }
-                </MudSelect>
-            </EditTemplate>
-        </PropertyColumn>
-        <PropertyColumn Property="u => u.User.Birthdate" Title="Dátum narodenia" Editable="true" Hidden Required="false">
-            <EditTemplate>
-                <MudText Class="mt-4">Osobné údaje</MudText>
-                <MudDatePicker class="mt-1" ShowToolbar="false" Label="Dátum narodenia" Variant="Variant.Outlined" @bind-Date="context.Item.User.Birthdate"  />
-            </EditTemplate>
-        </PropertyColumn>
-        <PropertyColumn Property="u => u.User.PhoneNumber" Title="Telefónne číslo" Editable="true" Hidden Required="false" />
-        <PropertyColumn Property="u => u.User.Address.Street" Title="Ulica" Editable="true" Hidden Required="false" />
-        <PropertyColumn Property="u => u.User.Address.HouseNumber" Title="Číslo domu" Editable="true" Hidden Required="false" />
-        <PropertyColumn Property="u => u.User.Address.City" Title="Obec" Editable="true" Hidden Required="false" />
-        <PropertyColumn Property="u => u.User.Address.PostalCode" Title="PSČ" Editable="true" Hidden Required="false" />
-        <PropertyColumn Property="u => u.User.Address.Country" Title="Štát" Editable="true" Hidden Required="false" />
+        <PropertyColumn Property="u => u.User.UserName" Title="Používateľské meno" />
+        <PropertyColumn Property="u => u.User.DisplayName" Title="Celé meno" />
+        <PropertyColumn Property="u => u.User.Email" Title="Email" />
+        <PropertyColumn Property="@(u => u.User.EmailConfirmed ? "Áno" : "Nie")" Title="Potvrdený email" />
+        <PropertyColumn Property="u => u.Role" Title="Rola" Editable="true" />
         <TemplateColumn Title="Individuálny plán">
             <CellTemplate>
-                <div class="d-flex">
+                <MudStack Row>
                     @if (context.Item.User.IndividualPlan is not null)
                     {
                         <MudIconButton Size="@Size.Small" Color="Color.Error" Icon="@Icons.Material.Outlined.Delete" OnClick="@(async () => await DeleteIndividualPlan(context.Item.User.IndividualPlan))" />
                         <MudIconButton Size="@Size.Small" Color="Color.Info" Icon="@Icons.Material.Outlined.Edit" Href="@($"/admin/individual-plan/edit/{context.Item.User.IndividualPlan.Guid}")" />
                     }
-                </div>
+                </MudStack>
             </CellTemplate>
         </TemplateColumn>
         <TemplateColumn Title="Úprava profilu">
             <CellTemplate>
-                <div class="d-flex">
+                <MudStack Row>
                     <MudIconButton Size="@Size.Small" Color="Color.Error" Icon="@Icons.Material.Outlined.Delete" OnClick="@(() => DeleteUser(context.Item))" />
-                    <MudIconButton Size="@Size.Small" Color="Color.Info" Icon="@Icons.Material.Outlined.Edit" OnClick="@context.Actions.StartEditingItemAsync" />
-                </div>
+                    <MudIconButton Size="@Size.Small" Color="Color.Info" Icon="@Icons.Material.Outlined.Edit" OnClick="@(() => UpdateUser(context.Item))" />
+                </MudStack>
             </CellTemplate>
         </TemplateColumn>
     </Columns>
@@ -99,15 +65,13 @@
 
 @code {
     private UserInfo[] _users = { };
-    private IdentityRole[] _roles = { };
-    private IEnumerable<StudyProgram>? _studyPrograms;
+
     private string _search = "";
     private bool _visible = false;
 
     protected override async Task OnInitializedAsync()
     {
-        _roles = RoleManager.Roles.ToArray();
-        _studyPrograms = await UnitOfWork.StudyPrograms.GetAllAsync();
+
 
         var usersTask = UserManager.Users.ToList().Select(async u =>
         {
@@ -137,15 +101,17 @@
         return false;
     };
 
-    private async Task CreateAddress(UserInfo userInfo)
-    {
-        userInfo.User.Address = userInfo.User.Address is null ? new() : userInfo.User.Address;
-    }
-
     private async Task UpdateUser(UserInfo userInfo)
     {
-        await UsersService.UpdateUserInfo(userInfo.User);
-        await UsersService.UpdateUserRoleAsync(userInfo.User, userInfo.Role);
+        var parameters = new DialogParameters<EditUserDialog> { { x => x.UserInfo, userInfo } };
+        var dialog = await DialogService.ShowAsync<EditUserDialog>("Uprav užívateľa", parameters);
+        var result = await dialog.Result;
+
+        if (result.Canceled) return;
+
+        var updatedUserInfo = result.Data as UserInfo;
+        await UsersService.UpdateUserInfoAsync(updatedUserInfo.User);
+        await UsersService.UpdateUserRoleAsync(updatedUserInfo.User, updatedUserInfo.Role);
     }
 
     private async Task DeleteUser(UserInfo userInfo)
@@ -164,11 +130,5 @@
     {
         await UnitOfWork.IndividualPlans.DeleteAsync(individualPlan.Id);
         await UnitOfWork.CompleteAsync();
-    }
-
-    private sealed class UserInfo(ApplicationUser user, string role)
-    {
-        public ApplicationUser User { get; set; } = user;
-        public string Role { get; set; } = role;
     }
 }

@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Identity;
 using PhDManager.Models;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Text.Json.Serialization;
 
 namespace PhDManager.Data
 {
@@ -16,6 +15,8 @@ namespace PhDManager.Data
 
         public virtual Address? Address { get; set; }
         public virtual StudyProgram? StudyProgram { get; set; }
+        public bool IsExternal { get; set; }
+
         public virtual IndividualPlan? IndividualPlan { get; set; }
 
         // Supervisor

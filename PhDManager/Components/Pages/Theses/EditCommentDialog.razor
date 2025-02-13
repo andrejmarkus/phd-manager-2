@@ -3,7 +3,7 @@
 
 @rendermode InteractiveServer
 
-<MudDialog>
+<MudDialog Options="@(new() { FullWidth = true })">
     <TitleContent>
         <MudText Typo="Typo.h6">Uprav komentár</MudText>
     </TitleContent>
@@ -12,7 +12,7 @@
     </DialogContent>
     <DialogActions>
         <MudButton Color="Color.Primary" OnClick="UpdateComment">Uprav</MudButton>
-        <MudButton OnClick="@(() => MudDialog.Cancel())">Zrušiť</MudButton>
+        <MudButton Color="Color.Secondary" OnClick="@(() => MudDialog.Cancel())">Zrušiť</MudButton>
     </DialogActions>
 </MudDialog>
 

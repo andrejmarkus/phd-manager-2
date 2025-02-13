@@ -15,20 +15,19 @@
 @inject IDialogService DialogService
 @inject IUnitOfWork UnitOfWork
 @inject UsersService UsersService
-@inject UserManager<ApplicationUser> UserManager;
+@inject UserManager<ApplicationUser> UserManager
+@inject NavigationManager NavigationManager
 
 @attribute [Authorize(Roles = "Admin")]
 
-<PageTitle>Admin</PageTitle>
+<PageTitle>Užívatelia | Admin</PageTitle>
 
-<MudText Typo="Typo.h3" GutterBottom="true">Admin</MudText>
-
-<MudDataGrid T="UserInfo" Items="@_users" Hover="true" SortMode="SortMode.Multiple" QuickFilter="@_quickFilter">
+<MudDataGrid T="UserInfo" Items="@_users" Hover SortMode="SortMode.Multiple" QuickFilter="@_quickFilter">
     <ToolBarContent>
-        <MudText Typo="Typo.h6" GutterBottom="false">Uživatelia</MudText>
+        <MudText Typo="Typo.h6" GutterBottom="false">Užívatelia</MudText>
         <MudSpacer />
-        <MudTextField Class="mr-4" @bind-Value="_search" Variant="Variant.Outlined" Placeholder="Vyhľadaj" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium"></MudTextField>
-        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@(() => _visible = true)">Pridaj uživateľa</MudButton>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="AddUsers">Pridaj uživateľa</MudButton>
+        <MudTextField Class="ml-4" Variant="Variant.Outlined" Placeholder="Vyhľadaj" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" @bind-Value="_search" />
     </ToolBarContent>
     <Columns>
         <PropertyColumn Property="u => u.User.UserName" Title="Používateľské meno" />
@@ -36,17 +35,6 @@
         <PropertyColumn Property="u => u.User.Email" Title="Email" />
         <PropertyColumn Property="@(u => u.User.EmailConfirmed ? "Áno" : "Nie")" Title="Potvrdený email" />
         <PropertyColumn Property="u => u.Role" Title="Rola" Editable="true" />
-        <TemplateColumn Title="Individuálny plán">
-            <CellTemplate>
-                <MudStack Row>
-                    @if (context.Item.User.IndividualPlan is not null)
-                    {
-                        <MudIconButton Size="@Size.Small" Color="Color.Error" Icon="@Icons.Material.Outlined.Delete" OnClick="@(async () => await DeleteIndividualPlan(context.Item.User.IndividualPlan))" />
-                        <MudIconButton Size="@Size.Small" Color="Color.Info" Icon="@Icons.Material.Outlined.Edit" Href="@($"/admin/individual-plan/edit/{context.Item.User.IndividualPlan.Guid}")" />
-                    }
-                </MudStack>
-            </CellTemplate>
-        </TemplateColumn>
         <TemplateColumn Title="Úprava profilu">
             <CellTemplate>
                 <MudStack Row>
@@ -61,18 +49,13 @@
     </PagerContent>
 </MudDataGrid>
 
-<AddUsersDialog Visible=_visible />
-
 @code {
-    private UserInfo[] _users = { };
+    private IEnumerable<UserInfo> _users;
 
-    private string _search = "";
-    private bool _visible = false;
+    private string _search;
 
     protected override async Task OnInitializedAsync()
     {
-
-
         var usersTask = UserManager.Users.ToList().Select(async u =>
         {
             using var scope = ServiceProvider.CreateScope();
@@ -101,6 +84,16 @@
         return false;
     };
 
+    private async Task AddUsers()
+    {
+        var dialog = await DialogService.ShowAsync<AddUserDialog>("Pridaj uživateľov");
+        var result = await dialog.Result;
+
+        if (result.Canceled) return;
+
+        NavigationManager.NavigateTo(NavigationManager.Uri, true);
+    }
+
     private async Task UpdateUser(UserInfo userInfo)
     {
         var parameters = new DialogParameters<EditUserDialog> { { x => x.UserInfo, userInfo } };
@@ -124,11 +117,5 @@
         await UsersService.DeleteUserAsync(user);
 
         _users = _users.Where(u => u.User.Id != user.Id).ToArray();
-    }
-
-    private async Task DeleteIndividualPlan(IndividualPlan individualPlan)
-    {
-        await UnitOfWork.IndividualPlans.DeleteAsync(individualPlan.Id);
-        await UnitOfWork.CompleteAsync();
     }
 }

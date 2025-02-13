@@ -7,19 +7,18 @@
 
 @inject ActiveDirectoryService ActiveDirectoryService
 @inject UsersService UsersService
-@inject NavigationManager NavigationManager
 @inject IServiceProvider ServiceProvider
 
-<MudDialog @bind-Visible="@_visible" Options="@(new() { FullWidth = true })">
+<MudDialog Options="@(new() { FullWidth = true })">
     <TitleContent>
-        <MudText Typo="Typo.h6">Add users</MudText>
+        <MudText Typo="Typo.h6">Pridaj užívateľov</MudText>
     </TitleContent>
     <DialogContent>
         <MudDataGrid T="LdapEntry" Items="_entries" MultiSelection="true" SortMode="SortMode.Multiple" SelectedItemsChanged="@SelectedItemsChangedLdap">
             <ToolBarContent>
-                <MudText Typo="Typo.h6" GutterBottom="false">LDAP users</MudText>
+                <MudText Typo="Typo.h6" GutterBottom="false">LDAP užívatelia</MudText>
                 <MudSpacer />
-                <MudTextField @bind-Value="@_search" @bind-Value:after="@GetUsers" Immediate="true" Class="mr-4" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium"></MudTextField>
+                <MudTextField @bind-Value="@_search" @bind-Value:after="@GetUsers" Class="mr-4" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium"></MudTextField>
             </ToolBarContent>
             <Columns>
                 <SelectColumn T="LdapEntry" />
@@ -35,32 +34,24 @@
         </MudDataGrid>
     </DialogContent>
     <DialogActions>
-        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@AddUsers">Pridať</MudButton>
-        <MudButton Variant="Variant.Outlined" Color="Color.Secondary" OnClick="@(() => Visible = false)">Zrušiť</MudButton>
+        <MudButton Color="Color.Primary" OnClick="@AddUsers">Pridať</MudButton>
+        <MudButton Color="Color.Secondary" OnClick="@(() => MudDialog.Cancel())">Zrušiť</MudButton>
     </DialogActions>
 </MudDialog>
 
 @code {
-    [Parameter]
-    public bool Visible { 
-        get => _visible;
-        set
-        {
-            _visible = value;
-            if (_visible)
-            {
-                _search = "";
-                _entries = [];
-                _selectedEntries = [];
-            }
-        }
-    }
+    [CascadingParameter]
+    private IMudDialogInstance MudDialog { get; set; }
 
     private LdapEntry[] _entries;
     private LdapEntry[] _selectedEntries;
 
-    private string _search;
-    private bool _visible;
+    private string _search = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetUsers();
+    }
 
     private async Task GetUsers()
     {
@@ -78,8 +69,7 @@
         {
             await UsersService.RegisterLdapUserWithoutPasswordAsync(entry);
         }
-        Visible = false;
-        NavigationManager.NavigateTo(NavigationManager.Uri, true);
+        MudDialog.Close();
     }
 
     private void SelectedItemsChangedLdap(IEnumerable<LdapEntry> entries)

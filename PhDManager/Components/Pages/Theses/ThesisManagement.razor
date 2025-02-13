@@ -11,8 +11,8 @@
 @using PhDManager.Services.IRepositories
 
 @inject IServiceProvider ServiceProvider
-@inject UsersService UsersService
 @inject IUnitOfWork UnitOfWork
+@inject UsersService UsersService
 @inject NavigationManager NavigationManager
 @inject UserManager<ApplicationUser> UserManager;
 
@@ -36,7 +36,7 @@
     <MudAutocomplete T="StudyProgram" Required RequiredError="Je nutné zvoliť študijný odbor!" Label="Študijný program" ToStringFunc="@(sp => sp is null ? null : sp.Name)" Variant="Variant.Outlined" SearchFunc="SearchStudyPrograms" @bind-Value="_thesis.StudyProgram" />
     @if (_thesis.StudyProgram is not null)
     {
-        <MudTextField T="string" Label="Študijný odbor" Variant="Variant.Outlined" @bind-Value="_thesis.StudyProgram.StudyFieldName" ReadOnly />
+        <MudField T="string" Label="Študijný odbor" Variant="Variant.Outlined">@_thesis.StudyProgram.StudyFieldName</MudField>
     }
     <MudStack Row>
         <MudCheckBox T="bool" @bind-Value="_thesis.DailyStudy">denná</MudCheckBox>

@@ -1,5 +1,5 @@
-﻿@page "/admin/individual-plan/add"
-@page "/admin/individual-plan/edit/{IndividualPlanGuid}"
+﻿@page "/admin/individual-plans/add"
+@page "/admin/individual-plans/edit/{IndividualPlanGuid}"
 
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Identity
@@ -30,6 +30,10 @@
             <MudDatePicker ShowToolbar="false" Label="Dátum narodenia" Variant="Variant.Outlined" @bind-Date="_selectedStudent.Birthdate" ReadOnly />
             <MudField T="string" Label="Trvalé bydlisko" Variant="Variant.Outlined">@_selectedStudent.Address.FullAddress</MudField>
             <MudField T="string" Label="Telefónne číslo" Variant="Variant.Outlined">@_selectedStudent.PhoneNumber</MudField>
+            <MudField T="string" Label="Forma štúdia" Variant="Variant.Outlined">@(_selectedStudent.IsExternal ? "Externá" : "Denná")</MudField>
+            <MudField T="string" Label="Študijný program" Variant="Variant.Outlined">@_selectedStudent.StudyProgram.Name</MudField>
+            <MudField T="string" Label="Študijný odbor" Variant="Variant.Outlined">@_selectedStudent.StudyProgram.StudyFieldName</MudField>
+            <MudDatePicker ShowToolbar="false" Required RequiredError="Je nutné zadať termín nástupu!" Label="Nástup na doktorandské štúdium" Variant="Variant.Outlined" @bind-Date="_individualPlan.StudyStartDate" />
         } 
         else
         {
@@ -38,24 +42,33 @@
     }
 
     <MudText Typo="Typo.h5">Termíny</MudText>
-    <div class="d-flex gap-3 align-center">
+    <MudStack Row AlignItems="AlignItems.Center">
         <MudText Class="width-half">Termín podania žiadosti o dizertačnú skúšku vrátane odovzdania písomnej práce k diz. skúške (zvyčajne prvá polovica septembra v 2. ročníku)</MudText>
         <MudDatePicker ShowToolbar="false" Required RequiredError="Je nutné zadať termín podania žiadosti!" Label="Termín podania žiadosti" Variant="Variant.Outlined" @bind-Date="_individualPlan.DissertationExamDate" />
-    </div>
-    <div class="d-flex gap-3 align-center">
+    </MudStack>
+    <MudStack Row AlignItems="AlignItems.Center">
         <MudText Class="width-half">Termín odovzdania dizertačnej práce (zvyčajne apríl v roku ukončenia štúdia)</MudText>
         <MudDatePicker ShowToolbar="false" Required RequiredError="Je nutné zadať termín odovzdania!" Label="Termín odovzdania" Variant="Variant.Outlined" FixDay="1" OpenTo="OpenTo.Month" @bind-Date="_individualPlan.DissertationSubmissionDate" />
-    </div>
-    <div class="d-flex gap-3 align-center">
+    </MudStack>
+    <MudStack Row AlignItems="AlignItems.Center">
         <MudText Class="width-half">Termín ukončenia doktorandského štúdia vrátane obhajoby dizertačnej práce (zvyčajne 31.8. po 3 rokoch štúdia interní doktorandi a po 4 rokoch externí doktorandi)</MudText>
         <MudDatePicker ShowToolbar="false" Required RequiredError="Je nutné zadať termín ukončenia štúdia!" Label="Termín ukončenia štúdia" Variant="Variant.Outlined" @bind-Date="_individualPlan.StudyEndDate" />
-    </div>
+    </MudStack>
 
-    <MudText Typo="Typo.h5">Študijná časť</MudText>
+    <MudText Typo="Typo.h4">Študijná časť</MudText>
+    <MudText Typo="Typo.h5">Predmety s tématickými okruhmi pre dizertačnú skúšku</MudText>
+    <MudAutocomplete T="Subject" Required RequiredError="Je nutné zvoliť predmet!" Label="Predmet 1" ToStringFunc="@(s => s is null ? null : s.Name)" SearchFunc="SearchSubjects" Variant="Variant.Outlined" @bind-Value="_selectedSubjects[0]" />
+    <MudAutocomplete T="Subject" Required RequiredError="Je nutné zvoliť predmet!" Label="Predmet 2" ToStringFunc="@(s => s is null ? null : s.Name)" SearchFunc="SearchSubjects" Variant="Variant.Outlined" @bind-Value="_selectedSubjects[1]" />
+    <MudAutocomplete T="Subject" Required RequiredError="Je nutné zvoliť predmet!" Label="Predmet 3" ToStringFunc="@(s => s is null ? null : s.Name)" SearchFunc="SearchSubjects" Variant="Variant.Outlined" @bind-Value="_selectedSubjects[2]" />
+    <MudText Typo="Typo.h5">Odporučané ďalšie voliteľné predmety</MudText>
+    <MudText>To-Do</MudText>
+    <MudText Typo="Typo.h5">Téma písomnej časti dizertačnej skúšky</MudText>
     <MudAutocomplete T="Thesis" Required RequiredError="Je nutné zvoliť dizertačnú tému!" Label="Dizertačná téma" ToStringFunc="@(t => t is null ? null : t.Title)" SearchFunc="SearchTheses" Variant="Variant.Outlined" @bind-Value="_selectedThesis" />
-    <MudAutocomplete T="Subject" Required RequiredError="Je nutné zvoliť predmet!" Label="Predmet" ToStringFunc="@(s => s is null ? null : s.Name)" SearchFunc="SearchSubjects" Variant="Variant.Outlined" @bind-Value="_selectedSubjects[0]" />
-    <MudAutocomplete T="Subject" Required RequiredError="Je nutné zvoliť predmet!" Label="Predmet" ToStringFunc="@(s => s is null ? null : s.Name)" SearchFunc="SearchSubjects" Variant="Variant.Outlined" @bind-Value="_selectedSubjects[1]" />
-    <MudAutocomplete T="Subject" Required RequiredError="Je nutné zvoliť predmet!" Label="Predmet" ToStringFunc="@(s => s is null ? null : s.Name)" SearchFunc="SearchSubjects" Variant="Variant.Outlined" @bind-Value="_selectedSubjects[2]" />
+    @if (_selectedThesis is not null)
+    {
+        <MudField T="string" Label="Školitel" Variant="Variant.Outlined">@_selectedThesis.Supervisor.DisplayName</MudField>
+    }
+
     <MudButton class="mt-4" OnClick="HandleIndividualPlan" Variant="Variant.Filled" Color="Color.Primary">@(IndividualPlanGuid is null ? "Pridať" : "Upraviť")</MudButton>
 </MudForm>
 
@@ -85,6 +98,13 @@
                 _selectedThesis = _individualPlan.Thesis;
                 _selectedSubjects = _individualPlan.Subjects.ToArray();
             }
+        }
+        else
+        {
+            _individualPlan.StudyStartDate = new DateTime(DateTime.Now.Year, 9, 1);
+            _individualPlan.DissertationExamDate = new DateTime(DateTime.Now.Year + 1, 9, 6);
+            _individualPlan.DissertationSubmissionDate = new DateTime(DateTime.Now.Year + 3, 4, 1);
+            _individualPlan.StudyEndDate = new DateTime(DateTime.Now.Year + 3, 8, 31);
         }
 
         _students = await UserManager.Users.ToAsyncEnumerable().WhereAwait(async u =>
@@ -128,6 +148,7 @@
 
         if (_form.IsValid)
         {
+            _individualPlan.StudyStartDate = _individualPlan.StudyStartDate?.ToUniversalTime();
             _individualPlan.DissertationExamDate = _individualPlan.DissertationExamDate?.ToUniversalTime();
             _individualPlan.DissertationSubmissionDate = _individualPlan.DissertationSubmissionDate?.ToUniversalTime();
             _individualPlan.StudyEndDate = _individualPlan.StudyEndDate?.ToUniversalTime();
@@ -143,7 +164,7 @@
                 await UnitOfWork.IndividualPlans.UpdateAsync(_individualPlan.Id, _individualPlan);
             }
             await UnitOfWork.CompleteAsync();
-            NavigationManager.NavigateTo("/admin/users");
+            NavigationManager.NavigateTo("/admin/individual-plans");
         }
     }
 }

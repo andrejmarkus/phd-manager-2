@@ -6,9 +6,9 @@
 @rendermode InteractiveServer
 
 @inject IUnitOfWork UnitOfWork
-@inject RoleManager<IdentityRole> RoleManager;
+@inject RoleManager<IdentityRole> RoleManager
 
-<MudDialog>
+<MudDialog Options="@(new() { FullWidth = true })">
     <TitleContent>
         <MudText Typo="Typo.h6">Uprav užívateľa</MudText>
     </TitleContent>
@@ -51,7 +51,7 @@
     </DialogContent>
     <DialogActions>
         <MudButton Color="Color.Primary" OnClick="UpdateUser">Uprav</MudButton>
-        <MudButton OnClick="@(() => MudDialog.Cancel())">Zrušiť</MudButton>
+        <MudButton Color="Color.Secondary" OnClick="@(() => MudDialog.Cancel())">Zrušiť</MudButton>
     </DialogActions>
 </MudDialog>
 

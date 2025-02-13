@@ -13,7 +13,7 @@ namespace PhDManager.Data
         [DataType(DataType.Date)]
         public DateTime? Birthdate { get; set; }
 
-        public virtual Address? Address { get; set; }
+        public virtual Address Address { get; set; } = new();
         public virtual StudyProgram? StudyProgram { get; set; }
         public bool IsExternal { get; set; }
 

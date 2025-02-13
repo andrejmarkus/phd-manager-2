@@ -1,0 +1,83 @@
+﻿@page "/admin/individual-plans"
+
+@rendermode InteractiveServer
+
+@inject IUnitOfWork UnitOfWork
+
+@using PhDManager.Models
+@using PhDManager.Services.IRepositories
+
+<PageTitle>Individual Plans | Admin</PageTitle>
+
+<MudDataGrid T="IndividualPlan" Items="_individualPlans" Hover SortMode="SortMode.Multiple" QuickFilter="_quickFilter">
+    <ToolBarContent>
+        <MudText Typo="Typo.h6" GutterBottom="false">Individuálne plány</MudText>
+        <MudSpacer />
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="/admin/individual-plans/add">Pridaj plán</MudButton>
+        <MudTextField Class="ml-4" Variant="Variant.Outlined" Placeholder="Vyhľadaj" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" @bind-Value="_search" />
+    </ToolBarContent>
+    <Columns>
+        <PropertyColumn Property="ip => ip.Thesis.Title" Title="Názov dizertačnej témy" />
+        <PropertyColumn Property="ip => ip.Thesis.Supervisor.DisplayName" Title="Meno školitela" />
+        <PropertyColumn Property="ip => ip.Thesis.Supervisor.Email" Title="Email školitela" />
+        <PropertyColumn Property="ip => ip.User.DisplayName" Title="Meno študenta" />
+        <PropertyColumn Property="ip => ip.User.Email" Title="Email študenta" />
+        <TemplateColumn Title="Úprava individuálného plánu">
+            <CellTemplate>
+                <MudStack Row>
+                    @if (context.Item.User.IndividualPlan is not null)
+                    {
+                        <MudIconButton Size="@Size.Small" Color="Color.Error" Icon="@Icons.Material.Outlined.Delete" OnClick="@(async () => await DeleteIndividualPlan(context.Item.User.IndividualPlan))" />
+                        <MudIconButton Size="@Size.Small" Color="Color.Info" Icon="@Icons.Material.Outlined.Edit" Href="@($"/admin/individual-plans/edit/{context.Item.User.IndividualPlan.Guid}")" />
+                    }
+                </MudStack>
+            </CellTemplate>
+        </TemplateColumn>
+    </Columns>
+    <PagerContent>
+        <MudDataGridPager T="IndividualPlan" />
+    </PagerContent>
+</MudDataGrid>
+
+@code {
+    private IEnumerable<IndividualPlan> _individualPlans;
+
+    private string _search;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _individualPlans = await UnitOfWork.IndividualPlans.GetAllAsync();
+    }
+
+    private Func<IndividualPlan, bool> _quickFilter => ip =>
+    {
+        if (string.IsNullOrWhiteSpace(_search))
+            return true;
+
+        if (ip.Thesis.Title.Contains(_search, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        if (ip.Thesis.Supervisor.DisplayName.Contains(_search, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        if (ip.Thesis.Supervisor.Email.Contains(_search, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        if (ip.User.DisplayName.Contains(_search, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        if (ip.User.Email.Contains(_search, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        if ($"{ip.Thesis.Title} {ip.Thesis.Supervisor.DisplayName} {ip.Thesis.Supervisor.Email} {ip.User.DisplayName} {ip.User.Email}".Contains(_search))
+            return true;
+
+        return false;
+    };
+
+    private async Task DeleteIndividualPlan(IndividualPlan individualPlan)
+    {
+        await UnitOfWork.IndividualPlans.DeleteAsync(individualPlan.Id);
+        await UnitOfWork.CompleteAsync();
+    }
+}

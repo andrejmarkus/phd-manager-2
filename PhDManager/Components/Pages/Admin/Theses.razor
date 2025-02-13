@@ -1,0 +1,81 @@
+﻿@page "/admin/theses"
+
+@rendermode InteractiveServer
+
+@inject IJSRuntime JSRuntime
+@inject IUnitOfWork UnitOfWork
+@inject DocumentService DocumentService
+
+@using PhDManager.Models
+@using PhDManager.Services
+@using PhDManager.Services.IRepositories
+
+<PageTitle>Dizertačné témy | Admin</PageTitle>
+
+<MudDataGrid T="Thesis" Items="_theses" Hover SortMode="SortMode.Multiple" QuickFilter="_quickFilter">
+    <ToolBarContent>
+        <MudText Typo="Typo.h6" GutterBottom="false">Dizertačné témy</MudText>
+        <MudSpacer />
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="/theses/add">Pridaj tému</MudButton>
+        <MudTextField Class="ml-4" Variant="Variant.Outlined" Placeholder="Vyhľadaj" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" @bind-Value="_search" />
+    </ToolBarContent>
+    <Columns>
+        <PropertyColumn Property="t => t.Title" Title="Názov dizertačnej témy" />
+        <PropertyColumn Property="t => t.Supervisor.DisplayName" Title="Meno školitela" />
+        <PropertyColumn Property="t => t.Supervisor.Email" Title="Email školitela" />
+        <PropertyColumn Property="t => t.StudyProgram.Name" Title="Študijný program" />
+        <PropertyColumn Property="t => t.ResearchType" Title="Druh výskumu" />
+        <PropertyColumn Property="@(t => t.DailyStudy ? "Áno" : "Nie")" Title="Denné štúdium" />
+        <PropertyColumn Property="@(t => t.ExternalStudy ? "Áno" : "Nie")" Title="Externé štúdium" />
+        <PropertyColumn Property="@(t => t.IsApproved ? "Áno" : "Nie")" Title="Potvrdená" />
+        <PropertyColumn Property="t => t.Comments.Count" Title="Počet komentárov" />
+        <TemplateColumn Title="Úprava individuálného plánu">
+            <CellTemplate>
+                <MudStack Row>
+                    <MudIconButton Size="@Size.Small" Color="Color.Error" Icon="@Icons.Material.Outlined.Delete" OnClick="@(async () => await DeleteThesis(context.Item))" />
+                    <MudIconButton Size="@Size.Small" Color="Color.Info" Icon="@Icons.Material.Outlined.Edit" Href="@($"/theses/edit/{context.Item.Guid}")" />
+                    <MudIconButton Size="@Size.Small" Color="Color.Info" Icon="@Icons.Material.Outlined.Print" OnClick="@(async () => await DocumentService.DownloadThesisDocument(context.Item))" />
+                </MudStack>
+            </CellTemplate>
+        </TemplateColumn>
+    </Columns>
+</MudDataGrid>
+
+@code {
+    private IEnumerable<Thesis> _theses;
+
+    private string _search;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _theses = await UnitOfWork.Theses.GetAllAsync();
+    }
+
+    private Func<Thesis, bool> _quickFilter => t =>
+    {
+        if (string.IsNullOrWhiteSpace(_search))
+            return true;
+
+        if (t.Title.Contains(_search, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        if (t.Supervisor.DisplayName.Contains(_search, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        if (t.Supervisor.Email.Contains(_search, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        if ($"{t.Title} {t.Supervisor.DisplayName} {t.Supervisor.Email}".Contains(_search))
+            return true;
+
+        return false;
+    };
+
+    private async Task DeleteThesis(Thesis thesis)
+    {
+        await UnitOfWork.Theses.DeleteAsync(thesis.Id);
+        await UnitOfWork.CompleteAsync();
+    }
+
+    
+}

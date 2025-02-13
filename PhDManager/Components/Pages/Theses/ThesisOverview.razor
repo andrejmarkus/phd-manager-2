@@ -76,9 +76,9 @@
         <AuthorizeView Roles="Admin, Učiteľ">
             <Authorized>
                 <MudStack Row>
-                    <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@(() => DownloadDocument())">Dokument</MudButton>
-                    <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="@($"/theses/edit/{_thesis.Guid}")">Uprav</MudButton>
                     <MudButton Variant="Variant.Filled" Color="Color.Error" OnClick="@(() => DeleteThesis(_thesis))">Vymaž</MudButton>
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="@($"/theses/edit/{_thesis.Guid}")">Uprav</MudButton>
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@(() => DocumentService.DownloadThesisDocument(_thesis))">Dokument</MudButton>
                 </MudStack>
             </Authorized>
         </AuthorizeView>
@@ -194,34 +194,5 @@
         await UnitOfWork.Comments.DeleteAsync(comment.Id);
         await UnitOfWork.CompleteAsync();
         _thesis = await UnitOfWork.Theses.GetByGuidAsync(ThesisGuid);
-    }
-
-    private async Task DownloadDocument()
-    {
-        var documentName = DocumentService.NormalizeName(_thesis.Title) + ".docx";
-        var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "templates", "thesis_template.docx");
-        var replacements = new Dictionary<string, string>()
-        {
-            {"{Title}", _thesis.Title},
-            {"{Supervisor}", _thesis.Supervisor.DisplayName},
-            {"{StudyProgram}", _thesis.StudyProgram.Name},
-            {"{StudyField}", _thesis.StudyProgram.StudyFieldName},
-            {"{DailyStudy}", _thesis.DailyStudy ? "☑" : "☐"},
-            {"{ExternalStudy}", _thesis.ExternalStudy ? "☑" : "☐"},
-            {"{Subject1}", _thesis.SubjectNames[0]},
-            {"{Subject2}", _thesis.SubjectNames[1]},
-            {"{Subject3}", _thesis.SubjectNames[2]},
-            {"{Description}", _thesis.Description},
-            {"{ScientificContribution}", _thesis.ScientificContribution},
-            {"{ScientificProgress}", _thesis.ScientificProgress},
-            {"{ResearchType}", _thesis.ResearchType},
-            {"{ResearchTask}", _thesis.ResearchTask},
-            {"{SolutionResults}", _thesis.SolutionResults}
-        };
-
-        var document = DocumentService.GenerateDocumentData(path, replacements);
-        using var documentStream = new DotNetStreamReference(document);
-
-        await JSRuntime.InvokeVoidAsync("saveAsFile", documentName, documentStream);
     }
 }

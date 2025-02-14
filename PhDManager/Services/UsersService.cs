@@ -25,6 +25,13 @@ namespace PhDManager.Services
             return roles.First();
         }
 
+        public async Task<string?> GetCurrentUserRoleAsync()
+        {
+            var currentUser = await GetCurrentUserAsync();
+            if (currentUser is null) return null;
+            return await GetUserRoleAsync(currentUser);
+        }
+
         public async Task UpdateUserRoleAsync(ApplicationUser user, string role)
         {
             var unusedUser = await UserManager.FindByIdAsync(user.Id);

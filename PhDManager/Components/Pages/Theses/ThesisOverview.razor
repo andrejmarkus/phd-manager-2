@@ -21,6 +21,15 @@
 
 @if (_thesis is not null)
 {
+    <AuthorizeView Roles="Admin, Učiteľ">
+        <Authorized>
+            <MudStack Row Justify="Justify.Center">
+                <MudIconButton Color="Color.Error" Icon="@Icons.Material.Outlined.Delete" OnClick="@(async () => await DeleteThesis(_thesis))" />
+                <MudIconButton Color="Color.Info" Icon="@Icons.Material.Outlined.Edit" Href="@($"/theses/edit/{_thesis.Guid}")" />
+                <MudIconButton Color="Color.Info" Icon="@Icons.Material.Outlined.Print" OnClick="@(async () => await DocumentService.DownloadThesisDocument(_thesis))" />
+            </MudStack>
+        </Authorized>
+    </AuthorizeView>
     <MudText Align="Align.Center" Typo="Typo.h4">@_thesis.Title</MudText>
     <MudStack Spacing="5">
         @if (_thesis.TitleEnglish is not null)
@@ -73,15 +82,6 @@
             <MudText Typo="Typo.h6">Doterajšie výsledky riešenia na školiacom pracovisku, vrátane odkazov na dostupné zdroje</MudText>
             <MudText Typo="Typo.body1" Class="break-lines">@_thesis.SolutionResults</MudText>
         </MudStack>
-        <AuthorizeView Roles="Admin, Učiteľ">
-            <Authorized>
-                <MudStack Row>
-                    <MudButton Variant="Variant.Filled" Color="Color.Error" OnClick="@(() => DeleteThesis(_thesis))">Vymaž</MudButton>
-                    <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="@($"/theses/edit/{_thesis.Guid}")">Uprav</MudButton>
-                    <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@(() => DocumentService.DownloadThesisDocument(_thesis))">Dokument</MudButton>
-                </MudStack>
-            </Authorized>
-        </AuthorizeView>
     </MudStack>
     @if (!_thesis.IsApproved)
     {

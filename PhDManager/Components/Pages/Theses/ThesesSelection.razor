@@ -12,9 +12,10 @@
 @inject IUnitOfWork UnitOfWork
 @inject IServiceProvider ServiceProvider
 @inject UsersService UsersService
+@inject DocumentService DocumentService
 @inject UserManager<ApplicationUser> UserManager
 
-<PageTitle>Theses</PageTitle>
+<PageTitle>Dizertačné témy</PageTitle>
 
 <MudText Typo="Typo.h3" GutterBottom="true">Dizertačné témy</MudText>
 
@@ -62,31 +63,32 @@
         {
             <MudItem xs="12" md="6">
                 <MudPaper Class="pa-2">
-                    <MudText Typo="Typo.h6">@thesis.Title</MudText>
-                    <MudText Typo="Typo.body2"><b>Školiteľ: </b> @thesis.Supervisor.DisplayName</MudText>
-                    <MudText Typo="Typo.body2"><b>Študijný program: </b> @thesis.StudyProgram.Name</MudText>
-                    <div class="d-flex justify-space-between mt-2">
-                        <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="@($"/theses/{thesis.Guid}")">Detail</MudButton>
-                        <AuthorizeView Roles="Admin">
-                            <Authorized>
-                                <div class="d-flex gap-1">
-                                    <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="@($"/theses/edit/{thesis.Guid}")">Uprav</MudButton>
-                                    <MudButton Variant="Variant.Filled" Color="Color.Error" OnClick="@(() => DeleteThesis(thesis))">Vymaž</MudButton>
-                                </div>
-                            </Authorized>
-                        </AuthorizeView>
-                        <AuthorizeView Roles="Učiteľ">
-                            <Authorized>
-                                @if (_currentUserId?.Equals(thesis.SupervisorId) == true)
-                                {
-                                    <div class="d-flex gap-1">
-                                        <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="@($"/theses/edit/{thesis.Guid}")">Uprav</MudButton>
-                                        <MudButton Variant="Variant.Filled" Color="Color.Error" OnClick="@(() => DeleteThesis(thesis))">Vymaž</MudButton>
-                                    </div>
-                                }
-                            </Authorized>
-                        </AuthorizeView>
-                    </div>
+                    <MudLink Color="Color.Default" Underline="Underline.None" Href="@($"/theses/{thesis.Guid}")">
+                        <MudText Typo="Typo.h6">@thesis.Title</MudText>
+                        <MudText Typo="Typo.body2"><b>Školiteľ: </b> @thesis.Supervisor.DisplayName</MudText>
+                        <MudText Typo="Typo.body2"><b>Študijný program: </b> @thesis.StudyProgram.Name</MudText>
+                    </MudLink>
+                    <AuthorizeView Roles="Admin">
+                        <Authorized>
+                            <MudStack Row Class="mt-2">
+                                <MudIconButton Size="@Size.Small" Color="Color.Error" Icon="@Icons.Material.Outlined.Delete" OnClick="@(async () => await DeleteThesis(thesis))" />
+                                <MudIconButton Size="@Size.Small" Color="Color.Info" Icon="@Icons.Material.Outlined.Edit" Href="@($"/theses/edit/{thesis.Guid}")" />
+                                <MudIconButton Size="@Size.Small" Color="Color.Info" Icon="@Icons.Material.Outlined.Print" OnClick="@(async () => await DocumentService.DownloadThesisDocument(thesis))" />
+                            </MudStack>
+                        </Authorized>
+                    </AuthorizeView>
+                    <AuthorizeView Roles="Učiteľ">
+                        <Authorized>
+                            @if (_currentUserId?.Equals(thesis.SupervisorId) == true)
+                            {
+                                <MudStack Row Class="mt-2">
+                                    <MudIconButton Size="@Size.Small" Color="Color.Error" Icon="@Icons.Material.Outlined.Delete" OnClick="@(async () => await DeleteThesis(thesis))" />
+                                    <MudIconButton Size="@Size.Small" Color="Color.Info" Icon="@Icons.Material.Outlined.Edit" Href="@($"/theses/edit/{thesis.Guid}")" />
+                                    <MudIconButton Size="@Size.Small" Color="Color.Info" Icon="@Icons.Material.Outlined.Print" OnClick="@(async () => await DocumentService.DownloadThesisDocument(thesis))" />
+                                </MudStack>
+                            }
+                        </Authorized>
+                    </AuthorizeView>
                 </MudPaper>
             </MudItem>
         }

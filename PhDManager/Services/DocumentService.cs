@@ -38,6 +38,37 @@ namespace PhDManager.Services
             await JSRuntime.InvokeVoidAsync("saveAsFile", documentName, documentStream);
         }
 
+        public async Task DownloadIndividualPlanDocument(IndividualPlan individualPlan)
+        {
+            var documentName = NormalizeName(individualPlan.User.DisplayName) + ".docx";
+            var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "templates", "individual_plan_template.docx");
+            var replacements = new Dictionary<string, string>()
+            {
+                {"{Student}", individualPlan.User.DisplayName},
+                {"{Birthdate}", individualPlan.User.Birthdate?.ToString("dd.MM.yyyy")},
+                {"{FullAddress}", individualPlan.User.Address.FullAddress },
+                {"{PhoneNumber}", individualPlan.User.PhoneNumber},
+                {"{StudyForm}", individualPlan.User.IsExternal ? "Externá" : "Denná"},
+                {"{StudyProgram}", individualPlan.Thesis.StudyProgram.Name},
+                {"{StudyField}", individualPlan.Thesis.StudyProgram.StudyFieldName},
+                {"{Supervisor}", individualPlan.Thesis.Supervisor.DisplayName},
+                {"{StudyStartDate}", individualPlan.StudyStartDate?.ToString("dd.MM.yyyy")},
+                {"{DissertationExamDate}", individualPlan.DissertationExamDate?.ToString("dd.MM.yyyy")},
+                {"{DissertationSubmissionDate}", individualPlan.DissertationSubmissionDate?.ToString("MMMM yyyy") },
+                {"{StudyEndDate}", individualPlan.StudyEndDate?.ToString("dd.MM.yyyy")},
+                {"{Subject1}", individualPlan.Thesis.SubjectNames[0]},
+                {"{Subject2}", individualPlan.Thesis.SubjectNames[1]},
+                {"{Subject3}", individualPlan.Thesis.SubjectNames[2]},
+                {"{ThesisTitle}", individualPlan.Thesis.Title},
+                {"{CurrentDate}", DateTime.Today.ToString("dd.MM.yyyy")},
+            };
+
+            var document = GenerateDocumentData(path, replacements);
+            using var documentStream = new DotNetStreamReference(document);
+
+            await JSRuntime.InvokeVoidAsync("saveAsFile", documentName, documentStream);
+        }
+
         private string NormalizeName(string name)
         {
             return new string(name.Normalize(NormalizationForm.FormD).Where(c => CharUnicodeInfo.GetUnicodeCategory(c) != UnicodeCategory.NonSpacingMark).Select(c => c == ' ' ? '_' : c).ToArray());

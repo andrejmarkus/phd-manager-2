@@ -3,8 +3,10 @@
 @rendermode InteractiveServer
 
 @inject IUnitOfWork UnitOfWork
+@inject DocumentService DocumentService
 
 @using PhDManager.Models
+@using PhDManager.Services
 @using PhDManager.Services.IRepositories
 
 <PageTitle>Individuálne plány | Admin</PageTitle>
@@ -29,6 +31,7 @@
                     {
                         <MudIconButton Size="@Size.Small" Color="Color.Error" Icon="@Icons.Material.Outlined.Delete" OnClick="@(async () => await DeleteIndividualPlan(context.Item.User.IndividualPlan))" />
                         <MudIconButton Size="@Size.Small" Color="Color.Info" Icon="@Icons.Material.Outlined.Edit" Href="@($"/admin/individual-plans/edit/{context.Item.User.IndividualPlan.Guid}")" />
+                        <MudIconButton Size="@Size.Small" Color="Color.Info" Icon="@Icons.Material.Outlined.Print" OnClick="@(async () => await DocumentService.DownloadIndividualPlanDocument(context.Item))" />
                     }
                 </MudStack>
             </CellTemplate>

@@ -12,7 +12,7 @@
     <AuthorizeView>
         <Authorized>
             <MudStack Class="height-full" Justify="Justify.Center" AlignItems="AlignItems.Center">
-                <MudText Class="text-rotate" Typo="Typo.h3">Vitaj @context.User.Identity.Name</MudText>
+                <MudText Class="text-rotate" Typo="Typo.h3">Vitaj @context.User.Identity?.Name</MudText>
                 <MudText>Pre navigáciu použi bočný panel.</MudText>
             </MudStack>
         </Authorized>

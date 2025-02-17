@@ -25,7 +25,7 @@ namespace PhDManager.Services
                 });
                 entries = await connection.SearchAsync(_options.LdapDomain, $"(uid={username})");
             }
-            catch (Exception e)
+            catch
             {
                 return null;
             }
@@ -55,7 +55,7 @@ namespace PhDManager.Services
                 });
                 entries = await connection.SearchAsync(_options.LdapDomain, $"(uid={username}*)");
             }
-            catch (Exception e)
+            catch
             {
                 return null;
             }

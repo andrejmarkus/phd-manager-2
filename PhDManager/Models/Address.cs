@@ -14,7 +14,7 @@ namespace PhDManager.Models
         public string? Country { get; set; }
 
         [JsonIgnore]
-        public virtual ApplicationUser User { get; set; }
+        public virtual ApplicationUser User { get; set; } = default!;
 
         [NotMapped]
         public string FullAddress => $"{Street} {HouseNumber}, {PostalCode} {City}, {Country}";

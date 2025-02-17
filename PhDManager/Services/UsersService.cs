@@ -52,6 +52,9 @@ namespace PhDManager.Services
                 unusedUser.Address = user.Address;
                 unusedUser.StudyProgram = user.StudyProgram;
                 await UserManager.UpdateAsync(unusedUser);
+
+                if (user.PhoneNumber is null) return;
+
                 var token = await UserManager.GenerateChangePhoneNumberTokenAsync(unusedUser, user.PhoneNumber);
                 await UserManager.ChangePhoneNumberAsync(unusedUser, user.PhoneNumber, token);
             }
@@ -60,6 +63,9 @@ namespace PhDManager.Services
         public async Task DeleteUserAsync(ApplicationUser user)
         {
             var unusedUser = await UserManager.FindByIdAsync(user.Id);
+
+            if (unusedUser is null) return;
+
             await UserManager.DeleteAsync(unusedUser);
         }
 

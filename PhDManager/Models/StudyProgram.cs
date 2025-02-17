@@ -9,8 +9,8 @@ namespace PhDManager.Models
         public string Name { get; set; } = string.Empty;
         public string StudyFieldName { get; set; } = string.Empty;
 
-        public virtual List<Subject> Subjects { get; set; }
+        public virtual List<Subject> Subjects { get; set; } = [];
         [JsonIgnore]
-        public virtual List<Thesis> Thesis { get; set; }
+        public virtual List<Thesis> Thesis { get; set; } = [];
     }
 }

@@ -20,9 +20,9 @@
 
 <PageTitle>Registerácia</PageTitle>
 
-@if (Registration is not null)
+@if (_registration is not null)
 {
-    @if (RegistrationExpired)
+    @if (_registrationExpired)
     {
         <MudText Typo="Typo.h5">Platnosť registračného odkazu vypršala!</MudText>
     }
@@ -77,13 +77,8 @@
 }
 
 @code {
-    public Registration? Registration { get; set; } = null;
-    public bool RegistrationExpired { get; set; } = false;
-
-    private IEnumerable<IdentityError>? identityErrors;
-
     [Parameter]
-    public string RegistrationGuid { get; set; }
+    public string RegistrationGuid { get; set; } = default!;
 
     [SupplyParameterFromForm]
     private InputModel Input { get; set; } = new();
@@ -91,16 +86,22 @@
     [SupplyParameterFromQuery]
     private string? ReturnUrl { get; set; }
 
-    private string? Message => identityErrors is null ? null : $"Error: {string.Join(", ", identityErrors.Select(error => error.Description))}";
+    private IEnumerable<IdentityError>? _identityErrors;
+    private Registration? _registration;
+    private bool _registrationExpired = false;
+
+    private string? Message => _identityErrors is null ? null : $"Error: {string.Join(", ", _identityErrors.Select(error => error.Description))}";
 
     protected override async Task OnInitializedAsync()
     {
-        Registration = await UnitOfWork.Registrations.GetByGuidAsync(RegistrationGuid);
-        RegistrationExpired = DateTime.UtcNow > Registration?.Expiration;
+        _registration = await UnitOfWork.Registrations.GetByGuidAsync(RegistrationGuid);
+        _registrationExpired = DateTime.UtcNow > _registration?.Expiration;
 
-        if (RegistrationExpired)
+        if (_registration is null) return;
+
+        if (_registrationExpired)
         {
-            await UnitOfWork.Registrations.DeleteAsync(Registration.Id);
+            await UnitOfWork.Registrations.DeleteAsync(_registration.Id);
             await UnitOfWork.CompleteAsync();
         }
     }
@@ -119,7 +120,7 @@
 
         if (!result.Succeeded)
         {
-            identityErrors = result.Errors;
+            _identityErrors = result.Errors;
             return;
         }
 

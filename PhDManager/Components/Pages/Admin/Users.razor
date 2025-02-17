@@ -57,8 +57,9 @@
 </MudDataGrid>
 
 @code {
-    private IEnumerable<UserInfo> _users;
-    private string _search;
+    private IEnumerable<UserInfo>? _users;
+
+    private string _search = string.Empty;
     private bool _usersLoading = false;
 
     protected override async Task OnInitializedAsync()
@@ -79,10 +80,10 @@
         if (string.IsNullOrWhiteSpace(_search))
             return true;
 
-        if (u.User.UserName.Contains(_search, StringComparison.OrdinalIgnoreCase))
+        if (u.User.UserName?.Contains(_search, StringComparison.OrdinalIgnoreCase) == true)
             return true;
 
-        if (u.User.Email.Contains(_search, StringComparison.OrdinalIgnoreCase))
+        if (u.User.Email?.Contains(_search, StringComparison.OrdinalIgnoreCase) == true)
             return true;
 
         if ($"{u.User.UserName} {u.User.Email}".Contains(_search))
@@ -94,7 +95,10 @@
     private async Task AddUsers()
     {
         _usersLoading = true;
+
         var searchEntries = await ActiveDirectoryService.SearchUsersAsync(_search);
+        if (searchEntries is null) return;
+
         using (var scope = ServiceProvider.CreateScope())
         {
             var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
@@ -104,7 +108,7 @@
             var dialog = await DialogService.ShowAsync<AddUserDialog>("Pridaj uživateľov", parameters, new() { FullWidth = true, MaxWidth = MaxWidth.Medium });
             var result = await dialog.Result;
 
-            if (result.Canceled) return;
+            if (result?.Canceled == true) return;
         }
 
         NavigationManager.NavigateTo(NavigationManager.Uri, true);
@@ -116,9 +120,13 @@
         var dialog = await DialogService.ShowAsync<EditUserDialog>("Uprav užívateľa", parameters, new() { FullWidth = true, MaxWidth = MaxWidth.Medium });
         var result = await dialog.Result;
 
+        if (result is null) return;
         if (result.Canceled) return;
 
         var updatedUserInfo = result.Data as UserInfo;
+
+        if (updatedUserInfo is null || updatedUserInfo.Role is null) return;
+
         await UsersService.UpdateUserInfoAsync(updatedUserInfo.User);
         await UsersService.UpdateUserRoleAsync(updatedUserInfo.User, updatedUserInfo.Role);
     }
@@ -134,6 +142,8 @@
         user.SupervisorTheses.ForEach(async st => await UnitOfWork.Theses.DeleteAsync(st.Id));
         user.Comments.ForEach(async c => await UnitOfWork.Comments.DeleteAsync(c.Id));
         await UsersService.DeleteUserAsync(user);
+
+        if (_users is null) return;
 
         _users = _users.Where(u => u.User.Id != user.Id).ToArray();
     }

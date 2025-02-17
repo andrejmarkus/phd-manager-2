@@ -40,13 +40,13 @@
 
 @code {
     [CascadingParameter]
-    private IMudDialogInstance MudDialog { get; set; }
+    private IMudDialogInstance MudDialog { get; set; } = default!;
 
     [Parameter]
-    public LdapEntry[] Users { get; set; }
+    public LdapEntry[] Users { get; set; } = [];
 
-    private LdapEntry[] _filtredUsers;
-    private LdapEntry[] _selectedUsers;
+    private LdapEntry[] _filtredUsers = [];
+    private LdapEntry[] _selectedUsers = [];
 
     private string _search = "";
 

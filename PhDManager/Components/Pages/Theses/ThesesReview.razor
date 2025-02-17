@@ -44,7 +44,9 @@
 
     protected override async Task OnInitializedAsync()
     {
-        _theses = (await UnitOfWork.Theses.GetAllAsync()).Where(t => !t.IsApproved).ToArray();
+        var allTheses = await UnitOfWork.Theses.GetAllAsync();
+
+        _theses = allTheses?.Where(t => !t.IsApproved).ToArray();
     }
 
     private async Task AcceptThesis(Thesis thesis)

@@ -16,7 +16,7 @@ namespace PhDManager.Services
             var replacements = new Dictionary<string, string>()
             {
                 {"{Title}", thesis.Title},
-                {"{Supervisor}", thesis.Supervisor.DisplayName},
+                {"{Supervisor}", thesis.Supervisor.DisplayName ?? ""},
                 {"{StudyProgram}", thesis.StudyProgram.Name},
                 {"{StudyField}", thesis.StudyProgram.StudyFieldName},
                 {"{DailyStudy}", thesis.DailyStudy ? "☑" : "☐"},
@@ -40,22 +40,22 @@ namespace PhDManager.Services
 
         public async Task DownloadIndividualPlanDocument(IndividualPlan individualPlan)
         {
-            var documentName = NormalizeName(individualPlan.User.DisplayName) + ".docx";
+            var documentName = NormalizeName(individualPlan.User.DisplayName?? "") + ".docx";
             var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "templates", "individual_plan_template.docx");
             var replacements = new Dictionary<string, string>()
             {
-                {"{Student}", individualPlan.User.DisplayName},
-                {"{Birthdate}", individualPlan.User.Birthdate?.ToString("dd.MM.yyyy")},
+                {"{Student}", individualPlan.User.DisplayName ?? ""},
+                {"{Birthdate}", individualPlan.User.Birthdate?.ToString("dd.MM.yyyy") ?? ""},
                 {"{FullAddress}", individualPlan.User.Address.FullAddress },
-                {"{PhoneNumber}", individualPlan.User.PhoneNumber},
+                {"{PhoneNumber}", individualPlan.User.PhoneNumber ?? ""},
                 {"{StudyForm}", individualPlan.User.IsExternal ? "Externá" : "Denná"},
                 {"{StudyProgram}", individualPlan.Thesis.StudyProgram.Name},
                 {"{StudyField}", individualPlan.Thesis.StudyProgram.StudyFieldName},
-                {"{Supervisor}", individualPlan.Thesis.Supervisor.DisplayName},
-                {"{StudyStartDate}", individualPlan.StudyStartDate?.ToString("dd.MM.yyyy")},
-                {"{DissertationExamDate}", individualPlan.DissertationExamDate?.ToString("dd.MM.yyyy")},
-                {"{DissertationSubmissionDate}", individualPlan.DissertationSubmissionDate?.ToString("MMMM yyyy") },
-                {"{StudyEndDate}", individualPlan.StudyEndDate?.ToString("dd.MM.yyyy")},
+                {"{Supervisor}", individualPlan.Thesis.Supervisor.DisplayName ?? ""},
+                {"{StudyStartDate}", individualPlan.StudyStartDate?.ToString("dd.MM.yyyy") ?? ""},
+                {"{DissertationExamDate}", individualPlan.DissertationExamDate ?.ToString("dd.MM.yyyy") ?? ""},
+                {"{DissertationSubmissionDate}", individualPlan.DissertationSubmissionDate ?.ToString("MMMM yyyy") ?? "" },
+                {"{StudyEndDate}", individualPlan.StudyEndDate ?.ToString("dd.MM.yyyy") ?? ""},
                 {"{Subject1}", individualPlan.Thesis.SubjectNames[0]},
                 {"{Subject2}", individualPlan.Thesis.SubjectNames[1]},
                 {"{Subject3}", individualPlan.Thesis.SubjectNames[2]},

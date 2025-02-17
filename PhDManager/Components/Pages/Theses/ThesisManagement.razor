@@ -92,7 +92,11 @@
         if (ThesisGuid is not null)
         {
             var thesis = await UnitOfWork.Theses.GetByGuidAsync(ThesisGuid);
-            if (thesis is null) NavigationManager.NavigateTo("/notfound");
+            if (thesis is null)
+            {
+                NavigationManager.NavigateTo("/notfound");
+                return;
+            }
 
             _thesis = thesis;
             _isEnglish = _thesis?.TitleEnglish is not null;
@@ -109,25 +113,29 @@
         _studyPrograms = await UnitOfWork.StudyPrograms.GetAllAsync();
     }
 
-    private async Task<IEnumerable<ApplicationUser>> SearchTeachers(string search, CancellationToken token)
+    private Task<IEnumerable<ApplicationUser>> SearchTeachers(string search, CancellationToken token)
     {
-        if (string.IsNullOrWhiteSpace(search))
-            return _teachers;
+        if (_teachers is null) return Task.FromResult(Enumerable.Empty<ApplicationUser>());
 
-        return _teachers.Where(t => t.UserName.Contains(search, StringComparison.OrdinalIgnoreCase));
+        if (string.IsNullOrWhiteSpace(search))
+            return Task.FromResult(_teachers);
+
+        return Task.FromResult(_teachers.Where(t => t.UserName is not null && t.UserName.Contains(search, StringComparison.OrdinalIgnoreCase)));
     }
 
-    private async Task<IEnumerable<StudyProgram>> SearchStudyPrograms(string search, CancellationToken token)
+    private Task<IEnumerable<StudyProgram>> SearchStudyPrograms(string search, CancellationToken token)
     {
-        if (string.IsNullOrWhiteSpace(search))
-            return _studyPrograms;
+        if (_studyPrograms is null) return Task.FromResult(Enumerable.Empty<StudyProgram>());
 
-        return _studyPrograms.Where(sp => sp.Name.Contains(search, StringComparison.OrdinalIgnoreCase));
+        if (string.IsNullOrWhiteSpace(search))
+            return Task.FromResult(_studyPrograms);
+
+        return Task.FromResult(_studyPrograms.Where(sp => sp.Name.Contains(search, StringComparison.OrdinalIgnoreCase)));
     }
 
     private async Task HandleThesis()
     {
-        await _form.Validate();
+        if (_form is null) return;
 
         if (_form.IsValid)
         {

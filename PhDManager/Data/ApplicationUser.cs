@@ -13,17 +13,17 @@ namespace PhDManager.Data
         [DataType(DataType.Date)]
         public DateTime? Birthdate { get; set; }
 
-        public virtual Address Address { get; set; } = new();
+        public virtual Address Address { get; set; } = default!;
         public virtual StudyProgram? StudyProgram { get; set; }
         public bool IsExternal { get; set; }
 
         public virtual IndividualPlan? IndividualPlan { get; set; }
 
         // Supervisor
-        public virtual List<Thesis> SupervisorTheses { get; set; }
+        public virtual List<Thesis> SupervisorTheses { get; set; } = [];
 
         // Reviewer
-        public virtual List<Comment> Comments { get; set; }
+        public virtual List<Comment> Comments { get; set; } = [];
 
         [NotMapped]
         public bool HasInfo => Birthdate is not null && Address is not null && StudyProgram is not null;

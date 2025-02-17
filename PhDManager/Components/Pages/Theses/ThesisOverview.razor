@@ -135,12 +135,12 @@
 
 @code {
     [Parameter]
-    public string ThesisGuid { get; set; }
+    public string ThesisGuid { get; set; } = string.Empty;
 
     private Thesis? _thesis;
     private string? _currentUserId;
 
-    private string _commentText;
+    private string _commentText = string.Empty;
 
     protected override async Task OnInitializedAsync()
     {
@@ -156,9 +156,13 @@
         var dialog = await DialogService.ShowAsync<EditCommentDialog>("Uprav komentár", parameters, new() { FullWidth = true, MaxWidth = MaxWidth.Medium });
         var result = await dialog.Result;
 
+        if (result is null) return;
         if (result.Canceled) return;
 
         var updatedComment = result.Data as Comment;
+
+        if (updatedComment is null) return;
+
         await UnitOfWork.Comments.UpdateAsync(updatedComment.Id, updatedComment);
         await UnitOfWork.CompleteAsync();
         _thesis = await UnitOfWork.Theses.GetByGuidAsync(ThesisGuid);
@@ -166,11 +170,13 @@
 
     private async Task PostComment()
     {
+        if (_thesis is null || _currentUserId is null) return;
+
         Comment comment = new Comment
         {
             Text = _commentText,
             ThesisId = _thesis.Id,
-            ReviewerId = await UsersService.GetCurrentUserIdAsync()
+            ReviewerId = _currentUserId
         };
         await UnitOfWork.Comments.AddAsync(comment);
         await UnitOfWork.CompleteAsync();

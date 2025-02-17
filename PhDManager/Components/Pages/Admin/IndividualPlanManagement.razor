@@ -31,8 +31,8 @@
             <MudField T="string" Label="Trvalé bydlisko" Variant="Variant.Outlined">@_selectedStudent.Address.FullAddress</MudField>
             <MudField T="string" Label="Telefónne číslo" Variant="Variant.Outlined">@_selectedStudent.PhoneNumber</MudField>
             <MudField T="string" Label="Forma štúdia" Variant="Variant.Outlined">@(_selectedStudent.IsExternal ? "Externá" : "Denná")</MudField>
-            <MudField T="string" Label="Študijný program" Variant="Variant.Outlined">@_selectedStudent.StudyProgram.Name</MudField>
-            <MudField T="string" Label="Študijný odbor" Variant="Variant.Outlined">@_selectedStudent.StudyProgram.StudyFieldName</MudField>
+            <MudField T="string" Label="Študijný program" Variant="Variant.Outlined">@_selectedStudent.StudyProgram?.Name</MudField>
+            <MudField T="string" Label="Študijný odbor" Variant="Variant.Outlined">@_selectedStudent.StudyProgram?.StudyFieldName</MudField>
             <MudDatePicker ShowToolbar="false" Required RequiredError="Je nutné zadať termín nástupu!" Label="Nástup na doktorandské štúdium" Variant="Variant.Outlined" @bind-Date="_individualPlan.StudyStartDate" />
         } 
         else
@@ -84,7 +84,7 @@
     private IndividualPlan _individualPlan = new();
     private ApplicationUser? _selectedStudent;
     private Thesis? _selectedThesis;
-    private Subject?[] _selectedSubjects = new Subject[3];
+    private Subject[] _selectedSubjects = new Subject[3];
 
     protected override async Task OnInitializedAsync()
     {
@@ -118,33 +118,37 @@
         _subjects = await UnitOfWork.Subjects.GetAllAsync();
     }
 
-    private async Task<IEnumerable<ApplicationUser>?> SearchStudents(string search, CancellationToken token)
+    private Task<IEnumerable<ApplicationUser>?> SearchStudents(string search, CancellationToken token)
     {
         if (string.IsNullOrWhiteSpace(search))
-            return _students?.Where(s => s.IndividualPlan is null);
+            return Task.FromResult(_students?.Where(s => s.IndividualPlan is null));
 
-        return _students?.Where(s => s.IndividualPlan is null).Where(s => s.DisplayName.Contains(search, StringComparison.OrdinalIgnoreCase));
+        return Task.FromResult(_students?.Where(s => s.IndividualPlan is null).Where(s => s.DisplayName is not null && s.DisplayName.Contains(search, StringComparison.OrdinalIgnoreCase)));
     }
 
-    private async Task<IEnumerable<Thesis>> SearchTheses(string search, CancellationToken token)
+    private Task<IEnumerable<Thesis>> SearchTheses(string search, CancellationToken token)
     {
-        if (string.IsNullOrWhiteSpace(search))
-            return _theses.Where(t => t.StudyProgram == _selectedStudent?.StudyProgram);
+        if (_theses is null) return Task.FromResult(Enumerable.Empty<Thesis>());
 
-        return _theses.Where(t => t.StudyProgram == _selectedStudent?.StudyProgram).Where(t => t.Title.Contains(search, StringComparison.OrdinalIgnoreCase));
+        if (string.IsNullOrWhiteSpace(search))
+            return Task.FromResult(_theses.Where(t => t.StudyProgram == _selectedStudent?.StudyProgram));
+
+        return Task.FromResult(_theses.Where(t => t.StudyProgram == _selectedStudent?.StudyProgram).Where(t => t.Title.Contains(search, StringComparison.OrdinalIgnoreCase)));
     }
 
-    private async Task<IEnumerable<Subject>> SearchSubjects(string search, CancellationToken token)
+    private Task<IEnumerable<Subject>> SearchSubjects(string search, CancellationToken token)
     {
-        if (string.IsNullOrWhiteSpace(search))
-            return _subjects.Where(t => t.StudyProgram == _selectedStudent?.StudyProgram);
+        if (_subjects is null) return Task.FromResult(Enumerable.Empty<Subject>());
 
-        return _subjects.Where(s => s.StudyProgram == _selectedStudent?.StudyProgram).Where(s => s.Name.Contains(search, StringComparison.OrdinalIgnoreCase));
+        if (string.IsNullOrWhiteSpace(search))
+            return Task.FromResult(_subjects.Where(t => t.StudyProgram == _selectedStudent?.StudyProgram));
+
+        return Task.FromResult(_subjects.Where(s => s.StudyProgram == _selectedStudent?.StudyProgram).Where(s => s.Name.Contains(search, StringComparison.OrdinalIgnoreCase)));
     }
 
     private async Task HandleIndividualPlan()
     {
-        await _form.Validate();
+        if (_form is null || _selectedStudent is null || _selectedThesis is null) return;
 
         if (_form.IsValid)
         {

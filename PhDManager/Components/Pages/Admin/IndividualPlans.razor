@@ -44,9 +44,9 @@
 </MudDataGrid>
 
 @code {
-    private IEnumerable<IndividualPlan> _individualPlans;
+    private IEnumerable<IndividualPlan>? _individualPlans;
 
-    private string _search;
+    private string _search = string.Empty;
 
     protected override async Task OnInitializedAsync()
     {
@@ -61,16 +61,16 @@
         if (ip.Thesis.Title.Contains(_search, StringComparison.OrdinalIgnoreCase))
             return true;
 
-        if (ip.Thesis.Supervisor.DisplayName.Contains(_search, StringComparison.OrdinalIgnoreCase))
+        if (ip.Thesis.Supervisor.DisplayName?.Contains(_search, StringComparison.OrdinalIgnoreCase) == true)
             return true;
 
-        if (ip.Thesis.Supervisor.Email.Contains(_search, StringComparison.OrdinalIgnoreCase))
+        if (ip.Thesis.Supervisor.Email?.Contains(_search, StringComparison.OrdinalIgnoreCase) == true)
             return true;
 
-        if (ip.User.DisplayName.Contains(_search, StringComparison.OrdinalIgnoreCase))
+        if (ip.User.DisplayName?.Contains(_search, StringComparison.OrdinalIgnoreCase) == true)
             return true;
 
-        if (ip.User.Email.Contains(_search, StringComparison.OrdinalIgnoreCase))
+        if (ip.User.Email?.Contains(_search, StringComparison.OrdinalIgnoreCase) == true)
             return true;
 
         if ($"{ip.Thesis.Title} {ip.Thesis.Supervisor.DisplayName} {ip.Thesis.Supervisor.Email} {ip.User.DisplayName} {ip.User.Email}".Contains(_search))

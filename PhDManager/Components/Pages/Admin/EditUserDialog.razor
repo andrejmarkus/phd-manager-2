@@ -14,9 +14,12 @@
     </TitleContent>
     <DialogContent>
         <MudSelect T="string" Variant="Variant.Outlined" Label="Rola" @bind-Value="UserInfo.Role" Required>
-            @foreach (var role in _roles)
+            @if (_roles is not null)
             {
-                <MudSelectItem Value="@role.Name">@role.Name</MudSelectItem>
+                @foreach (var role in _roles)
+                {
+                    <MudSelectItem Value="@role.Name">@role.Name</MudSelectItem>
+                }
             }
         </MudSelect>
         @if (UserInfo.Role == "Študent")
@@ -57,10 +60,10 @@
 
 @code {
     [CascadingParameter]
-    private IMudDialogInstance MudDialog { get; set; }
+    private IMudDialogInstance MudDialog { get; set; } = default!;
 
     [Parameter]
-    public UserInfo UserInfo { get; set; }
+    public UserInfo UserInfo { get; set; } = default!;
 
     private IEnumerable<IdentityRole>? _roles;
     private IEnumerable<StudyProgram>? _studyPrograms;

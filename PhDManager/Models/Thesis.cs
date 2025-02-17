@@ -19,14 +19,14 @@ namespace PhDManager.Models
         public string SolutionResults { get; set; } = string.Empty;
         public bool DailyStudy { get; set; } = false;
         public bool ExternalStudy { get; set; } = false;
-        public List<string> SubjectNames { get; set; } = new();
+        public List<string> SubjectNames { get; set; } = [];
         public string SupervisorId { get; set; } = string.Empty;
         [JsonIgnore]
-        public virtual ApplicationUser Supervisor { get; set; }
+        public virtual ApplicationUser Supervisor { get; set; } = default!;
         public int StudyProgramId { get; set; }
-        public virtual StudyProgram StudyProgram { get; set; }
+        public virtual StudyProgram StudyProgram { get; set; } = default!;
 
-        public virtual List<Comment> Comments { get; set; } = new();
+        public virtual List<Comment> Comments { get; set; } = [];
 
         [JsonIgnore]
         public virtual IndividualPlan? IndividualPlan { get; set; }

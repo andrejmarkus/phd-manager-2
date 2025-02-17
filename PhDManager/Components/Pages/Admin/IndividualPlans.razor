@@ -3,6 +3,7 @@
 @rendermode InteractiveServer
 
 @inject IUnitOfWork UnitOfWork
+@inject IDialogService DialogService
 @inject DocumentService DocumentService
 
 @using PhDManager.Models
@@ -11,7 +12,7 @@
 
 <PageTitle>Individuálne plány | Admin</PageTitle>
 
-<MudDataGrid T="IndividualPlan" Items="_individualPlans" Hover SortMode="SortMode.Multiple" QuickFilter="_quickFilter">
+<MudDataGrid T="IndividualPlan" Items="_individualPlans" Hover SortMode="SortMode.Multiple" QuickFilter="_quickFilter" Elevation="0">
     <ToolBarContent>
         <MudText Typo="Typo.h6" GutterBottom="false">Individuálne plány</MudText>
         <MudSpacer />
@@ -80,6 +81,9 @@
 
     private async Task DeleteIndividualPlan(IndividualPlan individualPlan)
     {
+        bool? result = await DialogService.ShowMessageBox("Vymazať individuálny plán", "Naozaj si prajete vymazať zvolený individuálny plán?", "Áno", "Nie");
+        if (result == false) return;
+
         await UnitOfWork.IndividualPlans.DeleteAsync(individualPlan.Id);
         await UnitOfWork.CompleteAsync();
     }

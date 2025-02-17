@@ -4,6 +4,7 @@
 
 @inject IJSRuntime JSRuntime
 @inject IUnitOfWork UnitOfWork
+@inject IDialogService DialogService
 @inject DocumentService DocumentService
 
 @using PhDManager.Models
@@ -12,7 +13,7 @@
 
 <PageTitle>Dizertačné témy | Admin</PageTitle>
 
-<MudDataGrid T="Thesis" Items="_theses" Hover SortMode="SortMode.Multiple" QuickFilter="_quickFilter">
+<MudDataGrid T="Thesis" Items="_theses" Hover SortMode="SortMode.Multiple" QuickFilter="_quickFilter" Elevation="0">
     <ToolBarContent>
         <MudText Typo="Typo.h6" GutterBottom="false">Dizertačné témy</MudText>
         <MudSpacer />
@@ -73,6 +74,9 @@
 
     private async Task DeleteThesis(Thesis thesis)
     {
+        bool? result = await DialogService.ShowMessageBox("Vymazať dizertačnú tému", "Naozaj si prajete vymazať zvolenú dizertačnú tému?", "Áno", "Nie");
+        if (result == false) return;
+
         if (thesis.IndividualPlan is not null)
         {
             await UnitOfWork.IndividualPlans.DeleteAsync(thesis.IndividualPlan.Id);

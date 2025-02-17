@@ -11,6 +11,7 @@
 
 @inject IUnitOfWork UnitOfWork
 @inject IServiceProvider ServiceProvider
+@inject IDialogService DialogService
 @inject UsersService UsersService
 @inject DocumentService DocumentService
 @inject UserManager<ApplicationUser> UserManager
@@ -18,19 +19,6 @@
 <PageTitle>Dizertačné témy</PageTitle>
 
 <MudText Typo="Typo.h3" GutterBottom="true">Dizertačné témy</MudText>
-
-<MudStack Row>
-    <AuthorizeView Roles="Admin, Učiteľ">
-        <Authorized>
-            <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="/theses/add">Pridať tému</MudButton>
-        </Authorized>
-    </AuthorizeView>
-    <AuthorizeView Roles="Admin, Učiteľ, Externista">
-        <Authorized>
-            <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="/theses/review">Potvrdiť tému</MudButton>
-        </Authorized>
-    </AuthorizeView>
-</MudStack>
 
 <MudStack Row>
     <MudTextField FullWidth T="string" @bind-Value="@_search" @bind-Value:after="UpdateSearch" Immediate="true" Label="Vyhľadaj" Variant="Variant.Outlined" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Search" />
@@ -54,6 +42,19 @@
             }
         </MudSelect>
     }
+</MudStack>
+
+<MudStack Class="mt-1" Row>
+    <AuthorizeView Roles="Admin, Učiteľ">
+        <Authorized>
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="/theses/add">Pridať tému</MudButton>
+        </Authorized>
+    </AuthorizeView>
+    <AuthorizeView Roles="Admin, Učiteľ, Externista">
+        <Authorized>
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="/theses/review">Potvrdiť tému</MudButton>
+        </Authorized>
+    </AuthorizeView>
 </MudStack>
 
 <MudGrid Class="mt-1">
@@ -122,6 +123,9 @@
 
     private async Task DeleteThesis(Thesis thesis)
     {
+        bool? result = await DialogService.ShowMessageBox("Vymazať dizertačnú tému", "Naozaj si prajete vymazať zvolenú dizertačnú tému?", "Áno", "Nie");
+        if (result == false) return;
+
         if (thesis.IndividualPlan is not null)
         {
             await UnitOfWork.IndividualPlans.DeleteAsync(thesis.IndividualPlan.Id);

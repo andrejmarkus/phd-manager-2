@@ -17,16 +17,23 @@
 @inject UsersService UsersService
 @inject UserManager<ApplicationUser> UserManager
 @inject NavigationManager NavigationManager
+@inject ActiveDirectoryService ActiveDirectoryService
 
 @attribute [Authorize(Roles = "Admin")]
 
 <PageTitle>Užívatelia | Admin</PageTitle>
 
-<MudDataGrid T="UserInfo" Items="@_users" Hover SortMode="SortMode.Multiple" QuickFilter="@_quickFilter">
+<MudDataGrid T="UserInfo" Items="@_users" Hover SortMode="SortMode.Multiple" QuickFilter="@_quickFilter" Elevation="0">
     <ToolBarContent>
         <MudText Typo="Typo.h6" GutterBottom="false">Užívatelia</MudText>
         <MudSpacer />
-        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="AddUsers">Pridaj uživateľa</MudButton>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="AddUsers" Disabled="@_usersLoading">
+            Pridaj užívateľa
+            @if (_usersLoading)
+            {
+                <MudProgressCircular Class="ml-2" Size="Size.Small" Indeterminate />
+            }
+        </MudButton>
         <MudTextField Class="ml-4" Variant="Variant.Outlined" Placeholder="Vyhľadaj" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" @bind-Value="_search" />
     </ToolBarContent>
     <Columns>
@@ -51,8 +58,8 @@
 
 @code {
     private IEnumerable<UserInfo> _users;
-
     private string _search;
+    private bool _usersLoading = false;
 
     protected override async Task OnInitializedAsync()
     {
@@ -86,18 +93,27 @@
 
     private async Task AddUsers()
     {
-        var dialog = await DialogService.ShowAsync<AddUserDialog>("Pridaj uživateľov");
-        var result = await dialog.Result;
+        _usersLoading = true;
+        var searchEntries = await ActiveDirectoryService.SearchUsersAsync(_search);
+        using (var scope = ServiceProvider.CreateScope())
+        {
+            var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+            var users = await searchEntries.ToAsyncEnumerable().WhereAwait(async e => (await userManager.FindByNameAsync(e.DirectoryAttributes["uid"].GetValue<string>()) is null)).ToArrayAsync();
+            _usersLoading = false;
+            var parameters = new DialogParameters<AddUserDialog> { { d => d.Users, users } };
+            var dialog = await DialogService.ShowAsync<AddUserDialog>("Pridaj uživateľov", parameters, new() { FullWidth = true, MaxWidth = MaxWidth.Medium });
+            var result = await dialog.Result;
 
-        if (result.Canceled) return;
+            if (result.Canceled) return;
+        }
 
         NavigationManager.NavigateTo(NavigationManager.Uri, true);
     }
 
     private async Task UpdateUser(UserInfo userInfo)
     {
-        var parameters = new DialogParameters<EditUserDialog> { { x => x.UserInfo, userInfo } };
-        var dialog = await DialogService.ShowAsync<EditUserDialog>("Uprav užívateľa", parameters);
+        var parameters = new DialogParameters<EditUserDialog> { { d => d.UserInfo, userInfo } };
+        var dialog = await DialogService.ShowAsync<EditUserDialog>("Uprav užívateľa", parameters, new() { FullWidth = true, MaxWidth = MaxWidth.Medium });
         var result = await dialog.Result;
 
         if (result.Canceled) return;
@@ -109,6 +125,9 @@
 
     private async Task DeleteUser(UserInfo userInfo)
     {
+        bool? result = await DialogService.ShowMessageBox("Vymazať užívateľa", "Naozaj si prajete vymazať zvoleného užívateľa?", "Áno", "Nie");
+        if (result == false) return;
+
         var user = userInfo.User;
         if (user.Address is not null) await UnitOfWork.Addresses.DeleteAsync(user.Address.Id);
         if (user.IndividualPlan is not null) await UnitOfWork.IndividualPlans.DeleteAsync(user.IndividualPlan.Id);

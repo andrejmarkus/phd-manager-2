@@ -118,12 +118,12 @@
         _subjects = await UnitOfWork.Subjects.GetAllAsync();
     }
 
-    private async Task<IEnumerable<ApplicationUser>> SearchStudents(string search, CancellationToken token)
+    private async Task<IEnumerable<ApplicationUser>?> SearchStudents(string search, CancellationToken token)
     {
         if (string.IsNullOrWhiteSpace(search))
-            return _students.Where(s => s.IndividualPlan is null);
+            return _students?.Where(s => s.IndividualPlan is null);
 
-        return _students.Where(s => s.IndividualPlan is null).Where(s => s.DisplayName.Contains(search, StringComparison.OrdinalIgnoreCase));
+        return _students?.Where(s => s.IndividualPlan is null).Where(s => s.DisplayName.Contains(search, StringComparison.OrdinalIgnoreCase));
     }
 
     private async Task<IEnumerable<Thesis>> SearchTheses(string search, CancellationToken token)

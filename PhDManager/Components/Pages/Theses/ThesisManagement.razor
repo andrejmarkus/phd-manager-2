@@ -80,7 +80,8 @@
     public string? ThesisGuid { get; set; }
 
     private MudForm? _form;
-    private IEnumerable<ApplicationUser> _teachers;
+
+    private IEnumerable<ApplicationUser>? _teachers;
     private IEnumerable<StudyProgram>? _studyPrograms;
 
     private Thesis _thesis = new() { SubjectNames = new List<string> { "", "", "" } };

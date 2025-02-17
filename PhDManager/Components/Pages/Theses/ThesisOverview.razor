@@ -153,7 +153,7 @@
     private async Task UpdateComment(Comment comment)
     {
         var parameters = new DialogParameters<EditCommentDialog> { { x => x.Comment, comment } };
-        var dialog = await DialogService.ShowAsync<EditCommentDialog>("Uprav komentár", parameters);
+        var dialog = await DialogService.ShowAsync<EditCommentDialog>("Uprav komentár", parameters, new() { FullWidth = true, MaxWidth = MaxWidth.Medium });
         var result = await dialog.Result;
 
         if (result.Canceled) return;
@@ -180,6 +180,9 @@
 
     private async Task DeleteThesis(Thesis thesis)
     {
+        bool? result = await DialogService.ShowMessageBox("Vymazať dizertačnú tému", "Naozaj si prajete vymazať zvolenú dizertačnú tému?", "Áno", "Nie");
+        if (result == false) return;
+
         if (thesis.IndividualPlan is not null)
         {
             await UnitOfWork.IndividualPlans.DeleteAsync(thesis.IndividualPlan.Id);

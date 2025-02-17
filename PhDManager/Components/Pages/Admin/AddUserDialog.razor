@@ -5,28 +5,27 @@
 
 @rendermode InteractiveServer
 
-@inject ActiveDirectoryService ActiveDirectoryService
 @inject UsersService UsersService
 @inject IServiceProvider ServiceProvider
 
-<MudDialog Options="@(new() { FullWidth = true })">
+<MudDialog>
     <TitleContent>
         <MudText Typo="Typo.h6">Pridaj užívateľov</MudText>
     </TitleContent>
     <DialogContent>
-        <MudDataGrid T="LdapEntry" Items="_entries" MultiSelection="true" SortMode="SortMode.Multiple" SelectedItemsChanged="@SelectedItemsChangedLdap">
+        <MudDataGrid T="LdapEntry" Items="_filtredUsers" MultiSelection="true" SortMode="SortMode.Multiple" SelectedItemsChanged="@SelectedItemsChangedLdap" Elevation="0">
             <ToolBarContent>
                 <MudText Typo="Typo.h6" GutterBottom="false">LDAP užívatelia</MudText>
                 <MudSpacer />
-                <MudTextField @bind-Value="@_search" @bind-Value:after="@GetUsers" Class="mr-4" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium"></MudTextField>
+                <MudTextField @bind-Value="@_search" @bind-Value:after="@FilterUsers" Class="mr-4" Variant="Variant.Outlined" Placeholder="Hľadaj" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium"></MudTextField>
             </ToolBarContent>
             <Columns>
                 <SelectColumn T="LdapEntry" />
-                <PropertyColumn Property="@(e => e.DirectoryAttributes["uid"].GetValue<string>())" Title="Username" />
+                <PropertyColumn Property="@(e => e.DirectoryAttributes["uid"].GetValue<string>())" Title="Použivateľské meno" />
+                <PropertyColumn Property="@(e => e.DirectoryAttributes["displayName"].GetValue<string>())" Title="Celé meno" />
+                <PropertyColumn Property="@(e => e.DirectoryAttributes["givenName"].GetValue<string>())" Title="Krstné meno" />
+                <PropertyColumn Property="@(e => e.DirectoryAttributes["sn"].GetValue<string>())" Title="Priezvisko" />
                 <PropertyColumn Property="@(e => e.DirectoryAttributes["mail"].GetValue<string>())" Title="Email" />
-                <PropertyColumn Property="@(e => e.DirectoryAttributes["displayName"].GetValue<string>())" Title="Display Name" />
-                <PropertyColumn Property="@(e => e.DirectoryAttributes["givenName"].GetValue<string>())" Title="First Name" />
-                <PropertyColumn Property="@(e => e.DirectoryAttributes["sn"].GetValue<string>())" Title="Last Name" />
             </Columns>
             <PagerContent>
                 <MudDataGridPager T="LdapEntry" />
@@ -43,29 +42,27 @@
     [CascadingParameter]
     private IMudDialogInstance MudDialog { get; set; }
 
-    private LdapEntry[] _entries;
-    private LdapEntry[] _selectedEntries;
+    [Parameter]
+    public LdapEntry[] Users { get; set; }
+
+    private LdapEntry[] _filtredUsers;
+    private LdapEntry[] _selectedUsers;
 
     private string _search = "";
 
-    protected override async Task OnInitializedAsync()
+    protected override void OnInitialized()
     {
-        await GetUsers();
+        _filtredUsers = Users;
     }
 
-    private async Task GetUsers()
+    private void FilterUsers()
     {
-        var searchEntries = await ActiveDirectoryService.SearchUsersAsync(_search);
-        using (var scope = ServiceProvider.CreateScope())
-        {
-            var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
-            _entries = await searchEntries.ToAsyncEnumerable().WhereAwait(async e => (await userManager.FindByNameAsync(e.DirectoryAttributes["uid"].GetValue<string>()) is null)).ToArrayAsync();
-        }
+        _filtredUsers = Users.Where(u => u.DirectoryAttributes["uid"].GetValue<string>().ToLower().Contains(_search.ToLower())).ToArray();
     }
 
     private async Task AddUsers()
     {
-        foreach (var entry in _selectedEntries)
+        foreach (var entry in _selectedUsers)
         {
             await UsersService.RegisterLdapUserWithoutPasswordAsync(entry);
         }
@@ -74,6 +71,6 @@
 
     private void SelectedItemsChangedLdap(IEnumerable<LdapEntry> entries)
     {
-        _selectedEntries = entries.ToArray();
+        _selectedUsers = entries.ToArray();
     }
 }

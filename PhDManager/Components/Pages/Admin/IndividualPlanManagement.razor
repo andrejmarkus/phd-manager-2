@@ -3,7 +3,9 @@
 
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Identity
+@using Microsoft.Extensions.Localization
 @using PhDManager.Data
+@using PhDManager.Locales
 @using PhDManager.Models
 @using PhDManager.Services
 @using PhDManager.Services.IRepositories
@@ -12,64 +14,65 @@
 
 @inject IServiceProvider ServiceProvider
 @inject IUnitOfWork UnitOfWork
+@inject IStringLocalizer<Resources> Localizer
 @inject UserManager<ApplicationUser> UserManager
 @inject NavigationManager NavigationManager
 
 @attribute [Authorize(Roles = "Admin")]
 
-<PageTitle>Vytvorenie individualného plánu</PageTitle>
+<PageTitle>@Localizer["IndividualPlanCreate"]</PageTitle>
 
-<MudText Typo="Typo.h3">Individuálny študijný plán doktoranda</MudText>
+<MudText Typo="Typo.h3">@Localizer["IndividualPlanTitle"]</MudText>
 
 <MudForm @ref="_form">
-    <MudAutocomplete T="ApplicationUser" Required RequiredError="Je nutné zvoliť študenta!" Label="Meno a priezvisko, titul" ToStringFunc="@(s => s is null ? null : s.DisplayName)" SearchFunc="SearchStudents" Variant="Variant.Outlined" @bind-Value="@_selectedStudent" />
+    <MudAutocomplete T="ApplicationUser" Required RequiredError="@Localizer["IndividualPlanStudentError"]" Label="@Localizer["IndividualPlanStudent"]" ToStringFunc="@(s => s is null ? null : s.DisplayName)" SearchFunc="SearchStudents" Variant="Variant.Outlined" @bind-Value="@_selectedStudent" />
     @if (_selectedStudent is not null)
     {
         @if (_selectedStudent.HasInfo)
         {
-            <MudDatePicker ShowToolbar="false" Label="Dátum narodenia" Variant="Variant.Outlined" @bind-Date="_selectedStudent.Birthdate" ReadOnly />
-            <MudField T="string" Label="Trvalé bydlisko" Variant="Variant.Outlined">@_selectedStudent.Address.FullAddress</MudField>
-            <MudField T="string" Label="Telefónne číslo" Variant="Variant.Outlined">@_selectedStudent.PhoneNumber</MudField>
-            <MudField T="string" Label="Forma štúdia" Variant="Variant.Outlined">@(_selectedStudent.IsExternal ? "Externá" : "Denná")</MudField>
-            <MudField T="string" Label="Študijný program" Variant="Variant.Outlined">@_selectedStudent.StudyProgram?.Name</MudField>
-            <MudField T="string" Label="Študijný odbor" Variant="Variant.Outlined">@_selectedStudent.StudyProgram?.StudyFieldName</MudField>
-            <MudDatePicker ShowToolbar="false" Required RequiredError="Je nutné zadať termín nástupu!" Label="Nástup na doktorandské štúdium" Variant="Variant.Outlined" @bind-Date="_individualPlan.StudyStartDate" />
+            <MudDatePicker ShowToolbar="false" Label="@Localizer["Birthdate"]" Variant="Variant.Outlined" @bind-Date="_selectedStudent.Birthdate" ReadOnly />
+            <MudField T="string" Label="@Localizer["Address"]" Variant="Variant.Outlined">@_selectedStudent.Address.FullAddress</MudField>
+            <MudField T="string" Label="@Localizer["PhoneNumber"]" Variant="Variant.Outlined">@_selectedStudent.PhoneNumber</MudField>
+            <MudField T="string" Label="@Localizer["StudyForm"]" Variant="Variant.Outlined">@(_selectedStudent.IsExternal ? Localizer["StudyFormExternal"] : Localizer["StudyFormDaily"])</MudField>
+            <MudField T="string" Label="@Localizer["StudyProgram"]" Variant="Variant.Outlined">@_selectedStudent.StudyProgram?.Name</MudField>
+            <MudField T="string" Label="@Localizer["StudyField"]" Variant="Variant.Outlined">@_selectedStudent.StudyProgram?.StudyFieldName</MudField>
+            <MudDatePicker ShowToolbar="false" Required RequiredError="@Localizer["IndividualPlanStudyStartDateError"]" Label="@Localizer["IndividualPlanStudyStartDate"]" Variant="Variant.Outlined" @bind-Date="_individualPlan.StudyStartDate" />
         } 
         else
         {
-            <MudText Color="Color.Error">Uživateľ nemá vyplnené profilové informácie!</MudText>
+            <MudText Color="Color.Error">@Localizer["IndividualPlanError"]</MudText>
         }
     }
 
-    <MudText Typo="Typo.h5">Termíny</MudText>
+    <MudText Typo="Typo.h5">@Localizer["Deadlines"]</MudText>
     <MudStack Row AlignItems="AlignItems.Center">
-        <MudText Class="width-half">Termín podania žiadosti o dizertačnú skúšku vrátane odovzdania písomnej práce k diz. skúške (zvyčajne prvá polovica septembra v 2. ročníku)</MudText>
-        <MudDatePicker ShowToolbar="false" Required RequiredError="Je nutné zadať termín podania žiadosti!" Label="Termín podania žiadosti" Variant="Variant.Outlined" @bind-Date="_individualPlan.DissertationExamDate" />
+        <MudText Class="width-half">@Localizer["IndividualPlanDissertationExamDateInfo"]</MudText>
+        <MudDatePicker ShowToolbar="false" Required RequiredError="@Localizer["IndividualPlanDissertationExamDateError"]" Label="@Localizer["IndividualPlanDissertationExamDate"]" Variant="Variant.Outlined" @bind-Date="_individualPlan.DissertationExamDate" />
     </MudStack>
     <MudStack Row AlignItems="AlignItems.Center">
-        <MudText Class="width-half">Termín odovzdania dizertačnej práce (zvyčajne apríl v roku ukončenia štúdia)</MudText>
-        <MudDatePicker ShowToolbar="false" Required RequiredError="Je nutné zadať termín odovzdania!" Label="Termín odovzdania" Variant="Variant.Outlined" FixDay="1" OpenTo="OpenTo.Month" @bind-Date="_individualPlan.DissertationSubmissionDate" />
+        <MudText Class="width-half">@Localizer["IndividualPlanDissertationSubmissionDateInfo"]</MudText>
+        <MudDatePicker ShowToolbar="false" Required RequiredError="@Localizer["IndividualPlanDissertationSubmissionDateError"]" Label="@Localizer["IndividualPlanDissertationSubmissionDate"]" Variant="Variant.Outlined" FixDay="1" OpenTo="OpenTo.Month" @bind-Date="_individualPlan.DissertationSubmissionDate" />
     </MudStack>
     <MudStack Row AlignItems="AlignItems.Center">
-        <MudText Class="width-half">Termín ukončenia doktorandského štúdia vrátane obhajoby dizertačnej práce (zvyčajne 31.8. po 3 rokoch štúdia interní doktorandi a po 4 rokoch externí doktorandi)</MudText>
-        <MudDatePicker ShowToolbar="false" Required RequiredError="Je nutné zadať termín ukončenia štúdia!" Label="Termín ukončenia štúdia" Variant="Variant.Outlined" @bind-Date="_individualPlan.StudyEndDate" />
+        <MudText Class="width-half">@Localizer["IndividualPlanStudyEndDateInfo"]</MudText>
+        <MudDatePicker ShowToolbar="false" Required RequiredError="@Localizer["IndividualPlanStudyEndDateError"]" Label="@Localizer["IndividualPlanStudyEndDate"]" Variant="Variant.Outlined" @bind-Date="_individualPlan.StudyEndDate" />
     </MudStack>
 
-    <MudText Typo="Typo.h4">Študijná časť</MudText>
-    <MudText Typo="Typo.h5">Predmety s tématickými okruhmi pre dizertačnú skúšku</MudText>
-    <MudAutocomplete T="Subject" Required RequiredError="Je nutné zvoliť predmet!" Label="Predmet 1" ToStringFunc="@(s => s is null ? null : s.Name)" SearchFunc="SearchSubjects" Variant="Variant.Outlined" @bind-Value="_selectedSubjects[0]" />
-    <MudAutocomplete T="Subject" Required RequiredError="Je nutné zvoliť predmet!" Label="Predmet 2" ToStringFunc="@(s => s is null ? null : s.Name)" SearchFunc="SearchSubjects" Variant="Variant.Outlined" @bind-Value="_selectedSubjects[1]" />
-    <MudAutocomplete T="Subject" Required RequiredError="Je nutné zvoliť predmet!" Label="Predmet 3" ToStringFunc="@(s => s is null ? null : s.Name)" SearchFunc="SearchSubjects" Variant="Variant.Outlined" @bind-Value="_selectedSubjects[2]" />
-    <MudText Typo="Typo.h5">Odporučané ďalšie voliteľné predmety</MudText>
+    <MudText Typo="Typo.h4">@Localizer["StudyPart"]</MudText>
+    <MudText Typo="Typo.h5">@Localizer["IndividualPlanSubjectsInfo"]</MudText>
+    <MudAutocomplete T="Subject" Required RequiredError="@Localizer["IndividualPlanSubjectError"]" Label="@($"{Localizer["Subject"]} 1")" ToStringFunc="@(s => s is null ? null : s.Name)" SearchFunc="SearchSubjects" Variant="Variant.Outlined" @bind-Value="_selectedSubjects[0]" />
+    <MudAutocomplete T="Subject" Required RequiredError="@Localizer["IndividualPlanSubjectError"]" Label="@($"{Localizer["Subject"]} 2")" ToStringFunc="@(s => s is null ? null : s.Name)" SearchFunc="SearchSubjects" Variant="Variant.Outlined" @bind-Value="_selectedSubjects[1]" />
+    <MudAutocomplete T="Subject" Required RequiredError="@Localizer["IndividualPlanSubjectError"]" Label="@($"{Localizer["Subject"]} 3")" ToStringFunc="@(s => s is null ? null : s.Name)" SearchFunc="SearchSubjects" Variant="Variant.Outlined" @bind-Value="_selectedSubjects[2]" />
+    <MudText Typo="Typo.h5">@Localizer["IndividualPlanAdditionalSubjectsInfo"]</MudText>
     <MudText>To-Do</MudText>
-    <MudText Typo="Typo.h5">Téma písomnej časti dizertačnej skúšky</MudText>
-    <MudAutocomplete T="Thesis" Required RequiredError="Je nutné zvoliť dizertačnú tému!" Label="Dizertačná téma" ToStringFunc="@(t => t is null ? null : t.Title)" SearchFunc="SearchTheses" Variant="Variant.Outlined" @bind-Value="_selectedThesis" />
+    <MudText Typo="Typo.h5">@Localizer["IndividualPlanThesisInfo"]</MudText>
+    <MudAutocomplete T="Thesis" Required RequiredError="@Localizer["IndividualPlanThesisError"]" Label="@Localizer["IndividualPlanThesis"]" ToStringFunc="@(t => t is null ? null : t.Title)" SearchFunc="SearchTheses" Variant="Variant.Outlined" @bind-Value="_selectedThesis" />
     @if (_selectedThesis is not null)
     {
-        <MudField T="string" Label="Školitel" Variant="Variant.Outlined">@_selectedThesis.Supervisor.DisplayName</MudField>
+        <MudField T="string" Label="@Localizer["Supervisor"]" Variant="Variant.Outlined">@_selectedThesis.Supervisor.DisplayName</MudField>
     }
 
-    <MudButton class="mt-4" OnClick="HandleIndividualPlan" Variant="Variant.Filled" Color="Color.Primary">@(IndividualPlanGuid is null ? "Pridať" : "Upraviť")</MudButton>
+    <MudButton class="mt-4" OnClick="HandleIndividualPlan" Variant="Variant.Filled" Color="Color.Primary">@(IndividualPlanGuid is null ? Localizer["Add"] : Localizer["Edit"])</MudButton>
 </MudForm>
 
 @code {

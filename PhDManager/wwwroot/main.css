@@ -69,6 +69,14 @@
     height: 100%;
 }
 
+.width-full {
+    width: 100%;
+}
+
+.width-fit {
+    width: fit-content;
+}
+
 .width-half {
     width: 50vw;
 }

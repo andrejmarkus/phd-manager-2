@@ -19,6 +19,9 @@ builder.Services.AddMudServices();
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
+builder.Services.AddLocalization();
+builder.Services.AddControllers();
+
 builder.Services.Configure<ActiveDirectoryOptions>(builder.Configuration.GetSection(ActiveDirectoryOptions.ActiveDirectory));
 
 builder.Services.AddCascadingAuthenticationState();
@@ -73,10 +76,18 @@ else
     app.UseHsts();
 }
 
+string[] supportedCultures = ["sk-SK", "en-US"];
+app.UseRequestLocalization(new RequestLocalizationOptions()
+    .SetDefaultCulture(supportedCultures[0])
+    .AddSupportedCultures(supportedCultures)
+    .AddSupportedUICultures(supportedCultures));
+
 app.UseHttpsRedirection();
 
 app.MapStaticAssets();
 app.UseAntiforgery();
+
+app.MapControllers();
 
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();

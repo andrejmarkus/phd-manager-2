@@ -1,13 +1,17 @@
 ﻿@page "/auth"
 
 @using Microsoft.AspNetCore.Authorization
+@using Microsoft.Extensions.Localization
+@using PhDManager.Locales
+
+@inject IStringLocalizer<Resources> Localizer
 
 @attribute [Authorize]
 
 <PageTitle>Auth</PageTitle>
 
-<MudText Typo="Typo.h3" GutterBottom="true">Úspešne prihásený!</MudText>
+<MudText Typo="Typo.h3" GutterBottom="true">@Localizer["LoginSuccessful"]</MudText>
 
 <AuthorizeView>
-    <MudText Class="mb-4">Vitaj @context.User.Identity?.Name!</MudText>
+    <MudText Class="mb-4">@Localizer["Welcome"], @context.User.Identity?.Name!</MudText>
 </AuthorizeView>

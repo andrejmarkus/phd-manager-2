@@ -2,7 +2,9 @@
 
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Identity
+@using Microsoft.Extensions.Localization
 @using PhDManager.Data
+@using PhDManager.Locales
 @using PhDManager.Models
 @using PhDManager.Services
 @using PhDManager.Services.IRepositories
@@ -12,19 +14,20 @@
 @inject IUnitOfWork UnitOfWork
 @inject IServiceProvider ServiceProvider
 @inject IDialogService DialogService
+@inject IStringLocalizer<Resources> Localizer
 @inject UsersService UsersService
 @inject DocumentService DocumentService
 @inject UserManager<ApplicationUser> UserManager
 
-<PageTitle>Dizertačné témy</PageTitle>
+<PageTitle>@Localizer["DissertationTheses"]</PageTitle>
 
-<MudText Typo="Typo.h3" GutterBottom="true">Dizertačné témy</MudText>
+<MudText Typo="Typo.h3" GutterBottom="true">@Localizer["DissertationTheses"]</MudText>
 
 <MudStack Row>
-    <MudTextField FullWidth T="string" @bind-Value="@_search" @bind-Value:after="UpdateSearch" Immediate="true" Label="Vyhľadaj" Variant="Variant.Outlined" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Search" />
+    <MudTextField FullWidth T="string" @bind-Value="@_search" @bind-Value:after="UpdateSearch" Immediate="true" Label="@Localizer["Search"]" Variant="Variant.Outlined" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Search" />
     @if (_studyPrograms is not null)
     {
-        <MudSelect T="StudyProgram" @bind-Value="@_selectedStudyProgram" @bind-Value:after="UpdateSearch" Immediate="true" Label="Študíjny odbor" Variant="Variant.Outlined">
+        <MudSelect T="StudyProgram" @bind-Value="@_selectedStudyProgram" @bind-Value:after="UpdateSearch" Immediate="true" Label="@Localizer["StudyProgram"]" Variant="Variant.Outlined">
             <MudSelectItem T="StudyProgram" Value="null">Všetky</MudSelectItem>
             @foreach (var studyProgram in _studyPrograms)
             {
@@ -34,7 +37,7 @@
     }
     @if (_teachers is not null)
     {
-        <MudSelect T="ApplicationUser" @bind-Value="@_selectedTeacher" @bind-Value:after="UpdateSearch" Immediate="true" Label="Školiteľ" Variant="Variant.Outlined">
+        <MudSelect T="ApplicationUser" @bind-Value="@_selectedTeacher" @bind-Value:after="UpdateSearch" Immediate="true" Label="@Localizer["Supervisor"]" Variant="Variant.Outlined">
             <MudSelectItem T="ApplicationUser" Value="null">Všetci</MudSelectItem>
             @foreach (var teacher in _teachers)
             {
@@ -47,12 +50,12 @@
 <MudStack Class="mt-1" Row>
     <AuthorizeView Roles="Admin, Učiteľ">
         <Authorized>
-            <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="/theses/add">Pridať tému</MudButton>
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="/theses/add">@Localizer["Add"]</MudButton>
         </Authorized>
     </AuthorizeView>
     <AuthorizeView Roles="Admin, Učiteľ, Externista">
         <Authorized>
-            <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="/theses/review">Potvrdiť tému</MudButton>
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="/theses/review">@Localizer["Approve"]</MudButton>
         </Authorized>
     </AuthorizeView>
 </MudStack>
@@ -66,8 +69,8 @@
                 <MudPaper Class="pa-2">
                     <MudLink Color="Color.Default" Underline="Underline.None" Href="@($"/theses/{thesis.Guid}")">
                         <MudText Typo="Typo.h6">@thesis.Title</MudText>
-                        <MudText Typo="Typo.body2"><b>Školiteľ: </b> @thesis.Supervisor.DisplayName</MudText>
-                        <MudText Typo="Typo.body2"><b>Študijný program: </b> @thesis.StudyProgram.Name</MudText>
+                        <MudText Typo="Typo.body2"><b>@Localizer["Supervisor"]: </b> @thesis.Supervisor.DisplayName</MudText>
+                        <MudText Typo="Typo.body2"><b>@Localizer["StudyProgram"]: </b> @thesis.StudyProgram.Name</MudText>
                     </MudLink>
                     <AuthorizeView Roles="Admin">
                         <Authorized>
@@ -123,7 +126,7 @@
 
     private async Task DeleteThesis(Thesis thesis)
     {
-        bool? result = await DialogService.ShowMessageBox("Vymazať dizertačnú tému", "Naozaj si prajete vymazať zvolenú dizertačnú tému?", "Áno", "Nie");
+        bool? result = await DialogService.ShowMessageBox(Localizer["DissertationThesisDelete"], Localizer["DissertationThesisDeleteConfirmation"], Localizer["Yes"], Localizer["No"]);
         if (result == false) return;
 
         if (thesis.IndividualPlan is not null)

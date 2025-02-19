@@ -1,7 +1,12 @@
 ﻿@page "/notfound"
 
-<PageTitle>Stránka nenájdená</PageTitle>
+@using Microsoft.Extensions.Localization
+@using PhDManager.Locales
+
+@inject IStringLocalizer<Resources> Localizer
+
+<PageTitle>@Localizer["PageNotFound"]</PageTitle>
 
 <MudStack class="height-screen" Justify="Justify.Center" AlignItems="AlignItems.Center">
-    <MudText Typo="Typo.h3">Stránka nenájdená!</MudText>
+    <MudText Typo="Typo.h3">@Localizer["PageNotFound"]!</MudText>
 </MudStack>

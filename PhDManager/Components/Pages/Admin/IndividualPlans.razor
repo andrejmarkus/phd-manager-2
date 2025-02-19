@@ -4,28 +4,31 @@
 
 @inject IUnitOfWork UnitOfWork
 @inject IDialogService DialogService
+@inject IStringLocalizer<Resources> Localizer
 @inject DocumentService DocumentService
 
+@using Microsoft.Extensions.Localization
+@using PhDManager.Locales
 @using PhDManager.Models
 @using PhDManager.Services
 @using PhDManager.Services.IRepositories
 
-<PageTitle>Individuálne plány | Admin</PageTitle>
+<PageTitle>@Localizer["IndividualPlans"] | Admin</PageTitle>
 
 <MudDataGrid T="IndividualPlan" Items="_individualPlans" Hover SortMode="SortMode.Multiple" QuickFilter="_quickFilter" Elevation="0">
     <ToolBarContent>
-        <MudText Typo="Typo.h6" GutterBottom="false">Individuálne plány</MudText>
+        <MudText Typo="Typo.h6" GutterBottom="false">@Localizer["IndividualPlans"]</MudText>
         <MudSpacer />
-        <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="/admin/individual-plans/add">Pridaj plán</MudButton>
-        <MudTextField Class="ml-4" Variant="Variant.Outlined" Placeholder="Vyhľadaj" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" @bind-Value="_search" />
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="/admin/individual-plans/add">@Localizer["IndividualPlanAdd"]</MudButton>
+        <MudTextField Class="ml-4" Variant="Variant.Outlined" Placeholder="@Localizer["Search"]" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" @bind-Value="_search" />
     </ToolBarContent>
     <Columns>
-        <PropertyColumn Property="ip => ip.Thesis.Title" Title="Názov dizertačnej témy" />
-        <PropertyColumn Property="ip => ip.Thesis.Supervisor.DisplayName" Title="Meno školitela" />
-        <PropertyColumn Property="ip => ip.Thesis.Supervisor.Email" Title="Email školitela" />
-        <PropertyColumn Property="ip => ip.User.DisplayName" Title="Meno študenta" />
-        <PropertyColumn Property="ip => ip.User.Email" Title="Email študenta" />
-        <TemplateColumn Title="Úprava individuálného plánu">
+        <PropertyColumn Property="ip => ip.Thesis.Title" Title="@Localizer["DissertationThesisTitle"]" />
+        <PropertyColumn Property="ip => ip.Thesis.Supervisor.DisplayName" Title="@Localizer["SupervisorName"]" />
+        <PropertyColumn Property="ip => ip.Thesis.Supervisor.Email" Title="@Localizer["SupervisorEmail"]" />
+        <PropertyColumn Property="ip => ip.User.DisplayName" Title="@Localizer["StudentName"]" />
+        <PropertyColumn Property="ip => ip.User.Email" Title="@Localizer["StudentEmail"]" />
+        <TemplateColumn Title="@Localizer["IndividualPlanEdit"]">
             <CellTemplate>
                 <MudStack Row>
                     @if (context.Item.User.IndividualPlan is not null)
@@ -81,7 +84,7 @@
 
     private async Task DeleteIndividualPlan(IndividualPlan individualPlan)
     {
-        bool? result = await DialogService.ShowMessageBox("Vymazať individuálny plán", "Naozaj si prajete vymazať zvolený individuálny plán?", "Áno", "Nie");
+        bool? result = await DialogService.ShowMessageBox(Localizer["IndividualPlanDelete"], Localizer["IndividualPlanDeleteConfirmation"], Localizer["Yes"], Localizer["No"]);
         if (result == false) return;
 
         await UnitOfWork.IndividualPlans.DeleteAsync(individualPlan.Id);

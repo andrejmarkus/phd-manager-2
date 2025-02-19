@@ -5,32 +5,35 @@
 @inject IJSRuntime JSRuntime
 @inject IUnitOfWork UnitOfWork
 @inject IDialogService DialogService
+@inject IStringLocalizer<Resources> Localizer
 @inject DocumentService DocumentService
 
+@using Microsoft.Extensions.Localization
+@using PhDManager.Locales
 @using PhDManager.Models
 @using PhDManager.Services
 @using PhDManager.Services.IRepositories
 
-<PageTitle>Dizertačné témy | Admin</PageTitle>
+<PageTitle>@Localizer["DissertationTheses"] | Admin</PageTitle>
 
 <MudDataGrid T="Thesis" Items="_theses" Hover SortMode="SortMode.Multiple" QuickFilter="_quickFilter" Elevation="0">
     <ToolBarContent>
-        <MudText Typo="Typo.h6" GutterBottom="false">Dizertačné témy</MudText>
+        <MudText Typo="Typo.h6" GutterBottom="false">@Localizer["DissertationTheses"]</MudText>
         <MudSpacer />
-        <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="/theses/add">Pridaj tému</MudButton>
-        <MudTextField Class="ml-4" Variant="Variant.Outlined" Placeholder="Vyhľadaj" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" @bind-Value="_search" />
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="/theses/add">@Localizer["DissertationThesisAdd"]</MudButton>
+        <MudTextField Class="ml-4" Variant="Variant.Outlined" Placeholder="@Localizer["Search"]" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" @bind-Value="_search" />
     </ToolBarContent>
     <Columns>
-        <PropertyColumn Property="t => t.Title" Title="Názov dizertačnej témy" />
-        <PropertyColumn Property="t => t.Supervisor.DisplayName" Title="Meno školitela" />
-        <PropertyColumn Property="t => t.Supervisor.Email" Title="Email školitela" />
-        <PropertyColumn Property="t => t.StudyProgram.Name" Title="Študijný program" />
-        <PropertyColumn Property="t => t.ResearchType" Title="Druh výskumu" />
-        <PropertyColumn Property="@(t => t.DailyStudy ? "Áno" : "Nie")" Title="Denné štúdium" />
-        <PropertyColumn Property="@(t => t.ExternalStudy ? "Áno" : "Nie")" Title="Externé štúdium" />
-        <PropertyColumn Property="@(t => t.IsApproved ? "Áno" : "Nie")" Title="Potvrdená" />
-        <PropertyColumn Property="t => t.Comments.Count" Title="Počet komentárov" />
-        <TemplateColumn Title="Úprava individuálného plánu">
+        <PropertyColumn Property="t => t.Title" Title="@Localizer["DissertationThesisTitle"]" />
+        <PropertyColumn Property="t => t.Supervisor.DisplayName" Title="@Localizer["SupervisorName"]" />
+        <PropertyColumn Property="t => t.Supervisor.Email" Title="@Localizer["SupervisorEmail"]" />
+        <PropertyColumn Property="t => t.StudyProgram.Name" Title="@Localizer["StudyProgram"]" />
+        <PropertyColumn Property="t => t.ResearchType" Title="@Localizer["ResearchType"]" />
+        <PropertyColumn Property="@(t => t.DailyStudy ? "Áno" : "Nie")" Title="@Localizer["StudyFormDaily"]" />
+        <PropertyColumn Property="@(t => t.ExternalStudy ? "Áno" : "Nie")" Title="@Localizer["StudyFormExternal"]" />
+        <PropertyColumn Property="@(t => t.IsApproved ? "Áno" : "Nie")" Title="@Localizer["Approved"]" />
+        <PropertyColumn Property="t => t.Comments.Count" Title="@Localizer["CommentsCount"]" />
+        <TemplateColumn Title="@Localizer["DisserationThesisEdit"]">
             <CellTemplate>
                 <MudStack Row>
                     <MudIconButton Size="@Size.Small" Color="Color.Error" Icon="@Icons.Material.Outlined.Delete" OnClick="@(async () => await DeleteThesis(context.Item))" />
@@ -74,7 +77,7 @@
 
     private async Task DeleteThesis(Thesis thesis)
     {
-        bool? result = await DialogService.ShowMessageBox("Vymazať dizertačnú tému", "Naozaj si prajete vymazať zvolenú dizertačnú tému?", "Áno", "Nie");
+        bool? result = await DialogService.ShowMessageBox(Localizer["DissertationThesisDelete"], Localizer["DissertationThesisDeleteConfirmation"], Localizer["Yes"], Localizer["No"]);
         if (result == false) return;
 
         if (thesis.IndividualPlan is not null)

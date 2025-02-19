@@ -1,0 +1,531 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="FindThesis" xml:space="preserve">
+    <value>Nájdi tému</value>
+  </data>
+  <data name="HomeHeading" xml:space="preserve">
+    <value>Uľahčite si štúdium.</value>
+  </data>
+  <data name="Home" xml:space="preserve">
+    <value>Domov</value>
+  </data>
+  <data name="SignIn" xml:space="preserve">
+    <value>Prihlásiť sa</value>
+  </data>
+  <data name="HomeSubheading" xml:space="preserve">
+    <value>Prihláste sa a zahoďte papiere za hlavu!</value>
+  </data>
+  <data name="Users" xml:space="preserve">
+    <value>Používatelia</value>
+  </data>
+  <data name="DissertationTheses" xml:space="preserve">
+    <value>Dizertačné témy</value>
+  </data>
+  <data name="IndividualPlans" xml:space="preserve">
+    <value>Individuálne plány</value>
+  </data>
+  <data name="CreateRegistration" xml:space="preserve">
+    <value>Vytvor registráciu</value>
+  </data>
+  <data name="LoginRequired" xml:space="preserve">
+    <value>Potrebné prihlásenie</value>
+  </data>
+  <data name="SignOut" xml:space="preserve">
+    <value>Odhlásiť sa</value>
+  </data>
+  <data name="NavigationInfo" xml:space="preserve">
+    <value>Pre navigáciu použi bočný panel.</value>
+  </data>
+  <data name="Welcome" xml:space="preserve">
+    <value>Vitaj</value>
+  </data>
+  <data name="SignInExternal" xml:space="preserve">
+    <value>Externé prishlásenie</value>
+  </data>
+  <data name="SignInLdapMessage" xml:space="preserve">
+    <value>Použi LDAP účet na prihlásenie.</value>
+  </data>
+  <data name="Username" xml:space="preserve">
+    <value>Používateľské meno</value>
+  </data>
+  <data name="Password" xml:space="preserve">
+    <value>Heslo</value>
+  </data>
+  <data name="RememberLogin" xml:space="preserve">
+    <value>Zapamätať si prihlásenie</value>
+  </data>
+  <data name="SignInLdapLink" xml:space="preserve">
+    <value>Prihlásenie pre externistu.</value>
+  </data>
+  <data name="SignInExternalMessage" xml:space="preserve">
+    <value>Použi lokálny účet na prihlásenie.</value>
+  </data>
+  <data name="SignInExternalService" xml:space="preserve">
+    <value>Použi inú službu na prihlásenie.</value>
+  </data>
+  <data name="SignInExternalForgottenPassword" xml:space="preserve">
+    <value>Zabudnuté heslo?</value>
+  </data>
+  <data name="SignInExternalResendEmail" xml:space="preserve">
+    <value>Znovu zaslať potvrdzovací email.</value>
+  </data>
+  <data name="SignUpExpired" xml:space="preserve">
+    <value>Platnosť registračného odkazu vypršala!</value>
+  </data>
+  <data name="SignUp" xml:space="preserve">
+    <value>Zaregistrovať sa</value>
+  </data>
+  <data name="SignUpMessage" xml:space="preserve">
+    <value>Vytvoriť nový účet.</value>
+  </data>
+  <data name="FullName" xml:space="preserve">
+    <value>Celé meno</value>
+  </data>
+  <data name="ConfirmationPassword" xml:space="preserve">
+    <value>Potvrdzovacie heslo</value>
+  </data>
+  <data name="SignUpService" xml:space="preserve">
+    <value>Použi inú službu pre registráciu.</value>
+  </data>
+  <data name="UsersAdd" xml:space="preserve">
+    <value>Pridaj používateľov</value>
+  </data>
+  <data name="LdapUsers" xml:space="preserve">
+    <value>LDAP používatelia</value>
+  </data>
+  <data name="FirstName" xml:space="preserve">
+    <value>Krstné meno</value>
+  </data>
+  <data name="LastName" xml:space="preserve">
+    <value>Priezvisko</value>
+  </data>
+  <data name="Search" xml:space="preserve">
+    <value>Vyhľadaj</value>
+  </data>
+  <data name="Add" xml:space="preserve">
+    <value>Pridaj</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Zrušiť</value>
+  </data>
+  <data name="UserEdit" xml:space="preserve">
+    <value>Uprav používateľa</value>
+  </data>
+  <data name="Role" xml:space="preserve">
+    <value>Rola</value>
+  </data>
+  <data name="StudyInformations" xml:space="preserve">
+    <value>Študijné informácie</value>
+  </data>
+  <data name="StudyProgram" xml:space="preserve">
+    <value>Študijný program</value>
+  </data>
+  <data name="StudyField" xml:space="preserve">
+    <value>Študijný odbor</value>
+  </data>
+  <data name="StudyForm" xml:space="preserve">
+    <value>Forma štúdia</value>
+  </data>
+  <data name="StudyFormExternal" xml:space="preserve">
+    <value>Externá</value>
+  </data>
+  <data name="StudyFormDaily" xml:space="preserve">
+    <value>Denná</value>
+  </data>
+  <data name="Birthdate" xml:space="preserve">
+    <value>Dátum narodenia</value>
+  </data>
+  <data name="PhoneNumber" xml:space="preserve">
+    <value>Telefónne číslo</value>
+  </data>
+  <data name="Street" xml:space="preserve">
+    <value>Ulica</value>
+  </data>
+  <data name="HouseNumber" xml:space="preserve">
+    <value>Číslo domu</value>
+  </data>
+  <data name="City" xml:space="preserve">
+    <value>Mesto</value>
+  </data>
+  <data name="PostalCode" xml:space="preserve">
+    <value>PSČ</value>
+  </data>
+  <data name="State" xml:space="preserve">
+    <value>Štát</value>
+  </data>
+  <data name="Edit" xml:space="preserve">
+    <value>Uprav</value>
+  </data>
+  <data name="IndividualPlanCreate" xml:space="preserve">
+    <value>Vytvorenie individualného plánu</value>
+  </data>
+  <data name="IdividualPlanTitle" xml:space="preserve">
+    <value>Individuálny študijný plán doktoranda</value>
+  </data>
+  <data name="Address" xml:space="preserve">
+    <value>Trvalé bydlisko</value>
+  </data>
+  <data name="IndividualPlanError" xml:space="preserve">
+    <value>Uživateľ nemá vyplnené profilové informácie!</value>
+  </data>
+  <data name="Deadlines" xml:space="preserve">
+    <value>Termíny</value>
+  </data>
+  <data name="IndividualPlanStudent" xml:space="preserve">
+    <value>Meno a priezvisko, titul</value>
+  </data>
+  <data name="IndividualPlanStudentError" xml:space="preserve">
+    <value>Je nutné zvoliť študenta!</value>
+  </data>
+  <data name="IndividualPlanStudyStartDate" xml:space="preserve">
+    <value>Nástup na doktorandské štúdium</value>
+  </data>
+  <data name="IndividualPlanStudyStartDateError" xml:space="preserve">
+    <value>Je nutné zadať termín nástupu!</value>
+  </data>
+  <data name="IndividualPlanDissertationExamDateInfo" xml:space="preserve">
+    <value>Termín podania žiadosti o dizertačnú skúšku vrátane odovzdania písomnej práce k diz. skúške (zvyčajne prvá polovica septembra v 2. ročníku)</value>
+  </data>
+  <data name="IndividualPlanDissertationExamDateError" xml:space="preserve">
+    <value>Je nutné zadať termín podania žiadosti!</value>
+  </data>
+  <data name="IndividualPlanDissertationExamDate" xml:space="preserve">
+    <value>Termín podania žiadosti</value>
+  </data>
+  <data name="IndividualPlanDissertationSubmissionDate" xml:space="preserve">
+    <value>Termín odovzdania</value>
+  </data>
+  <data name="IndividualPlanDissertationSubmissionDateError" xml:space="preserve">
+    <value>Je nutné zadať termín odovzdania!</value>
+  </data>
+  <data name="IndividualPlanDissertationSubmissionDateInfo" xml:space="preserve">
+    <value>Termín odovzdania dizertačnej práce (zvyčajne apríl v roku ukončenia štúdia)</value>
+  </data>
+  <data name="IndividualPlanStudyEndDate" xml:space="preserve">
+    <value>Termín ukončenia štúdia</value>
+  </data>
+  <data name="IndividualPlanStudyEndDateInfo" xml:space="preserve">
+    <value>Termín ukončenia doktorandského štúdia vrátane obhajoby dizertačnej práce (zvyčajne 31.8. po 3 rokoch štúdia interní doktorandi a po 4 rokoch externí doktorandi)</value>
+  </data>
+  <data name="IndividualPlanStudyEndDateError" xml:space="preserve">
+    <value>Je nutné zadať termín ukončenia štúdia!</value>
+  </data>
+  <data name="StudyPart" xml:space="preserve">
+    <value>Študijná časť</value>
+  </data>
+  <data name="Subject" xml:space="preserve">
+    <value>Predmet</value>
+  </data>
+  <data name="IndividualPlanSubjectError" xml:space="preserve">
+    <value>Je nutné zvoliť predmet!</value>
+  </data>
+  <data name="IndividualPlanSubjectsInfo" xml:space="preserve">
+    <value>Predmety s tématickými okruhmi pre dizertačnú skúšku</value>
+  </data>
+  <data name="IndividualPlanAdditionalSubjectsInfo" xml:space="preserve">
+    <value>Odporučané ďalšie voliteľné predmety</value>
+  </data>
+  <data name="IndividualPlanThesis" xml:space="preserve">
+    <value>Dizertačná téma</value>
+  </data>
+  <data name="IndividualPlanThesisinfo" xml:space="preserve">
+    <value>Téma písomnej časti dizertačnej skúšky</value>
+  </data>
+  <data name="IndividualPlanThesisError" xml:space="preserve">
+    <value>Je nutné zvoliť dizertačnú tému!</value>
+  </data>
+  <data name="Supervisor" xml:space="preserve">
+    <value>Školitel</value>
+  </data>
+  <data name="IndividualPlanAdd" xml:space="preserve">
+    <value>Pridaj individuálny plán</value>
+  </data>
+  <data name="DissertationThesisTitle" xml:space="preserve">
+    <value>Názov dizertačnej témy</value>
+  </data>
+  <data name="SupervisorName" xml:space="preserve">
+    <value>Meno školitela</value>
+  </data>
+  <data name="SupervisorEmail" xml:space="preserve">
+    <value>Email školitela</value>
+  </data>
+  <data name="StudentName" xml:space="preserve">
+    <value>Meno študenta</value>
+  </data>
+  <data name="StudentEmail" xml:space="preserve">
+    <value>Email študenta</value>
+  </data>
+  <data name="IndividualPlanEdit" xml:space="preserve">
+    <value>Úprava individuálného plánu</value>
+  </data>
+  <data name="DissertationThesisAdd" xml:space="preserve">
+    <value>Pridaj dizertačnú tému</value>
+  </data>
+  <data name="ResearchType" xml:space="preserve">
+    <value>Druh výskumu</value>
+  </data>
+  <data name="Approved" xml:space="preserve">
+    <value>Potvrdená</value>
+  </data>
+  <data name="CommentsCount" xml:space="preserve">
+    <value>Počet komentárov</value>
+  </data>
+  <data name="DisserationThesisEdit" xml:space="preserve">
+    <value>Úprava dizertačnej témy</value>
+  </data>
+  <data name="DissertationThesisDelete" xml:space="preserve">
+    <value>Vymazať dizertačnú tému</value>
+  </data>
+  <data name="DissertationThesisDeleteConfirmation" xml:space="preserve">
+    <value>Naozaj si prajete vymazať zvolenú dizertačnú tému?</value>
+  </data>
+  <data name="Yes" xml:space="preserve">
+    <value>Áno</value>
+  </data>
+  <data name="No" xml:space="preserve">
+    <value>Nie</value>
+  </data>
+  <data name="IndividualPlanDelete" xml:space="preserve">
+    <value>Vymazať individuálny plán</value>
+  </data>
+  <data name="IndividualPlanDeleteConfirmation" xml:space="preserve">
+    <value>Naozaj si prajete vymazať zvolený individuálny plán?</value>
+  </data>
+  <data name="UserAdd" xml:space="preserve">
+    <value>Pridaj používateľa</value>
+  </data>
+  <data name="ApprovedEmail" xml:space="preserve">
+    <value>Potvrdený email</value>
+  </data>
+  <data name="ProfileEdit" xml:space="preserve">
+    <value>Úprava profilu</value>
+  </data>
+  <data name="UserDelete" xml:space="preserve">
+    <value>Vymazať užívateľa</value>
+  </data>
+  <data name="UserDeleteConfirmation" xml:space="preserve">
+    <value>Naozaj si prajete vymazať zvoleného užívateľa?</value>
+  </data>
+  <data name="CommentEdit" xml:space="preserve">
+    <value>Uprav komentár</value>
+  </data>
+  <data name="Comment" xml:space="preserve">
+    <value>Komentár</value>
+  </data>
+  <data name="DissertationThesisPending" xml:space="preserve">
+    <value>Čakajúce dizertačné témy</value>
+  </data>
+  <data name="DissertationThesis" xml:space="preserve">
+    <value>Dizertačná téma</value>
+  </data>
+  <data name="Approve" xml:space="preserve">
+    <value>Potvrdiť</value>
+  </data>
+  <data name="DissertationThesisProposal" xml:space="preserve">
+    <value>Návrh témy doktorandského štúdia</value>
+  </data>
+  <data name="LoginSuccessful" xml:space="preserve">
+    <value>Úspešne prihlásený!</value>
+  </data>
+  <data name="PageNotFound" xml:space="preserve">
+    <value>Stránka nenájdená</value>
+  </data>
+  <data name="IndividualPlan" xml:space="preserve">
+    <value>Individuálny plán</value>
+  </data>
+  <data name="Subjects" xml:space="preserve">
+    <value>Predmety</value>
+  </data>
+  <data name="IndividualPlanMissing" xml:space="preserve">
+    <value>Zatiaľ Vám nebol priradený individuálny plán.</value>
+  </data>
+  <data name="DissertationThesisAssignment" xml:space="preserve">
+    <value>Zadanie dizertačnej témy</value>
+  </data>
+  <data name="DissertationThesisEnglish" xml:space="preserve">
+    <value>Je možné vypracovať tému v angličtine?</value>
+  </data>
+  <data name="DissertationThesisTitleError" xml:space="preserve">
+    <value>Je nutné zadať názov témy!</value>
+  </data>
+  <data name="SupervisorError" xml:space="preserve">
+    <value>Je nutné zvoliť školiteľa!</value>
+  </data>
+  <data name="StudyProgramError" xml:space="preserve">
+    <value>Je nutné zvoliť študijný program!</value>
+  </data>
+  <data name="DissertationThesisClassification" xml:space="preserve">
+    <value>Zaradenie dizertačnej témy</value>
+  </data>
+  <data name="DissertationThesisDescription" xml:space="preserve">
+    <value>Detailnejší opis problému</value>
+  </data>
+  <data name="DissertationThesisDescriptionError" xml:space="preserve">
+    <value>Je nutné zadať opis problému!</value>
+  </data>
+  <data name="MoreInformations" xml:space="preserve">
+    <value>Ďalšie informácie</value>
+  </data>
+  <data name="DissertationThesisScientificContribution" xml:space="preserve">
+    <value>Predpokladaný vedecký prínos (algoritmy, metodológie, ...)</value>
+  </data>
+  <data name="DissertationThesisScientificContributionError" xml:space="preserve">
+    <value>Je nutné zadať predpokladaný vedecký prínos!</value>
+  </data>
+  <data name="DissertationThesisScientificProgress" xml:space="preserve">
+    <value>Odporučány postup vedeckého bádania</value>
+  </data>
+  <data name="DissertationThesisScientificProgressError" xml:space="preserve">
+    <value>Je nutné zadať odporúčaný postup vedeckého bádania!</value>
+  </data>
+  <data name="ResearchTypeError" xml:space="preserve">
+    <value>Je nutné zvoliť druh výskumu!</value>
+  </data>
+  <data name="ResearchTypeAppliedExperimental" xml:space="preserve">
+    <value>Aplikovaný výskum a experimentálny vývoj</value>
+  </data>
+  <data name="ResearchTypeApplied" xml:space="preserve">
+    <value>Aplikovaný výskum</value>
+  </data>
+  <data name="ResearchTypeBasic" xml:space="preserve">
+    <value>Základný výskum</value>
+  </data>
+  <data name="ResearchTypeInfo" xml:space="preserve">
+    <value>Zadajte druh výskumu, v ktorom bude téma riešená.</value>
+  </data>
+  <data name="DissertationThesisResearchTask" xml:space="preserve">
+    <value>Výskumná úloha, ktorej súčasťou bude riešená téma</value>
+  </data>
+  <data name="DissertationThesisResearchTaskError" xml:space="preserve">
+    <value>Je nutné zadať výskumnú úlohu</value>
+  </data>
+  <data name="DissertationThesisSolutionResults" xml:space="preserve">
+    <value>Doterajšie výsledky riešenia na školiacom pracovisku, vrátane odkazov na dostupné zdroje</value>
+  </data>
+  <data name="DissertationThesisSolutionResultsError" xml:space="preserve">
+    <value>Je nutné zadať doterajšie výsledky riešenia na školiacom pracovisku!</value>
+  </data>
+  <data name="DissertationThesisSolutionResultsInfo" xml:space="preserve">
+    <value>Uveďte zoznam literatúry v rovnakom štýle, v akom je zobrazovaná v univerzitnej knižnici ŽU.</value>
+  </data>
+  <data name="Comments" xml:space="preserve">
+    <value>Komentáre</value>
+  </data>
+</root>

@@ -1,31 +1,35 @@
-﻿@implements IDisposable
+﻿@using Microsoft.Extensions.Localization
+@using PhDManager.Locales
+
+@implements IDisposable
 
 @inject NavigationManager NavigationManager
 @inject IJSRuntime JSRuntime
+@inject IStringLocalizer<Resources> Localizer
 
 <MudNavMenu>
-    <MudNavLink Href="" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Home">Domov</MudNavLink>
+    <MudNavLink Href="" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Home">@Localizer["Home"]</MudNavLink>
     <AuthorizeView Roles="Admin">
         <Authorized>
             <MudNavGroup Title="Admin" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.AdminPanelSettings" HideExpandIcon>
-                <MudNavLink Href="/admin/users" Icon="@Icons.Material.Filled.Group">Použivatelia</MudNavLink>
-                <MudNavLink Href="/admin/theses" Icon="@Icons.Material.Filled.DocumentScanner">Dizertačné témy</MudNavLink>
-                <MudNavLink Href="/admin/individual-plans" Icon="@Icons.Material.Filled.ContactPage">Individuálne plány</MudNavLink>
-                <MudNavLink Href="/admin/create-register" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.PersonAdd">Vytvor registráciu</MudNavLink>
+                <MudNavLink Href="/admin/users" Icon="@Icons.Material.Filled.Group">@Localizer["Users"]</MudNavLink>
+                <MudNavLink Href="/admin/theses" Icon="@Icons.Material.Filled.DocumentScanner">@Localizer["DissertationTheses"]</MudNavLink>
+                <MudNavLink Href="/admin/individual-plans" Icon="@Icons.Material.Filled.ContactPage">@Localizer["IndividualPlans"]</MudNavLink>
+                <MudNavLink Href="/admin/create-register" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.PersonAdd">@Localizer["CreateRegistration"]</MudNavLink>
             </MudNavGroup>
         </Authorized>
     </AuthorizeView>
-    <MudNavLink Href="theses" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.List">Dizertačné témy</MudNavLink>
+    <MudNavLink Href="theses" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.List">@Localizer["DissertationTheses"]</MudNavLink>
     <AuthorizeView Roles="User">
         <Authorized>
-            <MudNavLink Href="/individual-plan" Icon="@Icons.Material.Filled.ContactPage">Individuálny plán</MudNavLink>
+            <MudNavLink Href="/individual-plan" Icon="@Icons.Material.Filled.ContactPage">@Localizer["IndividualPlans"]</MudNavLink>
         </Authorized>
     </AuthorizeView>
-    <MudNavLink Href="auth" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Lock">Potrebné prihlásenie</MudNavLink>
+    <MudNavLink Href="auth" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Lock">@Localizer["LoginRequired"]</MudNavLink>
     <AuthorizeView>
         <Authorized>
             <MudNavLink Href="Account/Manage" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Person">@context.User.Identity?.Name</MudNavLink>
-            <MudNavLink OnClick="Logout" IconColor="Color.Error" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Logout">Odhlásiť sa</MudNavLink>
+            <MudNavLink OnClick="Logout" IconColor="Color.Error" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Logout">@Localizer["SignOut"]</MudNavLink>
 
             <form id="logoutForm" action="Account/Logout" method="post">
                 <AntiforgeryToken />
@@ -33,7 +37,7 @@
             </form>
         </Authorized>
         <NotAuthorized>
-            <MudNavLink Href="Account/Login" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Password">Prihlásenie</MudNavLink>
+            <MudNavLink Href="Account/Login" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Password">@Localizer["SignIn"]</MudNavLink>
         </NotAuthorized>
     </AuthorizeView>
 </MudNavMenu>

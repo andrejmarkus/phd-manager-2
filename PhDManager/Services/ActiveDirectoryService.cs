@@ -1,5 +1,6 @@
 ﻿using LdapForNet;
 using Microsoft.Extensions.Options;
+using PhDManager.Data.Migrations;
 using PhDManager.Models.Options;
 using static LdapForNet.Native.Native;
 
@@ -15,14 +16,7 @@ namespace PhDManager.Services
 
             try
             {
-                using var connection = new LdapConnection();
-                connection.Connect(_options.LdapPath, 389, LdapSchema.LDAP);
-                connection.SetOption(LdapOption.LDAP_OPT_REFERRALS, nint.Zero);
-                await connection.BindAsync(LdapAuthType.Simple, new LdapCredential
-                {
-                    UserName = $"{username}@{_options.LdapPath}",
-                    Password = password
-                });
+                var connection = await CreateConnection(username, password);
                 entries = await connection.SearchAsync(_options.LdapDomain, $"(uid={username})");
             }
             catch
@@ -39,20 +33,30 @@ namespace PhDManager.Services
             return entry;
         }
 
+        public async Task<IEnumerable<LdapEntry>?> GetAllUsersAsync()
+        {
+            IEnumerable<LdapEntry> entries;
+
+            try
+            {
+                var connection = await CreateConnection(_options.Username, _options.Password);
+                entries = await connection.SearchAsync(_options.LdapDomain, $"(uid=*)");
+            }
+            catch
+            {
+                return null;
+            }
+
+            return entries;
+        }
+
         public async Task<IEnumerable<LdapEntry>?> SearchUsersAsync(string username)
         {
             IEnumerable<LdapEntry> entries;
 
             try
             {
-                using var connection = new LdapConnection();
-                connection.Connect(_options.LdapPath, 389, LdapSchema.LDAP);
-                connection.SetOption(LdapOption.LDAP_OPT_REFERRALS, nint.Zero);
-                await connection.BindAsync(LdapAuthType.Simple, new LdapCredential
-                {
-                    UserName = $"{_options.Username}@{_options.LdapPath}",
-                    Password = _options.Password
-                });
+                var connection = await CreateConnection(_options.Username, _options.Password);
                 entries = await connection.SearchAsync(_options.LdapDomain, $"(uid={username}*)");
             }
             catch
@@ -61,6 +65,20 @@ namespace PhDManager.Services
             }
 
             return entries;
+        }
+
+        private async Task<LdapConnection> CreateConnection(string username, string password)
+        {
+            var connection = new LdapConnection();
+            connection.Connect(_options.LdapPath, 389, LdapSchema.LDAP);
+            connection.SetOption(LdapOption.LDAP_OPT_REFERRALS, nint.Zero);
+            await connection.BindAsync(LdapAuthType.Simple, new LdapCredential
+            {
+                UserName = $"{username}@{_options.LdapPath}",
+                Password = password
+            });
+
+            return connection;
         }
     }
 }

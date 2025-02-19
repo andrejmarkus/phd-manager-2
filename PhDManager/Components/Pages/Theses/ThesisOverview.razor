@@ -1,7 +1,9 @@
 ﻿@page "/theses/{ThesisGuid}"
 
 @using Microsoft.AspNetCore.Identity
+@using Microsoft.Extensions.Localization
 @using PhDManager.Data
+@using PhDManager.Locales
 @using PhDManager.Models
 @using PhDManager.Services
 @using PhDManager.Services.IRepositories
@@ -12,12 +14,13 @@
 @inject IJSRuntime JSRuntime
 @inject IUnitOfWork UnitOfWork
 @inject IDialogService DialogService
+@inject IStringLocalizer<Resources> Localizer
 @inject UserManager<ApplicationUser> UserManager
 @inject UsersService UsersService
 @inject NavigationManager NavigationManager
 @inject DocumentService DocumentService
 
-<PageTitle>Thesis</PageTitle>
+<PageTitle>@Localizer["Thesis"]</PageTitle>
 
 @if (_thesis is not null)
 {
@@ -35,24 +38,24 @@
         @if (_thesis.TitleEnglish is not null)
         {
             <MudStack>
-                <MudText Typo="Typo.h6">Title of the dissertation thesis</MudText>
+                <MudText Typo="Typo.h6">Dissertation thesis title</MudText>
                 <MudText Typo="Typo.body1">@_thesis.TitleEnglish</MudText>
             </MudStack>
         }
         <MudStack>
-            <MudText Typo="Typo.h6">Školiteľ</MudText>
+            <MudText Typo="Typo.h6">@Localizer["Supervisor"]</MudText>
             <MudText Typo="Typo.body1">@_thesis.Supervisor.DisplayName</MudText>
         </MudStack>
         <MudStack>
-            <MudText Typo="Typo.h6">Študijný program</MudText>
+            <MudText Typo="Typo.h6">@Localizer["StudyProgram"]</MudText>
             <MudText Typo="Typo.body1">@_thesis.StudyProgram.Name</MudText>
         </MudStack>
         <MudStack>
-            <MudText Typo="Typo.h6">Študijný odbor</MudText>
+            <MudText Typo="Typo.h6">@Localizer["StudyField"]</MudText>
             <MudText Typo="Typo.body1">@_thesis.StudyProgram.StudyFieldName</MudText>
         </MudStack>
         <MudStack>
-            <MudText Typo="Typo.h6">Detailnejší opis problému</MudText>
+            <MudText Typo="Typo.h6">@Localizer["DissertationThesisDescription"]</MudText>
             <MudText Typo="Typo.body1" Class="break-lines">@_thesis.Description</MudText>
         </MudStack>
         @if (_thesis.DescriptionEnglish is not null)
@@ -63,23 +66,23 @@
             </MudStack>
         }
         <MudStack>
-            <MudText Typo="Typo.h6">Predpokladaný vedecký prínos</MudText>
+            <MudText Typo="Typo.h6">@Localizer["DissertationThesisScientificContribution"]</MudText>
             <MudText Typo="Typo.body1" Class="break-lines">@_thesis.ScientificContribution</MudText>
         </MudStack>
         <MudStack>
-            <MudText Typo="Typo.h6">Odporučány postup vedeckého bádania</MudText>
+            <MudText Typo="Typo.h6">@Localizer["DissertationThesisScientificProgress"]</MudText>
             <MudText Typo="Typo.body1" Class="break-lines">@_thesis.ScientificProgress</MudText>
         </MudStack>
         <MudStack>
-            <MudText Typo="Typo.h6">Druh výskumu</MudText>
+            <MudText Typo="Typo.h6">@Localizer["ResearchType"]</MudText>
             <MudText Typo="Typo.body1">@_thesis.ResearchType</MudText>
         </MudStack>
         <MudStack>
-            <MudText Typo="Typo.h6">Výskumná úloha, ktorej súčasťou bude riešená téma</MudText>
+            <MudText Typo="Typo.h6">@Localizer["DissertationThesisResearchTask"]</MudText>
             <MudText Typo="Typo.body1" Class="break-lines">@_thesis.ResearchTask</MudText>
         </MudStack>
         <MudStack>
-            <MudText Typo="Typo.h6">Doterajšie výsledky riešenia na školiacom pracovisku, vrátane odkazov na dostupné zdroje</MudText>
+            <MudText Typo="Typo.h6">@Localizer["DissertationThesisSolutionResults"]</MudText>
             <MudText Typo="Typo.body1" Class="break-lines">@_thesis.SolutionResults</MudText>
         </MudStack>
     </MudStack>
@@ -90,7 +93,7 @@
                 <MudStack Class="mt-5">
                     @if (_thesis.Comments?.Count() > 0)
                     {
-                        <MudText Typo="Typo.h6">Komentáre</MudText>
+                        <MudText Typo="Typo.h6">@Localizer["Comments"]</MudText>
                         @foreach (var comment in _thesis.Comments)
                         {
                             <MudPaper Class="pa-2">
@@ -124,7 +127,7 @@
                     }
                     <AuthorizeView Roles="Externista" Context="reviewerContext">
                         <Authorized>
-                            <MudTextField @bind-Value="_commentText" Label="Komentár" Variant="Variant.Outlined" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Send" OnAdornmentClick="PostComment"></MudTextField>
+                            <MudTextField @bind-Value="_commentText" Label="@Localizer["Comment"]" Variant="Variant.Outlined" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Send" OnAdornmentClick="PostComment"></MudTextField>
                         </Authorized>
                     </AuthorizeView>
                 </MudStack>
@@ -153,7 +156,7 @@
     private async Task UpdateComment(Comment comment)
     {
         var parameters = new DialogParameters<EditCommentDialog> { { x => x.Comment, comment } };
-        var dialog = await DialogService.ShowAsync<EditCommentDialog>("Uprav komentár", parameters, new() { FullWidth = true, MaxWidth = MaxWidth.Medium });
+        var dialog = await DialogService.ShowAsync<EditCommentDialog>(Localizer["CommentEdit"], parameters, new() { FullWidth = true, MaxWidth = MaxWidth.Medium });
         var result = await dialog.Result;
 
         if (result is null) return;
@@ -186,7 +189,7 @@
 
     private async Task DeleteThesis(Thesis thesis)
     {
-        bool? result = await DialogService.ShowMessageBox("Vymazať dizertačnú tému", "Naozaj si prajete vymazať zvolenú dizertačnú tému?", "Áno", "Nie");
+        bool? result = await DialogService.ShowMessageBox(Localizer["DissertationThesisDelete"], Localizer["DissertationThesisDeleteConfirmation"], Localizer["Yes"], Localizer["No"]);
         if (result == false) return;
 
         if (thesis.IndividualPlan is not null)

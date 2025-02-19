@@ -5,24 +5,27 @@
 @using static LdapForNet.Native.Native
 @using Microsoft.AspNetCore.Authentication
 @using Microsoft.AspNetCore.Identity
+@using Microsoft.Extensions.Localization
 @using Microsoft.Extensions.Options
 @using PhDManager.Data
+@using PhDManager.Locales
 @using PhDManager.Models.Options
 @using PhDManager.Services
 
-@inject SignInManager<ApplicationUser> SignInManager
 @inject ILogger<Login> Logger
+@inject IOptions<ActiveDirectoryOptions> ActiveDirectoryOptions
+@inject IStringLocalizer<Resources> Localizer
+@inject SignInManager<ApplicationUser> SignInManager
 @inject NavigationManager NavigationManager
 @inject IdentityRedirectManager RedirectManager
-@inject IOptions<ActiveDirectoryOptions> ActiveDirectoryOptions
 @inject UserManager<ApplicationUser> UserManager
 @inject ActiveDirectoryService ActiveDirectoryService
 @inject UsersService UsersService
 
-<PageTitle>Prihlásenie</PageTitle>
+<PageTitle>@Localizer["SignIn"]</PageTitle>
 
 <MudStack AlignItems="AlignItems.Center" Justify="Justify.Center">
-    <MudText Typo="Typo.h3" GutterBottom="true">Prihlásenie</MudText>
+    <MudText Typo="Typo.h3" GutterBottom="true">@Localizer["SignIn"]</MudText>
     <MudImage Class="height-half" Src="@Assets["fingerprint.svg"]" />
 
     <MudStack Class="width-three-quarters" Spacing="5">
@@ -30,24 +33,24 @@
         <EditForm Model="Input" method="post" OnValidSubmit="LoginUser" FormName="login">
             <DataAnnotationsValidator />
 
-            <MudText GutterBottom="true" Typo="Typo.body1">Použi LDAP účet na prihlásenie.</MudText>
+            <MudText GutterBottom="true" Typo="Typo.body1">@Localizer["SignInLdapMessage"]</MudText>
 
             <MudStack Spacing="3">
                 <MudStaticTextField For="@(() => Input.Username)" @bind-Value="Input.Username"
                     Variant="Variant.Outlined"
-                    Label="Použivateľské meno" Placeholder="použivateľské meno"
+                    Label="@Localizer["Username"]"
                     UserAttributes="@(new() { { "autocomplete", "true" }, { "aria-required", "true" } } )" />
                 <MudStaticTextField For="@(() => Input.Password)" @bind-Value="Input.Password"
                     Variant="Variant.Outlined"
-                    Label="Heslo" InputType="InputType.Password" Placeholder="heslo" 
+                    Label="@Localizer["Password"]" InputType="InputType.Password"
                     UserAttributes="@(new() { { "autocomplete", "current-password" }, { "aria-required", "true" } } )" />
-                <MudStaticCheckBox For="@(() => Input.RememberMe)" @bind-Value="Input.RememberMe">Zapamätať si prihlásenie</MudStaticCheckBox>
-                <MudStaticButton Variant="Variant.Filled" Color="Color.Primary" FullWidth="true" FormAction="FormAction.Submit">Prihlásiť sa</MudStaticButton>
+                <MudStaticCheckBox For="@(() => Input.RememberMe)" @bind-Value="Input.RememberMe">@Localizer["RememberLogin"]</MudStaticCheckBox>
+                <MudStaticButton Variant="Variant.Filled" Color="Color.Primary" FullWidth="true" FormAction="FormAction.Submit">@Localizer["SignIn"]</MudStaticButton>
             </MudStack>
         </EditForm>
 
         <MudStack Class="mt-4">
-            <MudLink Href="Account/LoginExtern">Prihlásenie pre externistu.</MudLink>
+            <MudLink Href="Account/LoginExtern">@Localizer["SignInLdapLink"]</MudLink>
         </MudStack>
     </MudStack>
 </MudStack>

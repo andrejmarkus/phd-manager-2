@@ -1,10 +1,14 @@
 ﻿@page "/"
+@using Microsoft.Extensions.Localization
+@using PhDManager.Components.Layout
+@using PhDManager.Locales
 
 @rendermode InteractiveServer
 
+@inject IStringLocalizer<Resources> Localizer
 @inject NavigationManager NavigationManager
 
-<PageTitle>Domov</PageTitle>
+<PageTitle>@Localizer["Home"]</PageTitle>
 
 <MudStack class="height-screen" StretchItems="StretchItems.Middle">
     @* <div class="full-size circle circle-bottom"></div>
@@ -12,18 +16,18 @@
     <AuthorizeView>
         <Authorized>
             <MudStack Class="height-full" Justify="Justify.Center" AlignItems="AlignItems.Center">
-                <MudText Class="text-rotate" Typo="Typo.h3">Vitaj @context.User.Identity?.Name</MudText>
-                <MudText>Pre navigáciu použi bočný panel.</MudText>
+                <MudText Class="text-rotate" Typo="Typo.h3">@Localizer["Welcome"], @context.User.Identity?.Name</MudText>
+                <MudText>@Localizer["NavigationInfo"]</MudText>
             </MudStack>
         </Authorized>
         <NotAuthorized>
             <div class="full-size responsive-row">
                 <div class="d-flex flex-column gap-3">
-                    <MudText Typo="Typo.h3"><span class="underline">Uľahčite</span> si štúdium.</MudText>
-                    <MudText Typo="Typo.h5">Prihláste sa a zahoďte papiere za hlavu!</MudText>
+                    <MudText Typo="Typo.h3"><span class="underline">@Localizer["HomeHeading"]</span></MudText>
+                    <MudText Typo="Typo.h5">@Localizer["HomeSubheading"]</MudText>
                     <div>
-                        <MudButton Class="mr-2 button-shake" Variant="Variant.Filled" Color="Color.Primary" OnClick="@(() => NavigationManager.NavigateTo("Account/Login"))">Prihlásiť sa</MudButton>
-                        <MudButton Class="button-shake" Variant="Variant.Filled" Color="Color.Info" OnClick="@(() => NavigationManager.NavigateTo("theses"))">Nájdi tému</MudButton>
+                        <MudButton Class="mr-2 button-shake" Variant="Variant.Filled" Color="Color.Primary" OnClick="@(() => NavigationManager.NavigateTo("Account/Login"))">@Localizer["SignIn"]</MudButton>
+                        <MudButton Class="button-shake" Variant="Variant.Filled" Color="Color.Info" OnClick="@(() => NavigationManager.NavigateTo("theses"))">@Localizer["FindThesis"]</MudButton>
                     </div>
                 </div>
                 <div class="container-image landing-basis">

@@ -9,8 +9,6 @@
 
 @attribute [Authorize(Roles = "Admin")]
 
-<h3>Registrácia</h3>
-
 @if (Registration is not null)
 {
     <MudLink Href="@(Registration.Url)">@(Registration.Url)</MudLink>

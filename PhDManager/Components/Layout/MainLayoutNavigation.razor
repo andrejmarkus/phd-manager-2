@@ -4,11 +4,15 @@
 
 <MudHidden HiddenChanged="ScreenResized" />
 
-<MudAppBar Elevation="1">
+<MudAppBar Fixed Elevation="1">
     <MudIconButton Color="Color.Inherit" Size="@Size.Medium" Edge="Edge.Start" Icon="@Icons.Material.Filled.Menu" OnClick="ToggleOpen" />
     <MudLink Href="/">
         <MudImage Class="logo" Src="@Assets["uniza_logo.png"]" Height="40" />
     </MudLink>
+    <MudSpacer />
+    <MudStack>
+        <CultureSelect />
+    </MudStack>
 </MudAppBar>
 
 <MudDrawer Class="mud-drawer-fixed" @bind-Open="@_open" Variant="@_variant" OpenMiniOnHover="true" Fixed="false" Breakpoint="Breakpoint.Xs" Elevation="2">

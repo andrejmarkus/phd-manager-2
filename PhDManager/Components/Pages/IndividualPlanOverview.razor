@@ -1,29 +1,32 @@
 ﻿@page "/individual-plan"
 
 @using Microsoft.AspNetCore.Authorization
+@using Microsoft.Extensions.Localization
 @using PhDManager.Data
+@using PhDManager.Locales
 @using PhDManager.Models
 @using PhDManager.Services
 @using PhDManager.Services.IRepositories
 
 @inject IUnitOfWork UnitOfWork
+@inject IStringLocalizer<Resources> Localizer
 @inject UsersService UsersService
 
 @attribute [Authorize(Roles = "Študent")]
 
-<PageTitle>Individuálny plán</PageTitle>
+<PageTitle>@Localizer["IndividualPlan"]</PageTitle>
 
 @if (_individualPlan is not null)
 {
-    <MudText Align="Align.Center" Typo="Typo.h4">Individuálny plán</MudText>
+    <MudText Align="Align.Center" Typo="Typo.h4">@Localizer["IndividualPlan"]</MudText>
     <MudPaper Class="pa-2">
         <MudStack Spacing="5">
             <MudStack>
-                <MudText Typo="Typo.h6">Dizertačná práca</MudText>
+                <MudText Typo="Typo.h6">@Localizer["DissertationThesis"]</MudText>
                 <MudLink Typo="Typo.body1" Href="@($"/theses/{_individualPlan.Thesis.Guid}")">@_individualPlan.Thesis.Title</MudLink>
             </MudStack>
             <MudStack>
-                <MudText Typo="Typo.h6">Predmety</MudText>
+                <MudText Typo="Typo.h6">@Localizer["Subjects"]</MudText>
                 @foreach (var subject in _individualPlan.Subjects)
                 {
                     <MudText>@subject.Name</MudText>
@@ -34,7 +37,7 @@
 }
 else
 {
-    <MudText>Zatiaľ Vám nebol priradený individuálny plán.</MudText>
+    <MudText>@Localizer["IndividualPlanMissing"]</MudText>
 }
 
 @code {

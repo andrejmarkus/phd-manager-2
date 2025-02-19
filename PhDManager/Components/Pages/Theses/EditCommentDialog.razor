@@ -1,18 +1,22 @@
-﻿@using PhDManager.Models
+﻿@using Microsoft.Extensions.Localization
+@using PhDManager.Locales
+@using PhDManager.Models
 @using PhDManager.Services.IRepositories
 
 @rendermode InteractiveServer
 
+@inject IStringLocalizer<Resources> Localizer
+
 <MudDialog Options="@(new() { FullWidth = true })">
     <TitleContent>
-        <MudText Typo="Typo.h6">Uprav komentár</MudText>
+        <MudText Typo="Typo.h6">@Localizer["CommentEdit"]</MudText>
     </TitleContent>
     <DialogContent>
-        <MudTextField @bind-Value="@Comment.Text" Label="Komentár" />
+        <MudTextField @bind-Value="@Comment.Text" Label="@Localizer["Comment"]" />
     </DialogContent>
     <DialogActions>
-        <MudButton Color="Color.Primary" OnClick="UpdateComment">Uprav</MudButton>
-        <MudButton Color="Color.Secondary" OnClick="@(() => MudDialog.Cancel())">Zrušiť</MudButton>
+        <MudButton Color="Color.Primary" OnClick="UpdateComment">@Localizer["Edit"]</MudButton>
+        <MudButton Color="Color.Secondary" OnClick="@(() => MudDialog.Cancel())">@Localizer["Cancel"]</MudButton>
     </DialogActions>
 </MudDialog>
 

@@ -5,31 +5,34 @@
 @using System.Text.Encodings.Web
 @using Microsoft.AspNetCore.Identity
 @using Microsoft.AspNetCore.WebUtilities
+@using Microsoft.Extensions.Localization
 @using PhDManager.Data
+@using PhDManager.Locales
 @using PhDManager.Models
 @using PhDManager.Services.IRepositories
 
-@inject UserManager<ApplicationUser> UserManager
-@inject IUserStore<ApplicationUser> UserStore
-@inject SignInManager<ApplicationUser> SignInManager
 @inject IEmailSender<ApplicationUser> EmailSender
 @inject ILogger<Register> Logger
+@inject IUserStore<ApplicationUser> UserStore
+@inject IStringLocalizer<Resources> Localizer
+@inject IUnitOfWork UnitOfWork
+@inject UserManager<ApplicationUser> UserManager
+@inject SignInManager<ApplicationUser> SignInManager
 @inject NavigationManager NavigationManager
 @inject IdentityRedirectManager RedirectManager
-@inject IUnitOfWork UnitOfWork
 
-<PageTitle>Registerácia</PageTitle>
+<PageTitle>@Localizer["SignUp"]</PageTitle>
 
 @if (_registration is not null)
 {
     @if (_registrationExpired)
     {
-        <MudText Typo="Typo.h5">Platnosť registračného odkazu vypršala!</MudText>
+        <MudText Typo="Typo.h5">@Localizer["SignUpExpired"]</MudText>
     }
     else
     {
         <MudStack AlignItems="AlignItems.Center" Justify="Justify.Center">
-            <MudText Typo="Typo.h3" GutterBottom="true">Registrácia</MudText>
+            <MudText Typo="Typo.h3" GutterBottom="true">@Localizer["SignUp"]</MudText>
             <MudImage Class="height-half" Src="@Assets["register.svg"]" />
 
             <MudStack Class="width-three-quarters" Spacing="5">
@@ -37,39 +40,39 @@
                 <EditForm Model="Input" asp-route-returnUrl="@ReturnUrl" method="post" OnValidSubmit="RegisterUser" FormName="register">
                     <DataAnnotationsValidator />
 
-                    <MudText Typo="Typo.body1" GutterBottom="true">Vytvoriť nový účet.</MudText>
+                    <MudText Typo="Typo.body1" GutterBottom="true">@Localizer["SignUpMessage"]</MudText>
 
                     <MudStack Spacing="3">
                         <MudStaticTextField For="@(() => Input.DisplayName)" @bind-Value="Input.DisplayName"
                         Variant="Variant.Outlined"
-                        Label="Celé meno" Placeholder="meno priezvisko"
+                        Label="@Localizer["Full name"]"
                         UserAttributes="@(new() { { "autocomplete", "true" }, { "aria-required", "true" } } )" />
 
                         <MudStaticTextField For="@(() => Input.Username)" @bind-Value="Input.Username"
                         Variant="Variant.Outlined"
-                        Label="Použivateľské meno" Placeholder="použivateľské meno"
+                        Label="@Localizer["Username"]"
                         UserAttributes="@(new() { { "autocomplete", "true" }, { "aria-required", "true" } } )" />
 
                         <MudStaticTextField For="@(() => Input.Email)" @bind-Value="Input.Email"
                         Variant="Variant.Outlined"
-                        Label="Email" Placeholder="email"
+                        Label="Email"
                         UserAttributes="@(new() { { "autocomplete", "true" }, { "aria-required", "true" } } )" />
 
                         <MudStaticTextField For="@(() => Input.Password)" @bind-Value="Input.Password"
                         Variant="Variant.Outlined"
-                        Label="Heslo" InputType="InputType.Password" Placeholder="heslo"
+                        Label="@Localizer["Password"]" InputType="InputType.Password"
                         UserAttributes="@(new() { { "autocomplete", "new-password" }, { "aria-required", "true" } } )" />
 
                         <MudStaticTextField For="@(() => Input.ConfirmPassword)" @bind-Value="Input.ConfirmPassword"
                         Variant="Variant.Outlined"
-                        Label="Potvrďte heslo" InputType="InputType.Password" Placeholder="heslo"
+                        Label="@Localizer["ConfirmationPassword"]" InputType="InputType.Password"
                         UserAttributes="@(new() { { "autocomplete", "new-password" }, { "aria-required", "true" } } )" />
 
-                        <MudStaticButton Variant="Variant.Filled" Color="Color.Primary" FullWidth="true" FormAction="FormAction.Submit">Zaregistruj sa</MudStaticButton>
+                        <MudStaticButton Variant="Variant.Filled" Color="Color.Primary" FullWidth="true" FormAction="FormAction.Submit">@Localizer["SignUp"]</MudStaticButton>
                     </MudStack>
                 </EditForm>
 
-                <MudText Typo="Typo.body1" GutterBottom="true">Použi inú službu pre registráciu.</MudText>
+                <MudText Typo="Typo.body1" GutterBottom="true">@Localizer["SignUpService"]</MudText>
                 <ExternalLoginPicker />
             </MudStack>
         </MudStack>
@@ -173,11 +176,11 @@
     private sealed class InputModel
     {
         [Required]
-        [Display(Name = "Celé meno")]
+        [Display(Name = "Full name")]
         public string DisplayName { get; set; } = "";
 
         [Required]
-        [Display(Name = "Používateľské meno")]
+        [Display(Name = "Username")]
         public string Username { get; set; } = "";
 
         [Required]
@@ -186,15 +189,15 @@
         public string Email { get; set; } = "";
 
         [Required]
-        [StringLength(100, ErrorMessage = "{0} musí byť {2} až {1} znakov dlhé.", MinimumLength = 6)]
+        [StringLength(100, ErrorMessage = "{0} has to be from {2} to {1} characters long.", MinimumLength = 6)]
         [DataType(DataType.Password)]
-        [Display(Name = "Heslo")]
+        [Display(Name = "Password")]
         public string Password { get; set; } = "";
 
         [Required]
         [DataType(DataType.Password)]
-        [Display(Name = "Potvrdzujúce heslo")]
-        [Compare("Password", ErrorMessage = "Heslá sa nezhodujú.")]
+        [Display(Name = "Confirmation password")]
+        [Compare("Password", ErrorMessage = "Passwords doesn't match.")]
         public string ConfirmPassword { get; set; } = "";
     }
 }

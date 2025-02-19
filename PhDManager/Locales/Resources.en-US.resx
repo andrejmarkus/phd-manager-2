@@ -1,0 +1,531 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="FindThesis" xml:space="preserve">
+    <value>Find thesis</value>
+  </data>
+  <data name="HomeHeading" xml:space="preserve">
+    <value>Make your study easier.</value>
+  </data>
+  <data name="Home" xml:space="preserve">
+    <value>Home</value>
+  </data>
+  <data name="SignIn" xml:space="preserve">
+    <value>Sign in</value>
+  </data>
+  <data name="HomeSubheading" xml:space="preserve">
+    <value>Sign up and put the paperwork behind you!</value>
+  </data>
+  <data name="Users" xml:space="preserve">
+    <value>Users</value>
+  </data>
+  <data name="DissertationTheses" xml:space="preserve">
+    <value>Dissertation theses</value>
+  </data>
+  <data name="IndividualPlans" xml:space="preserve">
+    <value>Individual plans</value>
+  </data>
+  <data name="CreateRegistration" xml:space="preserve">
+    <value>Create registration</value>
+  </data>
+  <data name="LoginRequired" xml:space="preserve">
+    <value>Login required</value>
+  </data>
+  <data name="SignOut" xml:space="preserve">
+    <value>Sign out</value>
+  </data>
+  <data name="NavigationInfo" xml:space="preserve">
+    <value>Use the sidebar for navigation.</value>
+  </data>
+  <data name="Welcome" xml:space="preserve">
+    <value>Welcome</value>
+  </data>
+  <data name="SignInExternal" xml:space="preserve">
+    <value>External sign in</value>
+  </data>
+  <data name="SignInLdapMessage" xml:space="preserve">
+    <value>Use your LDAP account to sign in.</value>
+  </data>
+  <data name="Username" xml:space="preserve">
+    <value>Username</value>
+  </data>
+  <data name="Password" xml:space="preserve">
+    <value>Password</value>
+  </data>
+  <data name="RememberLogin" xml:space="preserve">
+    <value>Remember login</value>
+  </data>
+  <data name="SignInLdapLink" xml:space="preserve">
+    <value>Login for extern.</value>
+  </data>
+  <data name="SignInExternalMessage" xml:space="preserve">
+    <value>Use a local account to log in.</value>
+  </data>
+  <data name="SignInExternalService" xml:space="preserve">
+    <value>Use another service to log in.</value>
+  </data>
+  <data name="SignInExternalForgottenPassword" xml:space="preserve">
+    <value>Forgot your password?</value>
+  </data>
+  <data name="SignInExternalResendEmail" xml:space="preserve">
+    <value>Resend the confirmation email.</value>
+  </data>
+  <data name="SignUpExpired" xml:space="preserve">
+    <value>The registration link has expired!</value>
+  </data>
+  <data name="SignUp" xml:space="preserve">
+    <value>Sign up</value>
+  </data>
+  <data name="SignUpMessage" xml:space="preserve">
+    <value>Create a new account.</value>
+  </data>
+  <data name="FullName" xml:space="preserve">
+    <value>Full name</value>
+  </data>
+  <data name="ConfirmationPassword" xml:space="preserve">
+    <value>Confirmation password</value>
+  </data>
+  <data name="SignUpService" xml:space="preserve">
+    <value>Use another service to register.</value>
+  </data>
+  <data name="UsersAdd" xml:space="preserve">
+    <value>Add users</value>
+  </data>
+  <data name="LdapUsers" xml:space="preserve">
+    <value>LDAP Users</value>
+  </data>
+  <data name="FirstName" xml:space="preserve">
+    <value>First name</value>
+  </data>
+  <data name="LastName" xml:space="preserve">
+    <value>Last name</value>
+  </data>
+  <data name="Search" xml:space="preserve">
+    <value>Search</value>
+  </data>
+  <data name="Add" xml:space="preserve">
+    <value>Add</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="UserEdit" xml:space="preserve">
+    <value>Edit user</value>
+  </data>
+  <data name="Role" xml:space="preserve">
+    <value>Role</value>
+  </data>
+  <data name="StudyInformations" xml:space="preserve">
+    <value>Study informations</value>
+  </data>
+  <data name="StudyProgram" xml:space="preserve">
+    <value>Study program</value>
+  </data>
+  <data name="StudyField" xml:space="preserve">
+    <value>Study field</value>
+  </data>
+  <data name="StudyForm" xml:space="preserve">
+    <value>Study form</value>
+  </data>
+  <data name="StudyFormExternal" xml:space="preserve">
+    <value>External</value>
+  </data>
+  <data name="StudyFormDaily" xml:space="preserve">
+    <value>Daily</value>
+  </data>
+  <data name="Birthdate" xml:space="preserve">
+    <value>Birthdate</value>
+  </data>
+  <data name="PhoneNumber" xml:space="preserve">
+    <value>Phone number</value>
+  </data>
+  <data name="Street" xml:space="preserve">
+    <value>Street</value>
+  </data>
+  <data name="HouseNumber" xml:space="preserve">
+    <value>House number</value>
+  </data>
+  <data name="City" xml:space="preserve">
+    <value>City</value>
+  </data>
+  <data name="PostalCode" xml:space="preserve">
+    <value>Postal code</value>
+  </data>
+  <data name="State" xml:space="preserve">
+    <value>State</value>
+  </data>
+  <data name="Edit" xml:space="preserve">
+    <value>Edit</value>
+  </data>
+  <data name="IndividualPlanCreate" xml:space="preserve">
+    <value>Create individual plan</value>
+  </data>
+  <data name="IdividualPlanTitle" xml:space="preserve">
+    <value>Doctoral student's individual study plan</value>
+  </data>
+  <data name="Address" xml:space="preserve">
+    <value>Address</value>
+  </data>
+  <data name="IndividualPlanError" xml:space="preserve">
+    <value>User does not have profile information filled in!</value>
+  </data>
+  <data name="Deadlines" xml:space="preserve">
+    <value>Deadlines</value>
+  </data>
+  <data name="IndividualPlanStudent" xml:space="preserve">
+    <value>Name and surname, title</value>
+  </data>
+  <data name="IndividualPlanStudentError" xml:space="preserve">
+    <value>It is necessary to select a student!</value>
+  </data>
+  <data name="IndividualPlanStudyStartDate" xml:space="preserve">
+    <value>Entry to doctoral studies</value>
+  </data>
+  <data name="IndividualPlanStudyStartDateError" xml:space="preserve">
+    <value>It is necessary to enter the date of arrival!</value>
+  </data>
+  <data name="IndividualPlanDissertationExamDateInfo" xml:space="preserve">
+    <value>The deadline for submitting the application for the dissertation examination, including the submission of the written dissertation for the dissertation exam (usually the first half of September in the 2nd year)</value>
+  </data>
+  <data name="IndividualPlanDissertationExamDateError" xml:space="preserve">
+    <value>You must specify the application deadline!</value>
+  </data>
+  <data name="IndividualPlanDissertationExamDate" xml:space="preserve">
+    <value>Application deadline</value>
+  </data>
+  <data name="IndividualPlanDissertationSubmissionDate" xml:space="preserve">
+    <value>Submission deadline</value>
+  </data>
+  <data name="IndividualPlanDissertationSubmissionDateError" xml:space="preserve">
+    <value>It is necessary to specify the submission date!</value>
+  </data>
+  <data name="IndividualPlanDissertationSubmissionDateInfo" xml:space="preserve">
+    <value>Dissertation submission date (usually April in the year of graduation)</value>
+  </data>
+  <data name="IndividualPlanStudyEndDate" xml:space="preserve">
+    <value>Date of graduation</value>
+  </data>
+  <data name="IndividualPlanStudyEndDateInfo" xml:space="preserve">
+    <value>Date of completion of doctoral studies, including the defence of the dissertation (usually 31.8. after 3 years of study for internal doctoral students and after 4 years for external doctoral students)</value>
+  </data>
+  <data name="IndividualPlanStudyEndDateError" xml:space="preserve">
+    <value>It is necessary to specify the date of graduation!</value>
+  </data>
+  <data name="StudyPart" xml:space="preserve">
+    <value>Study part</value>
+  </data>
+  <data name="Subject" xml:space="preserve">
+    <value>Subject</value>
+  </data>
+  <data name="IndividualPlanSubjectError" xml:space="preserve">
+    <value>It is necessary to choose a subject!</value>
+  </data>
+  <data name="IndividualPlanSubjectsInfo" xml:space="preserve">
+    <value>Subjects with thematic headings for the dissertation examination</value>
+  </data>
+  <data name="IndividualPlanAdditionalSubjectsInfo" xml:space="preserve">
+    <value>Recommended additional elective subjects</value>
+  </data>
+  <data name="IndividualPlanThesis" xml:space="preserve">
+    <value>Dissertation thesis</value>
+  </data>
+  <data name="IndividualPlanThesisinfo" xml:space="preserve">
+    <value>Topic of the written part of the dissertation examination</value>
+  </data>
+  <data name="IndividualPlanThesisError" xml:space="preserve">
+    <value>It is necessary to choose a dissertation thesis!</value>
+  </data>
+  <data name="Supervisor" xml:space="preserve">
+    <value>Supervisor</value>
+  </data>
+  <data name="IndividualPlanAdd" xml:space="preserve">
+    <value>Add individual plan</value>
+  </data>
+  <data name="DissertationThesisTitle" xml:space="preserve">
+    <value>Dissertation thesis title</value>
+  </data>
+  <data name="SupervisorName" xml:space="preserve">
+    <value>Supervisor name</value>
+  </data>
+  <data name="SupervisorEmail" xml:space="preserve">
+    <value>Supervisor email</value>
+  </data>
+  <data name="StudentName" xml:space="preserve">
+    <value>Student name</value>
+  </data>
+  <data name="StudentEmail" xml:space="preserve">
+    <value>Student email</value>
+  </data>
+  <data name="IndividualPlanEdit" xml:space="preserve">
+    <value>Individual plan edit</value>
+  </data>
+  <data name="DissertationThesisAdd" xml:space="preserve">
+    <value>Add dissertation thesis</value>
+  </data>
+  <data name="ResearchType" xml:space="preserve">
+    <value>Research type</value>
+  </data>
+  <data name="Approved" xml:space="preserve">
+    <value>Approved</value>
+  </data>
+  <data name="CommentsCount" xml:space="preserve">
+    <value>Comments count</value>
+  </data>
+  <data name="DisserationThesisEdit" xml:space="preserve">
+    <value>Dissertation thesis edit</value>
+  </data>
+  <data name="DissertationThesisDelete" xml:space="preserve">
+    <value>Delete dissertation thesis</value>
+  </data>
+  <data name="DissertationThesisDeleteConfirmation" xml:space="preserve">
+    <value>Do you really wish to delete your chosen dissertation topic?</value>
+  </data>
+  <data name="Yes" xml:space="preserve">
+    <value>Yes</value>
+  </data>
+  <data name="No" xml:space="preserve">
+    <value>No</value>
+  </data>
+  <data name="IndividualPlanDelete" xml:space="preserve">
+    <value>Delete individual plan</value>
+  </data>
+  <data name="IndividualPlanDeleteConfirmation" xml:space="preserve">
+    <value>Do you really want to delete selected individual plan?</value>
+  </data>
+  <data name="UserAdd" xml:space="preserve">
+    <value>Add user</value>
+  </data>
+  <data name="ApprovedEmail" xml:space="preserve">
+    <value>Approved email</value>
+  </data>
+  <data name="ProfileEdit" xml:space="preserve">
+    <value>Edit profile</value>
+  </data>
+  <data name="UserDelete" xml:space="preserve">
+    <value>Delete user</value>
+  </data>
+  <data name="UserDeleteConfirmation" xml:space="preserve">
+    <value>Do you really want to delete selected user?</value>
+  </data>
+  <data name="CommentEdit" xml:space="preserve">
+    <value>Edit comment</value>
+  </data>
+  <data name="Comment" xml:space="preserve">
+    <value>Comment</value>
+  </data>
+  <data name="DissertationThesisPending" xml:space="preserve">
+    <value>Pending dissertation theses</value>
+  </data>
+  <data name="DissertationThesis" xml:space="preserve">
+    <value>Dissertation thesis</value>
+  </data>
+  <data name="Approve" xml:space="preserve">
+    <value>Approve</value>
+  </data>
+  <data name="DissertationThesisProposal" xml:space="preserve">
+    <value>Doctoral study thesis proposal</value>
+  </data>
+  <data name="LoginSuccessful" xml:space="preserve">
+    <value>Successfully logged in!</value>
+  </data>
+  <data name="PageNotFound" xml:space="preserve">
+    <value>Page not found</value>
+  </data>
+  <data name="IndividualPlan" xml:space="preserve">
+    <value>Individual plan</value>
+  </data>
+  <data name="Subjects" xml:space="preserve">
+    <value>Subjects</value>
+  </data>
+  <data name="IndividualPlanMissing" xml:space="preserve">
+    <value>You have not yet been assigned an individual plan.</value>
+  </data>
+  <data name="DissertationThesisAssignment" xml:space="preserve">
+    <value>Dissertation thesis assignment</value>
+  </data>
+  <data name="DissertationThesisEnglish" xml:space="preserve">
+    <value>Is it possible to develop a thesis in English?</value>
+  </data>
+  <data name="DissertationThesisTitleError" xml:space="preserve">
+    <value>You must enter a topic title!</value>
+  </data>
+  <data name="SupervisorError" xml:space="preserve">
+    <value>It is necessary to choose a supervisor!</value>
+  </data>
+  <data name="StudyProgramError" xml:space="preserve">
+    <value>It is necessary to choose a study program!</value>
+  </data>
+  <data name="DissertationThesisClassification" xml:space="preserve">
+    <value>Dissertation thesis classification</value>
+  </data>
+  <data name="DissertationThesisDescription" xml:space="preserve">
+    <value>Detailed problem description</value>
+  </data>
+  <data name="DissertationThesisDescriptionError" xml:space="preserve">
+    <value>You must enter a description of the problem!</value>
+  </data>
+  <data name="MoreInformations" xml:space="preserve">
+    <value>More informations</value>
+  </data>
+  <data name="DissertationThesisScientificContribution" xml:space="preserve">
+    <value>Expected scientific contribution (algorithms, methodologies, ...)</value>
+  </data>
+  <data name="DissertationThesisScientificContributionError" xml:space="preserve">
+    <value>It is necessary to specify the expected scientific contribution!</value>
+  </data>
+  <data name="DissertationThesisScientificProgress" xml:space="preserve">
+    <value>Recommended practice of scientific research</value>
+  </data>
+  <data name="DissertationThesisScientificProgressError" xml:space="preserve">
+    <value>It is necessary to specify the recommended procedure for scientific research!</value>
+  </data>
+  <data name="ResearchTypeError" xml:space="preserve">
+    <value>It is necessary to choose the research type!</value>
+  </data>
+  <data name="ResearchTypeAppliedExperimental" xml:space="preserve">
+    <value>Applied research and experimental development</value>
+  </data>
+  <data name="ResearchTypeApplied" xml:space="preserve">
+    <value>Applied research</value>
+  </data>
+  <data name="ResearchTypeBasic" xml:space="preserve">
+    <value>Basic research</value>
+  </data>
+  <data name="ResearchTypeInfo" xml:space="preserve">
+    <value>Specify the type of research in which the thesis will be addressed.</value>
+  </data>
+  <data name="DissertationThesisResearchTask" xml:space="preserve">
+    <value>The research task, which will include the thesis to be addressed</value>
+  </data>
+  <data name="DissertationThesisResearchTaskError" xml:space="preserve">
+    <value>It is necessary to assign a research task</value>
+  </data>
+  <data name="DissertationThesisSolutionResults" xml:space="preserve">
+    <value>Results to date of the solution at the training site, including references to available resources</value>
+  </data>
+  <data name="DissertationThesisSolutionResultsError" xml:space="preserve">
+    <value>It is necessary to submit the results of the solution so far at the training site!</value>
+  </data>
+  <data name="DissertationThesisSolutionResultsInfo" xml:space="preserve">
+    <value>List the literature in the same style as it is displayed in the University Library of the University of Žilina.</value>
+  </data>
+  <data name="Comments" xml:space="preserve">
+    <value>Comments</value>
+  </data>
+</root>

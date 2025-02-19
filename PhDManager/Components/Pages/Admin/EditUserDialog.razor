@@ -1,4 +1,6 @@
 ﻿@using Microsoft.AspNetCore.Identity
+@using Microsoft.Extensions.Localization
+@using PhDManager.Locales
 @using PhDManager.Models
 @using PhDManager.Models.DTOs
 @using PhDManager.Services.IRepositories
@@ -6,14 +8,15 @@
 @rendermode InteractiveServer
 
 @inject IUnitOfWork UnitOfWork
+@inject IStringLocalizer<Resources> Localizer
 @inject RoleManager<IdentityRole> RoleManager
 
 <MudDialog>
     <TitleContent>
-        <MudText Typo="Typo.h6">Uprav užívateľa</MudText>
+        <MudText Typo="Typo.h6">@Localizer["UserEdit"]</MudText>
     </TitleContent>
     <DialogContent>
-        <MudSelect T="string" Variant="Variant.Outlined" Label="Rola" @bind-Value="UserInfo.Role" Required>
+        <MudSelect T="string" Variant="Variant.Outlined" Label="@Localizer["Role"]" @bind-Value="UserInfo.Role" Required>
             @if (_roles is not null)
             {
                 @foreach (var role in _roles)
@@ -24,8 +27,8 @@
         </MudSelect>
         @if (UserInfo.Role == "Študent")
         {
-            <MudText Class="mt-4">Študijné informácie</MudText>
-            <MudSelect T="StudyProgram" Variant="Variant.Outlined" Label="Študijný program" @bind-Value="UserInfo.User.StudyProgram" ToStringFunc="@(sp => sp is null ? "" : sp.Name)">
+            <MudText Class="mt-4">@Localizer["StudyInformations"]</MudText>
+            <MudSelect T="StudyProgram" Variant="Variant.Outlined" Label="@Localizer["StudyProgram"]" @bind-Value="UserInfo.User.StudyProgram" ToStringFunc="@(sp => sp is null ? "" : sp.Name)">
                 @if (_studyPrograms is not null)
                 {
                     @foreach (var studyProgram in _studyPrograms)
@@ -34,27 +37,27 @@
                     }
                 }
             </MudSelect>
-            <MudSelect T="bool" Variant="Variant.Outlined" Label="Forma štúdia" @bind-Value="UserInfo.User.IsExternal" ToStringFunc="@(ie => ie ? "Externá" : "Denná")">
-                <MudSelectItem Value="true">Externá</MudSelectItem>
-                <MudSelectItem Value="false">Denná</MudSelectItem>
+            <MudSelect T="bool" Variant="Variant.Outlined" Label="@Localizer["StudyForm"]" @bind-Value="UserInfo.User.IsExternal" ToStringFunc="@(ie => ie ? Localizer["StudyFormExternal"] : Localizer["StudyFormDaily"])">
+                <MudSelectItem Value="true">@Localizer["StudyFormExternal"]</MudSelectItem>
+                <MudSelectItem Value="false">@Localizer["StudyFormDaily"]</MudSelectItem>
             </MudSelect>
 
             @if (UserInfo.User.Address is not null)
             {
                 <MudText Class="mt-4">Osobné údaje</MudText>
-                <MudDatePicker ShowToolbar="false" Variant="Variant.Outlined" Label="Dátum narodenia" @bind-Date="UserInfo.User.Birthdate" />
-                <MudTextField T="string" Variant="Variant.Outlined" Label="Telefónne číslo" @bind-Value="UserInfo.User.PhoneNumber" />
-                <MudTextField T="string" Variant="Variant.Outlined" Label="Ulica" @bind-Value="UserInfo.User.Address.Street" />
-                <MudTextField T="string" Variant="Variant.Outlined" Label="Číslo domu" @bind-Value="UserInfo.User.Address.HouseNumber" />
-                <MudTextField T="string" Variant="Variant.Outlined" Label="Mesto" @bind-Value="UserInfo.User.Address.City" />
-                <MudTextField T="string" Variant="Variant.Outlined" Label="PSČ" @bind-Value="UserInfo.User.Address.PostalCode" />
-                <MudTextField T="string" Variant="Variant.Outlined" Label="Štát" @bind-Value="UserInfo.User.Address.Country" />
+                <MudDatePicker ShowToolbar="false" Variant="Variant.Outlined" Label="@Localizer["Birthdate"]" @bind-Date="UserInfo.User.Birthdate" />
+                <MudTextField T="string" Variant="Variant.Outlined" Label="@Localizer["PhoneNumber"]" @bind-Value="UserInfo.User.PhoneNumber" />
+                <MudTextField T="string" Variant="Variant.Outlined" Label="@Localizer["Street"]" @bind-Value="UserInfo.User.Address.Street" />
+                <MudTextField T="string" Variant="Variant.Outlined" Label="@Localizer["HouseNumber"]" @bind-Value="UserInfo.User.Address.HouseNumber" />
+                <MudTextField T="string" Variant="Variant.Outlined" Label="@Localizer["City"]" @bind-Value="UserInfo.User.Address.City" />
+                <MudTextField T="string" Variant="Variant.Outlined" Label="@Localizer["PostalCode"]" @bind-Value="UserInfo.User.Address.PostalCode" />
+                <MudTextField T="string" Variant="Variant.Outlined" Label="@Localizer["State"]" @bind-Value="UserInfo.User.Address.Country" />
             }
         }
     </DialogContent>
     <DialogActions>
-        <MudButton Color="Color.Primary" OnClick="UpdateUser">Uprav</MudButton>
-        <MudButton Color="Color.Secondary" OnClick="@(() => MudDialog.Cancel())">Zrušiť</MudButton>
+        <MudButton Color="Color.Primary" OnClick="UpdateUser">@Localizer["Edit"]</MudButton>
+        <MudButton Color="Color.Secondary" OnClick="@(() => MudDialog.Cancel())">@Localizer["Cancel"]</MudButton>
     </DialogActions>
 </MudDialog>
 

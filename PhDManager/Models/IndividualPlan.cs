@@ -13,9 +13,7 @@ namespace PhDManager.Models
         public DateTime? StudyEndDate { get; set; }
 
         [JsonIgnore]
-        public virtual ApplicationUser User { get; set; } = default!;
-        [JsonIgnore]
-        public virtual Thesis Thesis { get; set; } = default!;
+        public virtual ApplicationUser Student { get; set; } = default!;
         public virtual List<Subject> Subjects { get; set; } = [];
     }
 }

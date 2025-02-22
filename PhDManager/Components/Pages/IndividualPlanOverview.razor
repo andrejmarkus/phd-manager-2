@@ -16,14 +16,14 @@
 
 <PageTitle>@Localizer["IndividualPlan"]</PageTitle>
 
-@if (_individualPlan is not null)
+@if (_individualPlan is not null && _individualPlan.Student.StudentThesis is not null)
 {
     <MudText Align="Align.Center" Typo="Typo.h4">@Localizer["IndividualPlan"]</MudText>
     <MudPaper Class="pa-2">
         <MudStack Spacing="5">
             <MudStack>
                 <MudText Typo="Typo.h6">@Localizer["DissertationThesis"]</MudText>
-                <MudLink Typo="Typo.body1" Href="@($"/theses/{_individualPlan.Thesis.Guid}")">@_individualPlan.Thesis.Title</MudLink>
+                <MudLink Typo="Typo.body1" Href="@($"/theses/{_individualPlan.Student.StudentThesis.Guid}")">@_individualPlan.Student.StudentThesis.Title</MudLink>
             </MudStack>
             <MudStack>
                 <MudText Typo="Typo.h6">@Localizer["Subjects"]</MudText>

@@ -97,8 +97,8 @@
             if (individualPlan is not null)
             {
                 _individualPlan = individualPlan;
-                _selectedStudent = _individualPlan.User;
-                _selectedThesis = _individualPlan.Thesis;
+                _selectedStudent = _individualPlan.Student;
+                _selectedThesis = _individualPlan.Student.StudentThesis;
                 _selectedSubjects = _individualPlan.Subjects.ToArray();
             }
         }
@@ -124,9 +124,9 @@
     private Task<IEnumerable<ApplicationUser>?> SearchStudents(string search, CancellationToken token)
     {
         if (string.IsNullOrWhiteSpace(search))
-            return Task.FromResult(_students?.Where(s => s.IndividualPlan is null));
+            return Task.FromResult(_students?.Where(s => s.StudentIndividualPlan is null));
 
-        return Task.FromResult(_students?.Where(s => s.IndividualPlan is null).Where(s => s.DisplayName is not null && s.DisplayName.Contains(search, StringComparison.OrdinalIgnoreCase)));
+        return Task.FromResult(_students?.Where(s => s.StudentIndividualPlan is null).Where(s => s.DisplayName is not null && s.DisplayName.Contains(search, StringComparison.OrdinalIgnoreCase)));
     }
 
     private Task<IEnumerable<Thesis>> SearchTheses(string search, CancellationToken token)
@@ -159,8 +159,8 @@
             _individualPlan.DissertationExamDate = _individualPlan.DissertationExamDate?.ToUniversalTime();
             _individualPlan.DissertationSubmissionDate = _individualPlan.DissertationSubmissionDate?.ToUniversalTime();
             _individualPlan.StudyEndDate = _individualPlan.StudyEndDate?.ToUniversalTime();
-            _individualPlan.User = _selectedStudent;
-            _individualPlan.Thesis = _selectedThesis;
+            _individualPlan.Student = _selectedStudent;
+            _individualPlan.Student.StudentThesis = _selectedThesis;
             _individualPlan.Subjects = _selectedSubjects.ToList();
             if (IndividualPlanGuid is null)
             {

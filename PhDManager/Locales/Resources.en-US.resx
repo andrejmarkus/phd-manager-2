@@ -276,7 +276,7 @@
   <data name="IndividualPlanCreate" xml:space="preserve">
     <value>Create individual plan</value>
   </data>
-  <data name="IdividualPlanTitle" xml:space="preserve">
+  <data name="IndividualPlanTitle" xml:space="preserve">
     <value>Doctoral student's individual study plan</value>
   </data>
   <data name="Address" xml:space="preserve">
@@ -345,7 +345,7 @@
   <data name="IndividualPlanThesis" xml:space="preserve">
     <value>Dissertation thesis</value>
   </data>
-  <data name="IndividualPlanThesisinfo" xml:space="preserve">
+  <data name="IndividualPlanThesisInfo" xml:space="preserve">
     <value>Topic of the written part of the dissertation examination</value>
   </data>
   <data name="IndividualPlanThesisError" xml:space="preserve">

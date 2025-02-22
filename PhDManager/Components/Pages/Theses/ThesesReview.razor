@@ -10,6 +10,7 @@
 
 @inject IUnitOfWork UnitOfWork
 @inject IStringLocalizer<Resources> Localizer
+@inject IDialogService DialogService
 @inject NavigationManager NavigationManager
 
 @attribute [Authorize(Roles = "Admin, Učiteľ, Externista")]
@@ -33,7 +34,8 @@
                     <AuthorizeView Roles="Admin, Externista">
                         <Authorized>
                             <MudStack Row Class="mt-2">
-                                <MudIconButton Size="@Size.Small" Variant="Variant.Filled" Color="Color.Primary" Icon="@Icons.Material.Outlined.Check" OnClick="@(() => AcceptThesis(thesis))" />
+                                <MudIconButton Size="@Size.Small" Color="Color.Primary" Icon="@Icons.Material.Outlined.Check" OnClick="@(() => AcceptThesis(thesis))" />
+                                <MudIconButton Size="@Size.Small" Color="Color.Error" Icon="@Icons.Material.Outlined.Delete" OnClick="@(() => DeleteThesis(thesis))" />
                             </MudStack>
                         </Authorized>
                     </AuthorizeView>
@@ -57,6 +59,20 @@
     {
         thesis.IsApproved = true;
         await UnitOfWork.Theses.UpdateAsync(thesis.Id, thesis);
+        await UnitOfWork.CompleteAsync();
+        _theses = _theses?.Where(t => t.Id != thesis.Id);
+    }
+
+    private async Task DeleteThesis(Thesis thesis)
+    {
+        bool? result = await DialogService.ShowMessageBox(Localizer["DissertationThesisDelete"], Localizer["DissertationThesisDeleteConfirmation"], Localizer["Yes"], Localizer["No"]);
+        if (result == false) return;
+
+        foreach (var comment in thesis.Comments)
+        {
+            await UnitOfWork.Comments.DeleteAsync(comment.Id);
+        }
+        await UnitOfWork.Theses.DeleteAsync(thesis.Id);
         await UnitOfWork.CompleteAsync();
         _theses = _theses?.Where(t => t.Id != thesis.Id);
     }

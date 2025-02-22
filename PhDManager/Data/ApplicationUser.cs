@@ -13,11 +13,12 @@ namespace PhDManager.Data
         [DataType(DataType.Date)]
         public DateTime? Birthdate { get; set; }
 
-        public virtual Address Address { get; set; } = default!;
+        public virtual Address? Address { get; set; }
         public virtual StudyProgram? StudyProgram { get; set; }
         public bool IsExternal { get; set; }
 
-        public virtual IndividualPlan? IndividualPlan { get; set; }
+        public virtual Thesis? StudentThesis { get; set; }
+        public virtual IndividualPlan? StudentIndividualPlan { get; set; }
 
         // Supervisor
         public virtual List<Thesis> SupervisorTheses { get; set; } = [];

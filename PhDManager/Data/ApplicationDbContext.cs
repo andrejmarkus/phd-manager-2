@@ -28,15 +28,15 @@ namespace PhDManager.Data
                 .HasForeignKey<Address>()
                 .IsRequired();
 
-            builder.Entity<IndividualPlan>()
-                .HasOne(ip => ip.User)
-                .WithOne(u => u.IndividualPlan)
-                .HasForeignKey<ApplicationUser>();
+            builder.Entity<ApplicationUser>()
+                .HasOne(u => u.StudentThesis)
+                .WithOne(t => t.Student)
+                .HasForeignKey<Thesis>();
 
-            builder.Entity<Thesis>()
-                .HasOne(t => t.IndividualPlan)
-                .WithOne(ip => ip.Thesis)
-                .HasForeignKey<IndividualPlan>();
+            builder.Entity<IndividualPlan>()
+                .HasOne(ip => ip.Student)
+                .WithOne(u => u.StudentIndividualPlan)
+                .HasForeignKey<ApplicationUser>();
 
             builder.Entity<StudyProgram>()
                 .HasData(

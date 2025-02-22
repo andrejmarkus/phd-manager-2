@@ -484,15 +484,6 @@ namespace PhDManager.Locales {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Doctoral student&apos;s individual study plan.
-        /// </summary>
-        public static string IdividualPlanTitle {
-            get {
-                return ResourceManager.GetString("IdividualPlanTitle", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Individual plan.
         /// </summary>
         public static string IndividualPlan {
@@ -738,9 +729,18 @@ namespace PhDManager.Locales {
         /// <summary>
         ///   Looks up a localized string similar to Topic of the written part of the dissertation examination.
         /// </summary>
-        public static string IndividualPlanThesisinfo {
+        public static string IndividualPlanThesisInfo {
             get {
-                return ResourceManager.GetString("IndividualPlanThesisinfo", resourceCulture);
+                return ResourceManager.GetString("IndividualPlanThesisInfo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Doctoral student&apos;s individual study plan.
+        /// </summary>
+        public static string IndividualPlanTitle {
+            get {
+                return ResourceManager.GetString("IndividualPlanTitle", resourceCulture);
             }
         }
         

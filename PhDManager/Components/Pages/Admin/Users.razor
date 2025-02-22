@@ -21,6 +21,7 @@
 @inject UserManager<ApplicationUser> UserManager
 @inject NavigationManager NavigationManager
 @inject ActiveDirectoryService ActiveDirectoryService
+@inject UserManager<ApplicationUser> UserManager
 
 @attribute [Authorize(Roles = "Admin")]
 
@@ -141,9 +142,10 @@
 
         var user = userInfo.User;
         if (user.Address is not null) await UnitOfWork.Addresses.DeleteAsync(user.Address.Id);
-        if (user.IndividualPlan is not null) await UnitOfWork.IndividualPlans.DeleteAsync(user.IndividualPlan.Id);
-        user.SupervisorTheses.ForEach(async st => await UnitOfWork.Theses.DeleteAsync(st.Id));
-        user.Comments.ForEach(async c => await UnitOfWork.Comments.DeleteAsync(c.Id));
+
+        user.SupervisorTheses = [];
+        await UserManager.UpdateAsync(user);
+
         await UsersService.DeleteUserAsync(user);
 
         if (_users is null) return;

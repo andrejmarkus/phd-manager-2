@@ -1,5 +1,6 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @using Microsoft.Extensions.Localization
+@using PhDManager.Data
 @using PhDManager.Locales
 @using PhDManager.Models
 @using PhDManager.Models.DTOs
@@ -16,44 +17,49 @@
         <MudText Typo="Typo.h6">@Localizer["UserEdit"]</MudText>
     </TitleContent>
     <DialogContent>
-        <MudSelect T="string" Variant="Variant.Outlined" Label="@Localizer["Role"]" @bind-Value="UserInfo.Role" Required>
-            @if (_roles is not null)
-            {
-                @foreach (var role in _roles)
+        <MudForm @ref="_form">
+            <MudSelect T="string" Variant="Variant.Outlined" Label="@Localizer["Role"]" @bind-Value="UserInfo.Role" Required>
+                @if (_roles is not null)
                 {
-                    <MudSelectItem Value="@role.Name">@role.Name</MudSelectItem>
-                }
-            }
-        </MudSelect>
-        @if (UserInfo.Role == "Študent")
-        {
-            <MudText Class="mt-4">@Localizer["StudyInformations"]</MudText>
-            <MudSelect T="StudyProgram" Variant="Variant.Outlined" Label="@Localizer["StudyProgram"]" @bind-Value="UserInfo.User.StudyProgram" ToStringFunc="@(sp => sp is null ? "" : sp.Name)">
-                @if (_studyPrograms is not null)
-                {
-                    @foreach (var studyProgram in _studyPrograms)
+                    @foreach (var role in _roles)
                     {
-                        <MudSelectItem Value="@studyProgram">@studyProgram.Name</MudSelectItem>
+                        <MudSelectItem Value="@role.Name">@role.Name</MudSelectItem>
                     }
                 }
             </MudSelect>
-            <MudSelect T="bool" Variant="Variant.Outlined" Label="@Localizer["StudyForm"]" @bind-Value="UserInfo.User.IsExternal" ToStringFunc="@(ie => ie ? Localizer["StudyFormExternal"] : Localizer["StudyFormDaily"])">
-                <MudSelectItem Value="true">@Localizer["StudyFormExternal"]</MudSelectItem>
-                <MudSelectItem Value="false">@Localizer["StudyFormDaily"]</MudSelectItem>
-            </MudSelect>
-
-            @if (UserInfo.User.Address is not null)
+            @if (UserInfo.Role == "Študent")
             {
+                <MudText Class="mt-4">@Localizer["StudyInformations"]</MudText>
+                <MudSelect T="StudyProgram" Variant="Variant.Outlined" Label="@Localizer["StudyProgram"]" @bind-Value="UserInfo.User.StudyProgram" ToStringFunc="@(sp => sp is null ? "" : sp.Name)">
+                    @if (_studyPrograms is not null)
+                    {
+                        @foreach (var studyProgram in _studyPrograms)
+                        {
+                            <MudSelectItem Value="@studyProgram">@studyProgram.Name</MudSelectItem>
+                        }
+                    }
+                </MudSelect>
+                <MudSelect T="bool" Variant="Variant.Outlined" Label="@Localizer["StudyForm"]" @bind-Value="UserInfo.User.IsExternal" ToStringFunc="@(ie => ie ? Localizer["StudyFormExternal"] : Localizer["StudyFormDaily"])">
+                    <MudSelectItem Value="true">@Localizer["StudyFormExternal"]</MudSelectItem>
+                    <MudSelectItem Value="false">@Localizer["StudyFormDaily"]</MudSelectItem>
+                </MudSelect>
                 <MudText Class="mt-4">Osobné údaje</MudText>
-                <MudDatePicker ShowToolbar="false" Variant="Variant.Outlined" Label="@Localizer["Birthdate"]" @bind-Date="UserInfo.User.Birthdate" />
-                <MudTextField T="string" Variant="Variant.Outlined" Label="@Localizer["PhoneNumber"]" @bind-Value="UserInfo.User.PhoneNumber" />
-                <MudTextField T="string" Variant="Variant.Outlined" Label="@Localizer["Street"]" @bind-Value="UserInfo.User.Address.Street" />
-                <MudTextField T="string" Variant="Variant.Outlined" Label="@Localizer["HouseNumber"]" @bind-Value="UserInfo.User.Address.HouseNumber" />
-                <MudTextField T="string" Variant="Variant.Outlined" Label="@Localizer["City"]" @bind-Value="UserInfo.User.Address.City" />
-                <MudTextField T="string" Variant="Variant.Outlined" Label="@Localizer["PostalCode"]" @bind-Value="UserInfo.User.Address.PostalCode" />
-                <MudTextField T="string" Variant="Variant.Outlined" Label="@Localizer["State"]" @bind-Value="UserInfo.User.Address.Country" />
+                @if (UserInfo.User.Address is null)
+                {
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@(() => CreateAddress(UserInfo.User))">Vytvor adresu</MudButton>
+                }
+                else
+                {
+                    <MudDatePicker ShowToolbar="false" Variant="Variant.Outlined" Label="@Localizer["Birthdate"]" @bind-Date="UserInfo.User.Birthdate" />
+                    <MudTextField T="string" Variant="Variant.Outlined" InputType="InputType.Telephone" Label="@Localizer["PhoneNumber"]" @bind-Value="UserInfo.User.PhoneNumber" />
+                    <MudTextField T="string" Variant="Variant.Outlined" Label="@Localizer["Street"]" @bind-Value="UserInfo.User.Address.Street" />
+                    <MudTextField T="string" Variant="Variant.Outlined" Label="@Localizer["HouseNumber"]" @bind-Value="UserInfo.User.Address.HouseNumber" />
+                    <MudTextField T="string" Variant="Variant.Outlined" Label="@Localizer["City"]" @bind-Value="UserInfo.User.Address.City" />
+                    <MudTextField T="string" Variant="Variant.Outlined" Label="@Localizer["PostalCode"]" @bind-Value="UserInfo.User.Address.PostalCode" />
+                    <MudTextField T="string" Variant="Variant.Outlined" Label="@Localizer["State"]" @bind-Value="UserInfo.User.Address.Country" />
+                }
             }
-        }
+        </MudForm>
     </DialogContent>
     <DialogActions>
         <MudButton Color="Color.Primary" OnClick="UpdateUser">@Localizer["Edit"]</MudButton>
@@ -68,6 +74,8 @@
     [Parameter]
     public UserInfo UserInfo { get; set; } = default!;
 
+    private MudForm _form = default!;
+
     private IEnumerable<IdentityRole>? _roles;
     private IEnumerable<StudyProgram>? _studyPrograms;
 
@@ -79,6 +87,13 @@
 
     private void UpdateUser()
     {
+        if (!_form.IsValid) return;
+
         MudDialog.Close(DialogResult.Ok(UserInfo));
+    }
+
+    private void CreateAddress(ApplicationUser user)
+    {
+        user.Address = new();
     }
 }

@@ -192,9 +192,9 @@
         bool? result = await DialogService.ShowMessageBox(Localizer["DissertationThesisDelete"], Localizer["DissertationThesisDeleteConfirmation"], Localizer["Yes"], Localizer["No"]);
         if (result == false) return;
 
-        if (thesis.IndividualPlan is not null)
+        foreach (var comment in thesis.Comments)
         {
-            await UnitOfWork.IndividualPlans.DeleteAsync(thesis.IndividualPlan.Id);
+            await UnitOfWork.Comments.DeleteAsync(comment.Id);
         }
         await UnitOfWork.Theses.DeleteAsync(thesis.Id);
         await UnitOfWork.CompleteAsync();

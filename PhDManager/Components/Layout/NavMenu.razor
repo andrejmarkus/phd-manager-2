@@ -19,6 +19,11 @@
             </MudNavGroup>
         </Authorized>
     </AuthorizeView>
+    <AuthorizeView Roles="Učiteľ">
+        <Authorized>
+            <MudNavLink Href="/my-theses" Icon="@Icons.Material.Filled.Apps">@Localizer["DissertationThesesMy"]</MudNavLink>
+        </Authorized>
+    </AuthorizeView>
     <MudNavLink Href="theses" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.List">@Localizer["DissertationTheses"]</MudNavLink>
     <AuthorizeView Roles="User">
         <Authorized>

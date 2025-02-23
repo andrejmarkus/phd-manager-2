@@ -138,7 +138,7 @@
         user.DisplayName = externalLoginInfo.Principal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
 
         var result = await UserManager.CreateAsync(user);
-        await UserManager.AddToRoleAsync(user, "Reviewer");
+        await UserManager.AddToRoleAsync(user, "Externista");
 
         if (result.Succeeded)
         {

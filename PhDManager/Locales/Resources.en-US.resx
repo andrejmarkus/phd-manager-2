@@ -348,9 +348,6 @@
   <data name="IndividualPlanThesisInfo" xml:space="preserve">
     <value>Topic of the written part of the dissertation examination</value>
   </data>
-  <data name="IndividualPlanThesisError" xml:space="preserve">
-    <value>It is necessary to choose a dissertation thesis!</value>
-  </data>
   <data name="Supervisor" xml:space="preserve">
     <value>Supervisor</value>
   </data>
@@ -527,5 +524,44 @@
   </data>
   <data name="Comments" xml:space="preserve">
     <value>Comments</value>
+  </data>
+  <data name="SchoolYear" xml:space="preserve">
+    <value>School year</value>
+  </data>
+  <data name="UserCreateAddress" xml:space="preserve">
+    <value>Create address</value>
+  </data>
+  <data name="DissertationThesesMy" xml:space="preserve">
+    <value>My dissertation theses</value>
+  </data>
+  <data name="NotApproved" xml:space="preserve">
+    <value>Not approved</value>
+  </data>
+  <data name="Interest" xml:space="preserve">
+    <value>Interest</value>
+  </data>
+  <data name="Enrol" xml:space="preserve">
+    <value>Enrol</value>
+  </data>
+  <data name="EnrolError" xml:space="preserve">
+    <value>You have already enrolled for a dissertation thesis.</value>
+  </data>
+  <data name="StudentAdd" xml:space="preserve">
+    <value>Add student</value>
+  </data>
+  <data name="ThesisStudentInfo" xml:space="preserve">
+    <value>Your assigned dissertation thesis is:</value>
+  </data>
+  <data name="ThesisStudentInterestInfo" xml:space="preserve">
+    <value>Dissertation thesis, that you are interested in:</value>
+  </data>
+  <data name="IndividualPlanThesisError" xml:space="preserve">
+    <value>The user is not assigned a dissertation topic!</value>
+  </data>
+  <data name="Occupancy" xml:space="preserve">
+    <value>Occupancy</value>
+  </data>
+  <data name="Renew" xml:space="preserve">
+    <value>Renew</value>
   </data>
 </root>

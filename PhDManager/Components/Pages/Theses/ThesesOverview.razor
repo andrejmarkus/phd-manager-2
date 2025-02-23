@@ -18,16 +18,17 @@
 @inject UsersService UsersService
 @inject DocumentService DocumentService
 @inject UserManager<ApplicationUser> UserManager
+@inject SchoolYearService SchoolYearService
 
 <PageTitle>@Localizer["DissertationTheses"]</PageTitle>
 
 <MudText Typo="Typo.h3" GutterBottom="true">@Localizer["DissertationTheses"]</MudText>
 
 <MudStack Row>
-    <MudTextField FullWidth T="string" @bind-Value="@_search" @bind-Value:after="UpdateSearch" Immediate="true" Label="@Localizer["Search"]" Variant="Variant.Outlined" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Search" />
+    <MudTextField FullWidth T="string" @bind-Value="@_search" @bind-Value:after="UpdateSearch" Immediate Label="@Localizer["Search"]" Variant="Variant.Outlined" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Search" />
     @if (_studyPrograms is not null)
     {
-        <MudSelect T="StudyProgram" @bind-Value="@_selectedStudyProgram" @bind-Value:after="UpdateSearch" Immediate="true" Label="@Localizer["StudyProgram"]" Variant="Variant.Outlined">
+        <MudSelect T="StudyProgram" @bind-Value="@_selectedStudyProgram" @bind-Value:after="UpdateSearch" Immediate Label="@Localizer["StudyProgram"]" Variant="Variant.Outlined">
             <MudSelectItem T="StudyProgram" Value="null">Všetky</MudSelectItem>
             @foreach (var studyProgram in _studyPrograms)
             {
@@ -37,7 +38,7 @@
     }
     @if (_teachers is not null)
     {
-        <MudSelect T="ApplicationUser" @bind-Value="@_selectedTeacher" @bind-Value:after="UpdateSearch" Immediate="true" Label="@Localizer["Supervisor"]" Variant="Variant.Outlined">
+        <MudSelect T="ApplicationUser" @bind-Value="@_selectedTeacher" @bind-Value:after="UpdateSearch" Immediate Label="@Localizer["Supervisor"]" Variant="Variant.Outlined">
             <MudSelectItem T="ApplicationUser" Value="null">Všetci</MudSelectItem>
             @foreach (var teacher in _teachers)
             {
@@ -45,27 +46,34 @@
             }
         </MudSelect>
     }
+    <MudSelect T="bool?" @bind-Value="@_available" @bind-Value:after="UpdateSearch" Immediate Label="@Localizer["Occupancy"]" Variant="Variant.Outlined">
+        <MudSelectItem T="bool?" Value="null">Všetky</MudSelectItem>
+        <MudSelectItem T="bool?" Value="true">Obsadená</MudSelectItem>
+        <MudSelectItem T="bool?" Value="false">Voľná</MudSelectItem>
+    </MudSelect>
+    @if (_schoolYears is not null)
+    {
+        <MudSelect T="string" @bind-Value="@_selectedSchoolYear" @bind-Value:after="UpdateSearch" Immediate Label="@Localizer["SchoolYear"]" Variant="Variant.Outlined">
+            @foreach (var schoolYear in _schoolYears)
+            {
+                <MudSelectItem Value="@schoolYear">@schoolYear</MudSelectItem>
+            }
+        </MudSelect>
+    }
 </MudStack>
 
-<MudStack Class="mt-1" Row>
-    <AuthorizeView Roles="Admin, Učiteľ">
-        <Authorized>
-            <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="/theses/add">@Localizer["Add"]</MudButton>
-        </Authorized>
-    </AuthorizeView>
-    <AuthorizeView Roles="Admin, Učiteľ, Externista">
-        <Authorized>
-            <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="/theses/review">@Localizer["Approve"]</MudButton>
-        </Authorized>
-    </AuthorizeView>
-</MudStack>
+<AuthorizeView Roles="Admin, Učiteľ, Externista">
+    <Authorized>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="/theses/review">@Localizer["Approve"]</MudButton>
+    </Authorized>
+</AuthorizeView>
 
 <MudGrid Class="mt-1">
     @if (_theses is not null)
     {
         @foreach (var thesis in _theses)
         {
-            <MudItem xs="12" md="6">
+            <MudItem xs="6" md="4" lg="3">
                 <MudPaper Class="pa-2">
                     <MudLink Color="Color.Default" Underline="Underline.None" Href="@($"/theses/{thesis.Guid}")">
                         <MudText Typo="Typo.h6">@thesis.Title</MudText>
@@ -103,11 +111,14 @@
     private IEnumerable<Thesis>? _theses;
     private IEnumerable<StudyProgram>? _studyPrograms;
     private IEnumerable<ApplicationUser>? _teachers;
+    private IEnumerable<string>? _schoolYears;
     private string? _currentUserId;
 
     private string _search = "";
     private StudyProgram? _selectedStudyProgram;
     private ApplicationUser? _selectedTeacher;
+    private string? _selectedSchoolYear;
+    private bool? _available;
 
     protected override async Task OnInitializedAsync()
     {
@@ -121,7 +132,10 @@
             var role = await usersService.GetUserRoleAsync(u);
             return role == "Učiteľ";
         }).ToArrayAsync();
+        _schoolYears = await UnitOfWork.Theses.GetAllSchoolYearsAsync();
         _currentUserId = await UsersService.GetCurrentUserIdAsync();
+
+        _selectedSchoolYear = SchoolYearService.CurrentSchoolYear;
     }
 
     private async Task DeleteThesis(Thesis thesis)
@@ -142,11 +156,19 @@
     {
         var theses = await UnitOfWork.Theses.GetAllAsync();
         _theses = theses?.Where(t => t.IsApproved).Where(t => t.Title.ToLower().Contains(_search.ToLower()) || t.TitleEnglish?.ToLower().Contains(_search.ToLower()) == true).ToArray();
-        if (_selectedStudyProgram is not null) {
+        if (_selectedStudyProgram is not null)
+        {
             _theses = _theses?.Where(t => t.StudyProgram == _selectedStudyProgram).ToArray();
         }
-        if (_selectedTeacher is not null) {
+        if (_selectedTeacher is not null)
+        {
             _theses = _theses?.Where(t => t.Supervisor == _selectedTeacher).ToArray();
         }
+        if (_selectedSchoolYear is not null) {
+            _theses = _theses?.Where(t => t.SchoolYears is not null && t.SchoolYears.Contains(_selectedSchoolYear)).ToArray();
+        }
+
+        if (_available is null) return;
+        _theses = _theses?.Where(t => t.Student is not null == _available).ToArray();
     }
 }

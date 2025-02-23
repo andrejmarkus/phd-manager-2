@@ -24,7 +24,7 @@
     {
         @foreach (var thesis in _theses)
         {
-            <MudItem xs="12" md="6">
+            <MudItem xs="6" md="4" lg="3">
                 <MudPaper Class="pa-2">
                     <MudLink Color="Color.Default" Underline="Underline.None" Href="@($"/theses/{thesis.Guid}")">
                         <MudText Typo="Typo.h6">@thesis.Title</MudText>
@@ -58,6 +58,10 @@
     private async Task AcceptThesis(Thesis thesis)
     {
         thesis.IsApproved = true;
+        foreach (var comment in thesis.Comments)
+        {
+            await UnitOfWork.Comments.DeleteAsync(comment.Id);
+        }
         await UnitOfWork.Theses.UpdateAsync(thesis.Id, thesis);
         await UnitOfWork.CompleteAsync();
         _theses = _theses?.Where(t => t.Id != thesis.Id);

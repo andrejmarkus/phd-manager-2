@@ -1,12 +1,15 @@
 ﻿@page "/"
 @using Microsoft.Extensions.Localization
 @using PhDManager.Components.Layout
+@using PhDManager.Data
 @using PhDManager.Locales
+@using PhDManager.Services
 
 @rendermode InteractiveServer
 
 @inject IStringLocalizer<Resources> Localizer
 @inject NavigationManager NavigationManager
+@inject UsersService UsersService
 
 <PageTitle>@Localizer["Home"]</PageTitle>
 
@@ -18,23 +21,53 @@
             <MudStack Class="height-full" Justify="Justify.Center" AlignItems="AlignItems.Center">
                 <MudText Class="text-rotate" Typo="Typo.h3">@Localizer["Welcome"], @context.User.Identity?.Name</MudText>
                 <MudText>@Localizer["NavigationInfo"]</MudText>
-            </MudStack>
-        </Authorized>
-        <NotAuthorized>
-            <div class="full-size responsive-row">
-                <div class="d-flex flex-column gap-3">
-                    <MudText Typo="Typo.h3"><span class="underline">@Localizer["HomeHeading"]</span></MudText>
-                    <MudText Typo="Typo.h5">@Localizer["HomeSubheading"]</MudText>
-                    <div>
-                        <MudButton Class="mr-2 button-shake" Variant="Variant.Filled" Color="Color.Primary" OnClick="@(() => NavigationManager.NavigateTo("Account/Login"))">@Localizer["SignIn"]</MudButton>
-                        <MudButton Class="button-shake" Variant="Variant.Filled" Color="Color.Info" OnClick="@(() => NavigationManager.NavigateTo("theses"))">@Localizer["FindThesis"]</MudButton>
+                <AuthorizeView Roles="Študent" Context="studentContext">
+                    @if (_currentUser is not null)
+                    {
+                        <MudStack Class="mt-3">
+                            @if (_currentUser.StudentThesis is not null)
+                            {
+                                <MudText>
+                                    @Localizer["ThesisStudentInfo"] 
+                                    <MudLink Href="@($"/theses/{_currentUser.StudentThesis.Guid}")">@_currentUser.StudentThesis.Title</MudLink>
+                                </MudText>
+                            }
+                            @if (_currentUser.StudentThesisInterest is not null)
+                            {
+                                <MudText>
+                                    @Localizer["ThesisStudentInterestInfo"] 
+                                    <MudLink Href="@($"/theses/{_currentUser.StudentThesisInterest.Guid}")">@_currentUser.StudentThesisInterest.Title</MudLink>
+                                </MudText>
+                            }
+                        </MudStack>
+                    }
+                    </AuthorizeView>
+                </MudStack>
+            </Authorized>
+            <NotAuthorized>
+                <div class="full-size responsive-row">
+                    <div class="d-flex flex-column gap-3">
+                        <MudText Typo="Typo.h3"><span class="underline">@Localizer["HomeHeading"]</span></MudText>
+                        <MudText Typo="Typo.h5">@Localizer["HomeSubheading"]</MudText>
+                        <div>
+                            <MudButton Class="mr-2 button-shake" Variant="Variant.Filled" Color="Color.Primary" OnClick="@(() => NavigationManager.NavigateTo("Account/Login"))">@Localizer["SignIn"]</MudButton>
+                            <MudButton Class="button-shake" Variant="Variant.Filled" Color="Color.Info" OnClick="@(() => NavigationManager.NavigateTo("theses"))">@Localizer["FindThesis"]</MudButton>
+                        </div>
+                    </div>
+                    <div class="container-image landing-basis">
+                        <div class="circle-image"></div>
+                        <MudImage Class="full-size landing-image" Src="@Assets["digital-nomad.svg"]" />
                     </div>
                 </div>
-                <div class="container-image landing-basis">
-                    <div class="circle-image"></div>
-                    <MudImage Class="full-size landing-image" Src="@Assets["digital-nomad.svg"]" />
-                </div>
-            </div>
-        </NotAuthorized>
-    </AuthorizeView>
-</MudStack>
+            </NotAuthorized>
+        </AuthorizeView>
+    </MudStack>
+
+    @code {
+    private ApplicationUser? _currentUser;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _currentUser = await UsersService.GetCurrentUserAsync();
+    }
+}

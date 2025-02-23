@@ -214,6 +214,15 @@ namespace PhDManager.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to My dissertation theses.
+        /// </summary>
+        public static string DissertationThesesMy {
+            get {
+                return ResourceManager.GetString("DissertationThesesMy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Dissertation thesis.
         /// </summary>
         public static string DissertationThesis {
@@ -417,6 +426,24 @@ namespace PhDManager.Locales {
         public static string Edit {
             get {
                 return ResourceManager.GetString("Edit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enrol.
+        /// </summary>
+        public static string Enrol {
+            get {
+                return ResourceManager.GetString("Enrol", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You have already enrolled for a dissertation thesis..
+        /// </summary>
+        public static string EnrolError {
+            get {
+                return ResourceManager.GetString("EnrolError", resourceCulture);
             }
         }
         
@@ -718,7 +745,7 @@ namespace PhDManager.Locales {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to It is necessary to choose a dissertation thesis!.
+        ///   Looks up a localized string similar to The user is not assigned a dissertation topic!.
         /// </summary>
         public static string IndividualPlanThesisError {
             get {
@@ -741,6 +768,15 @@ namespace PhDManager.Locales {
         public static string IndividualPlanTitle {
             get {
                 return ResourceManager.GetString("IndividualPlanTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Interest.
+        /// </summary>
+        public static string Interest {
+            get {
+                return ResourceManager.GetString("Interest", resourceCulture);
             }
         }
         
@@ -808,6 +844,24 @@ namespace PhDManager.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Not approved.
+        /// </summary>
+        public static string NotApproved {
+            get {
+                return ResourceManager.GetString("NotApproved", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Occupancy.
+        /// </summary>
+        public static string Occupancy {
+            get {
+                return ResourceManager.GetString("Occupancy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Page not found.
         /// </summary>
         public static string PageNotFound {
@@ -858,6 +912,15 @@ namespace PhDManager.Locales {
         public static string RememberLogin {
             get {
                 return ResourceManager.GetString("RememberLogin", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Renew.
+        /// </summary>
+        public static string Renew {
+            get {
+                return ResourceManager.GetString("Renew", resourceCulture);
             }
         }
         
@@ -921,6 +984,15 @@ namespace PhDManager.Locales {
         public static string Role {
             get {
                 return ResourceManager.GetString("Role", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to School year.
+        /// </summary>
+        public static string SchoolYear {
+            get {
+                return ResourceManager.GetString("SchoolYear", resourceCulture);
             }
         }
         
@@ -1069,6 +1141,15 @@ namespace PhDManager.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Add student.
+        /// </summary>
+        public static string StudentAdd {
+            get {
+                return ResourceManager.GetString("StudentAdd", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Student email.
         /// </summary>
         public static string StudentEmail {
@@ -1213,11 +1294,38 @@ namespace PhDManager.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Your assigned dissertation thesis is:.
+        /// </summary>
+        public static string ThesisStudentInfo {
+            get {
+                return ResourceManager.GetString("ThesisStudentInfo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Dissertation thesis, that you are interested in:.
+        /// </summary>
+        public static string ThesisStudentInterestInfo {
+            get {
+                return ResourceManager.GetString("ThesisStudentInterestInfo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Add user.
         /// </summary>
         public static string UserAdd {
             get {
                 return ResourceManager.GetString("UserAdd", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Create address.
+        /// </summary>
+        public static string UserCreateAddress {
+            get {
+                return ResourceManager.GetString("UserCreateAddress", resourceCulture);
             }
         }
         

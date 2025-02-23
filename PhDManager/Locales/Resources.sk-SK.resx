@@ -348,9 +348,6 @@
   <data name="IndividualPlanThesisInfo" xml:space="preserve">
     <value>Téma písomnej časti dizertačnej skúšky</value>
   </data>
-  <data name="IndividualPlanThesisError" xml:space="preserve">
-    <value>Je nutné zvoliť dizertačnú tému!</value>
-  </data>
   <data name="Supervisor" xml:space="preserve">
     <value>Školitel</value>
   </data>
@@ -527,5 +524,44 @@
   </data>
   <data name="Comments" xml:space="preserve">
     <value>Komentáre</value>
+  </data>
+  <data name="SchoolYear" xml:space="preserve">
+    <value>Školský rok</value>
+  </data>
+  <data name="UserCreateAddress" xml:space="preserve">
+    <value>Vytvor adresu</value>
+  </data>
+  <data name="DissertationThesesMy" xml:space="preserve">
+    <value>Moje dizertačné témy</value>
+  </data>
+  <data name="NotApproved" xml:space="preserve">
+    <value>Nepotvrdená</value>
+  </data>
+  <data name="Interest" xml:space="preserve">
+    <value>Záujem</value>
+  </data>
+  <data name="Enrol" xml:space="preserve">
+    <value>Prihlásiť sa</value>
+  </data>
+  <data name="EnrolError" xml:space="preserve">
+    <value>Už ste sa prihlásili na dizertačnú prácu</value>
+  </data>
+  <data name="StudentAdd" xml:space="preserve">
+    <value>Pridaj študenta</value>
+  </data>
+  <data name="ThesisStudentInfo" xml:space="preserve">
+    <value>Vaša pridelená dizertačná práca je:</value>
+  </data>
+  <data name="ThesisStudentInterestInfo" xml:space="preserve">
+    <value>Dizertačná práca, o ktorú máte záujem:</value>
+  </data>
+  <data name="IndividualPlanThesisError" xml:space="preserve">
+    <value>Používateľ nemá priradenú dizertačnú tému!</value>
+  </data>
+  <data name="Occupancy" xml:space="preserve">
+    <value>Obsadenosť</value>
+  </data>
+  <data name="Renew" xml:space="preserve">
+    <value>Obnoviť</value>
   </data>
 </root>

@@ -17,6 +17,7 @@ namespace PhDManager.Data
         public virtual StudyProgram? StudyProgram { get; set; }
         public bool IsExternal { get; set; }
 
+        public virtual Thesis? StudentThesisInterest { get; set; }
         public virtual Thesis? StudentThesis { get; set; }
         public virtual IndividualPlan? StudentIndividualPlan { get; set; }
 

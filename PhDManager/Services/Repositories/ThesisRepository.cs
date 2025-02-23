@@ -19,5 +19,18 @@ namespace PhDManager.Services.Repositories
                 return null;
             }
         }
+
+        public async Task<IEnumerable<string>?> GetAllSchoolYearsAsync()
+        {
+            try
+            {
+                return await _dbSet.Where(t => t.SchoolYears != null).SelectMany(t => t.SchoolYears).Distinct().ToArrayAsync();
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "Error while getting school years");
+                return null;
+            }
+        }
     }
 }

@@ -66,10 +66,17 @@
     <MudText Typo="Typo.h5">@Localizer["IndividualPlanAdditionalSubjectsInfo"]</MudText>
     <MudText>To-Do</MudText>
     <MudText Typo="Typo.h5">@Localizer["IndividualPlanThesisInfo"]</MudText>
-    <MudAutocomplete T="Thesis" Required RequiredError="@Localizer["IndividualPlanThesisError"]" Label="@Localizer["IndividualPlanThesis"]" ToStringFunc="@(t => t is null ? null : t.Title)" SearchFunc="SearchTheses" Variant="Variant.Outlined" @bind-Value="_selectedThesis" />
-    @if (_selectedThesis is not null)
-    {
-        <MudField T="string" Label="@Localizer["Supervisor"]" Variant="Variant.Outlined">@_selectedThesis.Supervisor.DisplayName</MudField>
+
+    @if (_selectedStudent is not null) {
+        @if (_selectedStudent.StudentThesis is not null)
+        {
+            <MudField T="Thesis" Label="@Localizer["IndividualPlanThesis"]" Variant="Variant.Outlined">@_selectedStudent.StudentThesis.Title</MudField>
+            <MudField T="string" Label="@Localizer["Supervisor"]" Variant="Variant.Outlined">@_selectedStudent.StudentThesis.Supervisor.DisplayName</MudField>
+        }
+        else
+        {
+            <MudText Color="Color.Error">@Localizer["IndividualPlanThesisError"]</MudText>
+        }
     }
 
     <MudButton class="mt-4" OnClick="HandleIndividualPlan" Variant="Variant.Filled" Color="Color.Primary">@(IndividualPlanGuid is null ? Localizer["Add"] : Localizer["Edit"])</MudButton>
@@ -81,12 +88,10 @@
 
     private MudForm? _form;
     private IEnumerable<ApplicationUser>? _students;
-    private IEnumerable<Thesis>? _theses;
     private IEnumerable<Subject>? _subjects;
 
     private IndividualPlan _individualPlan = new();
     private ApplicationUser? _selectedStudent;
-    private Thesis? _selectedThesis;
     private Subject[] _selectedSubjects = new Subject[3];
 
     protected override async Task OnInitializedAsync()
@@ -98,7 +103,6 @@
             {
                 _individualPlan = individualPlan;
                 _selectedStudent = _individualPlan.Student;
-                _selectedThesis = _individualPlan.Student.StudentThesis;
                 _selectedSubjects = _individualPlan.Subjects.ToArray();
             }
         }
@@ -117,7 +121,6 @@
             var role = await userService.GetUserRoleAsync(u);
             return role == "Študent";
         }).ToArrayAsync();
-        _theses = await UnitOfWork.Theses.GetAllAsync();
         _subjects = await UnitOfWork.Subjects.GetAllAsync();
     }
 
@@ -127,16 +130,6 @@
             return Task.FromResult(_students?.Where(s => s.StudentIndividualPlan is null));
 
         return Task.FromResult(_students?.Where(s => s.StudentIndividualPlan is null).Where(s => s.DisplayName is not null && s.DisplayName.Contains(search, StringComparison.OrdinalIgnoreCase)));
-    }
-
-    private Task<IEnumerable<Thesis>> SearchTheses(string search, CancellationToken token)
-    {
-        if (_theses is null) return Task.FromResult(Enumerable.Empty<Thesis>());
-
-        if (string.IsNullOrWhiteSpace(search))
-            return Task.FromResult(_theses.Where(t => t.StudyProgram == _selectedStudent?.StudyProgram));
-
-        return Task.FromResult(_theses.Where(t => t.StudyProgram == _selectedStudent?.StudyProgram).Where(t => t.Title.Contains(search, StringComparison.OrdinalIgnoreCase)));
     }
 
     private Task<IEnumerable<Subject>> SearchSubjects(string search, CancellationToken token)
@@ -151,7 +144,7 @@
 
     private async Task HandleIndividualPlan()
     {
-        if (_form is null || _selectedStudent is null || _selectedThesis is null) return;
+        if (_form is null || _selectedStudent is null || _selectedStudent.StudentThesis is null) return;
 
         if (_form.IsValid)
         {
@@ -160,7 +153,6 @@
             _individualPlan.DissertationSubmissionDate = _individualPlan.DissertationSubmissionDate?.ToUniversalTime();
             _individualPlan.StudyEndDate = _individualPlan.StudyEndDate?.ToUniversalTime();
             _individualPlan.Student = _selectedStudent;
-            _individualPlan.Student.StudentThesis = _selectedThesis;
             _individualPlan.Subjects = _selectedSubjects.ToList();
             if (IndividualPlanGuid is null)
             {

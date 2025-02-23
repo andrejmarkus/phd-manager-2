@@ -46,7 +46,7 @@
                 <MudText Class="mt-4">Osobné údaje</MudText>
                 @if (UserInfo.User.Address is null)
                 {
-                    <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@(() => CreateAddress(UserInfo.User))">Vytvor adresu</MudButton>
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@(() => CreateAddress(UserInfo.User))">@Localizer["UserCreateAddress"]</MudButton>
                 }
                 else
                 {

@@ -28,6 +28,10 @@ namespace PhDManager.Data
                 .HasForeignKey<Address>()
                 .IsRequired();
 
+            builder.Entity<Thesis>()
+                .HasMany(t => t.InterestedStudents)
+                .WithOne(u => u.StudentThesisInterest);
+
             builder.Entity<ApplicationUser>()
                 .HasOne(u => u.StudentThesis)
                 .WithOne(t => t.Student)

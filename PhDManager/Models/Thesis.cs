@@ -23,6 +23,8 @@ namespace PhDManager.Models
         public List<string>? SubjectNames { get; set; }
         public string SupervisorId { get; set; } = string.Empty;
         [JsonIgnore]
+        public virtual List<ApplicationUser> InterestedStudents { get; set; } = [];
+        [JsonIgnore]
         public virtual ApplicationUser? Student { get; set; }
         [JsonIgnore]
         public virtual ApplicationUser Supervisor { get; set; } = default!;

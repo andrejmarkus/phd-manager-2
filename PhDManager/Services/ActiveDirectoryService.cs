@@ -1,6 +1,5 @@
 ﻿using LdapForNet;
 using Microsoft.Extensions.Options;
-using PhDManager.Data.Migrations;
 using PhDManager.Models.Options;
 using static LdapForNet.Native.Native;
 

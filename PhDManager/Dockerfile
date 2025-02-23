@@ -4,8 +4,15 @@
 FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS base
 USER root
 RUN apt-get update && \
-	apt-get install --upgrade -y libldap-2.5-0 && \
-	ln -s /usr/lib/x86_64-linux-gnu/libldap-2.5.so.0 /usr/lib/libldap.so.2
+    apt-get install --upgrade -y libldap-2.5-0 && \
+    arch=$(dpkg --print-architecture) && \
+    if [ "$arch" = "amd64" ]; then \
+        ln -s /usr/lib/x86_64-linux-gnu/libldap-2.5.so.0 /usr/lib/libldap.so.2; \
+    elif [ "$arch" = "arm64" ]; then \
+        ln -s /usr/lib/aarch64-linux-gnu/libldap-2.5.so.0 /usr/lib/libldap.so.2; \
+    else \
+        echo "Unsupported architecture: $arch" && exit 1; \
+    fi
 USER app
 WORKDIR /app
 EXPOSE 8080

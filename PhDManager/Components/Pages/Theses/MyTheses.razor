@@ -82,7 +82,10 @@
                                         <MudIconButton Size="@Size.Small" Color="Color.Info" Icon="@Icons.Material.Outlined.Edit" Href="@($"/theses/edit/{thesis.Guid}")" />
                                         <MudIconButton Size="@Size.Small" Color="Color.Info" Icon="@Icons.Material.Outlined.Print" OnClick="@(async () => await DocumentService.DownloadThesisDocument(thesis))" />
                                     </MudStack>
-                                    <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@(() => RenewThesis(thesis))">@Localizer["Renew"]</MudButton>
+                                    @if (thesis.SchoolYears is not null && !thesis.SchoolYears.Contains(SchoolYearService.CurrentSchoolYear))
+                                    {
+                                        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@(() => RenewThesis(thesis))">@Localizer["Renew"]</MudButton>
+                                    }
                                 </MudStack>
                             }
                         </Authorized>

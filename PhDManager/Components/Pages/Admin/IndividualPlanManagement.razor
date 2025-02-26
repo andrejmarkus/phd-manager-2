@@ -26,7 +26,7 @@
 
 <MudForm @ref="_form">
     <MudAutocomplete T="Student" Required RequiredError="@Localizer["IndividualPlanStudentError"]" Label="@Localizer["IndividualPlanStudent"]" ToStringFunc="@(ds => ds is null ? null : ds.User.DisplayName)" SearchFunc="SearchStudents" Variant="Variant.Outlined" @bind-Value="@_selectedStudent" />
-    @if (_selectedStudent is not null)
+    @if (_selectedStudent is not null && _selectedStudent.Thesis is not null)
     {
         @if (_selectedStudent.HasInfo)
         {
@@ -36,6 +36,7 @@
             <MudField T="string" Label="@Localizer["StudyForm"]" Variant="Variant.Outlined">@(_selectedStudent.IsExternal ? Localizer["StudyFormExternal"] : Localizer["StudyFormDaily"])</MudField>
             <MudField T="string" Label="@Localizer["StudyProgram"]" Variant="Variant.Outlined">@_selectedStudent.StudyProgram?.Name</MudField>
             <MudField T="string" Label="@Localizer["StudyField"]" Variant="Variant.Outlined">@_selectedStudent.StudyProgram?.StudyFieldName</MudField>
+            <MudField T="string" Label="@Localizer["Supervisor"]" Variant="Variant.Outlined">@_selectedStudent.Thesis.Supervisor.User.DisplayName</MudField>
             <MudDatePicker ShowToolbar="false" Required RequiredError="@Localizer["IndividualPlanStudyStartDateError"]" Label="@Localizer["IndividualPlanStudyStartDate"]" Variant="Variant.Outlined" @bind-Date="_individualPlan.StudyStartDate" />
         }
         else
@@ -59,19 +60,24 @@
     </MudStack>
 
     <MudText Typo="Typo.h4">@Localizer["StudyPart"]</MudText>
+
     <MudText Typo="Typo.h5">@Localizer["IndividualPlanSubjectsInfo"]</MudText>
     <MudAutocomplete T="Subject" Required RequiredError="@Localizer["IndividualPlanSubjectError"]" Label="@($"{Localizer["Subject"]} 1")" ToStringFunc="@(s => s is null ? null : s.Name)" SearchFunc="SearchSubjects" Variant="Variant.Outlined" @bind-Value="_selectedSubjects[0]" />
     <MudAutocomplete T="Subject" Required RequiredError="@Localizer["IndividualPlanSubjectError"]" Label="@($"{Localizer["Subject"]} 2")" ToStringFunc="@(s => s is null ? null : s.Name)" SearchFunc="SearchSubjects" Variant="Variant.Outlined" @bind-Value="_selectedSubjects[1]" />
     <MudAutocomplete T="Subject" Required RequiredError="@Localizer["IndividualPlanSubjectError"]" Label="@($"{Localizer["Subject"]} 3")" ToStringFunc="@(s => s is null ? null : s.Name)" SearchFunc="SearchSubjects" Variant="Variant.Outlined" @bind-Value="_selectedSubjects[2]" />
+    <MudTextField T="string" Variant="Variant.Outlined" @bind-Value="_individualPlan.ThematicAreas" />
+
     <MudText Typo="Typo.h5">@Localizer["IndividualPlanAdditionalSubjectsInfo"]</MudText>
-    <MudText>To-Do</MudText>
+    <MudAutocomplete T="Subject" Label="@($"{Localizer["Subject"]} 1")" ToStringFunc="@(s => s is null ? null : s.Name)" SearchFunc="SearchSubjects" Variant="Variant.Outlined" />
+    <MudAutocomplete T="Subject" Label="@($"{Localizer["Subject"]} 2")" ToStringFunc="@(s => s is null ? null : s.Name)" SearchFunc="SearchSubjects" Variant="Variant.Outlined" />
+
     <MudText Typo="Typo.h5">@Localizer["IndividualPlanThesisInfo"]</MudText>
+    <MudTextField T="string" Label="@Localizer["IndividualPlanThesis"]" Required RequiredError="@Localizer["IndividualPlanThesisError"]" Variant="Variant.Outlined" />
 
     @if (_selectedStudent is not null) {
         @if (_selectedStudent.Thesis is not null)
         {
             <MudField T="Thesis" Label="@Localizer["IndividualPlanThesis"]" Variant="Variant.Outlined">@_selectedStudent.Thesis.Title</MudField>
-            <MudField T="string" Label="@Localizer["Supervisor"]" Variant="Variant.Outlined">@_selectedStudent.Thesis.Supervisor.User.DisplayName</MudField>
         }
         else
         {
@@ -140,6 +146,7 @@
     {
         if (_form is null || _selectedStudent is null || _selectedStudent.Thesis is null) return;
 
+        await _form.Validate();
         if (_form.IsValid)
         {
             _individualPlan.StudyStartDate = _individualPlan.StudyStartDate?.ToUniversalTime();

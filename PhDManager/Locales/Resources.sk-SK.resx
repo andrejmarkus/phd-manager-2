@@ -594,4 +594,13 @@
   <data name="Externals" xml:space="preserve">
     <value>Externisti</value>
   </data>
+  <data name="DissertationThesisAssign" xml:space="preserve">
+    <value>Priradenie dizertačnej témy</value>
+  </data>
+  <data name="Assign" xml:space="preserve">
+    <value>Priradiť</value>
+  </data>
+  <data name="Create" xml:space="preserve">
+    <value>Vytvor</value>
+  </data>
 </root>

@@ -594,4 +594,13 @@
   <data name="Externals" xml:space="preserve">
     <value>Externals</value>
   </data>
+  <data name="DissertationThesisAssign" xml:space="preserve">
+    <value>Assign dissertation thesis</value>
+  </data>
+  <data name="Assign" xml:space="preserve">
+    <value>Assign</value>
+  </data>
+  <data name="Create" xml:space="preserve">
+    <value>Create</value>
+  </data>
 </root>

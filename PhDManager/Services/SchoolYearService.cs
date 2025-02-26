@@ -5,11 +5,15 @@
         public string CurrentSchoolYear { 
             get
             {
-                var today = DateTime.Now;
-                int startYear = today.Month >= 9 ? today.Year : today.Year - 1;
-                int endYear = startYear + 1;
-                return $"{startYear}/{endYear}";
+                return GetSchoolYear(DateTime.Now);
             }
+        }
+
+        public string GetSchoolYear(DateTime dateTime)
+        {
+            int startYear = dateTime.Month >= 9 ? dateTime.Year : dateTime.Year - 1;
+            int endYear = startYear + 1;
+            return $"{startYear}/{endYear}";
         }
 
         public bool IsInCurrentSchoolYear(DateTime date)

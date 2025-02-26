@@ -84,6 +84,7 @@
         <MudTextField T="string" Required RequiredError="@Localizer["DissertationThesisSolutionResultsError"]" Label="@Localizer["DissertationThesisSolutionResults"]" AutoGrow Lines="6" Variant="Variant.Outlined" @bind-Value="_thesis.SolutionResults" />
         <MudText>@Localizer["DissertationThesisSolutionResultsInfo"]</MudText>
     </MudStack>
+
     <MudButton class="mt-4" OnClick="HandleThesis" Variant="Variant.Filled" Color="Color.Primary">@(ThesisGuid is null ? Localizer["Add"] : Localizer["Edit"])</MudButton>
 </MudForm>
 
@@ -146,6 +147,7 @@
     {
         if (_form is null) return;
 
+        await _form.Validate();
         if (_form.IsValid)
         {
             if (ThesisGuid is null) 

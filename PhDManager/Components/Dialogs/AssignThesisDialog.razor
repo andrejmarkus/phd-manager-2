@@ -1,0 +1,57 @@
+﻿@using Microsoft.Extensions.Localization
+@using PhDManager.Locales
+@using PhDManager.Models
+@using PhDManager.Services.IRepositories
+
+@rendermode InteractiveServer
+
+@inject IUnitOfWork UnitOfWork
+@inject IStringLocalizer<Resources> Localizer
+
+<MudDialog>
+    <TitleContent>
+        <MudText Typo="Typo.h6">@Localizer["DissertationThesisAssign"]</MudText>
+    </TitleContent>
+    <DialogContent>
+        <MudForm @ref="_form">
+            <MudAutocomplete T="Thesis" Label="@Localizer["DissertationThesis"]" ToStringFunc="@(t => t is null ? null : t.Title)" SearchFunc="SearchTeachers" Variant="Variant.Outlined" @bind-Value="Student.Thesis" />
+        </MudForm>
+    </DialogContent>
+    <DialogActions>
+        <MudButton Color="Color.Primary" OnClick="@HandleDialog">@Localizer["Assign"]</MudButton>
+        <MudButton Color="Color.Secondary" OnClick="@(() => MudDialog.Cancel())">@Localizer["Cancel"]</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter]
+    private IMudDialogInstance MudDialog { get; set; } = default!;
+
+    [Parameter]
+    public Student Student { get; set; } = default!;
+
+    private MudForm _form = default!;
+    private IEnumerable<Thesis>? _theses;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _theses = (await UnitOfWork.Theses.GetAllAsync())?.Where(t => t.Student is null);
+    }
+
+    private Task<IEnumerable<Thesis>> SearchTeachers(string search, CancellationToken token)
+    {
+        if (_theses is null) return Task.FromResult(Enumerable.Empty<Thesis>());
+
+        if (string.IsNullOrWhiteSpace(search))
+            return Task.FromResult(_theses);
+
+        return Task.FromResult(_theses.Where(t => t.Title.Contains(search, StringComparison.OrdinalIgnoreCase)));
+    }
+
+    private void HandleDialog()
+    {
+        if (!_form.IsValid) return;
+
+        MudDialog.Close(DialogResult.Ok(Student));
+    }
+}

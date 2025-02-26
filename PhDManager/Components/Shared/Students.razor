@@ -30,6 +30,7 @@
                 <MudStack Row>
                     <MudIconButton Size="@Size.Small" Color="Color.Error" Icon="@Icons.Material.Outlined.Delete" OnClick="@(() => DeleteStudent(context.Item))" />
                     <MudIconButton Size="@Size.Small" Color="Color.Info" Icon="@Icons.Material.Outlined.Edit" OnClick="@(() => UpdateStudent(context.Item))" />
+                    <MudIconButton Size="@Size.Small" Color="Color.Info" Icon="@Icons.Material.Outlined.ContactPage" OnClick="@(() => AssignThesis(context.Item))" />
                 </MudStack>
             </CellTemplate>
         </TemplateColumn>
@@ -117,6 +118,22 @@
     {
         var parameters = new DialogParameters<EditStudentDialog> { { d => d.Student, student } };
         var dialog = await DialogService.ShowAsync<EditStudentDialog>(Localizer["UserEdit"], parameters, new() { FullWidth = true, MaxWidth = MaxWidth.Medium });
+        var result = await dialog.Result;
+
+        if (result is null || result.Canceled) return;
+
+        var updatedStudent = result.Data as Student;
+
+        if (updatedStudent is null) return;
+
+        await UnitOfWork.Students.UpdateAsync(updatedStudent);
+        await UnitOfWork.CompleteAsync();
+    }
+
+    private async Task AssignThesis(Student student)
+    {
+        var parameters = new DialogParameters<AssignThesisDialog> { { d => d.Student, student } };
+        var dialog = await DialogService.ShowAsync<AssignThesisDialog>(Localizer["DissertationThesisAssign"], parameters, new() { FullWidth = true, MaxWidth = MaxWidth.Medium });
         var result = await dialog.Result;
 
         if (result is null || result.Canceled) return;

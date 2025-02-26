@@ -9,6 +9,7 @@
 @using PhDManager.Data
 @using PhDManager.Locales
 @using PhDManager.Models
+@using PhDManager.Services
 @using PhDManager.Services.IRepositories
 
 @inject IEmailSender<ApplicationUser> EmailSender
@@ -20,6 +21,7 @@
 @inject SignInManager<ApplicationUser> SignInManager
 @inject NavigationManager NavigationManager
 @inject IdentityRedirectManager RedirectManager
+@inject UsersService UsersService
 
 <PageTitle>@Localizer["SignUp"]</PageTitle>
 
@@ -111,6 +113,8 @@
 
     public async Task RegisterUser(EditContext editContext)
     {
+        if (_registration is null) return;
+
         var emailStore = GetEmailStore();
         var user = CreateUser();
 
@@ -127,7 +131,33 @@
             return;
         }
 
-        await UserManager.AddToRoleAsync(user, External.Role);
+        await UserManager.AddToRoleAsync(user, _registration.Role);
+
+        switch (_registration.Role) 
+        {
+            case Student.Role:
+                {
+                    await UsersService.AddStudentToUser(user, new());
+                    break;
+                }
+            case Admin.Role:
+                {
+                    await UnitOfWork.Admins.AddAsync(new() { User = user });
+                    break;
+                }
+            case Teacher.Role:
+                {
+                    await UnitOfWork.Teachers.AddAsync(new() { User = user });
+                    break;
+                }
+            case External.Role:
+                {
+                    await UnitOfWork.Externals.AddAsync(new() { User = user });
+                    break;
+                }
+            default:
+                break;
+        }
 
         Logger.LogInformation("User created a new account with password.");
 

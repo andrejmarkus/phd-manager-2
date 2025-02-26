@@ -6,8 +6,10 @@ using PhDManager.Models;
 
 namespace PhDManager.Services
 {
-    public class UsersService(IUserStore<ApplicationUser> UserStore, UserManager<ApplicationUser> UserManager, AuthenticationStateProvider AuthenticationStateProvider)
+    public class UsersService(IUserStore<ApplicationUser> UserStore, UserManager<ApplicationUser> UserManager, RoleManager<IdentityRole> RoleManager, AuthenticationStateProvider AuthenticationStateProvider)
     {
+        public IEnumerable<IdentityRole> Roles => RoleManager.Roles;
+
         public async Task<ApplicationUser?> GetCurrentUserAsync()
         {
             var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
@@ -57,23 +59,6 @@ namespace PhDManager.Services
                 await UserManager.AddToRoleAsync(unusedUser, role);
             }
         }
-
-        //public async Task UpdateUserInfoAsync(ApplicationUser user)
-        //{
-        //    var unusedUser = await UserManager.FindByIdAsync(user.Id);
-        //    if (unusedUser is not null) {
-        //        unusedUser.DisplayName = user.DisplayName;
-        //        unusedUser.Birthdate = user.Birthdate?.ToUniversalTime();
-        //        unusedUser.Address = user.Address;
-        //        unusedUser.StudyProgram = user.StudyProgram;
-        //        await UserManager.UpdateAsync(unusedUser);
-
-        //        if (user.PhoneNumber is null) return;
-
-        //        var token = await UserManager.GenerateChangePhoneNumberTokenAsync(unusedUser, user.PhoneNumber);
-        //        await UserManager.ChangePhoneNumberAsync(unusedUser, user.PhoneNumber, token);
-        //    }
-        //}
 
         public async Task DeleteUserAsync(ApplicationUser user)
         {

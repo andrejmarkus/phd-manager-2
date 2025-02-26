@@ -133,6 +133,15 @@ namespace PhDManager.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Assign.
+        /// </summary>
+        public static string Assign {
+            get {
+                return ResourceManager.GetString("Assign", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Birthdate.
         /// </summary>
         public static string Birthdate {
@@ -205,6 +214,15 @@ namespace PhDManager.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Create.
+        /// </summary>
+        public static string Create {
+            get {
+                return ResourceManager.GetString("Create", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Create registration.
         /// </summary>
         public static string CreateRegistration {
@@ -264,6 +282,15 @@ namespace PhDManager.Locales {
         public static string DissertationThesisAdd {
             get {
                 return ResourceManager.GetString("DissertationThesisAdd", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Assign dissertation thesis.
+        /// </summary>
+        public static string DissertationThesisAssign {
+            get {
+                return ResourceManager.GetString("DissertationThesisAssign", resourceCulture);
             }
         }
         

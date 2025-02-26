@@ -9,6 +9,7 @@ namespace PhDManager.Models
         public DateTime? DissertationSubmissionDate { get; set; }
         public DateTime? StudyStartDate { get; set; }
         public DateTime? StudyEndDate { get; set; }
+        public string ThematicAreas { get; set; } = string.Empty;
 
         [JsonIgnore]
         public virtual Student Student { get; set; } = default!;

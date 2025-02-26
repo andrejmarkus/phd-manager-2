@@ -9,6 +9,10 @@
         ICommentRepository Comments { get; }
         IIndividualPlanRepository IndividualPlans { get; }
         IAddressRepository Addresses { get; }
+        IAdminRepository Admins { get; }
+        IStudentRepository Students { get; }
+        IExternalRepository Externals { get; }
+        ITeacherRepository Teachers { get; }
         Task CompleteAsync();
     }
 }

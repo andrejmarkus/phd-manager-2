@@ -1,12 +1,10 @@
-﻿using PhDManager.Data;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 
 namespace PhDManager.Models
 {
-    public class Address
+    public class Address : BaseModel
     {
-        public int Id { get; set; }
         public string? Street { get; set; }
         public string? HouseNumber { get; set; }
         public string? City { get; set; }
@@ -14,7 +12,7 @@ namespace PhDManager.Models
         public string? Country { get; set; }
 
         [JsonIgnore]
-        public virtual ApplicationUser User { get; set; } = default!;
+        public virtual Student Student { get; set; } = default!;
 
         [NotMapped]
         public string FullAddress => $"{Street} {HouseNumber}, {PostalCode} {City}, {Country}";

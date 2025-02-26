@@ -13,17 +13,18 @@ namespace PhDManager.Services
         {
             var documentName = NormalizeName(thesis.Title) + ".docx";
             var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "templates", "thesis_template.docx");
-            var replacements = new Dictionary<string, string>()
+            var replacements = new Dictionary<string, string?>()
             {
                 {"{Title}", thesis.Title},
-                {"{Supervisor}", thesis.Supervisor.DisplayName ?? ""},
+                {"{Supervisor}", thesis.Supervisor.User.DisplayName},
+                {"{SupervisorSpecialist}", thesis.SupervisorSpecialist?.User.DisplayName},
                 {"{StudyProgram}", thesis.StudyProgram.Name},
                 {"{StudyField}", thesis.StudyProgram.StudyFieldName},
                 {"{DailyStudy}", thesis.DailyStudy ? "☑" : "☐"},
                 {"{ExternalStudy}", thesis.ExternalStudy ? "☑" : "☐"},
-                {"{Subject1}", thesis.SubjectNames[0]},
-                {"{Subject2}", thesis.SubjectNames[1]},
-                {"{Subject3}", thesis.SubjectNames[2]},
+                {"{Subject1}", thesis.StudyProgram.ThesisSubjects[0]},
+                {"{Subject2}", thesis.StudyProgram.ThesisSubjects[1]},
+                {"{Subject3}", thesis.StudyProgram.ThesisSubjects[2]},
                 {"{Description}", thesis.Description},
                 {"{ScientificContribution}", thesis.ScientificContribution},
                 {"{ScientificProgress}", thesis.ScientificProgress},
@@ -40,26 +41,26 @@ namespace PhDManager.Services
 
         public async Task DownloadIndividualPlanDocument(IndividualPlan individualPlan)
         {
-            var documentName = NormalizeName(individualPlan.Student.DisplayName?? "") + ".docx";
+            var documentName = NormalizeName(individualPlan.Student.User.DisplayName?? "") + ".docx";
             var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "templates", "individual_plan_template.docx");
-            var replacements = new Dictionary<string, string>()
+            var replacements = new Dictionary<string, string?>()
             {
-                {"{Student}", individualPlan.Student.DisplayName ?? ""},
-                {"{Birthdate}", individualPlan.Student.Birthdate?.ToString("dd.MM.yyyy") ?? ""},
-                {"{FullAddress}", individualPlan.Student.Address.FullAddress },
-                {"{PhoneNumber}", individualPlan.Student.PhoneNumber ?? ""},
+                {"{Student}", individualPlan.Student.User.DisplayName},
+                {"{Birthdate}", individualPlan.Student.User.Birthdate?.ToString("dd.MM.yyyy")},
+                {"{FullAddress}", individualPlan.Student.Address?.FullAddress },
+                {"{PhoneNumber}", individualPlan.Student.User.PhoneNumber},
                 {"{StudyForm}", individualPlan.Student.IsExternal ? "Externá" : "Denná"},
-                {"{StudyProgram}", individualPlan.Student.StudentThesis?.StudyProgram.Name ?? ""},
-                {"{StudyField}", individualPlan.Student.StudentThesis?.StudyProgram.StudyFieldName ?? ""},
-                {"{Supervisor}", individualPlan.Student.StudentThesis?.Supervisor.DisplayName ?? ""},
-                {"{StudyStartDate}", individualPlan.StudyStartDate?.ToString("dd.MM.yyyy") ?? ""},
-                {"{DissertationExamDate}", individualPlan.DissertationExamDate ?.ToString("dd.MM.yyyy") ?? ""},
-                {"{DissertationSubmissionDate}", individualPlan.DissertationSubmissionDate ?.ToString("MMMM yyyy") ?? "" },
-                {"{StudyEndDate}", individualPlan.StudyEndDate ?.ToString("dd.MM.yyyy") ?? ""},
-                {"{Subject1}", individualPlan.Student.StudentThesis?.SubjectNames[0] ?? ""},
-                {"{Subject2}", individualPlan.Student.StudentThesis?.SubjectNames[1] ?? ""},
-                {"{Subject3}", individualPlan.Student.StudentThesis?.SubjectNames[2] ?? ""},
-                {"{ThesisTitle}", individualPlan.Student.StudentThesis?.Title ?? ""},
+                {"{StudyProgram}", individualPlan.Student.Thesis?.StudyProgram.Name},
+                {"{StudyField}", individualPlan.Student.Thesis?.StudyProgram.StudyFieldName},
+                {"{Supervisor}", individualPlan.Student.Thesis?.Supervisor.User.DisplayName},
+                {"{StudyStartDate}", individualPlan.StudyStartDate?.ToString("dd.MM.yyyy")},
+                {"{DissertationExamDate}", individualPlan.DissertationExamDate?.ToString("dd.MM.yyyy")},
+                {"{DissertationSubmissionDate}", individualPlan.DissertationSubmissionDate?.ToString("MMMM yyyy")},
+                {"{StudyEndDate}", individualPlan.StudyEndDate?.ToString("dd.MM.yyyy")},
+                {"{Subject1}", individualPlan.Student.Thesis?.StudyProgram.Subjects[0].Name},
+                {"{Subject2}", individualPlan.Student.Thesis?.StudyProgram.Subjects[1].Name},
+                {"{Subject3}", individualPlan.Student.Thesis?.StudyProgram.Subjects[2].Name},
+                {"{ThesisTitle}", individualPlan.Student.Thesis?.Title},
                 {"{CurrentDate}", DateTime.Today.ToString("dd.MM.yyyy")},
             };
 
@@ -74,7 +75,7 @@ namespace PhDManager.Services
             return new string(name.Normalize(NormalizationForm.FormD).Where(c => CharUnicodeInfo.GetUnicodeCategory(c) != UnicodeCategory.NonSpacingMark).Select(c => c == ' ' ? '_' : c).ToArray());
         }
 
-        private Stream GenerateDocumentData(string path, Dictionary<string, string> replacements)
+        private Stream GenerateDocumentData(string path, Dictionary<string, string?> replacements)
         {
             var documentStream = new MemoryStream();
 
@@ -85,19 +86,22 @@ namespace PhDManager.Services
 
                 foreach (var replacement in replacements)
                 {
-                    var lines = replacement.Value.Split('\n');
+                    var lines = replacement.Value?.Split('\n');
                     var texts = body.Descendants<Text>().ToList();
                     foreach (var text in texts)
                     {
                         if (!text.Text.Contains(replacement.Key)) continue;
 
-                        var run = new Run();
-                        for (int i = 0; i < lines.Length; i++)
+                        if (lines is not null)
                         {
-                            run.AppendChild(new Text(lines[i]));
-                            if (i < lines.Length - 1) run.AppendChild(new Break());
+                            var run = new Run();
+                            for (int i = 0; i < lines.Length; i++)
+                            {
+                                run.AppendChild(new Text(lines[i]));
+                                if (i < lines.Length - 1) run.AppendChild(new Break());
+                            }
+                            text.Parent?.AppendChild(run);
                         }
-                        text.Parent?.AppendChild(run);
                         text.Remove();
                     }
                 }

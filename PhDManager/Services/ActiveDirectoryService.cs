@@ -32,23 +32,6 @@ namespace PhDManager.Services
             return entry;
         }
 
-        public async Task<IEnumerable<LdapEntry>?> GetAllUsersAsync()
-        {
-            IEnumerable<LdapEntry> entries;
-
-            try
-            {
-                var connection = await CreateConnection(_options.Username, _options.Password);
-                entries = await connection.SearchAsync(_options.LdapDomain, $"(uid=*)");
-            }
-            catch
-            {
-                return null;
-            }
-
-            return entries;
-        }
-
         public async Task<IEnumerable<LdapEntry>?> SearchUsersAsync(string username)
         {
             IEnumerable<LdapEntry> entries;

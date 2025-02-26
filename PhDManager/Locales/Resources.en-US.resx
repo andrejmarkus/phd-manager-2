@@ -564,4 +564,34 @@
   <data name="Renew" xml:space="preserve">
     <value>Renew</value>
   </data>
+  <data name="All" xml:space="preserve">
+    <value>All</value>
+  </data>
+  <data name="AllPeople" xml:space="preserve">
+    <value>All</value>
+  </data>
+  <data name="OccupancyOccupied" xml:space="preserve">
+    <value>Occupied</value>
+  </data>
+  <data name="OccupancyAvailable" xml:space="preserve">
+    <value>Available</value>
+  </data>
+  <data name="SupervisorSpecialist" xml:space="preserve">
+    <value>Supervisor specialist</value>
+  </data>
+  <data name="StudentEdit" xml:space="preserve">
+    <value>Edit doctoral student</value>
+  </data>
+  <data name="Students" xml:space="preserve">
+    <value>Doctoral students</value>
+  </data>
+  <data name="Admins" xml:space="preserve">
+    <value>Admins</value>
+  </data>
+  <data name="Teachers" xml:space="preserve">
+    <value>Teachers</value>
+  </data>
+  <data name="Externals" xml:space="preserve">
+    <value>Externals</value>
+  </data>
 </root>

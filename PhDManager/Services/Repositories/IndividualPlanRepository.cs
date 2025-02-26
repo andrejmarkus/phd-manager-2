@@ -11,7 +11,7 @@ namespace PhDManager.Services.Repositories
         {
             try
             {
-                return await _dbSet.FirstOrDefaultAsync(ip => ip.Student.Id == userId);
+                return await _dbSet.FirstOrDefaultAsync(ip => ip.Student.User.Id == userId);
             }
             catch (Exception e)
             {

@@ -1,0 +1,141 @@
+﻿@rendermode InteractiveServer
+
+@using LdapForNet
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.Extensions.Localization
+@using PhDManager.Components.Dialogs
+@using PhDManager.Data
+@using PhDManager.Locales
+@using PhDManager.Models
+@using PhDManager.Models.DTOs
+@using PhDManager.Services
+@using PhDManager.Services.IRepositories
+
+@inject IServiceProvider ServiceProvider
+@inject IDialogService DialogService
+@inject IUnitOfWork UnitOfWork
+@inject IStringLocalizer<Resources> Localizer
+@inject UsersService UsersService
+@inject UserManager<ApplicationUser> UserManager
+@inject NavigationManager NavigationManager
+
+@attribute [Authorize(Roles = $"{Admin.Role}")]
+
+<PageTitle>@Localizer["Users"] | Admin</PageTitle>
+
+<MudDataGrid T="UserInfo" Items="@_users" Hover SortMode="SortMode.Multiple" QuickFilter="@_quickFilter" Elevation="0">
+    <ToolBarContent>
+        <MudText Typo="Typo.h6" GutterBottom="false">@Localizer["Users"]</MudText>
+        <MudSpacer />
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="AddUser">@Localizer["UserAdd"]</MudButton>
+        <MudTextField Class="ml-4" Variant="Variant.Outlined" Placeholder="@Localizer["Search"]" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" @bind-Value="_search" />
+    </ToolBarContent>
+    <Columns>
+        <PropertyColumn Property="u => u.User.UserName" Title="@Localizer["Username"]" />
+        <PropertyColumn Property="u => u.User.DisplayName" Title="@Localizer["FullName"]" />
+        <PropertyColumn Property="u => u.User.Email" Title="Email" />
+        <PropertyColumn Property="@(u => u.User.EmailConfirmed ? Localizer["Yes"] : Localizer["No"])" Title="@Localizer["ApprovedEmail"]" />
+        <PropertyColumn Property="u => u.Role" Title="@Localizer["Role"]" Editable="true" />
+        <TemplateColumn Title="@Localizer["ProfileEdit"]">
+            <CellTemplate>
+                <MudStack Row>
+                    <MudIconButton Size="@Size.Small" Color="Color.Error" Icon="@Icons.Material.Outlined.Delete" OnClick="@(() => DeleteUser(context.Item))" />
+                    <MudIconButton Size="@Size.Small" Color="Color.Info" Icon="@Icons.Material.Outlined.Edit" OnClick="@(() => UpdateUser(context.Item))" />
+                </MudStack>
+            </CellTemplate>
+        </TemplateColumn>
+    </Columns>
+    <PagerContent>
+        <MudDataGridPager T="UserInfo" />
+    </PagerContent>
+</MudDataGrid>
+
+@code {
+    private IEnumerable<UserInfo>? _users;
+
+    private string _search = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var usersTask = UserManager.Users.ToList().Select(async u =>
+        {
+            using var scope = ServiceProvider.CreateScope();
+            var usersService = scope.ServiceProvider.GetRequiredService<UsersService>();
+            var role = await usersService.GetUserRoleAsync(u);
+            return new UserInfo(u, role);
+        });
+
+        _users = await Task.WhenAll(usersTask) ?? [];
+    }
+
+    private Func<UserInfo, bool> _quickFilter => u =>
+    {
+        if (string.IsNullOrWhiteSpace(_search))
+            return true;
+
+        if (u.User.UserName?.Contains(_search, StringComparison.OrdinalIgnoreCase) == true)
+            return true;
+
+        if (u.User.DisplayName?.Contains(_search, StringComparison.OrdinalIgnoreCase) == true)
+            return true;
+
+        if (u.User.Email?.Contains(_search, StringComparison.OrdinalIgnoreCase) == true)
+            return true;
+
+        if ($"{u.User.UserName} {u.User.DisplayName} {u.User.Email}".Contains(_search))
+            return true;
+
+        return false;
+    };
+
+    private async Task AddUser()
+    {
+        var dialog = await DialogService.ShowAsync<AddLdapUserDialog>(Localizer["UserAdd"], new DialogOptions() { FullWidth = true, MaxWidth = MaxWidth.Medium });
+        var result = await dialog.Result;
+
+        if (result is null || result.Canceled) return;
+
+        var entry = result.Data as LdapEntry;
+
+        if (entry is null) return;
+
+        await UsersService.RegisterLdapUserWithoutPasswordAsync(entry, Teacher.Role);
+
+        NavigationManager.NavigateTo(NavigationManager.Uri, true);
+    }
+
+    private async Task UpdateUser(UserInfo userInfo)
+    {
+        var parameters = new DialogParameters<EditUserDialog> { { d => d.UserInfo, userInfo } };
+        var dialog = await DialogService.ShowAsync<EditUserDialog>(Localizer["UserEdit"], parameters, new() { FullWidth = true, MaxWidth = MaxWidth.Medium });
+        var result = await dialog.Result;
+
+        if (result is null || result.Canceled) return;
+
+        var updatedUserInfo = result.Data as UserInfo;
+
+        if (updatedUserInfo is null || updatedUserInfo.Role is null) return;
+
+        await UsersService.UpdateUserRoleAsync(updatedUserInfo.User, updatedUserInfo.Role);
+    }
+
+    private async Task DeleteUser(UserInfo userInfo)
+    {
+        bool? result = await DialogService.ShowMessageBox(Localizer["UserDelete"], Localizer["UserDeleteConfirmation"], Localizer["Yes"], Localizer["No"]);
+        if (result == false) return;
+
+        var user = userInfo.User;
+        foreach (var doctoralStudent in user.Students)
+        {
+            if (doctoralStudent.Address is not null) UnitOfWork.Addresses.Delete(doctoralStudent.Address);
+        }
+
+        await UserManager.UpdateAsync(user);
+        await UsersService.DeleteUserAsync(user);
+
+        if (_users is null) return;
+
+        _users = _users.Where(u => u.User.Id != user.Id).ToArray();
+    }
+}

@@ -1,10 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PhDManager.Data;
+using PhDManager.Models;
 using PhDManager.Services.IRepositories;
 
 namespace PhDManager.Services.Repositories
 {
-    public class Repository<T> : IRepository<T> where T : class
+    public class Repository<T> : IRepository<T> where T : BaseModel
     {
         protected ApplicationDbContext _context;
         protected DbSet<T> _dbSet;
@@ -31,25 +32,16 @@ namespace PhDManager.Services.Repositories
             }
         }
 
-        public async Task<bool> DeleteAsync(int id)
+        public bool Delete(T entity)
         {
             try
             {
-                var entity = await _dbSet.FindAsync(id);
-                if (entity is not null)
-                {
-                    _dbSet.Remove(entity);
-                    return true;
-                }
-                else
-                {
-                    _logger.LogWarning("Entity with id: {Id} not found for deletion.", id);
-                    return false;
-                }
+                _dbSet.Remove(entity);
+                return true;
             }
             catch (Exception e)
             {
-                _logger.LogError(e, "Error while deleting entity with id: {Id}", id);
+                _logger.LogError(e, "Error while deleting entity with id: {Id}", entity.Id);
                 return false;
             }
         }
@@ -69,11 +61,11 @@ namespace PhDManager.Services.Repositories
             }
         }
 
-        public async Task<bool> UpdateAsync(int id, T entity)
+        public async Task<bool> UpdateAsync(T entity)
         {
             try
             {
-                var oldEntity = await _dbSet.FindAsync(id);
+                var oldEntity = await _dbSet.FindAsync(entity.Id);
                 if (oldEntity is not null)
                 {
                     _context.Entry(oldEntity).CurrentValues.SetValues(entity);
@@ -81,13 +73,13 @@ namespace PhDManager.Services.Repositories
                 }
                 else
                 {
-                    _logger.LogWarning("Entity with id: {Id} not found for update.", id);
+                    _logger.LogWarning("Entity with id: {Id} not found for update.", entity.Id);
                     return false;
                 }
             }
             catch (Exception e)
             {
-                _logger.LogError(e, "Error while updating entity with id: {Id}", id);
+                _logger.LogError(e, "Error while updating entity with id: {Id}", entity.Id);
                 return false;
             }
         }

@@ -24,7 +24,7 @@ namespace PhDManager.Services.Repositories
         {
             try
             {
-                return await _dbSet.Where(t => t.SchoolYears != null).SelectMany(t => t.SchoolYears).Distinct().ToArrayAsync();
+                return await _dbSet.Select(t => t.SchoolYear).Distinct().ToArrayAsync();
             }
             catch (Exception e)
             {

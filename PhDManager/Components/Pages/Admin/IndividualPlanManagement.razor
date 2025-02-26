@@ -18,26 +18,26 @@
 @inject UserManager<ApplicationUser> UserManager
 @inject NavigationManager NavigationManager
 
-@attribute [Authorize(Roles = "Admin")]
+@attribute [Authorize(Roles = $"{Admin.Role}")]
 
 <PageTitle>@Localizer["IndividualPlanCreate"]</PageTitle>
 
 <MudText Typo="Typo.h3">@Localizer["IndividualPlanTitle"]</MudText>
 
 <MudForm @ref="_form">
-    <MudAutocomplete T="ApplicationUser" Required RequiredError="@Localizer["IndividualPlanStudentError"]" Label="@Localizer["IndividualPlanStudent"]" ToStringFunc="@(s => s is null ? null : s.DisplayName)" SearchFunc="SearchStudents" Variant="Variant.Outlined" @bind-Value="@_selectedStudent" />
+    <MudAutocomplete T="Student" Required RequiredError="@Localizer["IndividualPlanStudentError"]" Label="@Localizer["IndividualPlanStudent"]" ToStringFunc="@(ds => ds is null ? null : ds.User.DisplayName)" SearchFunc="SearchStudents" Variant="Variant.Outlined" @bind-Value="@_selectedStudent" />
     @if (_selectedStudent is not null)
     {
         @if (_selectedStudent.HasInfo)
         {
-            <MudDatePicker ShowToolbar="false" Label="@Localizer["Birthdate"]" Variant="Variant.Outlined" @bind-Date="_selectedStudent.Birthdate" ReadOnly />
-            <MudField T="string" Label="@Localizer["Address"]" Variant="Variant.Outlined">@_selectedStudent.Address.FullAddress</MudField>
-            <MudField T="string" Label="@Localizer["PhoneNumber"]" Variant="Variant.Outlined">@_selectedStudent.PhoneNumber</MudField>
+            <MudDatePicker ShowToolbar="false" Label="@Localizer["Birthdate"]" Variant="Variant.Outlined" @bind-Date="_selectedStudent.User.Birthdate" ReadOnly />
+            <MudField T="string" Label="@Localizer["Address"]" Variant="Variant.Outlined">@_selectedStudent.Address?.FullAddress</MudField>
+            <MudField T="string" Label="@Localizer["PhoneNumber"]" Variant="Variant.Outlined">@_selectedStudent.User.PhoneNumber</MudField>
             <MudField T="string" Label="@Localizer["StudyForm"]" Variant="Variant.Outlined">@(_selectedStudent.IsExternal ? Localizer["StudyFormExternal"] : Localizer["StudyFormDaily"])</MudField>
             <MudField T="string" Label="@Localizer["StudyProgram"]" Variant="Variant.Outlined">@_selectedStudent.StudyProgram?.Name</MudField>
             <MudField T="string" Label="@Localizer["StudyField"]" Variant="Variant.Outlined">@_selectedStudent.StudyProgram?.StudyFieldName</MudField>
             <MudDatePicker ShowToolbar="false" Required RequiredError="@Localizer["IndividualPlanStudyStartDateError"]" Label="@Localizer["IndividualPlanStudyStartDate"]" Variant="Variant.Outlined" @bind-Date="_individualPlan.StudyStartDate" />
-        } 
+        }
         else
         {
             <MudText Color="Color.Error">@Localizer["IndividualPlanError"]</MudText>
@@ -68,10 +68,10 @@
     <MudText Typo="Typo.h5">@Localizer["IndividualPlanThesisInfo"]</MudText>
 
     @if (_selectedStudent is not null) {
-        @if (_selectedStudent.StudentThesis is not null)
+        @if (_selectedStudent.Thesis is not null)
         {
-            <MudField T="Thesis" Label="@Localizer["IndividualPlanThesis"]" Variant="Variant.Outlined">@_selectedStudent.StudentThesis.Title</MudField>
-            <MudField T="string" Label="@Localizer["Supervisor"]" Variant="Variant.Outlined">@_selectedStudent.StudentThesis.Supervisor.DisplayName</MudField>
+            <MudField T="Thesis" Label="@Localizer["IndividualPlanThesis"]" Variant="Variant.Outlined">@_selectedStudent.Thesis.Title</MudField>
+            <MudField T="string" Label="@Localizer["Supervisor"]" Variant="Variant.Outlined">@_selectedStudent.Thesis.Supervisor.User.DisplayName</MudField>
         }
         else
         {
@@ -87,11 +87,11 @@
     public string? IndividualPlanGuid { get; set; }
 
     private MudForm? _form;
-    private IEnumerable<ApplicationUser>? _students;
+    private IEnumerable<Student>? _students;
     private IEnumerable<Subject>? _subjects;
 
     private IndividualPlan _individualPlan = new();
-    private ApplicationUser? _selectedStudent;
+    private Student? _selectedStudent;
     private Subject[] _selectedSubjects = new Subject[3];
 
     protected override async Task OnInitializedAsync()
@@ -114,22 +114,16 @@
             _individualPlan.StudyEndDate = new DateTime(DateTime.Now.Year + 3, 8, 31);
         }
 
-        _students = await UserManager.Users.ToAsyncEnumerable().WhereAwait(async u =>
-        {
-            using var scope = ServiceProvider.CreateScope();
-            var userService = scope.ServiceProvider.GetRequiredService<UsersService>();
-            var role = await userService.GetUserRoleAsync(u);
-            return role == "Študent";
-        }).ToArrayAsync();
+        _students = await UnitOfWork.Students.GetAllAsync();
         _subjects = await UnitOfWork.Subjects.GetAllAsync();
     }
 
-    private Task<IEnumerable<ApplicationUser>?> SearchStudents(string search, CancellationToken token)
+    private Task<IEnumerable<Student>?> SearchStudents(string search, CancellationToken token)
     {
         if (string.IsNullOrWhiteSpace(search))
-            return Task.FromResult(_students?.Where(s => s.StudentIndividualPlan is null));
+            return Task.FromResult(_students?.Where(ds => ds.IndividualPlan is null));
 
-        return Task.FromResult(_students?.Where(s => s.StudentIndividualPlan is null).Where(s => s.DisplayName is not null && s.DisplayName.Contains(search, StringComparison.OrdinalIgnoreCase)));
+        return Task.FromResult(_students?.Where(ds => ds.IndividualPlan is null).Where(ds => ds.User.DisplayName is not null && ds.User.DisplayName.Contains(search, StringComparison.OrdinalIgnoreCase)));
     }
 
     private Task<IEnumerable<Subject>> SearchSubjects(string search, CancellationToken token)
@@ -144,7 +138,7 @@
 
     private async Task HandleIndividualPlan()
     {
-        if (_form is null || _selectedStudent is null || _selectedStudent.StudentThesis is null) return;
+        if (_form is null || _selectedStudent is null || _selectedStudent.Thesis is null) return;
 
         if (_form.IsValid)
         {
@@ -160,7 +154,7 @@
             }
             else
             {
-                await UnitOfWork.IndividualPlans.UpdateAsync(_individualPlan.Id, _individualPlan);
+                await UnitOfWork.IndividualPlans.UpdateAsync(_individualPlan);
             }
             await UnitOfWork.CompleteAsync();
             NavigationManager.NavigateTo("/admin/individual-plans");

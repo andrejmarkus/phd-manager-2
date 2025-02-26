@@ -7,6 +7,7 @@ namespace PhDManager.Services.Repositories
     {
         private readonly ApplicationDbContext _context;
         private readonly ILogger _logger;
+        private readonly SchoolYearService _schoolYearService;
 
         public IThesisRepository Theses { get; private set; }
         public IRegistrationRepository Registrations { get; private set; }
@@ -15,11 +16,16 @@ namespace PhDManager.Services.Repositories
         public ICommentRepository Comments { get; private set; }
         public IIndividualPlanRepository IndividualPlans { get; private set; }
         public IAddressRepository Addresses { get; private set; }
+        public IAdminRepository Admins { get; private set; }
+        public IStudentRepository Students { get; private set; }
+        public IExternalRepository Externals { get; private set; }
+        public ITeacherRepository Teachers { get; private set; }
 
-        public UnitOfWork(ApplicationDbContext context, ILoggerFactory loggerFactory)
+        public UnitOfWork(ApplicationDbContext context, ILoggerFactory loggerFactory, SchoolYearService schoolYearService)
         {
             _context = context;
             _logger = loggerFactory.CreateLogger("logs");
+            _schoolYearService = schoolYearService;
 
             Theses = new ThesisRepository(_context, _logger);
             Registrations = new RegistrationRepository(_context, _logger);
@@ -28,6 +34,10 @@ namespace PhDManager.Services.Repositories
             Comments = new CommentRepository(_context, _logger);
             IndividualPlans = new IndividualPlanRepository(_context, _logger);
             Addresses = new AddressRepository(_context, _logger);
+            Admins = new AdminRepository(_context, _logger);
+            Students = new StudentRepository(_context, _logger, _schoolYearService);
+            Externals = new ExternalRepository(_context, _logger);
+            Teachers = new TeacherRepository(_context, _logger);
         }
 
         public async Task CompleteAsync()

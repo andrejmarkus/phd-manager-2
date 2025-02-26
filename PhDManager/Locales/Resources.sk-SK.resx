@@ -564,4 +564,34 @@
   <data name="Renew" xml:space="preserve">
     <value>Obnoviť</value>
   </data>
+  <data name="All" xml:space="preserve">
+    <value>Všetky</value>
+  </data>
+  <data name="AllPeople" xml:space="preserve">
+    <value>Všetci</value>
+  </data>
+  <data name="OccupancyOccupied" xml:space="preserve">
+    <value>Obsadená</value>
+  </data>
+  <data name="OccupancyAvailable" xml:space="preserve">
+    <value>Voľná</value>
+  </data>
+  <data name="SupervisorSpecialist" xml:space="preserve">
+    <value>Školitel špecialista</value>
+  </data>
+  <data name="StudentEdit" xml:space="preserve">
+    <value>Uprav doktoranda</value>
+  </data>
+  <data name="Students" xml:space="preserve">
+    <value>Doktorandi</value>
+  </data>
+  <data name="Admins" xml:space="preserve">
+    <value>Admini</value>
+  </data>
+  <data name="Teachers" xml:space="preserve">
+    <value>Učitelia</value>
+  </data>
+  <data name="Externals" xml:space="preserve">
+    <value>Externisti</value>
+  </data>
 </root>

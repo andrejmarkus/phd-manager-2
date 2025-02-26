@@ -79,6 +79,33 @@ namespace PhDManager.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Admins.
+        /// </summary>
+        public static string Admins {
+            get {
+                return ResourceManager.GetString("Admins", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to All.
+        /// </summary>
+        public static string All {
+            get {
+                return ResourceManager.GetString("All", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to All.
+        /// </summary>
+        public static string AllPeople {
+            get {
+                return ResourceManager.GetString("AllPeople", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Approve.
         /// </summary>
         public static string Approve {
@@ -444,6 +471,15 @@ namespace PhDManager.Locales {
         public static string EnrolError {
             get {
                 return ResourceManager.GetString("EnrolError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Externals.
+        /// </summary>
+        public static string Externals {
+            get {
+                return ResourceManager.GetString("Externals", resourceCulture);
             }
         }
         
@@ -862,6 +898,24 @@ namespace PhDManager.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Available.
+        /// </summary>
+        public static string OccupancyAvailable {
+            get {
+                return ResourceManager.GetString("OccupancyAvailable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Occupied.
+        /// </summary>
+        public static string OccupancyOccupied {
+            get {
+                return ResourceManager.GetString("OccupancyOccupied", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Page not found.
         /// </summary>
         public static string PageNotFound {
@@ -1150,6 +1204,15 @@ namespace PhDManager.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Edit doctoral student.
+        /// </summary>
+        public static string StudentEdit {
+            get {
+                return ResourceManager.GetString("StudentEdit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Student email.
         /// </summary>
         public static string StudentEmail {
@@ -1164,6 +1227,15 @@ namespace PhDManager.Locales {
         public static string StudentName {
             get {
                 return ResourceManager.GetString("StudentName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Doctoral students.
+        /// </summary>
+        public static string Students {
+            get {
+                return ResourceManager.GetString("Students", resourceCulture);
             }
         }
         
@@ -1290,6 +1362,24 @@ namespace PhDManager.Locales {
         public static string SupervisorName {
             get {
                 return ResourceManager.GetString("SupervisorName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Supervisor specialist.
+        /// </summary>
+        public static string SupervisorSpecialist {
+            get {
+                return ResourceManager.GetString("SupervisorSpecialist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Teachers.
+        /// </summary>
+        public static string Teachers {
+            get {
+                return ResourceManager.GetString("Teachers", resourceCulture);
             }
         }
         

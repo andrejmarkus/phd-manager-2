@@ -1,5 +1,12 @@
 ﻿@page "/admin/individual-plans"
 
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.Extensions.Localization
+@using PhDManager.Locales
+@using PhDManager.Models
+@using PhDManager.Services
+@using PhDManager.Services.IRepositories
+
 @rendermode InteractiveServer
 
 @inject IUnitOfWork UnitOfWork
@@ -7,11 +14,7 @@
 @inject IStringLocalizer<Resources> Localizer
 @inject DocumentService DocumentService
 
-@using Microsoft.Extensions.Localization
-@using PhDManager.Locales
-@using PhDManager.Models
-@using PhDManager.Services
-@using PhDManager.Services.IRepositories
+@attribute [Authorize(Roles = $"{Admin.Role}")]
 
 <PageTitle>@Localizer["IndividualPlans"] | Admin</PageTitle>
 
@@ -23,15 +26,15 @@
         <MudTextField Class="ml-4" Variant="Variant.Outlined" Placeholder="@Localizer["Search"]" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" @bind-Value="_search" />
     </ToolBarContent>
     <Columns>
-        <PropertyColumn Property="ip => ip.Student.StudentThesis!.Title" Title="@Localizer["DissertationThesisTitle"]" />
-        <PropertyColumn Property="ip => ip.Student.StudentThesis!.Supervisor.DisplayName" Title="@Localizer["SupervisorName"]" />
-        <PropertyColumn Property="ip => ip.Student.StudentThesis!.Supervisor.Email" Title="@Localizer["SupervisorEmail"]" />
-        <PropertyColumn Property="ip => ip.Student.DisplayName" Title="@Localizer["StudentName"]" />
-        <PropertyColumn Property="ip => ip.Student.Email" Title="@Localizer["StudentEmail"]" />
+        <PropertyColumn Property="ip => ip.Student.Thesis!.Title" Title="@Localizer["DissertationThesisTitle"]" />
+        <PropertyColumn Property="ip => ip.Student.Thesis!.Supervisor.User.DisplayName" Title="@Localizer["SupervisorName"]" />
+        <PropertyColumn Property="ip => ip.Student.Thesis!.Supervisor.User.Email" Title="@Localizer["SupervisorEmail"]" />
+        <PropertyColumn Property="ip => ip.Student.User.DisplayName" Title="@Localizer["StudentName"]" />
+        <PropertyColumn Property="ip => ip.Student.User.Email" Title="@Localizer["StudentEmail"]" />
         <TemplateColumn Title="@Localizer["IndividualPlanEdit"]">
             <CellTemplate>
                 <MudStack Row>
-                    @if (context.Item.Student.StudentIndividualPlan is not null)
+                    @if (context.Item.Student.IndividualPlan is not null)
                     {
                         <MudIconButton Size="@Size.Small" Color="Color.Error" Icon="@Icons.Material.Outlined.Delete" OnClick="@(async () => await DeleteIndividualPlan(context.Item))" />
                         <MudIconButton Size="@Size.Small" Color="Color.Info" Icon="@Icons.Material.Outlined.Edit" Href="@($"/admin/individual-plans/edit/{context.Item.Guid}")" />
@@ -54,33 +57,33 @@
     protected override async Task OnInitializedAsync()
     {
         _individualPlans = await UnitOfWork.IndividualPlans.GetAllAsync();
-        _individualPlans = _individualPlans?.Where(ip => ip.Student.StudentThesis is not null);
+        _individualPlans = _individualPlans?.Where(ip => ip.Student.Thesis is not null);
     }
 
     private Func<IndividualPlan, bool> _quickFilter => ip =>
     {
-        if (ip.Student.StudentThesis is null)
+        if (ip.Student.Thesis is null)
             return false;
 
         if (string.IsNullOrWhiteSpace(_search))
             return true;
 
-        if (ip.Student.StudentThesis.Title.Contains(_search, StringComparison.OrdinalIgnoreCase))
+        if (ip.Student.Thesis.Title.Contains(_search, StringComparison.OrdinalIgnoreCase))
             return true;
 
-        if (ip.Student.StudentThesis.Supervisor.DisplayName?.Contains(_search, StringComparison.OrdinalIgnoreCase) == true)
+        if (ip.Student.Thesis.Supervisor.User.DisplayName?.Contains(_search, StringComparison.OrdinalIgnoreCase) == true)
             return true;
 
-        if (ip.Student.StudentThesis.Supervisor.Email?.Contains(_search, StringComparison.OrdinalIgnoreCase) == true)
+        if (ip.Student.Thesis.Supervisor.User.Email?.Contains(_search, StringComparison.OrdinalIgnoreCase) == true)
             return true;
 
-        if (ip.Student.DisplayName?.Contains(_search, StringComparison.OrdinalIgnoreCase) == true)
+        if (ip.Student.User.DisplayName?.Contains(_search, StringComparison.OrdinalIgnoreCase) == true)
             return true;
 
-        if (ip.Student.Email?.Contains(_search, StringComparison.OrdinalIgnoreCase) == true)
+        if (ip.Student.User.Email?.Contains(_search, StringComparison.OrdinalIgnoreCase) == true)
             return true;
 
-        if ($"{ip.Student.StudentThesis.Title} {ip.Student.StudentThesis.Supervisor.DisplayName} {ip.Student.StudentThesis.Supervisor.Email} {ip.Student.DisplayName} {ip.Student.Email}".Contains(_search))
+        if ($"{ip.Student.Thesis.Title} {ip.Student.Thesis.Supervisor.User.DisplayName} {ip.Student.Thesis.Supervisor.User.Email} {ip.Student.User.DisplayName} {ip.Student.User.Email}".Contains(_search))
             return true;
 
         return false;
@@ -91,7 +94,7 @@
         bool? result = await DialogService.ShowMessageBox(Localizer["IndividualPlanDelete"], Localizer["IndividualPlanDeleteConfirmation"], Localizer["Yes"], Localizer["No"]);
         if (result == false) return;
 
-        await UnitOfWork.IndividualPlans.DeleteAsync(individualPlan.Id);
+        UnitOfWork.IndividualPlans.Delete(individualPlan);
         await UnitOfWork.CompleteAsync();
     }
 }

@@ -1,11 +1,9 @@
-﻿using PhDManager.Data;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 
 namespace PhDManager.Models
 {
-    public class IndividualPlan
+    public class IndividualPlan : BaseModel
     {
-        public int Id { get; set; }
         public string Guid { get; set; } = System.Guid.NewGuid().ToString();
         public DateTime? DissertationExamDate { get; set; }
         public DateTime? DissertationSubmissionDate { get; set; }
@@ -13,7 +11,7 @@ namespace PhDManager.Models
         public DateTime? StudyEndDate { get; set; }
 
         [JsonIgnore]
-        public virtual ApplicationUser Student { get; set; } = default!;
+        public virtual Student Student { get; set; } = default!;
         public virtual List<Subject> Subjects { get; set; } = [];
     }
 }

@@ -1,5 +1,6 @@
 ﻿@using Microsoft.Extensions.Localization
 @using PhDManager.Locales
+@using PhDManager.Models
 
 @implements IDisposable
 
@@ -9,7 +10,7 @@
 
 <MudNavMenu>
     <MudNavLink Href="" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Home">@Localizer["Home"]</MudNavLink>
-    <AuthorizeView Roles="Admin">
+    <AuthorizeView Roles="@($"{Admin.Role}")">
         <Authorized>
             <MudNavGroup Title="Admin" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.AdminPanelSettings" HideExpandIcon>
                 <MudNavLink Href="/admin/users" Icon="@Icons.Material.Filled.Group">@Localizer["Users"]</MudNavLink>
@@ -19,7 +20,7 @@
             </MudNavGroup>
         </Authorized>
     </AuthorizeView>
-    <AuthorizeView Roles="Učiteľ">
+    <AuthorizeView Roles="@($"{Teacher.Role}")">
         <Authorized>
             <MudNavLink Href="/my-theses" Icon="@Icons.Material.Filled.Apps">@Localizer["DissertationThesesMy"]</MudNavLink>
         </Authorized>

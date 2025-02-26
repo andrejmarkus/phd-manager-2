@@ -43,22 +43,22 @@ namespace PhDManager.Services
             }
         }
 
-        public async Task UpdateUserInfoAsync(ApplicationUser user)
-        {
-            var unusedUser = await UserManager.FindByIdAsync(user.Id);
-            if (unusedUser is not null) {
-                unusedUser.DisplayName = user.DisplayName;
-                unusedUser.Birthdate = user.Birthdate?.ToUniversalTime();
-                unusedUser.Address = user.Address;
-                unusedUser.StudyProgram = user.StudyProgram;
-                await UserManager.UpdateAsync(unusedUser);
+        //public async Task UpdateUserInfoAsync(ApplicationUser user)
+        //{
+        //    var unusedUser = await UserManager.FindByIdAsync(user.Id);
+        //    if (unusedUser is not null) {
+        //        unusedUser.DisplayName = user.DisplayName;
+        //        unusedUser.Birthdate = user.Birthdate?.ToUniversalTime();
+        //        unusedUser.Address = user.Address;
+        //        unusedUser.StudyProgram = user.StudyProgram;
+        //        await UserManager.UpdateAsync(unusedUser);
 
-                if (user.PhoneNumber is null) return;
+        //        if (user.PhoneNumber is null) return;
 
-                var token = await UserManager.GenerateChangePhoneNumberTokenAsync(unusedUser, user.PhoneNumber);
-                await UserManager.ChangePhoneNumberAsync(unusedUser, user.PhoneNumber, token);
-            }
-        }
+        //        var token = await UserManager.GenerateChangePhoneNumberTokenAsync(unusedUser, user.PhoneNumber);
+        //        await UserManager.ChangePhoneNumberAsync(unusedUser, user.PhoneNumber, token);
+        //    }
+        //}
 
         public async Task DeleteUserAsync(ApplicationUser user)
         {
@@ -69,20 +69,20 @@ namespace PhDManager.Services
             await UserManager.DeleteAsync(unusedUser);
         }
 
-        public async Task<ApplicationUser> RegisterLdapUserWithoutPasswordAsync(LdapEntry entry)
+        public async Task<ApplicationUser> RegisterLdapUserWithoutPasswordAsync(LdapEntry entry, string role)
         {
             var user = await CreateLdapUserAsync(entry);
             var result = await UserManager.CreateAsync(user);
-            await UserManager.AddToRoleAsync(user, "Študent");
+            await UserManager.AddToRoleAsync(user, role);
 
             return user;
         }
 
-        public async Task<ApplicationUser> RegisterLdapUserAsync(LdapEntry entry, string password)
+        public async Task<ApplicationUser> RegisterLdapUserAsync(LdapEntry entry, string password, string role)
         {
             var user = await CreateLdapUserAsync(entry);
             var result = await UserManager.CreateAsync(user, password);
-            await UserManager.AddToRoleAsync(user, "Študent");
+            await UserManager.AddToRoleAsync(user, role);
 
             return user;
         }

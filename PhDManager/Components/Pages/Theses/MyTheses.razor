@@ -16,7 +16,7 @@
 @inject DocumentService DocumentService
 @inject SchoolYearService SchoolYearService
 
-@attribute [Authorize(Roles = "Učiteľ")]
+@attribute [Authorize(Roles = $"{Teacher.Role}")]
 
 <PageTitle>@Localizer["DissertationThesesMy"]</PageTitle>
 
@@ -25,14 +25,14 @@
 <MudStack Row>
     <MudTextField FullWidth T="string" @bind-Value="@_search" @bind-Value:after="UpdateSearch" Immediate Label="@Localizer["Search"]" Variant="Variant.Outlined" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Search" />
     <MudSelect T="bool?" @bind-Value="@_approved" @bind-Value:after="UpdateSearch" Immediate Label="@Localizer["Approved"]" Variant="Variant.Outlined">
-        <MudSelectItem T="bool?" Value="null">Všetky</MudSelectItem>
+        <MudSelectItem T="bool?" Value="null">@Localizer["All"]</MudSelectItem>
         <MudSelectItem T="bool?" Value="true">@Localizer["Yes"]</MudSelectItem>
         <MudSelectItem T="bool?" Value="false">@Localizer["No"]</MudSelectItem>
     </MudSelect>
     @if (_studyPrograms is not null)
     {
         <MudSelect T="StudyProgram" @bind-Value="@_selectedStudyProgram" @bind-Value:after="UpdateSearch" Immediate Label="@Localizer["StudyProgram"]" Variant="Variant.Outlined">
-            <MudSelectItem T="StudyProgram" Value="null">Všetky</MudSelectItem>
+            <MudSelectItem T="StudyProgram" Value="null">@Localizer["All"]</MudSelectItem>
             @foreach (var studyProgram in _studyPrograms)
             {
                 <MudSelectItem Value="@studyProgram">@studyProgram.Name</MudSelectItem>
@@ -69,10 +69,25 @@
                             <MudChip T="string" Variant="Variant.Text" Color="Color.Error">@Localizer["NotApproved"]</MudChip>
                         }
                         <MudText Typo="Typo.h6">@thesis.Title</MudText>
-                        <MudText Typo="Typo.body2"><b>@Localizer["Supervisor"]: </b> @thesis.Supervisor.DisplayName</MudText>
+                        <MudText Typo="Typo.body2"><b>@Localizer["Supervisor"]: </b> @thesis.Supervisor.User.DisplayName</MudText>
                         <MudText Typo="Typo.body2"><b>@Localizer["StudyProgram"]: </b> @thesis.StudyProgram.Name</MudText>
+                        <MudText Typo="Typo.body2">
+                            <b>@Localizer["StudyForm"]: </b>
+                            @if (thesis.DailyStudy)
+                            {
+                                <span>@Localizer["StudyFormDaily"]</span>
+                            }
+                            @if (thesis.DailyStudy && thesis.ExternalStudy)
+                            {
+                                <span>, </span>
+                            }
+                            @if (thesis.ExternalStudy)
+                            {
+                                <span>@Localizer["StudyFormExternal"]</span>
+                            }
+                        </MudText>
                     </MudLink>
-                    <AuthorizeView Roles="Učiteľ">
+                    <AuthorizeView Roles="@($"{Teacher.Role}")">
                         <Authorized>
                             @if (_currentUserId?.Equals(thesis.SupervisorId) == true)
                             {
@@ -82,9 +97,9 @@
                                         <MudIconButton Size="@Size.Small" Color="Color.Info" Icon="@Icons.Material.Outlined.Edit" Href="@($"/theses/edit/{thesis.Guid}")" />
                                         <MudIconButton Size="@Size.Small" Color="Color.Info" Icon="@Icons.Material.Outlined.Print" OnClick="@(async () => await DocumentService.DownloadThesisDocument(thesis))" />
                                     </MudStack>
-                                    @if (thesis.SchoolYears is not null && !thesis.SchoolYears.Contains(SchoolYearService.CurrentSchoolYear))
+                                    @if (thesis.SchoolYear != SchoolYearService.CurrentSchoolYear)
                                     {
-                                        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@(() => RenewThesis(thesis))">@Localizer["Renew"]</MudButton>
+                                        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@(() => DuplicateThesis(thesis))">@Localizer["Renew"]</MudButton>
                                     }
                                 </MudStack>
                             }
@@ -118,15 +133,13 @@
         _selectedSchoolYear = SchoolYearService.CurrentSchoolYear;
     }
 
-    private async Task RenewThesis(Thesis thesis)
+    private async Task DuplicateThesis(Thesis thesis)
     {
-        if (thesis.SchoolYears is null) return;
-
         var currentSchoolYear = SchoolYearService.CurrentSchoolYear;
-        if (thesis.SchoolYears.Contains(currentSchoolYear)) return;
+        if (thesis.SchoolYear == currentSchoolYear) return;
 
-        thesis.SchoolYears.Add(currentSchoolYear);
-        await UnitOfWork.Theses.UpdateAsync(thesis.Id, thesis);
+        thesis.SchoolYear = currentSchoolYear;
+        await UnitOfWork.Theses.AddAsync(thesis);
         await UnitOfWork.CompleteAsync();
         _theses = _theses?.Where(t => t.Id != thesis.Id);
     }
@@ -138,9 +151,9 @@
 
         foreach (var comment in thesis.Comments)
         {
-            await UnitOfWork.Comments.DeleteAsync(comment.Id);
+            UnitOfWork.Comments.Delete(comment);
         }
-        await UnitOfWork.Theses.DeleteAsync(thesis.Id);
+        UnitOfWork.Theses.Delete(thesis);
         await UnitOfWork.CompleteAsync();
         _theses = _theses?.Where(t => t.Id != thesis.Id);
     }
@@ -155,7 +168,7 @@
         }
         if (_selectedSchoolYear is not null)
         {
-            _theses = _theses?.Where(t => t.SchoolYears is not null && t.SchoolYears.Contains(_selectedSchoolYear)).ToArray();
+            _theses = _theses?.Where(t => t.SchoolYear == _selectedSchoolYear).ToArray();
         }
         if (_approved is null) return;
         _theses = _theses?.Where(t => t.IsApproved == _approved).ToArray();

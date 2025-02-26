@@ -104,7 +104,7 @@
 
         if (_registrationExpired)
         {
-            await UnitOfWork.Registrations.DeleteAsync(_registration.Id);
+            UnitOfWork.Registrations.Delete(_registration);
             await UnitOfWork.CompleteAsync();
         }
     }
@@ -127,7 +127,7 @@
             return;
         }
 
-        await UserManager.AddToRoleAsync(user, "Externista");
+        await UserManager.AddToRoleAsync(user, External.Role);
 
         Logger.LogInformation("User created a new account with password.");
 

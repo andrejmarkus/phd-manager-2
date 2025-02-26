@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using PhDManager.Models;
 
 namespace PhDManager.Services
 {
@@ -8,11 +9,11 @@ namespace PhDManager.Services
 
         public async Task InitializeAsync()
         {
-            string[] roles = { "Admin", "Študent", "Učiteľ", "Referent", "Prodekan", "Externista" };
+            string[] roles = { Admin.Role, External.Role, Student.Role, Teacher.Role };
 
             foreach (string role in roles)
             {
-                if (await _roleManager.FindByNameAsync(role) == null)
+                if (await _roleManager.FindByNameAsync(role) is null)
                 {
                     await _roleManager.CreateAsync(new IdentityRole(role));
                 }

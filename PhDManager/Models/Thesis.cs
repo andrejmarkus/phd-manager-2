@@ -1,11 +1,9 @@
-﻿using PhDManager.Data;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 
 namespace PhDManager.Models
 {
-    public class Thesis
+    public class Thesis : BaseModel
     {
-        public int Id { get; set; }
         public bool IsApproved { get; set; } = false;
         public string Title { get; set; } = string.Empty;
         public string Guid { get; set; } = System.Guid.NewGuid().ToString();
@@ -17,17 +15,18 @@ namespace PhDManager.Models
         public string ResearchType { get; set; } = string.Empty;
         public string ResearchTask { get; set; } = string.Empty;
         public string SolutionResults { get; set; } = string.Empty;
+        public string SchoolYear { get; set; } = string.Empty;
         public bool DailyStudy { get; set; } = false;
         public bool ExternalStudy { get; set; } = false;
-        public List<string>? SchoolYears { get; set; }
-        public List<string>? SubjectNames { get; set; }
         public string SupervisorId { get; set; } = string.Empty;
         [JsonIgnore]
-        public virtual List<ApplicationUser> InterestedStudents { get; set; } = [];
+        public virtual List<Student> InterestedStudents { get; set; } = [];
         [JsonIgnore]
-        public virtual ApplicationUser? Student { get; set; }
+        public virtual Student? Student { get; set; }
         [JsonIgnore]
-        public virtual ApplicationUser Supervisor { get; set; } = default!;
+        public virtual Teacher Supervisor { get; set; } = default!;
+        [JsonIgnore]
+        public virtual Teacher? SupervisorSpecialist { get; set; }
         public int StudyProgramId { get; set; }
         public virtual StudyProgram StudyProgram { get; set; } = default!;
 

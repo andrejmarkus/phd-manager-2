@@ -12,6 +12,11 @@ namespace PhDManager.Data
         public DbSet<Registration> Registrations { get; init; }
         public DbSet<IndividualPlan> IndividualPlans { get; init; }
         public DbSet<Comment> Comments { get; init; }
+        public DbSet<Address> Addresses { get; init; }
+        public DbSet<External> Admins { get; init; }
+        public DbSet<Student> Students { get; init; }
+        public DbSet<External> Externals { get; init; }
+        public DbSet<Teacher> Teachers { get; init; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -23,47 +28,88 @@ namespace PhDManager.Data
         {
             base.OnModelCreating(builder);
             builder.Entity<ApplicationUser>()
-                .HasOne(u => u.Address)
+                .HasOne(u => u.Admin)
                 .WithOne(a => a.User)
+                .HasForeignKey<Admin>();
+
+            builder.Entity<ApplicationUser>()
+                .HasOne(u => u.Teacher)
+                .WithOne(t  => t.User)
+                .HasForeignKey<Teacher>();
+
+            builder.Entity<ApplicationUser>()
+                .HasOne(u => u.External)
+                .WithOne(e => e.User)
+                .HasForeignKey<External>();
+
+            builder.Entity<Student>()
+                .HasOne(ds => ds.Address)
+                .WithOne(a => a.Student)
                 .HasForeignKey<Address>()
                 .IsRequired();
 
             builder.Entity<Thesis>()
                 .HasMany(t => t.InterestedStudents)
-                .WithOne(u => u.StudentThesisInterest);
+                .WithOne(ds => ds.ThesisInterest);
 
-            builder.Entity<ApplicationUser>()
-                .HasOne(u => u.StudentThesis)
+            builder.Entity<Student>()
+                .HasOne(ds => ds.Thesis)
                 .WithOne(t => t.Student)
                 .HasForeignKey<Thesis>();
 
+            builder.Entity<Teacher>()
+                .HasMany(t => t.Theses)
+                .WithOne(t => t.Supervisor);
+
+            builder.Entity<Teacher>()
+                .HasMany(t => t.SpecialistTheses)
+                .WithOne(t => t.SupervisorSpecialist);
+
             builder.Entity<IndividualPlan>()
                 .HasOne(ip => ip.Student)
-                .WithOne(u => u.StudentIndividualPlan)
-                .HasForeignKey<ApplicationUser>();
+                .WithOne(ds => ds.IndividualPlan)
+                .HasForeignKey<Student>();
 
             builder.Entity<StudyProgram>()
                 .HasData(
-                    new StudyProgram { Id = 1, Code = "AI", Name = "Aplikovaná informatika", StudyFieldName = "Informatika" },
-                    new StudyProgram { Id = 2, Code = "MAN", Name = "Manament", StudyFieldName = "Ekonómia a manament" }
+                    new StudyProgram
+                    {
+                        Id = 1,
+                        Code = "AI",
+                        Name = "Aplikovaná informatika",
+                        StudyFieldName = "Informatika",
+                        ThesisSubjects =
+                        [
+                            "Matematické princípy informatiky", 
+                            "Teória a metodológia aplikovanej informatiky",
+                            "Predmet špecializácie"
+                        ]
+                    },
+                    new StudyProgram
+                    {
+                        Id = 2,
+                        Code = "M",
+                        Name = "Manament",
+                        StudyFieldName = "Ekonómia a manament",
+                        ThesisSubjects =
+                        [
+                            "Metodológia vıskumu v manamente",
+                            "Manaérske teórie",
+                            "Predmet špecializácie"
+                        ]
+                    }
                 );
 
             builder.Entity<Subject>()
                 .HasData(
-                    new Subject { Id = 1, Code = "MPI", Name = "Matematické princípy informatiky", Semester = "zimnı", Credits = 5, StudyProgramId = 1 },
-                    new Subject { Id = 2, Code = "TM AI", Name = "Teória a metodológia aplikovanej informatiky", Semester = "zimnı", Credits = 5, StudyProgramId = 1 },
-                    new Subject { Id = 3, Code = "JAD1", Name = "Jazyk anglickı PhD. 1", Semester = "zimnı", Credits = 5, StudyProgramId = 1 },
-                    new Subject { Id = 4, Code = "DPR1", Name = "Dizertaènı projekt 1", Semester = "zimnı", Credits = 5, StudyProgramId = 1 },
-                    new Subject { Id = 5, Code = "VPub1", Name = "Vedecká a publikaèná èinnos 1", Semester = "letnı", Credits = 10, StudyProgramId = 1 },
-                    new Subject { Id = 6, Code = "JAD2", Name = "Jazyk anglickı PhD. 2", Semester = "letnı", Credits = 5, StudyProgramId = 1 },
-                    new Subject { Id = 7, Code = "DPR2", Name = "Dizertaènı projekt 2", Semester = "letnı", Credits = 5, StudyProgramId = 1 },
-                    new Subject { Id = 8, Code = "ManT", Name = "Manaérske teórie", Semester = "zimnı", Credits = 5, StudyProgramId = 2 },
-                    new Subject { Id = 9, Code = "MVM", Name = "Metodológia vıskumu v manamente", Semester = "zimnı", Credits = 5, StudyProgramId = 2 },
-                    new Subject { Id = 10, Code = "JAD1", Name = "Jazyk anglickı PhD. 1", Semester = "zimnı", Credits = 5, StudyProgramId = 2 },
-                    new Subject { Id = 11, Code = "DPR1", Name = "Dizertaènı projekt 1", Semester = "zimnı", Credits = 5, StudyProgramId = 2 },
-                    new Subject { Id = 12, Code = "VPub1", Name = "Vedecká a publikaèná èinnos 1", Semester = "letnı", Credits = 10, StudyProgramId = 2 },
-                    new Subject { Id = 13, Code = "JAD2", Name = "Jazyk anglickı PhD. 2", Semester = "letnı", Credits = 5, StudyProgramId = 2 },
-                    new Subject { Id = 14, Code = "DPR2", Name = "Dizertaènı projekt 2", Semester = "letnı", Credits = 5, StudyProgramId = 2 }
+                    new Subject { Id = 1, Variant = 'A', Name = "Matematické princípy informatiky - A: Deterministické metódy", Semester = "zimnı", StudyProgramId = 1 },
+                    new Subject { Id = 2, Variant = 'B', Name = "Matematické princípy informatiky - B: Stochastické metódy", Semester = "zimnı", StudyProgramId = 1 },
+                    new Subject { Id = 3, Variant = 'A', Name = "Teória a metodológia aplikovanej informatiky - A: Znalostné systémy a algoritmy", Semester = "letnı", StudyProgramId = 1 },
+                    new Subject { Id = 4, Variant = 'B', Name = "Teória a metodológia aplikovanej informatiky - B: Vıpoètová inteligencia", Semester = "letnı", StudyProgramId = 1 },
+                    new Subject { Id = 5, Name = "Predmet špecializácie", Semester = "letnı", StudyProgramId = 1 },
+                    new Subject { Id = 6, Name = "Manaérske teórie", Semester = "zimnı", StudyProgramId = 2 },
+                    new Subject { Id = 7, Name = "Metodológia vıskumu v manamente", Semester = "zimnı", StudyProgramId = 2 },
+                    new Subject { Id = 8, Name = "Predmet špecializácie", Semester = "letnı", StudyProgramId = 2 }
                 );
         }
     }

@@ -7,7 +7,7 @@
 @inject NavigationManager NavigationManager
 @inject IUnitOfWork UnitOfWork
 
-@attribute [Authorize(Roles = "Admin")]
+@attribute [Authorize(Roles = $"{Admin.Role}")]
 
 @if (Registration is not null)
 {

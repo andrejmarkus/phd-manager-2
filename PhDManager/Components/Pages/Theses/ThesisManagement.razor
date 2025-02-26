@@ -20,7 +20,7 @@
 @inject UserManager<ApplicationUser> UserManager;
 @inject SchoolYearService SchoolYearService;
 
-@attribute [Authorize(Roles = "Admin, Učiteľ")]
+@attribute [Authorize(Roles = $"{Admin.Role}, {Teacher.Role}")]
 
 <PageTitle>@(ThesisGuid is null ? Localizer["DissertationThesisAdd"] : Localizer["DisserationThesisEdit"])</PageTitle>
 
@@ -34,7 +34,8 @@
     {
         <MudTextField T="string" Label="Dissertation thesis title" Variant="Variant.Outlined" @bind-Value="_thesis.TitleEnglish" />
     }
-    <MudAutocomplete T="ApplicationUser" Required RequiredError="@Localizer["SupervisorError"]" Label="@Localizer["Supervisor"]" ToStringFunc="@(u => u is null ? null : u.DisplayName)" SearchFunc="SearchTeachers" Variant="Variant.Outlined" @bind-Value="_thesis.Supervisor" />
+    <MudAutocomplete T="Teacher" Required RequiredError="@Localizer["SupervisorError"]" Label="@Localizer["Supervisor"]" ToStringFunc="@(t => t is null ? null : t.User.DisplayName)" SearchFunc="SearchTeachers" Variant="Variant.Outlined" @bind-Value="_thesis.Supervisor" />
+    <MudAutocomplete T="Teacher" Label="@Localizer["SupervisorSpecialist"]" ToStringFunc="@(t => t is null ? null : t.User.DisplayName)" SearchFunc="SearchTeachers" Variant="Variant.Outlined" @bind-Value="_thesis.SupervisorSpecialist" />
 
     <MudText Typo="Typo.h5">@Localizer["DissertationThesisClassification"]</MudText>
     <MudAutocomplete T="StudyProgram" Required RequiredError="@Localizer["StudyProgramError"]" Label="@Localizer["StudyProgram"]" ToStringFunc="@(sp => sp is null ? null : sp.Name)" Variant="Variant.Outlined" SearchFunc="SearchStudyPrograms" @bind-Value="_thesis.StudyProgram" />
@@ -46,12 +47,19 @@
         <MudCheckBox T="bool" @bind-Value="_thesis.DailyStudy">@Localizer["StudyFormDaily"]</MudCheckBox>
         <MudCheckBox T="bool" @bind-Value="_thesis.ExternalStudy">@Localizer["StudyFormExternal"]</MudCheckBox>
     </MudStack>
-    <MudStack Spacing="0">
-        <MudText>Povinné študijné jednotky</MudText>
-        <MudTextField T="string" Variant="Variant.Outlined" Label="@($"{Localizer["Subject"]} 1")" @bind-Value="@_thesis.SubjectNames[0]" />
-        <MudTextField T="string" Variant="Variant.Outlined" Label="@($"{Localizer["Subject"]} 2")" @bind-Value="@_thesis.SubjectNames[1]" />
-        <MudTextField T="string" Variant="Variant.Outlined" Label="@($"{Localizer["Subject"]} 3")" @bind-Value="@_thesis.SubjectNames[2]" />
-    </MudStack>
+
+    @if (_thesis.StudyProgram is not null)
+    {
+        <MudStack Spacing="0">
+            <MudText>Povinné študijné jednotky</MudText>
+            @{int index = 1;}
+            @foreach (var subject in _thesis.StudyProgram.ThesisSubjects)
+            {
+                <MudField T="string" Label="@($"{Localizer["Subject"]} {index}")" Variant="Variant.Outlined">@subject</MudField>
+                index++;
+            }
+        </MudStack>
+    }
 
     <MudText Typo="Typo.h5">Špecifikácia témy</MudText>
     <MudTextField T="string" Required RequiredError="@Localizer["DissertationThesisDescriptionError"]" Label="@Localizer["DissertationThesisDescription"]" AutoGrow Lines="5" Variant="Variant.Outlined" @bind-Value="_thesis.Description" />
@@ -85,7 +93,7 @@
 
     private MudForm? _form;
 
-    private IEnumerable<ApplicationUser>? _teachers;
+    private IEnumerable<Teacher>? _teachers;
     private IEnumerable<StudyProgram>? _studyPrograms;
 
     private Thesis _thesis = new();
@@ -107,29 +115,21 @@
         }
         else
         {
-            _thesis.SubjectNames = new() { "", "", "" };
-            _thesis.SchoolYears = new() { SchoolYearService.CurrentSchoolYear };
+            _thesis.SchoolYear = SchoolYearService.CurrentSchoolYear;
         }
 
-        _teachers = await UserManager.Users.ToAsyncEnumerable().WhereAwait(async u =>
-        {
-            using var scope = ServiceProvider.CreateScope();
-            var usersService = scope.ServiceProvider.GetRequiredService<UsersService>();
-            var role = await usersService.GetUserRoleAsync(u);
-            return role == "Učiteľ";
-        }).ToArrayAsync();
-
+        _teachers = await UnitOfWork.Teachers.GetAllAsync();
         _studyPrograms = await UnitOfWork.StudyPrograms.GetAllAsync();
     }
 
-    private Task<IEnumerable<ApplicationUser>> SearchTeachers(string search, CancellationToken token)
+    private Task<IEnumerable<Teacher>> SearchTeachers(string search, CancellationToken token)
     {
-        if (_teachers is null) return Task.FromResult(Enumerable.Empty<ApplicationUser>());
+        if (_teachers is null) return Task.FromResult(Enumerable.Empty<Teacher>());
 
         if (string.IsNullOrWhiteSpace(search))
             return Task.FromResult(_teachers);
 
-        return Task.FromResult(_teachers.Where(t => t.UserName is not null && t.UserName.Contains(search, StringComparison.OrdinalIgnoreCase)));
+        return Task.FromResult(_teachers.Where(t => t.User.UserName is not null && t.User.UserName.Contains(search, StringComparison.OrdinalIgnoreCase)));
     }
 
     private Task<IEnumerable<StudyProgram>> SearchStudyPrograms(string search, CancellationToken token)
@@ -154,7 +154,7 @@
             }
             else
             {
-                await UnitOfWork.Theses.UpdateAsync(_thesis.Id, _thesis);
+                await UnitOfWork.Theses.UpdateAsync(_thesis);
             }
             await UnitOfWork.CompleteAsync();
             NavigationManager.NavigateTo("/theses");

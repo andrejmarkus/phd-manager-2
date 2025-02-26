@@ -3,11 +3,14 @@
 @using PhDManager.Components.Layout
 @using PhDManager.Data
 @using PhDManager.Locales
+@using PhDManager.Models
 @using PhDManager.Services
+@using PhDManager.Services.IRepositories
 
 @rendermode InteractiveServer
 
 @inject IStringLocalizer<Resources> Localizer
+@inject IUnitOfWork UnitOfWork
 @inject NavigationManager NavigationManager
 @inject UsersService UsersService
 
@@ -21,53 +24,54 @@
             <MudStack Class="height-full" Justify="Justify.Center" AlignItems="AlignItems.Center">
                 <MudText Class="text-rotate" Typo="Typo.h3">@Localizer["Welcome"], @context.User.Identity?.Name</MudText>
                 <MudText>@Localizer["NavigationInfo"]</MudText>
-                <AuthorizeView Roles="Študent" Context="studentContext">
-                    @if (_currentUser is not null)
+                <AuthorizeView Roles="@($"{Student.Role}")" Context="studentContext">
+                    @if (_currentStudent is not null)
                     {
                         <MudStack Class="mt-3">
-                            @if (_currentUser.StudentThesis is not null)
+                            @if (_currentStudent.Thesis is not null)
                             {
                                 <MudText>
                                     @Localizer["ThesisStudentInfo"] 
-                                    <MudLink Href="@($"/theses/{_currentUser.StudentThesis.Guid}")">@_currentUser.StudentThesis.Title</MudLink>
+                                    <MudLink Href="@($"/theses/{_currentStudent.Thesis.Guid}")">@_currentStudent.Thesis.Title</MudLink>
                                 </MudText>
                             }
-                            @if (_currentUser.StudentThesisInterest is not null)
+                            @if (_currentStudent.ThesisInterest is not null)
                             {
                                 <MudText>
                                     @Localizer["ThesisStudentInterestInfo"] 
-                                    <MudLink Href="@($"/theses/{_currentUser.StudentThesisInterest.Guid}")">@_currentUser.StudentThesisInterest.Title</MudLink>
+                                    <MudLink Href="@($"/theses/{_currentStudent.ThesisInterest.Guid}")">@_currentStudent.ThesisInterest.Title</MudLink>
                                 </MudText>
                             }
                         </MudStack>
                     }
-                    </AuthorizeView>
-                </MudStack>
-            </Authorized>
-            <NotAuthorized>
-                <div class="full-size responsive-row">
-                    <div class="d-flex flex-column gap-3">
-                        <MudText Typo="Typo.h3"><span class="underline">@Localizer["HomeHeading"]</span></MudText>
-                        <MudText Typo="Typo.h5">@Localizer["HomeSubheading"]</MudText>
-                        <div>
-                            <MudButton Class="mr-2 button-shake" Variant="Variant.Filled" Color="Color.Primary" OnClick="@(() => NavigationManager.NavigateTo("Account/Login"))">@Localizer["SignIn"]</MudButton>
-                            <MudButton Class="button-shake" Variant="Variant.Filled" Color="Color.Info" OnClick="@(() => NavigationManager.NavigateTo("theses"))">@Localizer["FindThesis"]</MudButton>
-                        </div>
-                    </div>
-                    <div class="container-image landing-basis">
-                        <div class="circle-image"></div>
-                        <MudImage Class="full-size landing-image" Src="@Assets["digital-nomad.svg"]" />
+                </AuthorizeView>
+            </MudStack>
+        </Authorized>
+        <NotAuthorized>
+            <div class="full-size responsive-row">
+                <div class="d-flex flex-column gap-3">
+                    <MudText Typo="Typo.h3"><span class="underline">@Localizer["HomeHeading"]</span></MudText>
+                    <MudText Typo="Typo.h5">@Localizer["HomeSubheading"]</MudText>
+                    <div>
+                        <MudButton Class="mr-2 button-shake" Variant="Variant.Filled" Color="Color.Primary" OnClick="@(() => NavigationManager.NavigateTo("Account/Login"))">@Localizer["SignIn"]</MudButton>
+                        <MudButton Class="button-shake" Variant="Variant.Filled" Color="Color.Info" OnClick="@(() => NavigationManager.NavigateTo("theses"))">@Localizer["FindThesis"]</MudButton>
                     </div>
                 </div>
-            </NotAuthorized>
-        </AuthorizeView>
-    </MudStack>
+                <div class="container-image landing-basis">
+                    <div class="circle-image"></div>
+                    <MudImage Class="full-size landing-image" Src="@Assets["digital-nomad.svg"]" />
+                </div>
+            </div>
+        </NotAuthorized>
+    </AuthorizeView>
+</MudStack>
 
-    @code {
-    private ApplicationUser? _currentUser;
+@code {
+    private Student? _currentStudent;
 
     protected override async Task OnInitializedAsync()
     {
-        _currentUser = await UsersService.GetCurrentUserAsync();
+        var currentUserId = await UsersService.GetCurrentUserIdAsync();
+        _currentStudent = await UnitOfWork.Students.GetCurrentByUserId(currentUserId);
     }
 }

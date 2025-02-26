@@ -24,7 +24,7 @@
 
 @if (_thesis is not null)
 {
-    <AuthorizeView Roles="Admin, Učiteľ">
+    <AuthorizeView Roles="@($"{Admin.Role}, {Teacher.Role}")">
         <Authorized>
             <MudStack Row Justify="Justify.Center">
                 <MudIconButton Color="Color.Error" Icon="@Icons.Material.Outlined.Delete" OnClick="@(async () => await DeleteThesis(_thesis))" />
@@ -44,8 +44,15 @@
         }
         <MudStack>
             <MudText Typo="Typo.h6">@Localizer["Supervisor"]</MudText>
-            <MudText Typo="Typo.body1">@_thesis.Supervisor.DisplayName</MudText>
+            <MudText Typo="Typo.body1">@_thesis.Supervisor.User.DisplayName</MudText>
         </MudStack>
+        @if (_thesis.SupervisorSpecialist is not null)
+        {
+            <MudStack>
+                <MudText Typo="Typo.h6">@Localizer["SupervisorSpecialist"]</MudText>
+                <MudText Typo="Typo.body1">@_thesis.SupervisorSpecialist.User.DisplayName</MudText>
+            </MudStack>
+        }
         <MudStack>
             <MudText Typo="Typo.h6">@Localizer["StudyProgram"]</MudText>
             <MudText Typo="Typo.body1">@_thesis.StudyProgram.Name</MudText>
@@ -89,36 +96,24 @@
 
     @if (_thesis.IsApproved && _thesis.Student is null)
     {
-        <AuthorizeView Roles="Admin, Učiteľ, Študent" Context="generalContext">
+        <AuthorizeView Roles="@($"{Admin.Role}, {Teacher.Role}, {Student.Role}")" Context="generalContext">
             <Authorized>
                 <MudStack Class="mt-5">
                     <MudText Typo="Typo.h6">@Localizer["Interest"]</MudText>
-                    <MudDataGrid T="ApplicationUser" Items="_thesis.InterestedStudents" SortMode="SortMode.Multiple" Elevation="0">
+                    <MudDataGrid T="Student" Items="_thesis.InterestedStudents" SortMode="SortMode.Multiple" Elevation="0">
                         <Columns>
-                            <PropertyColumn Property="u => u.DisplayName" Title="@Localizer["FullName"]" />
-                            <PropertyColumn Property="u => u.Email" Title="Email" />
-                            <AuthorizeView Roles="Učiteľ" Context="teacherContext">
-                                <Authorized>
-                                    @if (_thesis.SupervisorId == _currentUserId)
-                                    {
-                                        <TemplateColumn Title="@Localizer["StudentAdd"]">
-                                            <CellTemplate>
-                                                <MudIconButton Size="@Size.Small" Color="Color.Info" Icon="@Icons.Material.Outlined.Add" OnClick="@(() => ApproveStudent(context.Item))" />
-                                            </CellTemplate>
-                                        </TemplateColumn>
-                                    }
-                                </Authorized>
-                            </AuthorizeView>
+                            <PropertyColumn Property="ds => ds.User.DisplayName" Title="@Localizer["FullName"]" />
+                            <PropertyColumn Property="ds => ds.User.Email" Title="Email" />
                         </Columns>
                     </MudDataGrid>
                 </MudStack>
             </Authorized>
         </AuthorizeView>
-        <AuthorizeView Roles="Študent">
+        <AuthorizeView Roles="@($"{Student.Role}")">
             <Authorized>
-                @if (_currentUser is not null && _currentUser.StudentThesisInterest is null)
+                @if (_currentStudent is not null && _currentStudent.ThesisInterest is null)
                 {
-                    <MudButton Class="mt-2" Variant="Variant.Filled" Color="Color.Primary" OnClick="@(() => AddThesisInterest(_currentUser))">@Localizer["Enrol"]</MudButton>
+                    <MudButton Class="mt-2" Variant="Variant.Filled" Color="Color.Primary" OnClick="@(() => AddThesisInterest(_currentStudent))">@Localizer["Enrol"]</MudButton>
                 }
                 else
                 {
@@ -130,7 +125,7 @@
 
     @if (!_thesis.IsApproved)
     {
-        <AuthorizeView Roles="Admin, Učiteľ, Externista">
+        <AuthorizeView Roles="@($"{Admin.Role}, {Teacher.Role}, {External.Role}")">
             <Authorized>
                 <MudStack Class="mt-5">
                     @if (_thesis.Comments?.Count() > 0)
@@ -141,10 +136,10 @@
                             <MudPaper Class="pa-2">
                                 <MudStack Row Justify="Justify.SpaceBetween" AlignItems="AlignItems.Center">
                                     <div>
-                                        <MudText Typo="Typo.h6">@comment.Reviewer.DisplayName</MudText>
+                                        <MudText Typo="Typo.h6">@comment.External.User.DisplayName</MudText>
                                         <MudText Typo="Typo.body1">@comment.Text</MudText>
                                     </div>
-                                    <AuthorizeView Roles="Admin" Context="editContext">
+                                    <AuthorizeView Roles="@($"{Admin.Role}")" Context="editContext">
                                         <Authorized>
                                             <div>
                                                 <MudIconButton Size="@Size.Medium" Color="Color.Error" Icon="@Icons.Material.Outlined.Delete" OnClick="@(() => DeleteComment(comment))" />
@@ -152,9 +147,9 @@
                                             </div>
                                         </Authorized>
                                     </AuthorizeView>
-                                    <AuthorizeView Roles="Externista" Context="editContext">
+                                    <AuthorizeView Roles="@($"{External.Role}")" Context="editContext">
                                         <Authorized>
-                                            @if (_currentUserId?.Equals(comment.ReviewerId) == true)
+                                            @if (_currentUserId?.Equals(comment.ExternalId) == true)
                                             {
                                                 <div>
                                                     <MudIconButton Size="@Size.Medium" Color="Color.Error" Icon="@Icons.Material.Outlined.Delete" OnClick="@(() => DeleteComment(comment))" />
@@ -167,7 +162,7 @@
                             </MudPaper>
                         }
                     }
-                    <AuthorizeView Roles="Externista" Context="reviewerContext">
+                    <AuthorizeView Roles="@($"{External.Role}")" Context="reviewerContext">
                         <Authorized>
                             <MudTextField @bind-Value="_commentText" Label="@Localizer["Comment"]" Variant="Variant.Outlined" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Send" OnAdornmentClick="PostComment"></MudTextField>
                         </Authorized>
@@ -185,6 +180,7 @@
     private Thesis? _thesis;
     private string? _currentUserId;
     private ApplicationUser? _currentUser;
+    private Student? _currentStudent;
 
     private string _commentText = string.Empty;
 
@@ -195,25 +191,15 @@
 
         _currentUserId = await UsersService.GetCurrentUserIdAsync();
         _currentUser = await UsersService.GetCurrentUserAsync();
+        _currentStudent = await UnitOfWork.Students.GetCurrentByUserId(_currentUserId);
     }
 
-    private async Task AddThesisInterest(ApplicationUser student)
+    private async Task AddThesisInterest(Student student)
     {
         if (_thesis is null) return;
 
         _thesis.InterestedStudents.Add(student);
-        await UnitOfWork.Theses.UpdateAsync(_thesis.Id, _thesis);
-        await UnitOfWork.CompleteAsync();
-        _thesis = await UnitOfWork.Theses.GetByGuidAsync(ThesisGuid);
-    }
-
-    private async Task ApproveStudent(ApplicationUser student)
-    {
-        if (_thesis is null) return;
-
-        _thesis.InterestedStudents = [];
-        _thesis.Student = student;
-        await UnitOfWork.Theses.UpdateAsync(_thesis.Id, _thesis);
+        await UnitOfWork.Theses.UpdateAsync(_thesis);
         await UnitOfWork.CompleteAsync();
         _thesis = await UnitOfWork.Theses.GetByGuidAsync(ThesisGuid);
     }
@@ -231,7 +217,7 @@
 
         if (updatedComment is null) return;
 
-        await UnitOfWork.Comments.UpdateAsync(updatedComment.Id, updatedComment);
+        await UnitOfWork.Comments.UpdateAsync(updatedComment);
         await UnitOfWork.CompleteAsync();
         _thesis = await UnitOfWork.Theses.GetByGuidAsync(ThesisGuid);
     }
@@ -244,7 +230,7 @@
         {
             Text = _commentText,
             ThesisId = _thesis.Id,
-            ReviewerId = _currentUserId
+            ExternalId = _currentUserId
         };
         await UnitOfWork.Comments.AddAsync(comment);
         await UnitOfWork.CompleteAsync();
@@ -259,16 +245,16 @@
 
         foreach (var comment in thesis.Comments)
         {
-            await UnitOfWork.Comments.DeleteAsync(comment.Id);
+            UnitOfWork.Comments.Delete(comment);
         }
-        await UnitOfWork.Theses.DeleteAsync(thesis.Id);
+        UnitOfWork.Theses.Delete(thesis);
         await UnitOfWork.CompleteAsync();
         NavigationManager.NavigateTo("/theses");
     }
 
     private async Task DeleteComment(Comment comment)
     {
-        await UnitOfWork.Comments.DeleteAsync(comment.Id);
+        UnitOfWork.Comments.Delete(comment);
         await UnitOfWork.CompleteAsync();
         _thesis = await UnitOfWork.Theses.GetByGuidAsync(ThesisGuid);
     }

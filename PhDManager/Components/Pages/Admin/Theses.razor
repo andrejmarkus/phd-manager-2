@@ -8,11 +8,14 @@
 @inject IStringLocalizer<Resources> Localizer
 @inject DocumentService DocumentService
 
+@using Microsoft.AspNetCore.Authorization
 @using Microsoft.Extensions.Localization
 @using PhDManager.Locales
 @using PhDManager.Models
 @using PhDManager.Services
 @using PhDManager.Services.IRepositories
+
+@attribute [Authorize(Roles = $"{Admin.Role}")]
 
 <PageTitle>@Localizer["DissertationTheses"] | Admin</PageTitle>
 
@@ -25,8 +28,8 @@
     </ToolBarContent>
     <Columns>
         <PropertyColumn Property="t => t.Title" Title="@Localizer["DissertationThesisTitle"]" />
-        <PropertyColumn Property="t => t.Supervisor.DisplayName" Title="@Localizer["SupervisorName"]" />
-        <PropertyColumn Property="t => t.Supervisor.Email" Title="@Localizer["SupervisorEmail"]" />
+        <PropertyColumn Property="t => t.Supervisor.User.DisplayName" Title="@Localizer["SupervisorName"]" />
+        <PropertyColumn Property="t => t.Supervisor.User.Email" Title="@Localizer["SupervisorEmail"]" />
         <PropertyColumn Property="t => t.StudyProgram.Name" Title="@Localizer["StudyProgram"]" />
         <PropertyColumn Property="t => t.ResearchType" Title="@Localizer["ResearchType"]" />
         <PropertyColumn Property="@(t => t.DailyStudy ? "Áno" : "Nie")" Title="@Localizer["StudyFormDaily"]" />
@@ -63,13 +66,13 @@
         if (t.Title.Contains(_search, StringComparison.OrdinalIgnoreCase))
             return true;
 
-        if (t.Supervisor.DisplayName?.Contains(_search, StringComparison.OrdinalIgnoreCase) == true)
+        if (t.Supervisor.User.DisplayName?.Contains(_search, StringComparison.OrdinalIgnoreCase) == true)
             return true;
 
-        if (t.Supervisor.Email?.Contains(_search, StringComparison.OrdinalIgnoreCase) == true)
+        if (t.Supervisor.User.Email?.Contains(_search, StringComparison.OrdinalIgnoreCase) == true)
             return true;
 
-        if ($"{t.Title} {t.Supervisor.DisplayName} {t.Supervisor.Email}".Contains(_search))
+        if ($"{t.Title} {t.Supervisor.User.DisplayName} {t.Supervisor.User.Email}".Contains(_search))
             return true;
 
         return false;
@@ -82,9 +85,9 @@
 
         foreach (var comment in thesis.Comments)
         {
-            await UnitOfWork.Comments.DeleteAsync(comment.Id);
+            UnitOfWork.Comments.Delete(comment);
         }
-        await UnitOfWork.Theses.DeleteAsync(thesis.Id);
+        UnitOfWork.Theses.Delete(thesis);
         await UnitOfWork.CompleteAsync();
     }
 }

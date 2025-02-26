@@ -1,0 +1,66 @@
+﻿@using LdapForNet
+@using Microsoft.AspNetCore.Identity
+@using Microsoft.Extensions.Localization
+@using PhDManager.Data
+@using PhDManager.Locales
+@using PhDManager.Services
+
+@rendermode InteractiveServer
+
+@inject IServiceProvider ServiceProvider
+@inject IStringLocalizer<Resources> Localizer
+@inject UsersService UsersService
+@inject UserManager<ApplicationUser> UserManager
+@inject ActiveDirectoryService ActiveDirectoryService
+
+<MudDialog>
+    <TitleContent>
+        <MudText Typo="Typo.h6">@Localizer["UsersAdd"]</MudText>
+    </TitleContent>
+    <DialogContent>
+        <MudDataGrid T="LdapEntry" Items="_users" SortMode="SortMode.Multiple" SelectedItemChanged="@SelectedItemChangedLdap" Elevation="0">
+            <ToolBarContent>
+                <MudText Typo="Typo.h6" GutterBottom="false">@Localizer["LdapUsers"]</MudText>
+                <MudSpacer />
+                <MudTextField @bind-Value="@_search" @bind-Value:after="@SearchUsers" Class="mr-4" Variant="Variant.Outlined" Placeholder="@Localizer["Search"]" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium"></MudTextField>
+            </ToolBarContent>
+            <Columns>
+                <SelectColumn T="LdapEntry" />
+                <PropertyColumn Property="@(e => e.DirectoryAttributes["uid"].GetValue<string>())" Title="@Localizer["Username"]" />
+                <PropertyColumn Property="@(e => e.DirectoryAttributes["displayName"].GetValue<string>())" Title="@Localizer["FullName"]" />
+                <PropertyColumn Property="@(e => e.DirectoryAttributes["givenName"].GetValue<string>())" Title="@Localizer["FirstName"]" />
+                <PropertyColumn Property="@(e => e.DirectoryAttributes["sn"].GetValue<string>())" Title="@Localizer["LastName"]" />
+                <PropertyColumn Property="@(e => e.DirectoryAttributes["mail"].GetValue<string>())" Title="Email" />
+            </Columns>
+            <PagerContent>
+                <MudDataGridPager T="LdapEntry" />
+            </PagerContent>
+        </MudDataGrid>
+    </DialogContent>
+    <DialogActions>
+        <MudButton Color="Color.Primary" OnClick="@(() => MudDialog.Close(DialogResult.Ok(_selectedUser)))">@Localizer["Add"]</MudButton>
+        <MudButton Color="Color.Secondary" OnClick="@(() => MudDialog.Cancel())">@Localizer["Cancel"]</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter]
+    private IMudDialogInstance MudDialog { get; set; } = default!;
+
+    private IEnumerable<LdapEntry>? _users = [];
+    private LdapEntry? _selectedUser;
+
+    private string _search = "";
+
+    private async Task SearchUsers()
+    {
+        _users = await ActiveDirectoryService.SearchUsersAsync(_search.ToLower());
+        if (_users is null) return;
+        _users = await (_users.ToAsyncEnumerable().WhereAwait(async e => (await UserManager.FindByNameAsync(e.DirectoryAttributes["uid"].GetValue<string>()) is null))).ToArrayAsync();
+    }
+
+    private void SelectedItemChangedLdap(LdapEntry entry)
+    {
+        _selectedUser = entry;
+    }
+}

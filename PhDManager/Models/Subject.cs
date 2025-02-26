@@ -2,16 +2,13 @@
 
 namespace PhDManager.Models
 {
-    public class Subject
+    public class Subject : BaseModel
     {
-        public int Id { get; set; }
-        public string Code { get; set; } = string.Empty;
+        public char? Variant { get; set; }
         public string Name { get; set; } = string.Empty;
         public string Semester { get; set; } = string.Empty;
-        public int Credits { get; set; }
 
         public int StudyProgramId { get; set; }
-
         [JsonIgnore]
         public virtual StudyProgram StudyProgram { get; set; } = default!;
         public virtual List<IndividualPlan> IndividualPlans { get; set; } = [];

@@ -13,7 +13,7 @@
 @inject IDialogService DialogService
 @inject NavigationManager NavigationManager
 
-@attribute [Authorize(Roles = "Admin, Učiteľ, Externista")]
+@attribute [Authorize(Roles = $"{Admin.Role}, {Teacher.Role}, {External.Role}")]
 
 <PageTitle>@Localizer["DissertationThesisPending"]</PageTitle>
 
@@ -28,10 +28,25 @@
                 <MudPaper Class="pa-2">
                     <MudLink Color="Color.Default" Underline="Underline.None" Href="@($"/theses/{thesis.Guid}")">
                         <MudText Typo="Typo.h6">@thesis.Title</MudText>
-                        <MudText Typo="Typo.body2"><b>@Localizer["Supervisor"]: </b> @thesis.Supervisor.DisplayName</MudText>
+                        <MudText Typo="Typo.body2"><b>@Localizer["Supervisor"]: </b> @thesis.Supervisor.User.DisplayName</MudText>
                         <MudText Typo="Typo.body2"><b>@Localizer["StudyProgram"]: </b> @thesis.StudyProgram.Name</MudText>
+                        <MudText Typo="Typo.body2">
+                            <b>@Localizer["StudyForm"]: </b>
+                            @if (thesis.DailyStudy)
+                            {
+                                <span>@Localizer["StudyFormDaily"]</span>
+                            }
+                            @if (thesis.DailyStudy && thesis.ExternalStudy)
+                            {
+                                <span>, </span>
+                            }
+                            @if (thesis.ExternalStudy)
+                            {
+                                <span>@Localizer["StudyFormExternal"]</span>
+                            }
+                        </MudText>
                     </MudLink>
-                    <AuthorizeView Roles="Admin, Externista">
+                    <AuthorizeView Roles="@($"{Admin.Role}, {External.Role}")">
                         <Authorized>
                             <MudStack Row Class="mt-2">
                                 <MudIconButton Size="@Size.Small" Color="Color.Primary" Icon="@Icons.Material.Outlined.Check" OnClick="@(() => AcceptThesis(thesis))" />
@@ -60,9 +75,9 @@
         thesis.IsApproved = true;
         foreach (var comment in thesis.Comments)
         {
-            await UnitOfWork.Comments.DeleteAsync(comment.Id);
+            UnitOfWork.Comments.Delete(comment);
         }
-        await UnitOfWork.Theses.UpdateAsync(thesis.Id, thesis);
+        await UnitOfWork.Theses.UpdateAsync(thesis);
         await UnitOfWork.CompleteAsync();
         _theses = _theses?.Where(t => t.Id != thesis.Id);
     }
@@ -74,9 +89,9 @@
 
         foreach (var comment in thesis.Comments)
         {
-            await UnitOfWork.Comments.DeleteAsync(comment.Id);
+            UnitOfWork.Comments.Delete(comment);
         }
-        await UnitOfWork.Theses.DeleteAsync(thesis.Id);
+        UnitOfWork.Theses.Delete(thesis);
         await UnitOfWork.CompleteAsync();
         _theses = _theses?.Where(t => t.Id != thesis.Id);
     }

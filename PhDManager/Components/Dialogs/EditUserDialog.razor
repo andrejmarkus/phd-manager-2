@@ -1,0 +1,60 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using Microsoft.Extensions.Localization
+@using PhDManager.Data
+@using PhDManager.Locales
+@using PhDManager.Models
+@using PhDManager.Models.DTOs
+@using PhDManager.Services.IRepositories
+
+@rendermode InteractiveServer
+
+@inject IUnitOfWork UnitOfWork
+@inject IStringLocalizer<Resources> Localizer
+@inject RoleManager<IdentityRole> RoleManager
+
+<MudDialog>
+    <TitleContent>
+        <MudText Typo="Typo.h6">@Localizer["UserEdit"]</MudText>
+    </TitleContent>
+    <DialogContent>
+        <MudForm @ref="_form">
+            <MudSelect T="string" Variant="Variant.Outlined" Label="@Localizer["Role"]" @bind-Value="UserInfo.Role" Required>
+                @if (_roles is not null)
+                {
+                    @foreach (var role in _roles)
+                    {
+                        <MudSelectItem Value="@role.Name">@role.Name</MudSelectItem>
+                    }
+                }
+            </MudSelect>
+        </MudForm>
+    </DialogContent>
+    <DialogActions>
+        <MudButton Color="Color.Primary" OnClick="HandleDialog">@Localizer["Edit"]</MudButton>
+        <MudButton Color="Color.Secondary" OnClick="@(() => MudDialog.Cancel())">@Localizer["Cancel"]</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter]
+    private IMudDialogInstance MudDialog { get; set; } = default!;
+
+    [Parameter]
+    public UserInfo UserInfo { get; set; } = default!;
+
+    private MudForm _form = default!;
+
+    private IEnumerable<IdentityRole>? _roles;
+
+    protected override void OnInitialized()
+    {
+        _roles = RoleManager.Roles.Where(r => r.Name != Student.Role);
+    }
+
+    private void HandleDialog()
+    {
+        if (!_form.IsValid) return;
+
+        MudDialog.Close(DialogResult.Ok(UserInfo));
+    }
+}

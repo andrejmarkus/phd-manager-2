@@ -12,7 +12,7 @@ using PhDManager.Data;
 namespace PhDManager.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250226003019_Init")]
+    [Migration("20250226210723_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -345,10 +345,7 @@ namespace PhDManager.Data.Migrations
             modelBuilder.Entity("PhDManager.Models.IndividualPlan", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime?>("DissertationExamDate")
                         .HasColumnType("timestamp with time zone");
@@ -398,7 +395,10 @@ namespace PhDManager.Data.Migrations
             modelBuilder.Entity("PhDManager.Models.Student", b =>
                 {
                     b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("EndSchoolYear")
                         .IsRequired()
@@ -591,7 +591,10 @@ namespace PhDManager.Data.Migrations
             modelBuilder.Entity("PhDManager.Models.Thesis", b =>
                 {
                     b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<bool>("DailyStudy")
                         .HasColumnType("boolean");
@@ -637,14 +640,13 @@ namespace PhDManager.Data.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<int?>("StudentId")
+                        .HasColumnType("integer");
+
                     b.Property<int>("StudyProgramId")
                         .HasColumnType("integer");
 
-                    b.Property<string>("SupervisorId")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<int>("SupervisorId1")
+                    b.Property<int>("SupervisorId")
                         .HasColumnType("integer");
 
                     b.Property<int?>("SupervisorSpecialistId")
@@ -659,9 +661,12 @@ namespace PhDManager.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("StudentId")
+                        .IsUnique();
+
                     b.HasIndex("StudyProgramId");
 
-                    b.HasIndex("SupervisorId1");
+                    b.HasIndex("SupervisorId");
 
                     b.HasIndex("SupervisorSpecialistId");
 
@@ -782,14 +787,19 @@ namespace PhDManager.Data.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("PhDManager.Models.Student", b =>
+            modelBuilder.Entity("PhDManager.Models.IndividualPlan", b =>
                 {
-                    b.HasOne("PhDManager.Models.IndividualPlan", "IndividualPlan")
-                        .WithOne("Student")
-                        .HasForeignKey("PhDManager.Models.Student", "Id")
+                    b.HasOne("PhDManager.Models.Student", "Student")
+                        .WithOne("IndividualPlan")
+                        .HasForeignKey("PhDManager.Models.IndividualPlan", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.Navigation("Student");
+                });
+
+            modelBuilder.Entity("PhDManager.Models.Student", b =>
+                {
                     b.HasOne("PhDManager.Models.StudyProgram", "StudyProgram")
                         .WithMany()
                         .HasForeignKey("StudyProgramId");
@@ -801,8 +811,6 @@ namespace PhDManager.Data.Migrations
                     b.HasOne("PhDManager.Data.ApplicationUser", "User")
                         .WithMany("Students")
                         .HasForeignKey("UserId");
-
-                    b.Navigation("IndividualPlan");
 
                     b.Navigation("StudyProgram");
 
@@ -835,9 +843,8 @@ namespace PhDManager.Data.Migrations
                 {
                     b.HasOne("PhDManager.Models.Student", "Student")
                         .WithOne("Thesis")
-                        .HasForeignKey("PhDManager.Models.Thesis", "Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("PhDManager.Models.Thesis", "StudentId")
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("PhDManager.Models.StudyProgram", "StudyProgram")
                         .WithMany("Thesis")
@@ -847,7 +854,7 @@ namespace PhDManager.Data.Migrations
 
                     b.HasOne("PhDManager.Models.Teacher", "Supervisor")
                         .WithMany("Theses")
-                        .HasForeignKey("SupervisorId1")
+                        .HasForeignKey("SupervisorId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -880,15 +887,11 @@ namespace PhDManager.Data.Migrations
                     b.Navigation("Comments");
                 });
 
-            modelBuilder.Entity("PhDManager.Models.IndividualPlan", b =>
-                {
-                    b.Navigation("Student")
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("PhDManager.Models.Student", b =>
                 {
                     b.Navigation("Address");
+
+                    b.Navigation("IndividualPlan");
 
                     b.Navigation("Thesis");
                 });

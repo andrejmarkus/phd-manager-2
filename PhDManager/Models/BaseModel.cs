@@ -1,4 +1,6 @@
-﻿namespace PhDManager.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace PhDManager.Models
 {
     public class BaseModel
     {

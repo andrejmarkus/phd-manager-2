@@ -82,6 +82,8 @@
         var user = await UsersService.RegisterLdapUserWithoutPasswordAsync(entry, Admin.Role);
         await UnitOfWork.Admins.AddAsync(new() { User = user });
         await UnitOfWork.CompleteAsync();
+
+        _admins = await UnitOfWork.Admins.GetAllAsync();
     }
 
     private async Task DeleteAdmin(Admin admin)
@@ -89,8 +91,12 @@
         bool? result = await DialogService.ShowMessageBox(Localizer["UserDelete"], Localizer["UserDeleteConfirmation"], Localizer["Yes"], Localizer["No"]);
         if (result == false) return;
 
-        await UsersService.DeleteUserAsync(admin.User);
+        var user = admin.User;
+
         UnitOfWork.Admins.Delete(admin);
         await UnitOfWork.CompleteAsync();
+        await UsersService.DeleteUserAsync(user);
+
+        _admins = await UnitOfWork.Admins.GetAllAsync();
     }
 }

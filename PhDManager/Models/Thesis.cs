@@ -18,9 +18,9 @@ namespace PhDManager.Models
         public string SchoolYear { get; set; } = string.Empty;
         public bool DailyStudy { get; set; } = false;
         public bool ExternalStudy { get; set; } = false;
-        public string SupervisorId { get; set; } = string.Empty;
         [JsonIgnore]
         public virtual List<Student> InterestedStudents { get; set; } = [];
+        public int? StudentId { get; set; }
         [JsonIgnore]
         public virtual Student? Student { get; set; }
         [JsonIgnore]

@@ -1,0 +1,73 @@
+﻿@using Microsoft.Extensions.Localization
+@using PhDManager.Locales
+@using PhDManager.Models
+@using PhDManager.Services.IRepositories
+
+@rendermode InteractiveServer
+
+@inject IUnitOfWork UnitOfWork
+@inject IStringLocalizer<Resources> Localizer
+
+<MudDialog>
+    <TitleContent>
+        <MudText Typo="Typo.h6">@Localizer["StudentEdit"]</MudText>
+    </TitleContent>
+    <DialogContent>
+        <MudForm @ref="_form">
+            <MudText Class="mt-4">@Localizer["StudyInformations"]</MudText>
+            <MudSelect T="StudyProgram" Variant="Variant.Outlined" Label="@Localizer["StudyProgram"]" @bind-Value="Student.StudyProgram" ToStringFunc="@(sp => sp is null ? "" : sp.Name)">
+                @if (_studyPrograms is not null)
+                {
+                    @foreach (var studyProgram in _studyPrograms)
+                    {
+                        <MudSelectItem Value="@studyProgram">@studyProgram.Name</MudSelectItem>
+                    }
+                }
+            </MudSelect>
+            <MudSelect T="bool" Variant="Variant.Outlined" Label="@Localizer["StudyForm"]" @bind-Value="Student.IsExternal" ToStringFunc="@(ie => ie ? Localizer["StudyFormExternal"] : Localizer["StudyFormDaily"])">
+                <MudSelectItem Value="true">@Localizer["StudyFormExternal"]</MudSelectItem>
+                <MudSelectItem Value="false">@Localizer["StudyFormDaily"]</MudSelectItem>
+            </MudSelect>
+            <MudText Class="mt-4">Osobné údaje</MudText>
+            <MudDatePicker ShowToolbar="false" Variant="Variant.Outlined" Label="@Localizer["Birthdate"]" @bind-Date="Student.User.Birthdate" />
+            <MudTextField T="string" Variant="Variant.Outlined" InputType="InputType.Telephone" Label="@Localizer["PhoneNumber"]" @bind-Value="Student.User.PhoneNumber" />
+            <MudTextField T="string" Variant="Variant.Outlined" Label="@Localizer["Street"]" @bind-Value="Student.Address!.Street" />
+            <MudTextField T="string" Variant="Variant.Outlined" Label="@Localizer["HouseNumber"]" @bind-Value="Student.Address.HouseNumber" />
+            <MudTextField T="string" Variant="Variant.Outlined" Label="@Localizer["City"]" @bind-Value="Student.Address.City" />
+            <MudTextField T="string" Variant="Variant.Outlined" Label="@Localizer["PostalCode"]" @bind-Value="Student.Address.PostalCode" />
+            <MudTextField T="string" Variant="Variant.Outlined" Label="@Localizer["State"]" @bind-Value="Student.Address.Country" />
+        </MudForm>
+    </DialogContent>
+    <DialogActions>
+        <MudButton Color="Color.Primary" OnClick="@HandleDialog">@Localizer["Edit"]</MudButton>
+        <MudButton Color="Color.Secondary" OnClick="@(() => MudDialog.Cancel())">@Localizer["Cancel"]</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter]
+    private IMudDialogInstance MudDialog { get; set; } = default!;
+
+    [Parameter]
+    public Student Student { get; set; } = default!;
+
+    private MudForm _form = default!;
+
+    private IEnumerable<StudyProgram>? _studyPrograms;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (Student.Address is null) Student.Address = new();
+
+        _studyPrograms = await UnitOfWork.StudyPrograms.GetAllAsync();
+    }
+
+    private void HandleDialog()
+    {
+        if (!_form.IsValid) return;
+
+        Student.User.Birthdate = Student.User.Birthdate?.ToUniversalTime();
+
+        MudDialog.Close(DialogResult.Ok(Student));
+    }
+}

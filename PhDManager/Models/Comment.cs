@@ -1,6 +1,4 @@
-﻿using PhDManager.Data;
-
-namespace PhDManager.Models
+﻿namespace PhDManager.Models
 {
     public class Comment : BaseModel
     {
@@ -8,7 +6,7 @@ namespace PhDManager.Models
         public string Text { get; set; } = default!;
         public DateTime Created { get; set; }
 
-        public string ExternalId { get; set; } = default!;
+        public string ExternalId { get; set; } = string.Empty;
         public virtual External External { get; set; } = default!;
 
         public int ThesisId { get; set; }

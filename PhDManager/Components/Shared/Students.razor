@@ -82,8 +82,9 @@
 
         var user = await UsersService.RegisterLdapUserWithoutPasswordAsync(entry, Student.Role);
 
-        await UnitOfWork.Students.AddAsync(new() { User = user });
-        await UnitOfWork.CompleteAsync();
+        if (user is null) return;
+
+        await UsersService.AddStudentToUser(user, new());
 
         var student = (await UnitOfWork.Students.GetAllAsync())?.Where(s => s.User == user).FirstOrDefault();
         if (student is null)
@@ -91,6 +92,8 @@
             await UsersService.DeleteUserAsync(user);
             return;
         }
+
+        _students = await UnitOfWork.Students.GetAllAsync();
 
         await UpdateStudent(student);
     }
@@ -100,16 +103,20 @@
         bool? result = await DialogService.ShowMessageBox(Localizer["UserDelete"], Localizer["UserDeleteConfirmation"], Localizer["Yes"], Localizer["No"]);
         if (result == false) return;
 
-        await UsersService.DeleteUserAsync(student.User);
+        var user = student.User;
+
         if (student.Address is not null) UnitOfWork.Addresses.Delete(student.Address);
         UnitOfWork.Students.Delete(student);
         await UnitOfWork.CompleteAsync();
+        await UsersService.DeleteUserAsync(user);
+
+        _students = await UnitOfWork.Students.GetAllAsync();
     }
 
     private async Task UpdateStudent(Student student)
     {
-        var parameters = new DialogParameters<EditDoctoralStudentDialog> { { d => d.DoctoralStudent, student } };
-        var dialog = await DialogService.ShowAsync<EditDoctoralStudentDialog>(Localizer["UserEdit"], parameters, new() { FullWidth = true, MaxWidth = MaxWidth.Medium });
+        var parameters = new DialogParameters<EditStudentDialog> { { d => d.Student, student } };
+        var dialog = await DialogService.ShowAsync<EditStudentDialog>(Localizer["UserEdit"], parameters, new() { FullWidth = true, MaxWidth = MaxWidth.Medium });
         var result = await dialog.Result;
 
         if (result is null || result.Canceled) return;

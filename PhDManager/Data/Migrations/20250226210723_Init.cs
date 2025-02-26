@@ -56,23 +56,6 @@ namespace PhDManager.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "IndividualPlans",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Guid = table.Column<string>(type: "text", nullable: false),
-                    DissertationExamDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    DissertationSubmissionDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    StudyStartDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    StudyEndDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_IndividualPlans", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Registrations",
                 columns: table => new
                 {
@@ -286,30 +269,6 @@ namespace PhDManager.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "IndividualPlanSubject",
-                columns: table => new
-                {
-                    IndividualPlansId = table.Column<int>(type: "integer", nullable: false),
-                    SubjectsId = table.Column<int>(type: "integer", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_IndividualPlanSubject", x => new { x.IndividualPlansId, x.SubjectsId });
-                    table.ForeignKey(
-                        name: "FK_IndividualPlanSubject_IndividualPlans_IndividualPlansId",
-                        column: x => x.IndividualPlansId,
-                        principalTable: "IndividualPlans",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_IndividualPlanSubject_Subjects_SubjectsId",
-                        column: x => x.SubjectsId,
-                        principalTable: "Subjects",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Addresses",
                 columns: table => new
                 {
@@ -349,10 +308,51 @@ namespace PhDManager.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Students",
+                name: "IndividualPlans",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false),
+                    Guid = table.Column<string>(type: "text", nullable: false),
+                    DissertationExamDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    DissertationSubmissionDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    StudyStartDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    StudyEndDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_IndividualPlans", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "IndividualPlanSubject",
+                columns: table => new
+                {
+                    IndividualPlansId = table.Column<int>(type: "integer", nullable: false),
+                    SubjectsId = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_IndividualPlanSubject", x => new { x.IndividualPlansId, x.SubjectsId });
+                    table.ForeignKey(
+                        name: "FK_IndividualPlanSubject_IndividualPlans_IndividualPlansId",
+                        column: x => x.IndividualPlansId,
+                        principalTable: "IndividualPlans",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_IndividualPlanSubject_Subjects_SubjectsId",
+                        column: x => x.SubjectsId,
+                        principalTable: "Subjects",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Students",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     StartSchoolYear = table.Column<string>(type: "text", nullable: false),
                     EndSchoolYear = table.Column<string>(type: "text", nullable: false),
                     IsExternal = table.Column<bool>(type: "boolean", nullable: false),
@@ -369,12 +369,6 @@ namespace PhDManager.Data.Migrations
                         principalTable: "AspNetUsers",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_Students_IndividualPlans_Id",
-                        column: x => x.Id,
-                        principalTable: "IndividualPlans",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
                         name: "FK_Students_StudyPrograms_StudyProgramId",
                         column: x => x.StudyProgramId,
                         principalTable: "StudyPrograms",
@@ -385,7 +379,8 @@ namespace PhDManager.Data.Migrations
                 name: "Theses",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "integer", nullable: false),
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     IsApproved = table.Column<bool>(type: "boolean", nullable: false),
                     Title = table.Column<string>(type: "text", nullable: false),
                     Guid = table.Column<string>(type: "text", nullable: false),
@@ -400,8 +395,8 @@ namespace PhDManager.Data.Migrations
                     SchoolYear = table.Column<string>(type: "text", nullable: false),
                     DailyStudy = table.Column<bool>(type: "boolean", nullable: false),
                     ExternalStudy = table.Column<bool>(type: "boolean", nullable: false),
-                    SupervisorId = table.Column<string>(type: "text", nullable: false),
-                    SupervisorId1 = table.Column<int>(type: "integer", nullable: false),
+                    StudentId = table.Column<int>(type: "integer", nullable: true),
+                    SupervisorId = table.Column<int>(type: "integer", nullable: false),
                     SupervisorSpecialistId = table.Column<int>(type: "integer", nullable: true),
                     StudyProgramId = table.Column<int>(type: "integer", nullable: false)
                 },
@@ -409,11 +404,11 @@ namespace PhDManager.Data.Migrations
                 {
                     table.PrimaryKey("PK_Theses", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Theses_Students_Id",
-                        column: x => x.Id,
+                        name: "FK_Theses_Students_StudentId",
+                        column: x => x.StudentId,
                         principalTable: "Students",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.SetNull);
                     table.ForeignKey(
                         name: "FK_Theses_StudyPrograms_StudyProgramId",
                         column: x => x.StudyProgramId,
@@ -421,8 +416,8 @@ namespace PhDManager.Data.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Theses_Teachers_SupervisorId1",
-                        column: x => x.SupervisorId1,
+                        name: "FK_Theses_Teachers_SupervisorId",
+                        column: x => x.SupervisorId,
                         principalTable: "Teachers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -548,14 +543,20 @@ namespace PhDManager.Data.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_Theses_StudentId",
+                table: "Theses",
+                column: "StudentId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Theses_StudyProgramId",
                 table: "Theses",
                 column: "StudyProgramId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Theses_SupervisorId1",
+                name: "IX_Theses_SupervisorId",
                 table: "Theses",
-                column: "SupervisorId1");
+                column: "SupervisorId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Theses_SupervisorSpecialistId",
@@ -579,6 +580,14 @@ namespace PhDManager.Data.Migrations
                 onDelete: ReferentialAction.Cascade);
 
             migrationBuilder.AddForeignKey(
+                name: "FK_IndividualPlans_Students_Id",
+                table: "IndividualPlans",
+                column: "Id",
+                principalTable: "Students",
+                principalColumn: "Id",
+                onDelete: ReferentialAction.Cascade);
+
+            migrationBuilder.AddForeignKey(
                 name: "FK_Students_Theses_ThesisInterestId",
                 table: "Students",
                 column: "ThesisInterestId",
@@ -590,7 +599,7 @@ namespace PhDManager.Data.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(
-                name: "FK_Theses_Students_Id",
+                name: "FK_Theses_Students_StudentId",
                 table: "Theses");
 
             migrationBuilder.DropTable(
@@ -630,13 +639,13 @@ namespace PhDManager.Data.Migrations
                 name: "External");
 
             migrationBuilder.DropTable(
+                name: "IndividualPlans");
+
+            migrationBuilder.DropTable(
                 name: "Subjects");
 
             migrationBuilder.DropTable(
                 name: "Students");
-
-            migrationBuilder.DropTable(
-                name: "IndividualPlans");
 
             migrationBuilder.DropTable(
                 name: "Theses");

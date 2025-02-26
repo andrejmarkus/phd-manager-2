@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using PhDManager.Data;
+using PhDManager.Models;
 
 namespace PhDManager.Services
 {
@@ -11,6 +12,11 @@ namespace PhDManager.Services
         {
             var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
             return await UserManager.GetUserAsync(authState.User);
+        }
+
+        public async Task<string?> GetUserIdAsync(ApplicationUser user)
+        {
+            return await UserManager.GetUserIdAsync(user);
         }
 
         public async Task<string?> GetCurrentUserIdAsync()
@@ -30,6 +36,15 @@ namespace PhDManager.Services
             var currentUser = await GetCurrentUserAsync();
             if (currentUser is null) return null;
             return await GetUserRoleAsync(currentUser);
+        }
+
+        public async Task AddStudentToUser(ApplicationUser user, Student student)
+        {
+            var unusedUser = await UserManager.FindByIdAsync(user.Id);
+            if (unusedUser is null) return;
+
+            unusedUser.Students.Add(student);
+            await UserManager.UpdateAsync(unusedUser);
         }
 
         public async Task UpdateUserRoleAsync(ApplicationUser user, string role)

@@ -82,6 +82,8 @@
         var user = await UsersService.RegisterLdapUserWithoutPasswordAsync(entry, External.Role);
         await UnitOfWork.Externals.AddAsync(new() { User = user });
         await UnitOfWork.CompleteAsync();
+
+        _externals = await UnitOfWork.Externals.GetAllAsync();
     }
 
     private async Task DeleteExternal(External external)
@@ -89,9 +91,13 @@
         bool? result = await DialogService.ShowMessageBox(Localizer["UserDelete"], Localizer["UserDeleteConfirmation"], Localizer["Yes"], Localizer["No"]);
         if (result == false) return;
 
-        await UsersService.DeleteUserAsync(external.User);
+        var user = external.User;
+        
         UnitOfWork.Externals.Delete(external);
         await UnitOfWork.CompleteAsync();
+        await UsersService.DeleteUserAsync(user);
+
+        _externals = await UnitOfWork.Externals.GetAllAsync();
     }
 }
 

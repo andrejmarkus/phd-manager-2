@@ -110,7 +110,7 @@
                     </AuthorizeView>
                     <AuthorizeView Roles="@($"{Teacher.Role}")">
                         <Authorized>
-                            @if (_currentUserId?.Equals(thesis.SupervisorId) == true)
+                            @if (_currentUserId?.Equals(thesis.Supervisor.User.Id) == true)
                             {
                                 <MudStack Row Class="mt-2">
                                     <MudIconButton Size="@Size.Small" Color="Color.Error" Icon="@Icons.Material.Outlined.Delete" OnClick="@(async () => await DeleteThesis(thesis))" />

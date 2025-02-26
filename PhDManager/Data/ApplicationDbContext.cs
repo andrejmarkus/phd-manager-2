@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using PhDManager.Models;
+using System.Reflection.Emit;
 
 namespace PhDManager.Data
 {
@@ -34,7 +35,7 @@ namespace PhDManager.Data
 
             builder.Entity<ApplicationUser>()
                 .HasOne(u => u.Teacher)
-                .WithOne(t  => t.User)
+                .WithOne(t => t.User)
                 .HasForeignKey<Teacher>();
 
             builder.Entity<ApplicationUser>()
@@ -43,32 +44,26 @@ namespace PhDManager.Data
                 .HasForeignKey<External>();
 
             builder.Entity<Student>()
-                .HasOne(ds => ds.Address)
+                .HasOne(s => s.Address)
                 .WithOne(a => a.Student)
                 .HasForeignKey<Address>()
                 .IsRequired();
 
-            builder.Entity<Thesis>()
-                .HasMany(t => t.InterestedStudents)
-                .WithOne(ds => ds.ThesisInterest);
+            builder.Entity<Student>()
+                .HasOne(s => s.Thesis)
+                .WithOne(t => t.Student)
+                .HasForeignKey<Thesis>(t => t.StudentId)
+                .OnDelete(DeleteBehavior.SetNull);
 
             builder.Entity<Student>()
-                .HasOne(ds => ds.Thesis)
-                .WithOne(t => t.Student)
-                .HasForeignKey<Thesis>();
-
-            builder.Entity<Teacher>()
-                .HasMany(t => t.Theses)
-                .WithOne(t => t.Supervisor);
+                .HasOne(s => s.IndividualPlan)
+                .WithOne(ip => ip.Student)
+                .HasForeignKey<IndividualPlan>();
 
             builder.Entity<Teacher>()
                 .HasMany(t => t.SpecialistTheses)
-                .WithOne(t => t.SupervisorSpecialist);
-
-            builder.Entity<IndividualPlan>()
-                .HasOne(ip => ip.Student)
-                .WithOne(ds => ds.IndividualPlan)
-                .HasForeignKey<Student>();
+                .WithOne(t => t.SupervisorSpecialist)
+                .HasForeignKey("SupervisorSpecialistId");
 
             builder.Entity<StudyProgram>()
                 .HasData(

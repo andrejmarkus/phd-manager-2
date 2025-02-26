@@ -89,7 +89,7 @@
                     </MudLink>
                     <AuthorizeView Roles="@($"{Teacher.Role}")">
                         <Authorized>
-                            @if (_currentUserId?.Equals(thesis.SupervisorId) == true)
+                            @if (_currentUserId?.Equals(thesis.Supervisor.User.Id) == true)
                             {
                                 <MudStack Row Class="mt-2">
                                     <MudStack Row Justify="Justify.SpaceBetween">
@@ -126,7 +126,7 @@
     {
         _currentUserId = await UsersService.GetCurrentUserIdAsync();
         var theses = await UnitOfWork.Theses.GetAllAsync();
-        _theses = theses?.Where(t => t.SupervisorId == _currentUserId).ToArray();
+        _theses = theses?.Where(t => t.Supervisor.User.Id == _currentUserId).ToArray();
         _studyPrograms = await UnitOfWork.StudyPrograms.GetAllAsync();
         _schoolYears = await UnitOfWork.Theses.GetAllSchoolYearsAsync();
 
@@ -161,7 +161,7 @@
     private async Task UpdateSearch()
     {
         var theses = await UnitOfWork.Theses.GetAllAsync();
-        _theses = theses?.Where(t => t.SupervisorId == _currentUserId).Where(t => t.Title.ToLower().Contains(_search.ToLower()) || t.TitleEnglish?.ToLower().Contains(_search.ToLower()) == true).ToArray();
+        _theses = theses?.Where(t => t.Supervisor.User.Id == _currentUserId).Where(t => t.Title.ToLower().Contains(_search.ToLower()) || t.TitleEnglish?.ToLower().Contains(_search.ToLower()) == true).ToArray();
         if (_selectedStudyProgram is not null)
         {
             _theses = _theses?.Where(t => t.StudyProgram == _selectedStudyProgram).ToArray();

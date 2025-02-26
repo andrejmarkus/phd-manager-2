@@ -82,6 +82,8 @@
         var user = await UsersService.RegisterLdapUserWithoutPasswordAsync(entry, Teacher.Role);
         await UnitOfWork.Teachers.AddAsync(new() { User = user });
         await UnitOfWork.CompleteAsync();
+
+        _teachers = await UnitOfWork.Teachers.GetAllAsync();
     }
 
     private async Task DeleteTeacher(Teacher teacher)
@@ -89,9 +91,13 @@
         bool? result = await DialogService.ShowMessageBox(Localizer["UserDelete"], Localizer["UserDeleteConfirmation"], Localizer["Yes"], Localizer["No"]);
         if (result == false) return;
 
-        await UsersService.DeleteUserAsync(teacher.User);
+        var user = teacher.User;
+
         UnitOfWork.Teachers.Delete(teacher);
         await UnitOfWork.CompleteAsync();
+        await UsersService.DeleteUserAsync(user);
+
+        _teachers = await UnitOfWork.Teachers.GetAllAsync();
     }
 }
 

@@ -13,6 +13,7 @@
 @inject IStringLocalizer<Resources> Localizer
 @inject IUnitOfWork UnitOfWork
 @inject UsersService UsersService
+@inject SchoolYearService SchoolYearService
 
 <MudDataGrid T="Student" Items="@_students" Hover SortMode="SortMode.Multiple" QuickFilter="@_quickFilter" Elevation="0">
     <ToolBarContent>
@@ -85,7 +86,7 @@
 
         if (user is null) return;
 
-        await UsersService.AddStudentToUser(user, new());
+        await UsersService.AddStudentToUser(user, new() { StartSchoolYear = SchoolYearService.CurrentSchoolYear, EndSchoolYear = SchoolYearService.GetSchoolYear(DateTime.Today.AddYears(3)) });
 
         var student = (await UnitOfWork.Students.GetAllAsync())?.Where(s => s.User == user).FirstOrDefault();
         if (student is null)

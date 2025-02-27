@@ -345,7 +345,7 @@
   <data name="IndividualPlanThesis" xml:space="preserve">
     <value>Dizertačná téma</value>
   </data>
-  <data name="IndividualPlanThesisInfo" xml:space="preserve">
+  <data name="IndividualPlanWrittenThesisInfo" xml:space="preserve">
     <value>Téma písomnej časti dizertačnej skúšky</value>
   </data>
   <data name="Supervisor" xml:space="preserve">
@@ -602,5 +602,41 @@
   </data>
   <data name="Create" xml:space="preserve">
     <value>Vytvor</value>
+  </data>
+  <data name="IndividualPlanWrittenThesisRequiredLiterature" xml:space="preserve">
+    <value>Študijná literatúra - povinná</value>
+  </data>
+  <data name="IndividualPlanWrittenThesisRecommendedLiterature" xml:space="preserve">
+    <value>Študijná literatúra - odporúčaná</value>
+  </data>
+  <data name="IndividualPlanWrittenThesisLiteratureError" xml:space="preserve">
+    <value>Je nutné zadať študíjnu literatúru!</value>
+  </data>
+  <data name="IndividualPlanWrittenThesisRecommendedLectures" xml:space="preserve">
+    <value>Odporúčané odborné prednášky, semináre a konferencie</value>
+  </data>
+  <data name="IndividualPlanWrittenThesisRecommendedLecturesError" xml:space="preserve">
+    <value>Je nutné zadať dporúčané odborné prednášky, semináre alebo konferencie</value>
+  </data>
+  <data name="ScientificPart" xml:space="preserve">
+    <value>Vedecká časť</value>
+  </data>
+  <data name="IndividualThesisResearchTask" xml:space="preserve">
+    <value>Výskumná úloha, v rámci ktorej je riešená dizertačné práca</value>
+  </data>
+  <data name="IndividualPlanSolutionResults" xml:space="preserve">
+    <value>Publikačná činnosť vo vedeckých časopisoch a zborníkoch a prezentácia na vedeckých  seminároch a konferenciách</value>
+  </data>
+  <data name="IndividualPlanDeadline" xml:space="preserve">
+    <value>Termín</value>
+  </data>
+  <data name="IndividualPlanSolvingProcedure" xml:space="preserve">
+    <value>Postup riešenia úlohy</value>
+  </data>
+  <data name="IndividualPlanThematicAreas" xml:space="preserve">
+    <value>Tematické okruhy</value>
+  </data>
+  <data name="IndividualPlanTaskError" xml:space="preserve">
+    <value>Je nutné zadať úlohu!</value>
   </data>
 </root>

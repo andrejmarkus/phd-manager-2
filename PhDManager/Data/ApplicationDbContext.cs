@@ -65,6 +65,14 @@ namespace PhDManager.Data
                 .WithOne(t => t.SupervisorSpecialist)
                 .HasForeignKey("SupervisorSpecialistId");
 
+            builder.Entity<IndividualPlan>()
+                .HasMany(ip => ip.Subjects)
+                .WithMany(s => s.IndividualPlans);
+
+            builder.Entity<IndividualPlan>()
+                .HasMany(ip => ip.OptionalSubjects)
+                .WithMany(s => s.OptionalIndividualPlans);
+
             builder.Entity<StudyProgram>()
                 .HasData(
                     new StudyProgram

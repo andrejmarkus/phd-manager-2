@@ -4,6 +4,7 @@ namespace PhDManager.Models
 {
     public class Subject : BaseModel
     {
+        public bool IsRequired { get; set; } = true;
         public char? Variant { get; set; }
         public string Name { get; set; } = string.Empty;
         public string Semester { get; set; } = string.Empty;
@@ -12,5 +13,6 @@ namespace PhDManager.Models
         [JsonIgnore]
         public virtual StudyProgram StudyProgram { get; set; } = default!;
         public virtual List<IndividualPlan> IndividualPlans { get; set; } = [];
+        public virtual List<IndividualPlan> OptionalIndividualPlans { get; set; } = [];
     }
 }

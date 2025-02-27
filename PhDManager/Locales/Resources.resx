@@ -345,7 +345,7 @@
   <data name="IndividualPlanThesis" xml:space="preserve">
     <value>Dissertation theses</value>
   </data>
-  <data name="IndividualPlanThesisInfo" xml:space="preserve">
+  <data name="IndividualPlanWrittenThesisInfo" xml:space="preserve">
     <value>Topic of the written part of the dissertation examination</value>
   </data>
   <data name="Supervisor" xml:space="preserve">
@@ -602,5 +602,41 @@
   </data>
   <data name="Create" xml:space="preserve">
     <value>Create</value>
+  </data>
+  <data name="IndividualPlanWrittenThesisRequiredLiterature" xml:space="preserve">
+    <value>Study literature - required</value>
+  </data>
+  <data name="IndividualPlanWrittenThesisRecommendedLiterature" xml:space="preserve">
+    <value>Study literature - recommended</value>
+  </data>
+  <data name="IndividualPlanWrittenThesisLiteratureError" xml:space="preserve">
+    <value>It is necessary to enter the study literature!</value>
+  </data>
+  <data name="IndividualPlanWrittenThesisRecommendedLectures" xml:space="preserve">
+    <value>Recommended professional lectures, seminars and conferences</value>
+  </data>
+  <data name="IndividualPlanWrittenThesisRecommendedLecturesError" xml:space="preserve">
+    <value>It is necessary to enter recommended professional lectures, seminars or conferences</value>
+  </data>
+  <data name="ScientificPart" xml:space="preserve">
+    <value>Scientific part</value>
+  </data>
+  <data name="IndividualThesisResearchTask" xml:space="preserve">
+    <value>The research task within which the dissertation is solved</value>
+  </data>
+  <data name="IndividualPlanSolutionResults" xml:space="preserve">
+    <value>Publication activity in scientific journals and proceedings and presentation at scientific seminars and conferences</value>
+  </data>
+  <data name="IndividualPlanDeadline" xml:space="preserve">
+    <value>Deadline</value>
+  </data>
+  <data name="IndividualPlanSolvingProcedure" xml:space="preserve">
+    <value>Procedure for solving the task</value>
+  </data>
+  <data name="IndividualPlanThematicAreas" xml:space="preserve">
+    <value>Thematic areas</value>
+  </data>
+  <data name="IndividualPlanTaskError" xml:space="preserve">
+    <value>It is necessary to enter the task!</value>
   </data>
 </root>

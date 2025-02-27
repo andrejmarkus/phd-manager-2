@@ -610,6 +610,15 @@ namespace PhDManager.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Deadline.
+        /// </summary>
+        public static string IndividualPlanDeadline {
+            get {
+                return ResourceManager.GetString("IndividualPlanDeadline", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Delete individual plan.
         /// </summary>
         public static string IndividualPlanDelete {
@@ -718,6 +727,24 @@ namespace PhDManager.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Publication activity in scientific journals and proceedings and presentation at scientific seminars and conferences.
+        /// </summary>
+        public static string IndividualPlanSolutionResults {
+            get {
+                return ResourceManager.GetString("IndividualPlanSolutionResults", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Procedure for solving the task.
+        /// </summary>
+        public static string IndividualPlanSolvingProcedure {
+            get {
+                return ResourceManager.GetString("IndividualPlanSolvingProcedure", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Name and surname, title.
         /// </summary>
         public static string IndividualPlanStudent {
@@ -799,6 +826,24 @@ namespace PhDManager.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to It is necessary to enter the task!.
+        /// </summary>
+        public static string IndividualPlanTaskError {
+            get {
+                return ResourceManager.GetString("IndividualPlanTaskError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Thematic areas.
+        /// </summary>
+        public static string IndividualPlanThematicAreas {
+            get {
+                return ResourceManager.GetString("IndividualPlanThematicAreas", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Dissertation theses.
         /// </summary>
         public static string IndividualPlanThesis {
@@ -817,20 +862,74 @@ namespace PhDManager.Locales {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Topic of the written part of the dissertation examination.
-        /// </summary>
-        public static string IndividualPlanThesisInfo {
-            get {
-                return ResourceManager.GetString("IndividualPlanThesisInfo", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Doctoral student&apos;s individual study plan.
         /// </summary>
         public static string IndividualPlanTitle {
             get {
                 return ResourceManager.GetString("IndividualPlanTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Topic of the written part of the dissertation examination.
+        /// </summary>
+        public static string IndividualPlanWrittenThesisInfo {
+            get {
+                return ResourceManager.GetString("IndividualPlanWrittenThesisInfo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to It is necessary to enter the study literature!.
+        /// </summary>
+        public static string IndividualPlanWrittenThesisLiteratureError {
+            get {
+                return ResourceManager.GetString("IndividualPlanWrittenThesisLiteratureError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Recommended professional lectures, seminars and conferences.
+        /// </summary>
+        public static string IndividualPlanWrittenThesisRecommendedLectures {
+            get {
+                return ResourceManager.GetString("IndividualPlanWrittenThesisRecommendedLectures", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to It is necessary to enter recommended professional lectures, seminars or conferences.
+        /// </summary>
+        public static string IndividualPlanWrittenThesisRecommendedLecturesError {
+            get {
+                return ResourceManager.GetString("IndividualPlanWrittenThesisRecommendedLecturesError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Study literature - recommended.
+        /// </summary>
+        public static string IndividualPlanWrittenThesisRecommendedLiterature {
+            get {
+                return ResourceManager.GetString("IndividualPlanWrittenThesisRecommendedLiterature", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Study literature - required.
+        /// </summary>
+        public static string IndividualPlanWrittenThesisRequiredLiterature {
+            get {
+                return ResourceManager.GetString("IndividualPlanWrittenThesisRequiredLiterature", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The research task within which the dissertation is solved.
+        /// </summary>
+        public static string IndividualThesisResearchTask {
+            get {
+                return ResourceManager.GetString("IndividualThesisResearchTask", resourceCulture);
             }
         }
         
@@ -1074,6 +1173,15 @@ namespace PhDManager.Locales {
         public static string SchoolYear {
             get {
                 return ResourceManager.GetString("SchoolYear", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Scientific part.
+        /// </summary>
+        public static string ScientificPart {
+            get {
+                return ResourceManager.GetString("ScientificPart", resourceCulture);
             }
         }
         

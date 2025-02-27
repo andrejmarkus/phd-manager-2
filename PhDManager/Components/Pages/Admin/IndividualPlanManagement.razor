@@ -44,6 +44,10 @@
             <MudText Color="Color.Error">@Localizer["IndividualPlanError"]</MudText>
         }
     }
+    else
+    {
+        <MudText Color="Color.Error">@Localizer["IndividualPlanThesisError"]</MudText>
+    }
 
     <MudText Typo="Typo.h5">@Localizer["Deadlines"]</MudText>
     <MudStack Row AlignItems="AlignItems.Center">
@@ -65,25 +69,57 @@
     <MudAutocomplete T="Subject" Required RequiredError="@Localizer["IndividualPlanSubjectError"]" Label="@($"{Localizer["Subject"]} 1")" ToStringFunc="@(s => s is null ? null : s.Name)" SearchFunc="SearchSubjects" Variant="Variant.Outlined" @bind-Value="_selectedSubjects[0]" />
     <MudAutocomplete T="Subject" Required RequiredError="@Localizer["IndividualPlanSubjectError"]" Label="@($"{Localizer["Subject"]} 2")" ToStringFunc="@(s => s is null ? null : s.Name)" SearchFunc="SearchSubjects" Variant="Variant.Outlined" @bind-Value="_selectedSubjects[1]" />
     <MudAutocomplete T="Subject" Required RequiredError="@Localizer["IndividualPlanSubjectError"]" Label="@($"{Localizer["Subject"]} 3")" ToStringFunc="@(s => s is null ? null : s.Name)" SearchFunc="SearchSubjects" Variant="Variant.Outlined" @bind-Value="_selectedSubjects[2]" />
-    <MudTextField T="string" Variant="Variant.Outlined" @bind-Value="_individualPlan.ThematicAreas" />
+    <MudTextField T="string" Label="@Localizer["IndividualPlanThematicAreas"]" Variant="Variant.Outlined" @bind-Value="_individualPlan.ThematicAreas" />
 
     <MudText Typo="Typo.h5">@Localizer["IndividualPlanAdditionalSubjectsInfo"]</MudText>
-    <MudAutocomplete T="Subject" Label="@($"{Localizer["Subject"]} 1")" ToStringFunc="@(s => s is null ? null : s.Name)" SearchFunc="SearchSubjects" Variant="Variant.Outlined" />
-    <MudAutocomplete T="Subject" Label="@($"{Localizer["Subject"]} 2")" ToStringFunc="@(s => s is null ? null : s.Name)" SearchFunc="SearchSubjects" Variant="Variant.Outlined" />
+    <MudAutocomplete T="Subject" Label="@($"{Localizer["Subject"]} 1")" ToStringFunc="@(s => s is null ? null : s.Name)" SearchFunc="SearchSubjects" Variant="Variant.Outlined" @bind-Value="@_selectedOptionalSubjects[0]" />
+    <MudAutocomplete T="Subject" Label="@($"{Localizer["Subject"]} 2")" ToStringFunc="@(s => s is null ? null : s.Name)" SearchFunc="SearchSubjects" Variant="Variant.Outlined" @bind-Value="@_selectedOptionalSubjects[1]" />
 
-    <MudText Typo="Typo.h5">@Localizer["IndividualPlanThesisInfo"]</MudText>
-    <MudTextField T="string" Label="@Localizer["IndividualPlanThesis"]" Required RequiredError="@Localizer["IndividualPlanThesisError"]" Variant="Variant.Outlined" />
+    <MudText Typo="Typo.h5">@Localizer["IndividualPlanWrittenThesisInfo"]</MudText>
+    <MudTextField T="string" Label="@Localizer["IndividualPlanThesis"]" Required RequiredError="@Localizer["IndividualPlanThesisError"]" Variant="Variant.Outlined" @bind-Value="@_individualPlan.WrittenThesisTitle" />
+    <MudTextField T="string" Label="@Localizer["IndividualPlanWrittenThesisRequiredLiterature"]" Required RequiredError="@Localizer["IndividualPlanWrittenThesisLiteratureError"]" Variant="Variant.Outlined" AutoGrow Lines="10" @bind-Value="@_individualPlan.WrittenThesisRequiredLiterature" />
+    <MudTextField T="string" Label="@Localizer["IndividualPlanWrittenThesisRecommendedLiterature"]" Required RequiredError="@Localizer["IndividualPlanWrittenThesisLiteratureError"]" Variant="Variant.Outlined" AutoGrow Lines="10" @bind-Value="@_individualPlan.WrittenThesisRecommendedLiterature" />
+    <MudTextField T="string" Label="@Localizer["IndividualPlanWrittenThesisRecommendedLectures"]" Required RequiredError="@Localizer["IndividualPlanWrittenThesisRecommendedLecturesError"]" Variant="Variant.Outlined" AutoGrow Lines="8" @bind-Value="@_individualPlan.WrittenThesisRecommendedLectures" />
 
-    @if (_selectedStudent is not null) {
-        @if (_selectedStudent.Thesis is not null)
-        {
-            <MudField T="Thesis" Label="@Localizer["IndividualPlanThesis"]" Variant="Variant.Outlined">@_selectedStudent.Thesis.Title</MudField>
-        }
-        else
-        {
-            <MudText Color="Color.Error">@Localizer["IndividualPlanThesisError"]</MudText>
-        }
+    <MudText Typo="Typo.h4">@Localizer["ScientificPart"]</MudText>
+
+    @if (_selectedStudent?.Thesis is not null) {
+        <MudField T="Thesis" Label="@Localizer["IndividualPlanThesis"]" Variant="Variant.Outlined">@_selectedStudent.Thesis.Title</MudField>
+        <MudField T="string" Label="@Localizer["IndividualThesisResearchTask"]" Variant="Variant.Outlined">@_selectedStudent.Thesis.ResearchTask</MudField>
+        <MudField T="string" Label="@Localizer["IndividualPlanSolutionResults"]" Variant="Variant.Outlined">@_selectedStudent.Thesis.SolutionResults</MudField>
     }
+
+    <MudStack>
+        <MudStack Row>
+            <MudText Typo="Typo.h5">@Localizer["IndividualPlanSolvingProcedure"]</MudText>
+            <MudSpacer />
+            <MudText Typo="Typo.h5">@Localizer["IndividualPlanDeadline"]</MudText>
+        </MudStack>
+        <MudStack Row>
+            <MudTextField Class="flex-1" T="string" Required Variant="Variant.Outlined" AutoGrow @bind-Value="_individualPlan.Tasks[0]" />
+            <MudDatePicker Class="flex-none" ShowToolbar="false" Required RequiredError="@Localizer["IndividualPlanTaskError"]" Variant="Variant.Outlined" @bind-Date="_individualPlan.TaskDeadlines[0]" />
+        </MudStack>
+        <MudStack Row>
+            <MudTextField Class="flex-1" T="string" Required Variant="Variant.Outlined" AutoGrow @bind-Value="_individualPlan.Tasks[1]" />
+            <MudDatePicker Class="flex-none" ShowToolbar="false" Required RequiredError="@Localizer["IndividualPlanTaskError"]" Variant="Variant.Outlined" @bind-Date="_individualPlan.TaskDeadlines[1]" />
+        </MudStack>
+        <MudStack Row>
+            <MudTextField Class="flex-1" T="string" Required Variant="Variant.Outlined" AutoGrow @bind-Value="_individualPlan.Tasks[2]" />
+            <MudDatePicker Class="flex-none" ShowToolbar="false" Required RequiredError="@Localizer["IndividualPlanTaskError"]" Variant="Variant.Outlined" @bind-Date="_individualPlan.TaskDeadlines[2]" />
+        </MudStack>
+        <MudStack Row>
+            <MudTextField Class="flex-1" T="string" Required Variant="Variant.Outlined" AutoGrow @bind-Value="_individualPlan.Tasks[3]" />
+            <MudDatePicker Class="flex-none" ShowToolbar="false" Required RequiredError="@Localizer["IndividualPlanTaskError"]" Variant="Variant.Outlined" @bind-Date="_individualPlan.TaskDeadlines[3]" />
+        </MudStack>
+        <MudStack Row>
+            <MudTextField Class="flex-1" T="string" Required Variant="Variant.Outlined" AutoGrow @bind-Value="_individualPlan.Tasks[4]" />
+            <MudDatePicker Class="flex-none" ShowToolbar="false" Required RequiredError="@Localizer["IndividualPlanTaskError"]" Variant="Variant.Outlined" @bind-Date="_individualPlan.TaskDeadlines[4]" />
+        </MudStack>
+        <MudStack Row>
+            <MudTextField Class="flex-1" T="string" Required Variant="Variant.Outlined" AutoGrow @bind-Value="_individualPlan.Tasks[5]" />
+            <MudDatePicker Class="flex-none" ShowToolbar="false" Required RequiredError="@Localizer["IndividualPlanTaskError"]" Variant="Variant.Outlined" @bind-Date="_individualPlan.TaskDeadlines[4]" />
+        </MudStack>
+    </MudStack>
 
     <MudButton class="mt-4" OnClick="HandleIndividualPlan" Variant="Variant.Filled" Color="Color.Primary">@(IndividualPlanGuid is null ? Localizer["Add"] : Localizer["Edit"])</MudButton>
 </MudForm>
@@ -99,6 +135,7 @@
     private IndividualPlan _individualPlan = new();
     private Student? _selectedStudent;
     private Subject[] _selectedSubjects = new Subject[3];
+    private Subject[] _selectedOptionalSubjects = new Subject[2];
 
     protected override async Task OnInitializedAsync()
     {
@@ -114,10 +151,20 @@
         }
         else
         {
+            _individualPlan.Tasks = new string[6];
+            _individualPlan.TaskDeadlines = new DateTime?[6];
+
             _individualPlan.StudyStartDate = new DateTime(DateTime.Now.Year, 9, 1);
             _individualPlan.DissertationExamDate = new DateTime(DateTime.Now.Year + 1, 9, 6);
             _individualPlan.DissertationSubmissionDate = new DateTime(DateTime.Now.Year + 3, 4, 1);
             _individualPlan.StudyEndDate = new DateTime(DateTime.Now.Year + 3, 8, 31);
+
+            _individualPlan.TaskDeadlines[0] = new DateTime(DateTime.Now.Year, 12, 1);
+            _individualPlan.TaskDeadlines[1] = new DateTime(DateTime.Now.Year + 1, 6, 1);
+            _individualPlan.TaskDeadlines[2] = new DateTime(DateTime.Now.Year + 1, 12, 1);
+            _individualPlan.TaskDeadlines[3] = new DateTime(DateTime.Now.Year + 2, 6, 1);
+            _individualPlan.TaskDeadlines[4] = new DateTime(DateTime.Now.Year + 2, 12, 1);
+            _individualPlan.TaskDeadlines[5] = new DateTime(DateTime.Now.Year + 3, 4, 1);
         }
 
         _students = await UnitOfWork.Students.GetAllAsync();
@@ -155,6 +202,7 @@
             _individualPlan.StudyEndDate = _individualPlan.StudyEndDate?.ToUniversalTime();
             _individualPlan.Student = _selectedStudent;
             _individualPlan.Subjects = _selectedSubjects.ToList();
+            _individualPlan.OptionalSubjects = _selectedOptionalSubjects.ToList();
             if (IndividualPlanGuid is null)
             {
                 await UnitOfWork.IndividualPlans.AddAsync(_individualPlan);

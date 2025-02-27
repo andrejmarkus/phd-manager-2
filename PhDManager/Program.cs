@@ -1,4 +1,5 @@
 using Hangfire;
+using Hangfire.Dashboard;
 using Hangfire.PostgreSql;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -7,6 +8,7 @@ using MudBlazor.Services;
 using PhDManager.Components;
 using PhDManager.Components.Account;
 using PhDManager.Data;
+using PhDManager.Models;
 using PhDManager.Models.Options;
 using PhDManager.Services;
 using PhDManager.Services.IRepositories;
@@ -101,8 +103,6 @@ app.UseRequestLocalization(new RequestLocalizationOptions()
 
 app.UseHttpsRedirection();
 
-app.UseHangfireDashboard();
-
 app.MapStaticAssets();
 app.UseAntiforgery();
 
@@ -113,6 +113,11 @@ app.MapRazorComponents<App>()
 
 // Add additional endpoints required by the Identity /Account Razor components.
 app.MapAdditionalIdentityEndpoints();
+
+app.UseHangfireDashboard("/cron/dashboard", new DashboardOptions()
+{
+    Authorization = [ new AuthorizationFilter() ]
+});
 
 using (var scope = app.Services.CreateScope())
 {
@@ -127,3 +132,15 @@ using (var scope = app.Services.CreateScope())
 }
 
 app.Run();
+
+public class AuthorizationFilter : IDashboardAuthorizationFilter
+{
+    public bool Authorize(DashboardContext context)
+    {
+        var httpContext = context.GetHttpContext();
+
+        var auth = httpContext.User.Identity?.IsAuthenticated ?? false;
+        var role = httpContext.User.IsInRole(Admin.Role);
+        return auth && role;
+    }
+}

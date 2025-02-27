@@ -3,10 +3,18 @@ using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using PhDManager.Data;
 using PhDManager.Models;
+using PhDManager.Services.IRepositories;
 
 namespace PhDManager.Services
 {
-    public class UsersService(IUserStore<ApplicationUser> UserStore, UserManager<ApplicationUser> UserManager, RoleManager<IdentityRole> RoleManager, AuthenticationStateProvider AuthenticationStateProvider)
+    public class UsersService(
+        IUnitOfWork UnitOfWork,
+        IUserStore<ApplicationUser> UserStore, 
+        UserManager<ApplicationUser> UserManager, 
+        RoleManager<IdentityRole> RoleManager, 
+        AuthenticationStateProvider AuthenticationStateProvider, 
+        ActiveDirectoryService ActiveDirectoryService
+        )
     {
         public IEnumerable<IdentityRole> Roles => RoleManager.Roles;
 
@@ -58,6 +66,38 @@ namespace PhDManager.Services
                 await UserManager.RemoveFromRolesAsync(unusedUser, userRoles);
                 await UserManager.AddToRoleAsync(unusedUser, role);
             }
+        }
+
+        public async Task UpdateUsers()
+        {
+            var users = UserManager.Users.Where(u => !u.IsExternal).ToList();
+            foreach (var user in users)
+            {
+                if (user.UserName is null) continue;
+
+                var entry = await ActiveDirectoryService.SearchUserAsync(user.UserName);
+
+                if (entry is null) continue;
+
+                user.Email = entry.DirectoryAttributes["mail"].GetValue<string>();
+                user.UserName = entry.DirectoryAttributes["uid"].GetValue<string>();
+                user.DisplayName = entry.DirectoryAttributes["displayName"].GetValue<string>();
+
+                await UserManager.UpdateAsync(user);
+            }
+        }
+
+        public async Task ClearRegistrations()
+        {
+            var registrations = (await UnitOfWork.Registrations.GetAllAsync())?.Where(r => r.Expiration < DateTime.Now);
+
+            if (registrations is null) return;
+
+            foreach (var registration in registrations)
+            {
+                UnitOfWork.Registrations.Delete(registration);
+            }
+            await UnitOfWork.CompleteAsync();
         }
 
         public async Task DeleteUserAsync(ApplicationUser user)

@@ -1,3 +1,7 @@
+using Hangfire;
+using Hangfire.Annotations;
+using Hangfire.Dashboard;
+using Hangfire.PostgreSql;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -48,6 +52,13 @@ var connectionString = builder.Configuration.GetSection(DatabaseOptions.Database
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
+builder.Services.AddHangfire(options => options
+    .UseSimpleAssemblyNameTypeSerializer()
+    .UseRecommendedSerializerSettings()
+    .UsePostgreSqlStorage(c => c.UseNpgsqlConnection(connectionString))
+);
+builder.Services.AddHangfireServer();
+
 builder.Services.AddIdentityCore<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>()
@@ -57,10 +68,11 @@ builder.Services.AddIdentityCore<ApplicationUser>(options => options.SignIn.Requ
 builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
 builder.Services.AddSingleton<SchoolYearService>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-builder.Services.AddScoped<RoleInitializer>();
 builder.Services.AddScoped<ActiveDirectoryService>();
 builder.Services.AddScoped<UsersService>();
 builder.Services.AddScoped<DocumentService>();
+builder.Services.AddScoped<RoleInitializer>();
+builder.Services.AddScoped<JobInitializer>();
 
 var app = builder.Build();
 
@@ -100,9 +112,21 @@ using (var scope = app.Services.CreateScope())
     var services = scope.ServiceProvider;
     var context = services.GetRequiredService<ApplicationDbContext>();
     var roleInitializer = services.GetRequiredService<RoleInitializer>();
+    var jobInitializer = services.GetRequiredService<JobInitializer>();
 
     await context.Database.MigrateAsync();
     await roleInitializer.InitializeAsync();
+    jobInitializer.Initialize();
 }
 
 app.Run();
+
+public class AuthorizationFilter : IDashboardAuthorizationFilter
+{
+    public bool Authorize([NotNull] DashboardContext context)
+    {
+        var httpContext = context.GetHttpContext();
+
+        return httpContext.User.Identity?.IsAuthenticated ?? false;
+    }
+}

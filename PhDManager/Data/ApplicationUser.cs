@@ -8,6 +8,7 @@ namespace PhDManager.Data
     {
         public string? DisplayName { get; set; }
         public DateTime? Birthdate { get; set; }
+        public bool IsExternal { get; set; } = false;
 
         public virtual Admin? Admin { get; set; }
 

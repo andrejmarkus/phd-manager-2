@@ -639,4 +639,16 @@
   <data name="IndividualPlanTaskError" xml:space="preserve">
     <value>Je nutné zadať úlohu!</value>
   </data>
+  <data name="SystemSettings" xml:space="preserve">
+    <value>Nastavenia systému</value>
+  </data>
+  <data name="SystemClosedError" xml:space="preserve">
+    <value>Systém bol uzatvorený!</value>
+  </data>
+  <data name="SystemOpen" xml:space="preserve">
+    <value>Otvorený</value>
+  </data>
+  <data name="SystemClosed" xml:space="preserve">
+    <value>Zatvorený</value>
+  </data>
 </root>

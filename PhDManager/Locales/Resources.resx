@@ -639,4 +639,16 @@
   <data name="IndividualPlanTaskError" xml:space="preserve">
     <value>It is necessary to enter the task!</value>
   </data>
+  <data name="SystemSettings" xml:space="preserve">
+    <value>System settings</value>
+  </data>
+  <data name="SystemClosedError" xml:space="preserve">
+    <value>System was closed!</value>
+  </data>
+  <data name="SystemOpen" xml:space="preserve">
+    <value>Open</value>
+  </data>
+  <data name="SystemClosed" xml:space="preserve">
+    <value>Closed</value>
+  </data>
 </root>

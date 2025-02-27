@@ -1,0 +1,22 @@
+﻿@page "/admin/system-settings"
+
+@using Microsoft.Extensions.Localization
+@using PhDManager.Locales
+@using PhDManager.Services
+
+@rendermode InteractiveServer
+
+@inject AppStateService AppStateService
+@inject IStringLocalizer<Resources> Localizer
+
+<MudText>@(_isSystemOpen ? Localizer["SystemOpen"] : Localizer["SystemClosed"])</MudText>
+<MudSwitch @bind-Value="@_isSystemOpen" @bind-Value:after="async () => await AppStateService.SetSystemOpenAsync(_isSystemOpen)" />
+
+@code {
+    private bool _isSystemOpen;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _isSystemOpen = await AppStateService.IsSystemOpenAsync();
+    }
+}

@@ -1510,6 +1510,42 @@ namespace PhDManager.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Closed.
+        /// </summary>
+        public static string SystemClosed {
+            get {
+                return ResourceManager.GetString("SystemClosed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to System was closed!.
+        /// </summary>
+        public static string SystemClosedError {
+            get {
+                return ResourceManager.GetString("SystemClosedError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Open.
+        /// </summary>
+        public static string SystemOpen {
+            get {
+                return ResourceManager.GetString("SystemOpen", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to System settings.
+        /// </summary>
+        public static string SystemSettings {
+            get {
+                return ResourceManager.GetString("SystemSettings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Teachers.
         /// </summary>
         public static string Teachers {

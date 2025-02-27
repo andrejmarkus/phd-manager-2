@@ -19,5 +19,14 @@ services:
     volumes:
       - db-data:/var/lib/postgresql/data
 
+  phdmanager.cache:
+    image: redis:latest
+    command: ["redis-server", "--requirepass", "phdmanager"]
+    ports:
+      - '6379:6379'
+    volumes:
+      - cache-data:/data
+
 volumes:
   db-data:
+  cache-data:  

@@ -17,80 +17,90 @@
 @inject IStringLocalizer<Resources> Localizer
 @inject UsersService UsersService
 @inject NavigationManager NavigationManager
-@inject UserManager<ApplicationUser> UserManager;
-@inject SchoolYearService SchoolYearService;
+@inject UserManager<ApplicationUser> UserManager
+@inject SchoolYearService SchoolYearService
+@inject AppStateService AppStateService
 
 @attribute [Authorize(Roles = $"{Admin.Role}, {Teacher.Role}")]
 
 <PageTitle>@(ThesisGuid is null ? Localizer["DissertationThesisAdd"] : Localizer["DisserationThesisEdit"])</PageTitle>
 
-<MudText Class="mb-5" Typo="Typo.h3">@Localizer["DissertationThesisProposal"]</MudText>
+@if (_isSystemOpen)
+{
+    <MudText Class="mb-5" Typo="Typo.h3">@Localizer["DissertationThesisProposal"]</MudText>
 
-<MudForm @ref="_form">
-    <MudText Typo="Typo.h5">@Localizer["DissertationThesisAssignment"]</MudText>
-    <MudCheckBox T="bool" @bind-Value="_isEnglish">@Localizer["DissertationThesisEnglish"]</MudCheckBox>
-    <MudTextField T="string" Required RequiredError="@Localizer["DissertationThesisTitleError"]" Label="@Localizer["DissertationThesisTitle"]" Variant="Variant.Outlined" @bind-Value="_thesis.Title" />
-    @if (_isEnglish)
-    {
-        <MudTextField T="string" Label="Dissertation thesis title" Variant="Variant.Outlined" @bind-Value="_thesis.TitleEnglish" />
-    }
-    <MudAutocomplete T="Teacher" Required RequiredError="@Localizer["SupervisorError"]" Label="@Localizer["Supervisor"]" ToStringFunc="@(t => t is null ? null : t.User.DisplayName)" SearchFunc="SearchTeachers" Variant="Variant.Outlined" @bind-Value="_thesis.Supervisor" />
-    <MudAutocomplete T="Teacher" Label="@Localizer["SupervisorSpecialist"]" ToStringFunc="@(t => t is null ? null : t.User.DisplayName)" SearchFunc="SearchTeachers" Variant="Variant.Outlined" @bind-Value="_thesis.SupervisorSpecialist" />
+    <MudForm @ref="_form">
+        <MudText Typo="Typo.h5">@Localizer["DissertationThesisAssignment"]</MudText>
+        <MudCheckBox T="bool" @bind-Value="_isEnglish">@Localizer["DissertationThesisEnglish"]</MudCheckBox>
+        <MudTextField T="string" Required RequiredError="@Localizer["DissertationThesisTitleError"]" Label="@Localizer["DissertationThesisTitle"]" Variant="Variant.Outlined" @bind-Value="_thesis.Title" />
+        @if (_isEnglish)
+        {
+            <MudTextField T="string" Label="Dissertation thesis title" Variant="Variant.Outlined" @bind-Value="_thesis.TitleEnglish" />
+        }
+        <MudAutocomplete T="Teacher" Required RequiredError="@Localizer["SupervisorError"]" Label="@Localizer["Supervisor"]" ToStringFunc="@(t => t is null ? null : t.User.DisplayName)" SearchFunc="SearchTeachers" Variant="Variant.Outlined" @bind-Value="_thesis.Supervisor" />
+        <MudAutocomplete T="Teacher" Label="@Localizer["SupervisorSpecialist"]" ToStringFunc="@(t => t is null ? null : t.User.DisplayName)" SearchFunc="SearchTeachers" Variant="Variant.Outlined" @bind-Value="_thesis.SupervisorSpecialist" />
 
-    <MudText Typo="Typo.h5">@Localizer["DissertationThesisClassification"]</MudText>
-    <MudAutocomplete T="StudyProgram" Required RequiredError="@Localizer["StudyProgramError"]" Label="@Localizer["StudyProgram"]" ToStringFunc="@(sp => sp is null ? null : sp.Name)" Variant="Variant.Outlined" SearchFunc="SearchStudyPrograms" @bind-Value="_thesis.StudyProgram" />
-    @if (_thesis.StudyProgram is not null)
-    {
-        <MudField T="string" Label="@Localizer["StudyField"]" Variant="Variant.Outlined">@_thesis.StudyProgram.StudyFieldName</MudField>
-    }
-    <MudStack Row>
-        <MudCheckBox T="bool" @bind-Value="_thesis.DailyStudy">@Localizer["StudyFormDaily"]</MudCheckBox>
-        <MudCheckBox T="bool" @bind-Value="_thesis.ExternalStudy">@Localizer["StudyFormExternal"]</MudCheckBox>
-    </MudStack>
-     
-    @if (_thesis.StudyProgram is not null)
-    {
-        <MudStack Spacing="0">
-            <MudText>Povinné študijné jednotky</MudText>
-            @{int index = 1;}
-            @foreach (var subject in _thesis.StudyProgram.ThesisSubjects)
-            {
-                <MudField T="string" Label="@($"{Localizer["Subject"]} {index}")" Variant="Variant.Outlined">@subject</MudField>
-                index++;
-            }
+        <MudText Typo="Typo.h5">@Localizer["DissertationThesisClassification"]</MudText>
+        <MudAutocomplete T="StudyProgram" Required RequiredError="@Localizer["StudyProgramError"]" Label="@Localizer["StudyProgram"]" ToStringFunc="@(sp => sp is null ? null : sp.Name)" Variant="Variant.Outlined" SearchFunc="SearchStudyPrograms" @bind-Value="_thesis.StudyProgram" />
+        @if (_thesis.StudyProgram is not null)
+        {
+            <MudField T="string" Label="@Localizer["StudyField"]" Variant="Variant.Outlined">@_thesis.StudyProgram.StudyFieldName</MudField>
+        }
+        <MudStack Row>
+            <MudCheckBox T="bool" @bind-Value="_thesis.DailyStudy">@Localizer["StudyFormDaily"]</MudCheckBox>
+            <MudCheckBox T="bool" @bind-Value="_thesis.ExternalStudy">@Localizer["StudyFormExternal"]</MudCheckBox>
         </MudStack>
-    }
 
-    <MudText Typo="Typo.h5">Špecifikácia témy</MudText>
-    <MudTextField T="string" Required RequiredError="@Localizer["DissertationThesisDescriptionError"]" Label="@Localizer["DissertationThesisDescription"]" AutoGrow Lines="5" Variant="Variant.Outlined" @bind-Value="_thesis.Description" />
-    @if (_isEnglish)
-    {
-        <MudTextField T="string" Label="Detailed problem description" AutoGrow Lines="5" Variant="Variant.Outlined" @bind-Value="_thesis.DescriptionEnglish" />
-    }
-    <MudTextField T="string" Required RequiredError="@Localizer["DissertationThesisScientificContributionError"]" Label="@Localizer["DissertationThesisScientificContribution"]" AutoGrow Lines="3" Variant="Variant.Outlined" @bind-Value="_thesis.ScientificContribution" />
-    <MudTextField T="string" Required RequiredError="@Localizer["DissertationThesisScientificProgressError"]" Label="@Localizer["DissertationThesisScientificProgress"]" AutoGrow Lines="3" Variant="Variant.Outlined" @bind-Value="_thesis.ScientificProgress" />
+        @if (_thesis.StudyProgram is not null)
+        {
+            <MudStack Spacing="0">
+                <MudText>Povinné študijné jednotky</MudText>
+                @{int index = 1;}
+                @foreach (var subject in _thesis.StudyProgram.ThesisSubjects)
+                {
+                    <MudField T="string" Label="@($"{Localizer["Subject"]} {index}")" Variant="Variant.Outlined">@subject</MudField>
+                    index++;
+                }
+            </MudStack>
+        }
 
-    <MudText Typo="Typo.h5">@Localizer["MoreInformations"]</MudText>
-    <MudStack>
-        <MudSelect T="string" Required RequiredError="@Localizer["ResearchTypeError"]" Label="@Localizer["ResearchType"]" Variant="Variant.Outlined" @bind-Value="_thesis.ResearchType">
-            <MudSelectItem T="string" Value="@("Aplikovaný výskum a experimentálny vývoj")">@Localizer["ResearchTypeAppliedExperimental"]</MudSelectItem>
-            <MudSelectItem T="string" Value="@("Aplikovaný výskum")">@Localizer["ResearchTypeApplied"]</MudSelectItem>
-            <MudSelectItem T="string" Value="@("Základný výskum")">@Localizer["ResearchTypeBasic"]</MudSelectItem>
-        </MudSelect>
-        <MudText>@Localizer["ResearchTypeInfo"]</MudText>
-    </MudStack>
-    <MudTextField T="string" Required RequiredError="@Localizer["DissertationThesisResearchTaskError"]" Label="@Localizer["DissertationThesisResearchTask"]" AutoGrow Lines="4" Variant="Variant.Outlined" @bind-Value="_thesis.ResearchTask" />
-    <MudStack>
-        <MudTextField T="string" Required RequiredError="@Localizer["DissertationThesisSolutionResultsError"]" Label="@Localizer["DissertationThesisSolutionResults"]" AutoGrow Lines="6" Variant="Variant.Outlined" @bind-Value="_thesis.SolutionResults" />
-        <MudText>@Localizer["DissertationThesisSolutionResultsInfo"]</MudText>
-    </MudStack>
+        <MudText Typo="Typo.h5">Špecifikácia témy</MudText>
+        <MudTextField T="string" Required RequiredError="@Localizer["DissertationThesisDescriptionError"]" Label="@Localizer["DissertationThesisDescription"]" AutoGrow Lines="5" Variant="Variant.Outlined" @bind-Value="_thesis.Description" />
+        @if (_isEnglish)
+        {
+            <MudTextField T="string" Label="Detailed problem description" AutoGrow Lines="5" Variant="Variant.Outlined" @bind-Value="_thesis.DescriptionEnglish" />
+        }
+        <MudTextField T="string" Required RequiredError="@Localizer["DissertationThesisScientificContributionError"]" Label="@Localizer["DissertationThesisScientificContribution"]" AutoGrow Lines="3" Variant="Variant.Outlined" @bind-Value="_thesis.ScientificContribution" />
+        <MudTextField T="string" Required RequiredError="@Localizer["DissertationThesisScientificProgressError"]" Label="@Localizer["DissertationThesisScientificProgress"]" AutoGrow Lines="3" Variant="Variant.Outlined" @bind-Value="_thesis.ScientificProgress" />
 
-    <MudButton class="mt-4" OnClick="HandleThesis" Variant="Variant.Filled" Color="Color.Primary">@(ThesisGuid is null ? Localizer["Add"] : Localizer["Edit"])</MudButton>
-</MudForm>
+        <MudText Typo="Typo.h5">@Localizer["MoreInformations"]</MudText>
+        <MudStack>
+            <MudSelect T="string" Required RequiredError="@Localizer["ResearchTypeError"]" Label="@Localizer["ResearchType"]" Variant="Variant.Outlined" @bind-Value="_thesis.ResearchType">
+                <MudSelectItem T="string" Value="@("Aplikovaný výskum a experimentálny vývoj")">@Localizer["ResearchTypeAppliedExperimental"]</MudSelectItem>
+                <MudSelectItem T="string" Value="@("Aplikovaný výskum")">@Localizer["ResearchTypeApplied"]</MudSelectItem>
+                <MudSelectItem T="string" Value="@("Základný výskum")">@Localizer["ResearchTypeBasic"]</MudSelectItem>
+            </MudSelect>
+            <MudText>@Localizer["ResearchTypeInfo"]</MudText>
+        </MudStack>
+        <MudTextField T="string" Required RequiredError="@Localizer["DissertationThesisResearchTaskError"]" Label="@Localizer["DissertationThesisResearchTask"]" AutoGrow Lines="4" Variant="Variant.Outlined" @bind-Value="_thesis.ResearchTask" />
+        <MudStack>
+            <MudTextField T="string" Required RequiredError="@Localizer["DissertationThesisSolutionResultsError"]" Label="@Localizer["DissertationThesisSolutionResults"]" AutoGrow Lines="6" Variant="Variant.Outlined" @bind-Value="_thesis.SolutionResults" />
+            <MudText>@Localizer["DissertationThesisSolutionResultsInfo"]</MudText>
+        </MudStack>
+
+        <MudButton class="mt-4" OnClick="HandleThesis" Variant="Variant.Filled" Color="Color.Primary">@(ThesisGuid is null ? Localizer["Add"] : Localizer["Edit"])</MudButton>
+    </MudForm>
+}
+else
+{
+    <MudText Typo="Typo.h5" Color="Color.Error">@Localizer["SystemClosedError"]</MudText>
+}
 
 @code {
     [Parameter]
     public string? ThesisGuid { get; set; }
+
+    private bool _isSystemOpen;
 
     private MudForm? _form;
 
@@ -102,6 +112,8 @@
 
     protected override async Task OnInitializedAsync()
     {
+        _isSystemOpen = await AppStateService.IsSystemOpenAsync();
+
         if (ThesisGuid is not null)
         {
             var thesis = await UnitOfWork.Theses.GetByGuidAsync(ThesisGuid);

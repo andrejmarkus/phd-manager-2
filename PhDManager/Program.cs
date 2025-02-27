@@ -1,6 +1,4 @@
 using Hangfire;
-using Hangfire.Annotations;
-using Hangfire.Dashboard;
 using Hangfire.PostgreSql;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -48,16 +46,22 @@ builder.Services.AddAuthentication()
         options.ClientSecret = googleOptions.ClientSecret;
     });
 
-var connectionString = builder.Configuration.GetSection(DatabaseOptions.Database).Get<DatabaseOptions>()?.ConnectionString ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
-builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(connectionString));
+var databaseConnectionString = builder.Configuration.GetSection(DatabaseOptions.Database).Get<DatabaseOptions>()?.ConnectionString ?? throw new InvalidOperationException("Connection string not found.");
+builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(databaseConnectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddHangfire(options => options
     .UseSimpleAssemblyNameTypeSerializer()
     .UseRecommendedSerializerSettings()
-    .UsePostgreSqlStorage(c => c.UseNpgsqlConnection(connectionString))
+    .UsePostgreSqlStorage(c => c.UseNpgsqlConnection(databaseConnectionString))
 );
 builder.Services.AddHangfireServer();
+
+var cacheConnectionString = builder.Configuration.GetSection(CacheOptions.Cache).Get<CacheOptions>()?.ConnectionString ?? throw new InvalidOperationException("Connection string not found.");
+builder.Services.AddStackExchangeRedisCache(options =>
+{
+    options.Configuration = cacheConnectionString;
+});
 
 builder.Services.AddIdentityCore<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddRoles<IdentityRole>()
@@ -68,6 +72,7 @@ builder.Services.AddIdentityCore<ApplicationUser>(options => options.SignIn.Requ
 builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
 builder.Services.AddSingleton<SchoolYearService>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddScoped<AppStateService>();
 builder.Services.AddScoped<ActiveDirectoryService>();
 builder.Services.AddScoped<UsersService>();
 builder.Services.AddScoped<DocumentService>();
@@ -96,6 +101,8 @@ app.UseRequestLocalization(new RequestLocalizationOptions()
 
 app.UseHttpsRedirection();
 
+app.UseHangfireDashboard();
+
 app.MapStaticAssets();
 app.UseAntiforgery();
 
@@ -120,13 +127,3 @@ using (var scope = app.Services.CreateScope())
 }
 
 app.Run();
-
-public class AuthorizationFilter : IDashboardAuthorizationFilter
-{
-    public bool Authorize([NotNull] DashboardContext context)
-    {
-        var httpContext = context.GetHttpContext();
-
-        return httpContext.User.Identity?.IsAuthenticated ?? false;
-    }
-}

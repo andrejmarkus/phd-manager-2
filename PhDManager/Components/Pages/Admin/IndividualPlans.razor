@@ -96,5 +96,8 @@
 
         UnitOfWork.IndividualPlans.Delete(individualPlan);
         await UnitOfWork.CompleteAsync();
+
+        _individualPlans = await UnitOfWork.IndividualPlans.GetAllAsync();
+        _individualPlans = _individualPlans?.Where(ip => ip.Student.Thesis is not null);
     }
 }

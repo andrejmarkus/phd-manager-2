@@ -91,6 +91,7 @@
         if (user is null)
         {
             user = await UsersService.RegisterLdapUserAsync(entry, Input.Password, Student.Role);
+            await UsersService.AddStudentToUser(user, new());
         } 
         else
         {

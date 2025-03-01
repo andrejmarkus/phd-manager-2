@@ -35,6 +35,7 @@ namespace PhDManager.Data.Migrations
                     Id = table.Column<string>(type: "text", nullable: false),
                     DisplayName = table.Column<string>(type: "text", nullable: true),
                     Birthdate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    IsExternal = table.Column<bool>(type: "boolean", nullable: false),
                     UserName = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
@@ -63,6 +64,7 @@ namespace PhDManager.Data.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Guid = table.Column<string>(type: "text", nullable: false),
                     Url = table.Column<string>(type: "text", nullable: false),
+                    Role = table.Column<string>(type: "text", nullable: false),
                     Expiration = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
@@ -252,6 +254,7 @@ namespace PhDManager.Data.Migrations
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    IsRequired = table.Column<bool>(type: "boolean", nullable: false),
                     Variant = table.Column<char>(type: "character(1)", nullable: true),
                     Name = table.Column<string>(type: "text", nullable: false),
                     Semester = table.Column<string>(type: "text", nullable: false),
@@ -316,7 +319,14 @@ namespace PhDManager.Data.Migrations
                     DissertationExamDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     DissertationSubmissionDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     StudyStartDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    StudyEndDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                    StudyEndDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    ThematicAreas = table.Column<string>(type: "text", nullable: false),
+                    WrittenThesisTitle = table.Column<string>(type: "text", nullable: false),
+                    WrittenThesisRequiredLiterature = table.Column<string>(type: "text", nullable: false),
+                    WrittenThesisRecommendedLiterature = table.Column<string>(type: "text", nullable: false),
+                    WrittenThesisRecommendedLectures = table.Column<string>(type: "text", nullable: false),
+                    Tasks = table.Column<string[]>(type: "text[]", nullable: false),
+                    TaskDeadlines = table.Column<DateTime?[]>(type: "timestamp with time zone[]", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -342,6 +352,30 @@ namespace PhDManager.Data.Migrations
                     table.ForeignKey(
                         name: "FK_IndividualPlanSubject_Subjects_SubjectsId",
                         column: x => x.SubjectsId,
+                        principalTable: "Subjects",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "IndividualPlanSubject1",
+                columns: table => new
+                {
+                    OptionalIndividualPlansId = table.Column<int>(type: "integer", nullable: false),
+                    OptionalSubjectsId = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_IndividualPlanSubject1", x => new { x.OptionalIndividualPlansId, x.OptionalSubjectsId });
+                    table.ForeignKey(
+                        name: "FK_IndividualPlanSubject1_IndividualPlans_OptionalIndividualPl~",
+                        column: x => x.OptionalIndividualPlansId,
+                        principalTable: "IndividualPlans",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_IndividualPlanSubject1_Subjects_OptionalSubjectsId",
+                        column: x => x.OptionalSubjectsId,
                         principalTable: "Subjects",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -439,17 +473,17 @@ namespace PhDManager.Data.Migrations
 
             migrationBuilder.InsertData(
                 table: "Subjects",
-                columns: new[] { "Id", "Name", "Semester", "StudyProgramId", "Variant" },
+                columns: new[] { "Id", "IsRequired", "Name", "Semester", "StudyProgramId", "Variant" },
                 values: new object[,]
                 {
-                    { 1, "Matematické princípy informatiky - A: Deterministické metódy", "zimný", 1, 'A' },
-                    { 2, "Matematické princípy informatiky - B: Stochastické metódy", "zimný", 1, 'B' },
-                    { 3, "Teória a metodológia aplikovanej informatiky - A: Znalostné systémy a algoritmy", "letný", 1, 'A' },
-                    { 4, "Teória a metodológia aplikovanej informatiky - B: Výpočtová inteligencia", "letný", 1, 'B' },
-                    { 5, "Predmet špecializácie", "letný", 1, null },
-                    { 6, "Manažérske teórie", "zimný", 2, null },
-                    { 7, "Metodológia výskumu v manažmente", "zimný", 2, null },
-                    { 8, "Predmet špecializácie", "letný", 2, null }
+                    { 1, true, "Matematické princípy informatiky - A: Deterministické metódy", "zimný", 1, 'A' },
+                    { 2, true, "Matematické princípy informatiky - B: Stochastické metódy", "zimný", 1, 'B' },
+                    { 3, true, "Teória a metodológia aplikovanej informatiky - A: Znalostné systémy a algoritmy", "letný", 1, 'A' },
+                    { 4, true, "Teória a metodológia aplikovanej informatiky - B: Výpočtová inteligencia", "letný", 1, 'B' },
+                    { 5, true, "Predmet špecializácie", "letný", 1, null },
+                    { 6, true, "Manažérske teórie", "zimný", 2, null },
+                    { 7, true, "Metodológia výskumu v manažmente", "zimný", 2, null },
+                    { 8, true, "Predmet špecializácie", "letný", 2, null }
                 });
 
             migrationBuilder.CreateIndex(
@@ -515,6 +549,11 @@ namespace PhDManager.Data.Migrations
                 name: "IX_IndividualPlanSubject_SubjectsId",
                 table: "IndividualPlanSubject",
                 column: "SubjectsId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_IndividualPlanSubject1_OptionalSubjectsId",
+                table: "IndividualPlanSubject1",
+                column: "OptionalSubjectsId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Students_StudyProgramId",
@@ -628,6 +667,9 @@ namespace PhDManager.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "IndividualPlanSubject");
+
+            migrationBuilder.DropTable(
+                name: "IndividualPlanSubject1");
 
             migrationBuilder.DropTable(
                 name: "Registrations");

@@ -12,7 +12,7 @@ using PhDManager.Data;
 namespace PhDManager.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250226210723_Init")]
+    [Migration("20250228110730_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -41,6 +41,21 @@ namespace PhDManager.Data.Migrations
                     b.HasIndex("SubjectsId");
 
                     b.ToTable("IndividualPlanSubject");
+                });
+
+            modelBuilder.Entity("IndividualPlanSubject1", b =>
+                {
+                    b.Property<int>("OptionalIndividualPlansId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("OptionalSubjectsId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("OptionalIndividualPlansId", "OptionalSubjectsId");
+
+                    b.HasIndex("OptionalSubjectsId");
+
+                    b.ToTable("IndividualPlanSubject1");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -198,6 +213,9 @@ namespace PhDManager.Data.Migrations
                         .HasColumnType("character varying(256)");
 
                     b.Property<bool>("EmailConfirmed")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsExternal")
                         .HasColumnType("boolean");
 
                     b.Property<bool>("LockoutEnabled")
@@ -363,6 +381,34 @@ namespace PhDManager.Data.Migrations
                     b.Property<DateTime?>("StudyStartDate")
                         .HasColumnType("timestamp with time zone");
 
+                    b.PrimitiveCollection<DateTime?[]>("TaskDeadlines")
+                        .IsRequired()
+                        .HasColumnType("timestamp with time zone[]");
+
+                    b.PrimitiveCollection<string[]>("Tasks")
+                        .IsRequired()
+                        .HasColumnType("text[]");
+
+                    b.Property<string>("ThematicAreas")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("WrittenThesisRecommendedLectures")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("WrittenThesisRecommendedLiterature")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("WrittenThesisRequiredLiterature")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("WrittenThesisTitle")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.HasKey("Id");
 
                     b.ToTable("IndividualPlans");
@@ -380,6 +426,10 @@ namespace PhDManager.Data.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Guid")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Role")
                         .IsRequired()
                         .HasColumnType("text");
 
@@ -486,6 +536,9 @@ namespace PhDManager.Data.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<bool>("IsRequired")
+                        .HasColumnType("boolean");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
@@ -510,6 +563,7 @@ namespace PhDManager.Data.Migrations
                         new
                         {
                             Id = 1,
+                            IsRequired = true,
                             Name = "Matematické princípy informatiky - A: Deterministické metódy",
                             Semester = "zimný",
                             StudyProgramId = 1,
@@ -518,6 +572,7 @@ namespace PhDManager.Data.Migrations
                         new
                         {
                             Id = 2,
+                            IsRequired = true,
                             Name = "Matematické princípy informatiky - B: Stochastické metódy",
                             Semester = "zimný",
                             StudyProgramId = 1,
@@ -526,6 +581,7 @@ namespace PhDManager.Data.Migrations
                         new
                         {
                             Id = 3,
+                            IsRequired = true,
                             Name = "Teória a metodológia aplikovanej informatiky - A: Znalostné systémy a algoritmy",
                             Semester = "letný",
                             StudyProgramId = 1,
@@ -534,6 +590,7 @@ namespace PhDManager.Data.Migrations
                         new
                         {
                             Id = 4,
+                            IsRequired = true,
                             Name = "Teória a metodológia aplikovanej informatiky - B: Výpočtová inteligencia",
                             Semester = "letný",
                             StudyProgramId = 1,
@@ -542,6 +599,7 @@ namespace PhDManager.Data.Migrations
                         new
                         {
                             Id = 5,
+                            IsRequired = true,
                             Name = "Predmet špecializácie",
                             Semester = "letný",
                             StudyProgramId = 1
@@ -549,6 +607,7 @@ namespace PhDManager.Data.Migrations
                         new
                         {
                             Id = 6,
+                            IsRequired = true,
                             Name = "Manažérske teórie",
                             Semester = "zimný",
                             StudyProgramId = 2
@@ -556,6 +615,7 @@ namespace PhDManager.Data.Migrations
                         new
                         {
                             Id = 7,
+                            IsRequired = true,
                             Name = "Metodológia výskumu v manažmente",
                             Semester = "zimný",
                             StudyProgramId = 2
@@ -563,6 +623,7 @@ namespace PhDManager.Data.Migrations
                         new
                         {
                             Id = 8,
+                            IsRequired = true,
                             Name = "Predmet špecializácie",
                             Semester = "letný",
                             StudyProgramId = 2
@@ -684,6 +745,21 @@ namespace PhDManager.Data.Migrations
                     b.HasOne("PhDManager.Models.Subject", null)
                         .WithMany()
                         .HasForeignKey("SubjectsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("IndividualPlanSubject1", b =>
+                {
+                    b.HasOne("PhDManager.Models.IndividualPlan", null)
+                        .WithMany()
+                        .HasForeignKey("OptionalIndividualPlansId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("PhDManager.Models.Subject", null)
+                        .WithMany()
+                        .HasForeignKey("OptionalSubjectsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

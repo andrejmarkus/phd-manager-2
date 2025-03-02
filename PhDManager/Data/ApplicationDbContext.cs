@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+Ôªøusing Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using PhDManager.Models;
 using System.Reflection.Emit;
@@ -79,50 +79,50 @@ namespace PhDManager.Data
                     {
                         Id = 1,
                         Code = "AI",
-                        Name = "Aplikovan· informatika",
+                        Name = "Aplikovan√° informatika",
                         StudyFieldName = "Informatika",
                         ThesisSubjects =
                         [
-                            "MatematickÈ princÌpy informatiky", 
-                            "TeÛria a metodolÛgia aplikovanej informatiky",
-                            "Predmet öpecializ·cie"
+                            "Matematick√© princ√≠py informatiky",
+                            "Te√≥ria a metodol√≥gia aplikovanej informatiky",
+                            "Predmet ≈°pecializ√°cie"
                         ]
                     },
                     new StudyProgram
                     {
                         Id = 2,
                         Code = "M",
-                        Name = "Manaûment",
-                        StudyFieldName = "EkonÛmia a manaûment",
+                        Name = "Mana≈æment",
+                        StudyFieldName = "Ekon√≥mia a mana≈æment",
                         ThesisSubjects =
                         [
-                            "MetodolÛgia v˝skumu v manaûmente",
-                            "ManaûÈrske teÛrie",
-                            "Predmet öpecializ·cie"
+                            "Metodol√≥gia v√Ωskumu v mana≈æmente",
+                            "Mana≈æ√©rske te√≥rie",
+                            "Predmet ≈°pecializ√°cie"
                         ]
                     }
                 );
 
             builder.Entity<Subject>()
                 .HasData(
-                    new Subject { Id = 1, Variant = 'A', Name = "MatematickÈ princÌpy informatiky - A: DeterministickÈ metÛdy", Semester = "zimn˝", StudyProgramId = 1 },
-                    new Subject { Id = 2, Variant = 'B', Name = "MatematickÈ princÌpy informatiky - B: StochastickÈ metÛdy", Semester = "zimn˝", StudyProgramId = 1 },
-                    new Subject { Id = 3, Variant = 'A', Name = "TeÛria a metodolÛgia aplikovanej informatiky - A: ZnalostnÈ systÈmy a algoritmy", Semester = "letn˝", StudyProgramId = 1 },
-                    new Subject { Id = 4, Variant = 'B', Name = "TeÛria a metodolÛgia aplikovanej informatiky - B: V˝poËtov· inteligencia", Semester = "letn˝", StudyProgramId = 1 },
-                    new Subject { Id = 5, Name = "Predmet öpecializ·cie", Semester = "letn˝", StudyProgramId = 1 },
-                    new Subject { Id = 6, Name = "ManaûÈrske teÛrie", Semester = "zimn˝", StudyProgramId = 2 },
-                    new Subject { Id = 7, Name = "MetodolÛgia v˝skumu v manaûmente", Semester = "zimn˝", StudyProgramId = 2 },
-                    new Subject { Id = 8, Name = "Predmet öpecializ·cie", Semester = "letn˝", StudyProgramId = 2 }
+                    new Subject { Id = 1, Variant = 'A', Name = "Matematick√© princ√≠py informatiky - A: Deterministick√© met√≥dy", Semester = "zimn√Ω", StudyProgramId = 1 },
+                    new Subject { Id = 2, Variant = 'B', Name = "Matematick√© princ√≠py informatiky - B: Stochastick√© met√≥dy", Semester = "zimn√Ω", StudyProgramId = 1 },
+                    new Subject { Id = 3, Variant = 'A', Name = "Te√≥ria a metodol√≥gia aplikovanej informatiky - A: Znalostn√© syst√©my a algoritmy", Semester = "letn√Ω", StudyProgramId = 1 },
+                    new Subject { Id = 4, Variant = 'B', Name = "Te√≥ria a metodol√≥gia aplikovanej informatiky - B: V√Ωpoƒçtov√° inteligencia", Semester = "letn√Ω", StudyProgramId = 1 },
+                    new Subject { Id = 5, Name = "Predmet ≈°pecializ√°cie", Semester = "letn√Ω", StudyProgramId = 1 },
+                    new Subject { Id = 6, Name = "Mana≈æ√©rske te√≥rie", Semester = "zimn√Ω", StudyProgramId = 2 },
+                    new Subject { Id = 7, Name = "Metodol√≥gia v√Ωskumu v mana≈æmente", Semester = "zimn√Ω", StudyProgramId = 2 },
+                    new Subject { Id = 8, Name = "Predmet ≈°pecializ√°cie", Semester = "letn√Ω", StudyProgramId = 2 }
 
-                    //new Subject { Id = 9, IsRequired = false, Name = "Predmet öpecializ·cie", Semester = "letn˝", StudyProgramId = 2 },
-                    //new Subject { Id = 10, IsRequired = false, Name = "Predmet öpecializ·cie", Semester = "letn˝", StudyProgramId = 2 },
-                    //new Subject { Id = 11, IsRequired = false, Name = "Predmet öpecializ·cie", Semester = "letn˝", StudyProgramId = 2 },
-                    //new Subject { Id = 12, IsRequired = false, Name = "Predmet öpecializ·cie", Semester = "letn˝", StudyProgramId = 2 },
-                    //new Subject { Id = 13, IsRequired = false, Name = "Predmet öpecializ·cie", Semester = "letn˝", StudyProgramId = 2 },
-                    //new Subject { Id = 14, IsRequired = false, Name = "Predmet öpecializ·cie", Semester = "letn˝", StudyProgramId = 2 },
-                    //new Subject { Id = 15, IsRequired = false, Name = "Predmet öpecializ·cie", Semester = "letn˝", StudyProgramId = 2 },
-                    //new Subject { Id = 16, IsRequired = false, Name = "Predmet öpecializ·cie", Semester = "letn˝", StudyProgramId = 2 },
-                    //new Subject { Id = 17, IsRequired = false, Name = "Predmet öpecializ·cie", Semester = "letn˝", StudyProgramId = 2 }
+                    //new Subject { Id = 9, IsRequired = false, Name = "Predmet ≈°pecializ√°cie", Semester = "letn√Ω", StudyProgramId = 2 },
+                    //new Subject { Id = 10, IsRequired = false, Name = "Predmet ≈°pecializ√°cie", Semester = "letn√Ω", StudyProgramId = 2 },
+                    //new Subject { Id = 11, IsRequired = false, Name = "Predmet ≈°pecializ√°cie", Semester = "letn√Ω", StudyProgramId = 2 },
+                    //new Subject { Id = 12, IsRequired = false, Name = "Predmet ≈°pecializ√°cie", Semester = "letn√Ω", StudyProgramId = 2 },
+                    //new Subject { Id = 13, IsRequired = false, Name = "Predmet ≈°pecializ√°cie", Semester = "letn√Ω", StudyProgramId = 2 },
+                    //new Subject { Id = 14, IsRequired = false, Name = "Predmet ≈°pecializ√°cie", Semester = "letn√Ω", StudyProgramId = 2 },
+                    //new Subject { Id = 15, IsRequired = false, Name = "Predmet ≈°pecializ√°cie", Semester = "letn√Ω", StudyProgramId = 2 },
+                    //new Subject { Id = 16, IsRequired = false, Name = "Predmet ≈°pecializ√°cie", Semester = "letn√Ω", StudyProgramId = 2 },
+                    //new Subject { Id = 17, IsRequired = false, Name = "Predmet ≈°pecializ√°cie", Semester = "letn√Ω", StudyProgramId = 2 }
                 );
         }
     }

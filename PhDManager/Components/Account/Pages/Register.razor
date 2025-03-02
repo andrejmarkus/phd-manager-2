@@ -159,6 +159,7 @@
             default:
                 break;
         }
+        await UnitOfWork.CompleteAsync();
 
         Logger.LogInformation("User created a new account with password.");
 

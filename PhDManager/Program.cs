@@ -1,4 +1,4 @@
-using Hangfire;
+﻿using Hangfire;
 using Hangfire.Dashboard;
 using Hangfire.PostgreSql;
 using Microsoft.AspNetCore.Components.Authorization;
@@ -101,7 +101,7 @@ app.UseRequestLocalization(new RequestLocalizationOptions()
     .AddSupportedCultures(supportedCultures)
     .AddSupportedUICultures(supportedCultures));
 
-app.UseHttpsRedirection();
+// app.UseHttpsRedirection();
 
 app.MapStaticAssets();
 app.UseAntiforgery();

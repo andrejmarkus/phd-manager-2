@@ -651,4 +651,13 @@
   <data name="SystemClosed" xml:space="preserve">
     <value>Zatvorený</value>
   </data>
+  <data name="StudentState" xml:space="preserve">
+    <value>Stav študenta</value>
+  </data>
+  <data name="Active" xml:space="preserve">
+    <value>Aktívny</value>
+  </data>
+  <data name="Unactive" xml:space="preserve">
+    <value>Neaktívny</value>
+  </data>
 </root>

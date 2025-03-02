@@ -112,17 +112,17 @@ namespace PhDManager.Data
                     new Subject { Id = 5, Name = "Predmet špecializácie", Semester = "letný", StudyProgramId = 1 },
                     new Subject { Id = 6, Name = "Manažérske teórie", Semester = "zimný", StudyProgramId = 2 },
                     new Subject { Id = 7, Name = "Metodológia výskumu v manažmente", Semester = "zimný", StudyProgramId = 2 },
-                    new Subject { Id = 8, Name = "Predmet špecializácie", Semester = "letný", StudyProgramId = 2 },
+                    new Subject { Id = 8, Name = "Predmet špecializácie", Semester = "letný", StudyProgramId = 2 }
 
-                    new Subject { Id = 9, IsRequired = false, Name = "Predmet špecializácie", Semester = "letný", StudyProgramId = 2 },
-                    new Subject { Id = 10, IsRequired = false, Name = "Predmet špecializácie", Semester = "letný", StudyProgramId = 2 },
-                    new Subject { Id = 11, IsRequired = false, Name = "Predmet špecializácie", Semester = "letný", StudyProgramId = 2 },
-                    new Subject { Id = 12, IsRequired = false, Name = "Predmet špecializácie", Semester = "letný", StudyProgramId = 2 },
-                    new Subject { Id = 13, IsRequired = false, Name = "Predmet špecializácie", Semester = "letný", StudyProgramId = 2 },
-                    new Subject { Id = 14, IsRequired = false, Name = "Predmet špecializácie", Semester = "letný", StudyProgramId = 2 },
-                    new Subject { Id = 15, IsRequired = false, Name = "Predmet špecializácie", Semester = "letný", StudyProgramId = 2 },
-                    new Subject { Id = 16, IsRequired = false, Name = "Predmet špecializácie", Semester = "letný", StudyProgramId = 2 },
-                    new Subject { Id = 17, IsRequired = false, Name = "Predmet špecializácie", Semester = "letný", StudyProgramId = 2 }
+                    //new Subject { Id = 9, IsRequired = false, Name = "Predmet špecializácie", Semester = "letný", StudyProgramId = 2 },
+                    //new Subject { Id = 10, IsRequired = false, Name = "Predmet špecializácie", Semester = "letný", StudyProgramId = 2 },
+                    //new Subject { Id = 11, IsRequired = false, Name = "Predmet špecializácie", Semester = "letný", StudyProgramId = 2 },
+                    //new Subject { Id = 12, IsRequired = false, Name = "Predmet špecializácie", Semester = "letný", StudyProgramId = 2 },
+                    //new Subject { Id = 13, IsRequired = false, Name = "Predmet špecializácie", Semester = "letný", StudyProgramId = 2 },
+                    //new Subject { Id = 14, IsRequired = false, Name = "Predmet špecializácie", Semester = "letný", StudyProgramId = 2 },
+                    //new Subject { Id = 15, IsRequired = false, Name = "Predmet špecializácie", Semester = "letný", StudyProgramId = 2 },
+                    //new Subject { Id = 16, IsRequired = false, Name = "Predmet špecializácie", Semester = "letný", StudyProgramId = 2 },
+                    //new Subject { Id = 17, IsRequired = false, Name = "Predmet špecializácie", Semester = "letný", StudyProgramId = 2 }
                 );
         }
     }

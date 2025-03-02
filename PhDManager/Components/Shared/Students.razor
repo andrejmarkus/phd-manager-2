@@ -26,6 +26,7 @@
         <PropertyColumn Property="ds => ds.User.UserName" Title="@Localizer["Username"]" />
         <PropertyColumn Property="ds => ds.User.DisplayName" Title="@Localizer["FullName"]" />
         <PropertyColumn Property="ds => ds.User.Email" Title="Email" />
+        <PropertyColumn Property="@(ds => ds.IsActive ? Localizer["Active"] : Localizer["Unactive"])" Title="@Localizer["StudentState"]" />
         <TemplateColumn Title="@Localizer["ProfileEdit"]">
             <CellTemplate>
                 <MudStack Row>

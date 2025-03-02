@@ -14,6 +14,10 @@
     </TitleContent>
     <DialogContent>
         <MudForm @ref="_form">
+            <MudSelect T="bool" Variant="Variant.Outlined" Label="@Localizer["StudentState"]" @bind-Value="Student.IsActive" ToStringFunc="@(ia => ia ? Localizer["Active"] : Localizer["Unactive"])">
+                <MudSelectItem Value="true">@Localizer["Active"]</MudSelectItem>
+                <MudSelectItem Value="false">@Localizer["Unactive"]</MudSelectItem>
+            </MudSelect>
             <MudText Class="mt-4">@Localizer["StudyInformations"]</MudText>
             <MudSelect T="StudyProgram" Variant="Variant.Outlined" Label="@Localizer["StudyProgram"]" @bind-Value="Student.StudyProgram" ToStringFunc="@(sp => sp is null ? "" : sp.Name)">
                 @if (_studyPrograms is not null)

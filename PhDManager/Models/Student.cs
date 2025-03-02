@@ -10,7 +10,8 @@ namespace PhDManager.Models
 
         public string StartSchoolYear { get; set; } = string.Empty;
         public string EndSchoolYear { get; set; } = string.Empty;
-        public bool IsExternal { get; set; }
+        public bool IsExternal { get; set; } = false;
+        public bool IsActive { get; set; } = true;
 
         public virtual Address? Address { get; set; }
         public virtual StudyProgram? StudyProgram { get; set; }

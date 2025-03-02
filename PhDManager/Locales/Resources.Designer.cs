@@ -61,6 +61,15 @@ namespace PhDManager.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Active.
+        /// </summary>
+        public static string Active {
+            get {
+                return ResourceManager.GetString("Active", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Add.
         /// </summary>
         public static string Add {
@@ -1375,6 +1384,15 @@ namespace PhDManager.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Student state.
+        /// </summary>
+        public static string StudentState {
+            get {
+                return ResourceManager.GetString("StudentState", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Study field.
         /// </summary>
         public static string StudyField {
@@ -1569,6 +1587,15 @@ namespace PhDManager.Locales {
         public static string ThesisStudentInterestInfo {
             get {
                 return ResourceManager.GetString("ThesisStudentInterestInfo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unactive.
+        /// </summary>
+        public static string Unactive {
+            get {
+                return ResourceManager.GetString("Unactive", resourceCulture);
             }
         }
         

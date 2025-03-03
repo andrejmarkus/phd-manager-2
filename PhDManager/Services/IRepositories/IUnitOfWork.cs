@@ -1,6 +1,6 @@
 ﻿namespace PhDManager.Services.IRepositories
 {
-    public interface IUnitOfWork
+    public interface IUnitOfWork : IDisposable
     {
         IThesisRepository Theses { get; }
         IRegistrationRepository Registrations { get; }

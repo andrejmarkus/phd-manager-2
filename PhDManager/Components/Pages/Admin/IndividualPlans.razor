@@ -36,9 +36,15 @@
                 <MudStack Row>
                     @if (context.Item.Student.IndividualPlan is not null)
                     {
-                        <MudIconButton Size="@Size.Small" Color="Color.Error" Icon="@Icons.Material.Outlined.Delete" OnClick="@(async () => await DeleteIndividualPlan(context.Item))" />
-                        <MudIconButton Size="@Size.Small" Color="Color.Info" Icon="@Icons.Material.Outlined.Edit" Href="@($"/admin/individual-plans/edit/{context.Item.Guid}")" />
-                        <MudIconButton Size="@Size.Small" Color="Color.Info" Icon="@Icons.Material.Outlined.Print" OnClick="@(async () => await DocumentService.DownloadIndividualPlanDocument(context.Item))" />
+                        <MudTooltip Text="@Localizer["IndividualPlanDelete"]">
+                            <MudIconButton Size="@Size.Small" Color="Color.Error" Icon="@Icons.Material.Outlined.Delete" OnClick="@(async () => await DeleteIndividualPlan(context.Item))" />
+                        </MudTooltip>
+                        <MudTooltip Text="@Localizer["IndividualPlanEdit"]">
+                            <MudIconButton Size="@Size.Small" Color="Color.Info" Icon="@Icons.Material.Outlined.Edit" Href="@($"/admin/individual-plans/edit/{context.Item.Guid}")" />
+                        </MudTooltip>
+                        <MudTooltip Text="@Localizer["IndividualPlanGenerate"]">
+                            <MudIconButton Size="@Size.Small" Color="Color.Info" Icon="@Icons.Material.Outlined.Print" OnClick="@(async () => await DocumentService.DownloadIndividualPlanDocument(context.Item))" />
+                        </MudTooltip>
                     }
                 </MudStack>
             </CellTemplate>

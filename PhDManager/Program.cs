@@ -49,7 +49,7 @@ builder.Services.AddAuthentication()
     });
 
 var databaseConnectionString = builder.Configuration.GetSection(DatabaseOptions.Database).Get<DatabaseOptions>()?.ConnectionString ?? throw new InvalidOperationException("Connection string not found.");
-builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(databaseConnectionString));
+builder.Services.AddDbContextFactory<ApplicationDbContext>(options => options.UseNpgsql(databaseConnectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddHangfire(options => options
@@ -73,6 +73,7 @@ builder.Services.AddIdentityCore<ApplicationUser>(options => options.SignIn.Requ
 
 builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
 builder.Services.AddSingleton<SchoolYearService>();
+builder.Services.AddSingleton<EnumService>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<AppStateService>();
 builder.Services.AddScoped<ActiveDirectoryService>();

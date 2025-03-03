@@ -39,9 +39,15 @@
         <TemplateColumn Title="@Localizer["DisserationThesisEdit"]">
             <CellTemplate>
                 <MudStack Row>
-                    <MudIconButton Size="@Size.Small" Color="Color.Error" Icon="@Icons.Material.Outlined.Delete" OnClick="@(async () => await DeleteThesis(context.Item))" />
-                    <MudIconButton Size="@Size.Small" Color="Color.Info" Icon="@Icons.Material.Outlined.Edit" Href="@($"/theses/edit/{context.Item.Guid}")" />
-                    <MudIconButton Size="@Size.Small" Color="Color.Info" Icon="@Icons.Material.Outlined.Print" OnClick="@(async () => await DocumentService.DownloadThesisDocument(context.Item))" />
+                    <MudTooltip Text="@Localizer["DissertationThesisDelete"]">
+                        <MudIconButton Size="@Size.Small" Color="Color.Error" Icon="@Icons.Material.Outlined.Delete" OnClick="@(async () => await DeleteThesis(context.Item))" />
+                    </MudTooltip>
+                    <MudTooltip Text="@Localizer["DisserationThesisEdit"]">
+                        <MudIconButton Size="@Size.Small" Color="Color.Info" Icon="@Icons.Material.Outlined.Edit" Href="@($"/theses/edit/{context.Item.Guid}")" />
+                    </MudTooltip>
+                    <MudTooltip Text="@Localizer["DissertationThesisGenerate"]">
+                        <MudIconButton Size="@Size.Small" Color="Color.Info" Icon="@Icons.Material.Outlined.Print" OnClick="@(async () => await DocumentService.DownloadThesisDocument(context.Item))" />
+                    </MudTooltip>
                 </MudStack>
             </CellTemplate>
         </TemplateColumn>

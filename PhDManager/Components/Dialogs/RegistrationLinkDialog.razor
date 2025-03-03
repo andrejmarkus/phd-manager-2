@@ -1,0 +1,47 @@
+﻿@using Microsoft.Extensions.Localization
+@using PhDManager.Locales
+@using PhDManager.Models
+@using PhDManager.Services.IRepositories
+@using PhDManager.Services.Repositories
+
+@rendermode InteractiveServer
+
+@inject IUnitOfWork UnitOfWork
+@inject IStringLocalizer<Resources> Localizer
+@inject NavigationManager NavigationManager
+
+<MudDialog>
+    <TitleContent>
+        <MudText Typo="Typo.h6">@Localizer["UserRegister"]</MudText>
+    </TitleContent>
+    <DialogContent>
+        <MudLink Href="@_registration.Url">@_registration.Url</MudLink>
+    </DialogContent>
+    <DialogActions>
+        <MudButton Color="Color.Primary" OnClick="@(() => MudDialog.Cancel())">OK</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter]
+    private IMudDialogInstance MudDialog { get; set; } = default!;
+
+    [Parameter]
+    public string Role { get; set; } = string.Empty;
+
+    private Registration _registration = default!;
+
+    protected override async Task OnInitializedAsync()
+    {
+        string guid = Guid.NewGuid().ToString();
+        _registration = new Registration
+            {
+                Guid = guid,
+                Url = NavigationManager.BaseUri + "Account/Register/" + guid,
+                Role = Role,
+                Expiration = DateTime.UtcNow.AddDays(7)
+            };
+        await UnitOfWork.Registrations.AddAsync(_registration);
+        await UnitOfWork.CompleteAsync();
+    }
+}

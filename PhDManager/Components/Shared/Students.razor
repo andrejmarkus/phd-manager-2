@@ -4,6 +4,7 @@
 @using PhDManager.Components.Dialogs
 @using PhDManager.Locales
 @using PhDManager.Models
+@using PhDManager.Models.Enums
 @using PhDManager.Services
 @using PhDManager.Services.IRepositories
 
@@ -14,25 +15,40 @@
 @inject IUnitOfWork UnitOfWork
 @inject UsersService UsersService
 @inject SchoolYearService SchoolYearService
+@inject EnumService EnumService
 
 <MudDataGrid T="Student" Items="@_students" Hover SortMode="SortMode.Multiple" QuickFilter="@_quickFilter" Elevation="0">
     <ToolBarContent>
         <MudText Typo="Typo.h6" GutterBottom="false">@Localizer["Students"]</MudText>
         <MudSpacer />
-        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="AddStudent">@Localizer["UserAdd"]</MudButton>
-        <MudTextField Class="ml-4" Variant="Variant.Outlined" Placeholder="@Localizer["Search"]" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" @bind-Value="_search" />
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="AddStudent">@Localizer["UserAddLdap"]</MudButton>
+        <MudButton Class="mx-4" Variant="Variant.Filled" Color="Color.Primary" OnClick="CreateStudentRegistration">@Localizer["UserRegister"]</MudButton>
+        <MudTextField Class="mr-4" Variant="Variant.Outlined" Placeholder="@Localizer["Search"]" Immediate Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" @bind-Value="_search" />
+        <MudSelect T="StudentState?" Variant="Variant.Outlined" Label="@Localizer["StudentState"]" Immediate ToStringFunc="@(s => s is null ? Localizer["All"] : EnumService.GetLocalizedEnumValue((StudentState)s))" @bind-Value="_studentState">
+            <MudSelectItem T="StudentState?" Value="null">@Localizer["All"]</MudSelectItem>
+            @foreach (var studentState in _studentStates)
+            {
+                <MudSelectItem T="StudentState?" Value="studentState.Item1">@studentState.Item2</MudSelectItem>
+            }
+        </MudSelect>
     </ToolBarContent>
     <Columns>
         <PropertyColumn Property="ds => ds.User.UserName" Title="@Localizer["Username"]" />
         <PropertyColumn Property="ds => ds.User.DisplayName" Title="@Localizer["FullName"]" />
         <PropertyColumn Property="ds => ds.User.Email" Title="Email" />
-        <PropertyColumn Property="@(ds => ds.IsActive ? Localizer["Active"] : Localizer["Unactive"])" Title="@Localizer["StudentState"]" />
+        <PropertyColumn Property="ds => EnumService.GetLocalizedEnumValue(ds.State)" Title="@Localizer["StudentState"]" />
         <TemplateColumn Title="@Localizer["ProfileEdit"]">
             <CellTemplate>
                 <MudStack Row>
-                    <MudIconButton Size="@Size.Small" Color="Color.Error" Icon="@Icons.Material.Outlined.Delete" OnClick="@(() => DeleteStudent(context.Item))" />
-                    <MudIconButton Size="@Size.Small" Color="Color.Info" Icon="@Icons.Material.Outlined.Edit" OnClick="@(() => UpdateStudent(context.Item))" />
-                    <MudIconButton Size="@Size.Small" Color="Color.Info" Icon="@Icons.Material.Outlined.ContactPage" OnClick="@(() => AssignThesis(context.Item))" />
+                    <MudTooltip Text="@Localizer["StudentDelete"]">
+                        <MudIconButton Size="@Size.Small" Color="Color.Error" Icon="@Icons.Material.Outlined.Delete" OnClick="@(() => DeleteStudent(context.Item))" />
+                    </MudTooltip>
+                    <MudTooltip Text="@Localizer["StudentEdit"]">
+                        <MudIconButton Size="@Size.Small" Color="Color.Info" Icon="@Icons.Material.Outlined.Edit" OnClick="@(() => UpdateStudent(context.Item))" />
+                    </MudTooltip>
+                    <MudTooltip Text="@Localizer["DissertationThesisAssign"]">
+                        <MudIconButton Size="@Size.Small" Color="Color.Info" Icon="@Icons.Material.Outlined.ContactPage" OnClick="@(() => AssignThesis(context.Item))" />
+                    </MudTooltip>
                 </MudStack>
             </CellTemplate>
         </TemplateColumn>
@@ -44,17 +60,23 @@
 
 @code {
     private IEnumerable<Student>? _students;
+    private List<(StudentState, string)> _studentStates = [];
 
     private string _search = string.Empty;
+    private StudentState? _studentState;
 
     protected override async Task OnInitializedAsync()
     {
         _students = await UnitOfWork.Students.GetAllAsync();
+        _studentStates = EnumService.GetLocalizedEnumValues<StudentState>();
     }
 
     private Func<Student, bool> _quickFilter => ds =>
     {
         if (string.IsNullOrWhiteSpace(_search))
+            return true;
+
+        if (ds.State == _studentState)
             return true;
 
         if (ds.User.UserName?.Contains(_search, StringComparison.OrdinalIgnoreCase) == true)
@@ -146,5 +168,11 @@
 
         await UnitOfWork.Students.UpdateAsync(updatedStudent);
         await UnitOfWork.CompleteAsync();
+    }
+
+    private async Task CreateStudentRegistration()
+    {
+        var parameters = new DialogParameters<RegistrationLinkDialog> { { d => d.Role, Student.Role } };
+        await DialogService.ShowAsync<RegistrationLinkDialog>(Localizer["UserRegister"], parameters, new() { FullWidth = true, MaxWidth = MaxWidth.Medium });
     }
 }

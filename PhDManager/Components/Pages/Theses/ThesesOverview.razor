@@ -102,9 +102,15 @@
                     <AuthorizeView Roles="@($"{Admin.Role}")">
                         <Authorized>
                             <MudStack Row Class="mt-2">
-                                <MudIconButton Size="@Size.Small" Color="Color.Error" Icon="@Icons.Material.Outlined.Delete" OnClick="@(async () => await DeleteThesis(thesis))" />
-                                <MudIconButton Size="@Size.Small" Color="Color.Info" Icon="@Icons.Material.Outlined.Edit" Href="@($"/theses/edit/{thesis.Guid}")" />
-                                <MudIconButton Size="@Size.Small" Color="Color.Info" Icon="@Icons.Material.Outlined.Print" OnClick="@(async () => await DocumentService.DownloadThesisDocument(thesis))" />
+                                <MudTooltip Text="@Localizer["DissertationThesisDelete"]">
+                                    <MudIconButton Size="@Size.Small" Color="Color.Error" Icon="@Icons.Material.Outlined.Delete" OnClick="@(async () => await DeleteThesis(thesis))" />
+                                </MudTooltip>
+                                <MudTooltip Text="@Localizer["DisserationThesisEdit"]">
+                                    <MudIconButton Size="@Size.Small" Color="Color.Info" Icon="@Icons.Material.Outlined.Edit" Href="@($"/theses/edit/{thesis.Guid}")" />
+                                </MudTooltip>
+                                <MudTooltip Text="@Localizer["DissertationThesisGenerate"]">
+                                    <MudIconButton Size="@Size.Small" Color="Color.Info" Icon="@Icons.Material.Outlined.Print" OnClick="@(async () => await DocumentService.DownloadThesisDocument(thesis))" />
+                                </MudTooltip>
                             </MudStack>
                         </Authorized>
                     </AuthorizeView>
@@ -113,9 +119,15 @@
                             @if (_currentUserId?.Equals(thesis.Supervisor.User.Id) == true)
                             {
                                 <MudStack Row Class="mt-2">
-                                    <MudIconButton Size="@Size.Small" Color="Color.Error" Icon="@Icons.Material.Outlined.Delete" OnClick="@(async () => await DeleteThesis(thesis))" />
-                                    <MudIconButton Size="@Size.Small" Color="Color.Info" Icon="@Icons.Material.Outlined.Edit" Href="@($"/theses/edit/{thesis.Guid}")" />
-                                    <MudIconButton Size="@Size.Small" Color="Color.Info" Icon="@Icons.Material.Outlined.Print" OnClick="@(async () => await DocumentService.DownloadThesisDocument(thesis))" />
+                                    <MudTooltip Text="@Localizer["DissertationThesisDelete"]">
+                                        <MudIconButton Size="@Size.Small" Color="Color.Error" Icon="@Icons.Material.Outlined.Delete" OnClick="@(async () => await DeleteThesis(thesis))" />
+                                    </MudTooltip>
+                                    <MudTooltip Text="@Localizer["DisserationThesisEdit"]">
+                                        <MudIconButton Size="@Size.Small" Color="Color.Info" Icon="@Icons.Material.Outlined.Edit" Href="@($"/theses/edit/{thesis.Guid}")" />
+                                    </MudTooltip>
+                                    <MudTooltip Text="@Localizer["DissertationThesisGenerate"]">
+                                        <MudIconButton Size="@Size.Small" Color="Color.Info" Icon="@Icons.Material.Outlined.Print" OnClick="@(async () => await DocumentService.DownloadThesisDocument(thesis))" />
+                                    </MudTooltip>
                                 </MudStack>
                             }
                         </Authorized>

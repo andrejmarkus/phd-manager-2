@@ -12,13 +12,15 @@
 @inject IStringLocalizer<Resources> Localizer
 @inject IUnitOfWork UnitOfWork
 @inject UsersService UsersService
+@inject NavigationManager NavigationManager
 
 <MudDataGrid T="Teacher" Items="@_teachers" Hover SortMode="SortMode.Multiple" QuickFilter="@_quickFilter" Elevation="0">
     <ToolBarContent>
         <MudText Typo="Typo.h6" GutterBottom="false">@Localizer["Users"]</MudText>
         <MudSpacer />
-        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="AddTeacher">@Localizer["UserAdd"]</MudButton>
-        <MudTextField Class="ml-4" Variant="Variant.Outlined" Placeholder="@Localizer["Search"]" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" @bind-Value="_search" />
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="AddTeacher">@Localizer["UserAddLdap"]</MudButton>
+        <MudButton Class="mx-4" Variant="Variant.Filled" Color="Color.Primary" OnClick="CreateTeacherRegistration">@Localizer["UserRegister"]</MudButton>
+        <MudTextField Variant="Variant.Outlined" Placeholder="@Localizer["Search"]" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" @bind-Value="_search" />
     </ToolBarContent>
     <Columns>
         <PropertyColumn Property="u => u.User.UserName" Title="@Localizer["Username"]" />
@@ -28,7 +30,9 @@
         <TemplateColumn Title="@Localizer["ProfileEdit"]">
             <CellTemplate>
                 <MudStack Row>
-                    <MudIconButton Size="@Size.Small" Color="Color.Error" Icon="@Icons.Material.Outlined.Delete" OnClick="@(() => DeleteTeacher(context.Item))" />
+                    <MudTooltip Text="@Localizer["TeacherRemove"]">
+                        <MudIconButton Size="@Size.Small" Color="Color.Error" Icon="@Icons.Material.Outlined.Delete" OnClick="@(() => DeleteTeacher(context.Item))" />
+                    </MudTooltip>
                 </MudStack>
             </CellTemplate>
         </TemplateColumn>
@@ -84,6 +88,12 @@
         await UnitOfWork.CompleteAsync();
 
         _teachers = await UnitOfWork.Teachers.GetAllAsync();
+    }
+
+    private async Task CreateTeacherRegistration()
+    {
+        var parameters = new DialogParameters<RegistrationLinkDialog> { { d => d.Role, Teacher.Role } };
+        await DialogService.ShowAsync<RegistrationLinkDialog>(Localizer["UserRegister"], parameters, new() { FullWidth = true, MaxWidth = MaxWidth.Medium });
     }
 
     private async Task DeleteTeacher(Teacher teacher)

@@ -88,6 +88,15 @@ namespace PhDManager.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Delete admin.
+        /// </summary>
+        public static string AdminDelete {
+            get {
+                return ResourceManager.GetString("AdminDelete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Admins.
         /// </summary>
         public static string Admins {
@@ -250,7 +259,7 @@ namespace PhDManager.Locales {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Dissertation thesis edit.
+        ///   Looks up a localized string similar to Edit dissertation thesis.
         /// </summary>
         public static string DisserationThesisEdit {
             get {
@@ -363,6 +372,15 @@ namespace PhDManager.Locales {
         public static string DissertationThesisEnglish {
             get {
                 return ResourceManager.GetString("DissertationThesisEnglish", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Generate dissertation thesis.
+        /// </summary>
+        public static string DissertationThesisGenerate {
+            get {
+                return ResourceManager.GetString("DissertationThesisGenerate", resourceCulture);
             }
         }
         
@@ -507,6 +525,15 @@ namespace PhDManager.Locales {
         public static string EnrolError {
             get {
                 return ResourceManager.GetString("EnrolError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Delete external.
+        /// </summary>
+        public static string ExternalDelete {
+            get {
+                return ResourceManager.GetString("ExternalDelete", resourceCulture);
             }
         }
         
@@ -714,6 +741,15 @@ namespace PhDManager.Locales {
         public static string IndividualPlanError {
             get {
                 return ResourceManager.GetString("IndividualPlanError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Generate individual plan.
+        /// </summary>
+        public static string IndividualPlanGenerate {
+            get {
+                return ResourceManager.GetString("IndividualPlanGenerate", resourceCulture);
             }
         }
         
@@ -1348,6 +1384,15 @@ namespace PhDManager.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Delete doctoral student.
+        /// </summary>
+        public static string StudentDelete {
+            get {
+                return ResourceManager.GetString("StudentDelete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Edit doctoral student.
         /// </summary>
         public static string StudentEdit {
@@ -1564,6 +1609,15 @@ namespace PhDManager.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Remove teacher.
+        /// </summary>
+        public static string TeacherRemove {
+            get {
+                return ResourceManager.GetString("TeacherRemove", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Teachers.
         /// </summary>
         public static string Teachers {
@@ -1600,11 +1654,11 @@ namespace PhDManager.Locales {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Add user.
+        ///   Looks up a localized string similar to Add LDAP user.
         /// </summary>
-        public static string UserAdd {
+        public static string UserAddLdap {
             get {
-                return ResourceManager.GetString("UserAdd", resourceCulture);
+                return ResourceManager.GetString("UserAddLdap", resourceCulture);
             }
         }
         
@@ -1654,20 +1708,20 @@ namespace PhDManager.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Register user.
+        /// </summary>
+        public static string UserRegister {
+            get {
+                return ResourceManager.GetString("UserRegister", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Users.
         /// </summary>
         public static string Users {
             get {
                 return ResourceManager.GetString("Users", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Add users.
-        /// </summary>
-        public static string UsersAdd {
-            get {
-                return ResourceManager.GetString("UsersAdd", resourceCulture);
             }
         }
         

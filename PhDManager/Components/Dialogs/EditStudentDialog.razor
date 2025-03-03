@@ -1,12 +1,15 @@
 ﻿@using Microsoft.Extensions.Localization
 @using PhDManager.Locales
 @using PhDManager.Models
+@using PhDManager.Models.Enums
+@using PhDManager.Services
 @using PhDManager.Services.IRepositories
 
 @rendermode InteractiveServer
 
 @inject IUnitOfWork UnitOfWork
 @inject IStringLocalizer<Resources> Localizer
+@inject EnumService EnumService
 
 <MudDialog>
     <TitleContent>
@@ -14,9 +17,11 @@
     </TitleContent>
     <DialogContent>
         <MudForm @ref="_form">
-            <MudSelect T="bool" Variant="Variant.Outlined" Label="@Localizer["StudentState"]" @bind-Value="Student.IsActive" ToStringFunc="@(ia => ia ? Localizer["Active"] : Localizer["Unactive"])">
-                <MudSelectItem Value="true">@Localizer["Active"]</MudSelectItem>
-                <MudSelectItem Value="false">@Localizer["Unactive"]</MudSelectItem>
+            <MudSelect T="StudentState" Variant="Variant.Outlined" Label="@Localizer["StudentState"]" @bind-Value="Student.State" ToStringFunc="@(s => EnumService.GetLocalizedEnumValue(s))">
+                @foreach (var studentState in _studentStates)
+                {
+                    <MudSelectItem T="StudentState" Value="studentState.Item1">@studentState.Item2</MudSelectItem>
+                }
             </MudSelect>
             <MudText Class="mt-4">@Localizer["StudyInformations"]</MudText>
             <MudSelect T="StudyProgram" Variant="Variant.Outlined" Label="@Localizer["StudyProgram"]" @bind-Value="Student.StudyProgram" ToStringFunc="@(sp => sp is null ? "" : sp.Name)">
@@ -57,12 +62,14 @@
 
     private MudForm _form = default!;
     private IEnumerable<StudyProgram>? _studyPrograms;
+    private List<(StudentState, string)> _studentStates = [];
 
     protected override async Task OnInitializedAsync()
     {
         if (Student.Address is null) Student.Address = new();
 
         _studyPrograms = await UnitOfWork.StudyPrograms.GetAllAsync();
+        _studentStates = EnumService.GetLocalizedEnumValues<StudentState>();
     }
 
     private void HandleDialog()

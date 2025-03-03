@@ -1,4 +1,5 @@
 ﻿using PhDManager.Data;
+using PhDManager.Models.Enums;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PhDManager.Models
@@ -11,7 +12,7 @@ namespace PhDManager.Models
         public string StartSchoolYear { get; set; } = string.Empty;
         public string EndSchoolYear { get; set; } = string.Empty;
         public bool IsExternal { get; set; } = false;
-        public bool IsActive { get; set; } = true;
+        public StudentState State { get; set; } = StudentState.Study;
 
         public virtual Address? Address { get; set; }
         public virtual StudyProgram? StudyProgram { get; set; }

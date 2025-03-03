@@ -204,9 +204,6 @@
   <data name="SignUpService" xml:space="preserve">
     <value>Use another service to register.</value>
   </data>
-  <data name="UsersAdd" xml:space="preserve">
-    <value>Add users</value>
-  </data>
   <data name="LdapUsers" xml:space="preserve">
     <value>LDAP Users</value>
   </data>
@@ -385,7 +382,7 @@
     <value>Comments count</value>
   </data>
   <data name="DisserationThesisEdit" xml:space="preserve">
-    <value>Dissertation thesis edit</value>
+    <value>Edit dissertation thesis</value>
   </data>
   <data name="DissertationThesisDelete" xml:space="preserve">
     <value>Delete dissertation thesis</value>
@@ -405,8 +402,8 @@
   <data name="IndividualPlanDeleteConfirmation" xml:space="preserve">
     <value>Do you really want to delete selected individual plan?</value>
   </data>
-  <data name="UserAdd" xml:space="preserve">
-    <value>Add user</value>
+  <data name="UserAddLdap" xml:space="preserve">
+    <value>Add LDAP user</value>
   </data>
   <data name="ApprovedEmail" xml:space="preserve">
     <value>Approved email</value>
@@ -659,5 +656,26 @@
   </data>
   <data name="Unactive" xml:space="preserve">
     <value>Unactive</value>
+  </data>
+  <data name="TeacherRemove" xml:space="preserve">
+    <value>Remove teacher</value>
+  </data>
+  <data name="StudentDelete" xml:space="preserve">
+    <value>Delete doctoral student</value>
+  </data>
+  <data name="ExternalDelete" xml:space="preserve">
+    <value>Delete external</value>
+  </data>
+  <data name="IndividualPlanGenerate" xml:space="preserve">
+    <value>Generate individual plan</value>
+  </data>
+  <data name="AdminDelete" xml:space="preserve">
+    <value>Delete admin</value>
+  </data>
+  <data name="DissertationThesisGenerate" xml:space="preserve">
+    <value>Generate dissertation thesis</value>
+  </data>
+  <data name="UserRegister" xml:space="preserve">
+    <value>Register user</value>
   </data>
 </root>

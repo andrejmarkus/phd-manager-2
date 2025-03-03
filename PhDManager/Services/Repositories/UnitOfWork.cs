@@ -1,9 +1,10 @@
-﻿using PhDManager.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using PhDManager.Data;
 using PhDManager.Services.IRepositories;
 
 namespace PhDManager.Services.Repositories
 {
-    public class UnitOfWork : IUnitOfWork, IDisposable
+    public class UnitOfWork : IUnitOfWork
     {
         private readonly ApplicationDbContext _context;
         private readonly ILogger _logger;
@@ -21,9 +22,9 @@ namespace PhDManager.Services.Repositories
         public IExternalRepository Externals { get; private set; }
         public ITeacherRepository Teachers { get; private set; }
 
-        public UnitOfWork(ApplicationDbContext context, ILoggerFactory loggerFactory, SchoolYearService schoolYearService)
+        public UnitOfWork(IDbContextFactory<ApplicationDbContext> contextFactory, ILoggerFactory loggerFactory, SchoolYearService schoolYearService)
         {
-            _context = context;
+            _context = contextFactory.CreateDbContext();
             _logger = loggerFactory.CreateLogger("logs");
             _schoolYearService = schoolYearService;
 

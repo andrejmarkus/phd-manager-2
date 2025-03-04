@@ -429,8 +429,8 @@
   <data name="DissertationThesis" xml:space="preserve">
     <value>Dizertačná téma</value>
   </data>
-  <data name="Approve" xml:space="preserve">
-    <value>Potvrdiť</value>
+  <data name="DissertationThesisApprove" xml:space="preserve">
+    <value>Potvrdiť dizertačnú tému</value>
   </data>
   <data name="DissertationThesisProposal" xml:space="preserve">
     <value>Návrh témy doktorandského štúdia</value>
@@ -527,9 +527,6 @@
   </data>
   <data name="UserCreateAddress" xml:space="preserve">
     <value>Vytvor adresu</value>
-  </data>
-  <data name="DissertationThesesMy" xml:space="preserve">
-    <value>Moje dizertačné témy</value>
   </data>
   <data name="NotApproved" xml:space="preserve">
     <value>Nepotvrdená</value>
@@ -636,17 +633,8 @@
   <data name="IndividualPlanTaskError" xml:space="preserve">
     <value>Je nutné zadať úlohu!</value>
   </data>
-  <data name="SystemSettings" xml:space="preserve">
-    <value>Nastavenia systému</value>
-  </data>
   <data name="SystemClosedError" xml:space="preserve">
     <value>Systém bol uzatvorený!</value>
-  </data>
-  <data name="SystemOpen" xml:space="preserve">
-    <value>Otvorený</value>
-  </data>
-  <data name="SystemClosed" xml:space="preserve">
-    <value>Zatvorený</value>
   </data>
   <data name="StudentState" xml:space="preserve">
     <value>Stav študenta</value>
@@ -677,5 +665,71 @@
   </data>
   <data name="UserRegister" xml:space="preserve">
     <value>Zaregistuj používateľa</value>
+  </data>
+  <data name="Admin" xml:space="preserve">
+    <value>Admin</value>
+  </data>
+  <data name="Teacher" xml:space="preserve">
+    <value>Učiteľ</value>
+  </data>
+  <data name="DissertationThesisShow" xml:space="preserve">
+    <value>Zobraz dizertačnú tému</value>
+  </data>
+  <data name="SystemEnabled" xml:space="preserve">
+    <value>Vytváranie dizertačných tém povolené</value>
+  </data>
+  <data name="StudyProgramAdd" xml:space="preserve">
+    <value>Pridaj študijný program</value>
+  </data>
+  <data name="StudyProgramName" xml:space="preserve">
+    <value>Názov študijného programu</value>
+  </data>
+  <data name="StudyProgramCode" xml:space="preserve">
+    <value>Kód študijného programu</value>
+  </data>
+  <data name="StudyFieldName" xml:space="preserve">
+    <value>Názov študijného odboru</value>
+  </data>
+  <data name="StudyProgramEdit" xml:space="preserve">
+    <value>Úprava študijného programu</value>
+  </data>
+  <data name="StudyProgramDelete" xml:space="preserve">
+    <value>Vymaž Študijný program</value>
+  </data>
+  <data name="StudyProgramDeleteConfirmation" xml:space="preserve">
+    <value>Naozaj si prajete vymazať zvolený študijný program?</value>
+  </data>
+  <data name="ThesisSubjectAdd" xml:space="preserve">
+    <value>Pridaj predmet témy</value>
+  </data>
+  <data name="Education" xml:space="preserve">
+    <value>Výučba</value>
+  </data>
+  <data name="ThesisSubjects" xml:space="preserve">
+    <value>Predmety témy</value>
+  </data>
+  <data name="SubjectAdd" xml:space="preserve">
+    <value>Pridaj predmet</value>
+  </data>
+  <data name="SubjectName" xml:space="preserve">
+    <value>Názov predmetu</value>
+  </data>
+  <data name="SubjectSemester" xml:space="preserve">
+    <value>Semester predmetu</value>
+  </data>
+  <data name="SubjectEdit" xml:space="preserve">
+    <value>Uprav predmet</value>
+  </data>
+  <data name="SubjectDelete" xml:space="preserve">
+    <value>Vymaž predmet</value>
+  </data>
+  <data name="SubjectDeleteConfirmation" xml:space="preserve">
+    <value>Naozaj si prajete vymazať zvolený predmet?</value>
+  </data>
+  <data name="SubjectRequired" xml:space="preserve">
+    <value>Povinný predmet</value>
+  </data>
+  <data name="StudyPrograms" xml:space="preserve">
+    <value>Študijné programy</value>
   </data>
 </root>

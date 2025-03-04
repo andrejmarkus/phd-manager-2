@@ -12,8 +12,8 @@ using PhDManager.Data;
 namespace PhDManager.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250302153035_StudentState")]
-    partial class StudentState
+    [Migration("20250304181943_Init")]
+    partial class Init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -454,15 +454,15 @@ namespace PhDManager.Data.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<bool>("IsActive")
-                        .HasColumnType("boolean");
-
                     b.Property<bool>("IsExternal")
                         .HasColumnType("boolean");
 
                     b.Property<string>("StartSchoolYear")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<int>("State")
+                        .HasColumnType("integer");
 
                     b.Property<int?>("StudyProgramId")
                         .HasColumnType("integer");
@@ -630,6 +630,29 @@ namespace PhDManager.Data.Migrations
                             Name = "Predmet špecializácie",
                             Semester = "letný",
                             StudyProgramId = 2
+                        });
+                });
+
+            modelBuilder.Entity("PhDManager.Models.SystemState", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("IsOpen")
+                        .HasColumnType("boolean");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("SystemState");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            IsOpen = true
                         });
                 });
 

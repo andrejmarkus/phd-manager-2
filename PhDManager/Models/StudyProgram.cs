@@ -11,6 +11,6 @@ namespace PhDManager.Models
 
         public virtual List<Subject> Subjects { get; set; } = [];
         [JsonIgnore]
-        public virtual List<Thesis> Thesis { get; set; } = [];
+        public virtual List<Thesis> Theses { get; set; } = [];
     }
 }

@@ -29,6 +29,11 @@ namespace PhDManager.Services
             return await UserManager.GetUserIdAsync(user);
         }
 
+        public ApplicationUser? GetUserByIdAsync(string userId)
+        {
+            return UserManager.Users.Where(u => u.Id == userId).FirstOrDefault();
+        }
+
         public async Task<string?> GetCurrentUserIdAsync()
         {
             var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();

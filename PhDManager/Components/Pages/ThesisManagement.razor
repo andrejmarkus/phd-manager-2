@@ -1,5 +1,5 @@
-﻿@page "/theses/add"
-@page "/theses/edit/{ThesisGuid}"
+﻿@page "/management/theses/add"
+@page "/management/theses/edit/{ThesisGuid}"
 
 @rendermode InteractiveServer
 
@@ -19,13 +19,13 @@
 @inject NavigationManager NavigationManager
 @inject UserManager<ApplicationUser> UserManager
 @inject SchoolYearService SchoolYearService
-@inject AppStateService AppStateService
+@inject UsersService UsersService
 
 @attribute [Authorize(Roles = $"{Admin.Role}, {Teacher.Role}")]
 
 <PageTitle>@(ThesisGuid is null ? Localizer["DissertationThesisAdd"] : Localizer["DisserationThesisEdit"])</PageTitle>
 
-@if (_isSystemOpen)
+@if (_systemState is not null && _systemState.IsOpen)
 {
     <MudText Class="mb-5" Typo="Typo.h3">@Localizer["DissertationThesisProposal"]</MudText>
 
@@ -41,7 +41,15 @@
         <MudAutocomplete T="Teacher" Label="@Localizer["SupervisorSpecialist"]" ToStringFunc="@(t => t is null ? null : t.User.DisplayName)" SearchFunc="SearchTeachers" Variant="Variant.Outlined" @bind-Value="_thesis.SupervisorSpecialist" />
 
         <MudText Typo="Typo.h5">@Localizer["DissertationThesisClassification"]</MudText>
-        <MudAutocomplete T="StudyProgram" Required RequiredError="@Localizer["StudyProgramError"]" Label="@Localizer["StudyProgram"]" ToStringFunc="@(sp => sp is null ? null : sp.Name)" Variant="Variant.Outlined" SearchFunc="SearchStudyPrograms" @bind-Value="_thesis.StudyProgram" />
+        @if (_studyPrograms is not null)
+        {
+            <MudSelect T="StudyProgram" Required RequiredError="@Localizer["StudyProgramError"]" Label="@Localizer["StudyProgram"]" ToStringFunc="@(sp => sp is null ? null : sp.Name)" Variant="Variant.Outlined" @bind-Value="_thesis.StudyProgram">
+                @foreach (var studyProgram in _studyPrograms)
+                {
+                    <MudSelectItem Value="studyProgram">@studyProgram.Name</MudSelectItem>
+                }
+            </MudSelect>
+        }
         @if (_thesis.StudyProgram is not null)
         {
             <MudField T="string" Label="@Localizer["StudyField"]" Variant="Variant.Outlined">@_thesis.StudyProgram.StudyFieldName</MudField>
@@ -100,10 +108,12 @@ else
     [Parameter]
     public string? ThesisGuid { get; set; }
 
-    private bool _isSystemOpen;
+    private string? _currentUserRole;
+    private string? _currentUserId;
 
     private MudForm? _form;
 
+    private SystemState? _systemState;
     private IEnumerable<Teacher>? _teachers;
     private IEnumerable<StudyProgram>? _studyPrograms;
 
@@ -112,7 +122,8 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        _isSystemOpen = await AppStateService.IsSystemOpenAsync();
+        _currentUserRole = await UsersService.GetCurrentUserRoleAsync();
+        _currentUserId = await UsersService.GetCurrentUserIdAsync();
 
         if (ThesisGuid is not null)
         {
@@ -133,6 +144,12 @@ else
 
         _teachers = await UnitOfWork.Teachers.GetAllAsync();
         _studyPrograms = await UnitOfWork.StudyPrograms.GetAllAsync();
+        _systemState = await UnitOfWork.SystemState.GetAsync();
+
+        if (_currentUserRole == Teacher.Role)
+        {
+            _teachers = _teachers?.Where(t => t.User.Id == _currentUserId);
+        }
     }
 
     private Task<IEnumerable<Teacher>> SearchTeachers(string search, CancellationToken token)
@@ -143,16 +160,6 @@ else
             return Task.FromResult(_teachers);
 
         return Task.FromResult(_teachers.Where(t => t.User.UserName is not null && t.User.UserName.Contains(search, StringComparison.OrdinalIgnoreCase)));
-    }
-
-    private Task<IEnumerable<StudyProgram>> SearchStudyPrograms(string search, CancellationToken token)
-    {
-        if (_studyPrograms is null) return Task.FromResult(Enumerable.Empty<StudyProgram>());
-
-        if (string.IsNullOrWhiteSpace(search))
-            return Task.FromResult(_studyPrograms);
-
-        return Task.FromResult(_studyPrograms.Where(sp => sp.Name.Contains(search, StringComparison.OrdinalIgnoreCase)));
     }
 
     private async Task HandleThesis()
@@ -171,7 +178,7 @@ else
                 await UnitOfWork.Theses.UpdateAsync(_thesis);
             }
             await UnitOfWork.CompleteAsync();
-            NavigationManager.NavigateTo("/theses");
+            NavigationManager.NavigateTo("/management/theses");
         }
     }
 }

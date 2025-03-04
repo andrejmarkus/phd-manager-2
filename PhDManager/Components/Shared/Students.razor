@@ -22,7 +22,7 @@
         <MudText Typo="Typo.h6" GutterBottom="false">@Localizer["Students"]</MudText>
         <MudSpacer />
         <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="AddStudent">@Localizer["UserAddLdap"]</MudButton>
-        <MudButton Class="mx-4" Variant="Variant.Filled" Color="Color.Primary" OnClick="CreateStudentRegistration">@Localizer["UserRegister"]</MudButton>
+        <MudButton Class="mx-4" Variant="Variant.Filled" Color="Color.Primary" OnClick="AddStudentRegistration">@Localizer["UserRegister"]</MudButton>
         <MudTextField Class="mr-4" Variant="Variant.Outlined" Placeholder="@Localizer["Search"]" Immediate Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" @bind-Value="_search" />
         <MudSelect T="StudentState?" Variant="Variant.Outlined" Label="@Localizer["StudentState"]" Immediate ToStringFunc="@(s => s is null ? Localizer["All"] : EnumService.GetLocalizedEnumValue((StudentState)s))" @bind-Value="_studentState">
             <MudSelectItem T="StudentState?" Value="null">@Localizer["All"]</MudSelectItem>
@@ -170,7 +170,7 @@
         await UnitOfWork.CompleteAsync();
     }
 
-    private async Task CreateStudentRegistration()
+    private async Task AddStudentRegistration()
     {
         var parameters = new DialogParameters<RegistrationLinkDialog> { { d => d.Role, Student.Role } };
         await DialogService.ShowAsync<RegistrationLinkDialog>(Localizer["UserRegister"], parameters, new() { FullWidth = true, MaxWidth = MaxWidth.Medium });

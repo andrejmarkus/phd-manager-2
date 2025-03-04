@@ -89,6 +89,19 @@ namespace PhDManager.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "SystemState",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    IsOpen = table.Column<bool>(type: "boolean", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SystemState", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AspNetRoleClaims",
                 columns: table => new
                 {
@@ -390,6 +403,7 @@ namespace PhDManager.Data.Migrations
                     StartSchoolYear = table.Column<string>(type: "text", nullable: false),
                     EndSchoolYear = table.Column<string>(type: "text", nullable: false),
                     IsExternal = table.Column<bool>(type: "boolean", nullable: false),
+                    State = table.Column<int>(type: "integer", nullable: false),
                     StudyProgramId = table.Column<int>(type: "integer", nullable: true),
                     ThesisInterestId = table.Column<int>(type: "integer", nullable: true),
                     UserId = table.Column<string>(type: "text", nullable: true)
@@ -470,6 +484,11 @@ namespace PhDManager.Data.Migrations
                     { 1, "AI", "Aplikovaná informatika", "Informatika", new[] { "Matematické princípy informatiky", "Teória a metodológia aplikovanej informatiky", "Predmet špecializácie" } },
                     { 2, "M", "Manažment", "Ekonómia a manažment", new[] { "Metodológia výskumu v manažmente", "Manažérske teórie", "Predmet špecializácie" } }
                 });
+
+            migrationBuilder.InsertData(
+                table: "SystemState",
+                columns: new[] { "Id", "IsOpen" },
+                values: new object[] { 1, true });
 
             migrationBuilder.InsertData(
                 table: "Subjects",
@@ -673,6 +692,9 @@ namespace PhDManager.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "Registrations");
+
+            migrationBuilder.DropTable(
+                name: "SystemState");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");

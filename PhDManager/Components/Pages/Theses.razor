@@ -1,12 +1,4 @@
-﻿@page "/admin/theses"
-
-@rendermode InteractiveServer
-
-@inject IJSRuntime JSRuntime
-@inject IUnitOfWork UnitOfWork
-@inject IDialogService DialogService
-@inject IStringLocalizer<Resources> Localizer
-@inject DocumentService DocumentService
+﻿@page "/management/theses"
 
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.Extensions.Localization
@@ -15,26 +7,37 @@
 @using PhDManager.Services
 @using PhDManager.Services.IRepositories
 
-@attribute [Authorize(Roles = $"{Admin.Role}")]
+@rendermode InteractiveServer
 
-<PageTitle>@Localizer["DissertationTheses"] | Admin</PageTitle>
+@inject IJSRuntime JSRuntime
+@inject IUnitOfWork UnitOfWork
+@inject IDialogService DialogService
+@inject IStringLocalizer<Resources> Localizer
+@inject DocumentService DocumentService
+@inject UsersService UsersService
+@inject SchoolYearService SchoolYearService
+
+@attribute [Authorize(Roles = $"{Admin.Role}, {Teacher.Role}")]
+
+<PageTitle>@Localizer["DissertationTheses"]</PageTitle>
 
 <MudDataGrid T="Thesis" Items="_theses" Hover SortMode="SortMode.Multiple" QuickFilter="_quickFilter" Elevation="0">
     <ToolBarContent>
         <MudText Typo="Typo.h6" GutterBottom="false">@Localizer["DissertationTheses"]</MudText>
         <MudSpacer />
-        <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="/theses/add">@Localizer["DissertationThesisAdd"]</MudButton>
-        <MudTextField Class="ml-4" Variant="Variant.Outlined" Placeholder="@Localizer["Search"]" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" @bind-Value="_search" />
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="/management/theses/add">@Localizer["DissertationThesisAdd"]</MudButton>
+        <MudButton Class="mx-4" Variant="Variant.Filled" Color="Color.Primary" Href="/management/theses/review">@Localizer["DissertationThesisApprove"]</MudButton>
+        <MudTextField Variant="Variant.Outlined" Placeholder="@Localizer["Search"]" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" @bind-Value="_search" />
     </ToolBarContent>
     <Columns>
         <PropertyColumn Property="t => t.Title" Title="@Localizer["DissertationThesisTitle"]" />
+        <PropertyColumn Property="@(t => t.IsApproved ? "Áno" : "Nie")" Title="@Localizer["Approved"]" />
         <PropertyColumn Property="t => t.Supervisor.User.DisplayName" Title="@Localizer["SupervisorName"]" />
         <PropertyColumn Property="t => t.Supervisor.User.Email" Title="@Localizer["SupervisorEmail"]" />
         <PropertyColumn Property="t => t.StudyProgram.Name" Title="@Localizer["StudyProgram"]" />
         <PropertyColumn Property="t => t.ResearchType" Title="@Localizer["ResearchType"]" />
         <PropertyColumn Property="@(t => t.DailyStudy ? "Áno" : "Nie")" Title="@Localizer["StudyFormDaily"]" />
         <PropertyColumn Property="@(t => t.ExternalStudy ? "Áno" : "Nie")" Title="@Localizer["StudyFormExternal"]" />
-        <PropertyColumn Property="@(t => t.IsApproved ? "Áno" : "Nie")" Title="@Localizer["Approved"]" />
         <PropertyColumn Property="t => t.Comments.Count" Title="@Localizer["CommentsCount"]" />
         <TemplateColumn Title="@Localizer["DisserationThesisEdit"]">
             <CellTemplate>
@@ -43,7 +46,7 @@
                         <MudIconButton Size="@Size.Small" Color="Color.Error" Icon="@Icons.Material.Outlined.Delete" OnClick="@(async () => await DeleteThesis(context.Item))" />
                     </MudTooltip>
                     <MudTooltip Text="@Localizer["DisserationThesisEdit"]">
-                        <MudIconButton Size="@Size.Small" Color="Color.Info" Icon="@Icons.Material.Outlined.Edit" Href="@($"/theses/edit/{context.Item.Guid}")" />
+                        <MudIconButton Size="@Size.Small" Color="Color.Info" Icon="@Icons.Material.Outlined.Edit" Href="@($"/management/theses/edit/{context.Item.Guid}")" />
                     </MudTooltip>
                     <MudTooltip Text="@Localizer["DissertationThesisGenerate"]">
                         <MudIconButton Size="@Size.Small" Color="Color.Info" Icon="@Icons.Material.Outlined.Print" OnClick="@(async () => await DocumentService.DownloadThesisDocument(context.Item))" />
@@ -54,14 +57,31 @@
     </Columns>
 </MudDataGrid>
 
+<AuthorizeView Roles="@($"{Admin.Role}")">
+    <Authorized>
+        @if (_systemState is not null)
+        {
+            <MudSwitch Class="mt-4" Label="@Localizer["SystemEnabled"]" Color="Color.Primary" @bind-Value="_systemState.IsOpen" @bind-Value:after="UpdateSystemState" />
+        }
+    </Authorized>
+</AuthorizeView>
+
 @code {
     private IEnumerable<Thesis>? _theses;
+    private SystemState? _systemState;
 
+    private string? _currentUserRole;
+    private string? _currentUserId;
     private string _search = string.Empty;
 
     protected override async Task OnInitializedAsync()
     {
-        _theses = await UnitOfWork.Theses.GetAllAsync();
+        _currentUserRole = await UsersService.GetCurrentUserRoleAsync();
+        _currentUserId = await UsersService.GetCurrentUserIdAsync();
+
+        _systemState = await UnitOfWork.SystemState.GetAsync();
+
+        await LoadTheses();
     }
 
     private Func<Thesis, bool> _quickFilter => t =>
@@ -84,6 +104,14 @@
         return false;
     };
 
+    private async Task UpdateSystemState()
+    {
+        if (_systemState is null) return;
+
+        await UnitOfWork.SystemState.UpdateAsync(_systemState);
+        await UnitOfWork.CompleteAsync();
+    }
+
     private async Task DeleteThesis(Thesis thesis)
     {
         bool? result = await DialogService.ShowMessageBox(Localizer["DissertationThesisDelete"], Localizer["DissertationThesisDeleteConfirmation"], Localizer["Yes"], Localizer["No"]);
@@ -95,5 +123,25 @@
         }
         UnitOfWork.Theses.Delete(thesis);
         await UnitOfWork.CompleteAsync();
+        await LoadTheses();
+    }
+
+    private async Task DuplicateThesis(Thesis thesis)
+    {
+        thesis.SchoolYear = SchoolYearService.CurrentSchoolYear;
+        await UnitOfWork.Theses.AddAsync(thesis);
+        await UnitOfWork.CompleteAsync();
+
+        await LoadTheses();
+    }
+
+    private async Task LoadTheses()
+    {
+        _theses = await UnitOfWork.Theses.GetAllAsync();
+        
+        if (_currentUserRole == Teacher.Role)
+        {
+            _theses = _theses?.Where(t => t.Supervisor.User.Id == _currentUserId);
+        }
     }
 }

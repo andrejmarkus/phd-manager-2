@@ -59,12 +59,6 @@ builder.Services.AddHangfire(options => options
 );
 builder.Services.AddHangfireServer();
 
-var cacheConnectionString = builder.Configuration.GetSection(CacheOptions.Cache).Get<CacheOptions>()?.ConnectionString ?? throw new InvalidOperationException("Connection string not found.");
-builder.Services.AddStackExchangeRedisCache(options =>
-{
-    options.Configuration = cacheConnectionString;
-});
-
 builder.Services.AddIdentityCore<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>()
@@ -75,12 +69,11 @@ builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSe
 builder.Services.AddSingleton<SchoolYearService>();
 builder.Services.AddSingleton<EnumService>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-builder.Services.AddScoped<AppStateService>();
 builder.Services.AddScoped<ActiveDirectoryService>();
 builder.Services.AddScoped<UsersService>();
 builder.Services.AddScoped<DocumentService>();
+builder.Services.AddScoped<JobService>();
 builder.Services.AddScoped<RoleInitializer>();
-builder.Services.AddScoped<JobInitializer>();
 
 var app = builder.Build();
 
@@ -125,11 +118,11 @@ using (var scope = app.Services.CreateScope())
     var services = scope.ServiceProvider;
     var context = services.GetRequiredService<ApplicationDbContext>();
     var roleInitializer = services.GetRequiredService<RoleInitializer>();
-    var jobInitializer = services.GetRequiredService<JobInitializer>();
+    var jobService = services.GetRequiredService<JobService>();
 
     await context.Database.MigrateAsync();
     await roleInitializer.InitializeAsync();
-    jobInitializer.Initialize();
+    jobService.Initialize();
 }
 
 app.Run();

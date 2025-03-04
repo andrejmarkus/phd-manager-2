@@ -13,6 +13,7 @@
         IStudentRepository Students { get; }
         IExternalRepository Externals { get; }
         ITeacherRepository Teachers { get; }
+        ISystemStateRepository SystemState { get; }
         Task CompleteAsync();
     }
 }

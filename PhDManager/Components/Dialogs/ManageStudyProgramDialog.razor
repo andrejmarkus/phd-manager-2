@@ -1,0 +1,67 @@
+﻿@using Microsoft.Extensions.Localization
+@using PhDManager.Locales
+@using PhDManager.Models
+
+@inject IStringLocalizer<Resources> Localizer
+
+<MudDialog>
+    <TitleContent>
+        <MudText Typo="Typo.h6">@(_add ? Localizer["StudyProgramAdd"] : Localizer["StudyProgramEdit"])</MudText>
+    </TitleContent>
+    <DialogContent>
+        <MudForm @ref="_form">
+            @if (StudyProgram is not null)
+            {
+                <MudTextField Label="@Localizer["StudyProgramName"]" Variant="Variant.Outlined" @bind-Value="StudyProgram.Name" />
+                <MudTextField Label="@Localizer["StudyProgramCode"]" Variant="Variant.Outlined" @bind-Value="StudyProgram.Code" />
+                <MudTextField Label="@Localizer["StudyFieldName"]" Variant="Variant.Outlined" @bind-Value="StudyProgram.StudyFieldName" />
+                <MudText>@Localizer["ThesisSubjects"]</MudText>
+                <MudStack Spacing="2">
+                    @for (int i = 0; i < _thesisSubjects.Count; i++)
+                    {
+                        <MudTextField Variant="Variant.Outlined" @bind-Value="_thesisSubjects[i]" />
+                    }
+                </MudStack>
+                <MudButton Class="mt-4" Color="Color.Primary" Variant="Variant.Filled" OnClick="@(() => _thesisSubjects.Add(""))">@Localizer["ThesisSubjectAdd"]</MudButton>
+            }
+        </MudForm>
+    </DialogContent>
+    <DialogActions>
+        <MudButton Color="Color.Primary" OnClick="HandleDialog">@(_add ? Localizer["Add"] : Localizer["Edit"])</MudButton>
+        <MudButton Color="Color.Secondary" OnClick="@(() => MudDialog.Cancel())">@Localizer["Cancel"]</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter]
+    private IMudDialogInstance MudDialog { get; set; } = default!;
+
+    [Parameter]
+    public StudyProgram? StudyProgram { get; set; }
+
+    private MudForm _form = default!;
+    private bool _add;
+    private List<string> _thesisSubjects = new();
+
+    protected override void OnInitialized()
+    {
+        _add = StudyProgram is null;
+        if (StudyProgram is null)
+        {
+            StudyProgram = new();
+        }
+        else
+        {
+            _thesisSubjects = StudyProgram.ThesisSubjects.ToList();
+        }
+    }
+
+    private async Task HandleDialog()
+    {
+        await _form.Validate();
+        if (!_form.IsValid || StudyProgram is null) return;
+
+        StudyProgram.ThesisSubjects = _thesisSubjects.ToArray();
+        MudDialog.Close(DialogResult.Ok(StudyProgram));
+    }
+}

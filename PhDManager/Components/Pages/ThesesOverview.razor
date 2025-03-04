@@ -67,12 +67,6 @@
     }
 </MudStack>
 
-<AuthorizeView Roles="@($"{Admin.Role}, {Teacher.Role}, {External.Role}")">
-    <Authorized>
-        <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="/theses/review">@Localizer["Approve"]</MudButton>
-    </Authorized>
-</AuthorizeView>
-
 <MudGrid Class="mt-1">
     @if (_theses is not null)
     {
@@ -99,39 +93,6 @@
                             }
                         </MudText>
                     </MudLink>
-                    <AuthorizeView Roles="@($"{Admin.Role}")">
-                        <Authorized>
-                            <MudStack Row Class="mt-2">
-                                <MudTooltip Text="@Localizer["DissertationThesisDelete"]">
-                                    <MudIconButton Size="@Size.Small" Color="Color.Error" Icon="@Icons.Material.Outlined.Delete" OnClick="@(async () => await DeleteThesis(thesis))" />
-                                </MudTooltip>
-                                <MudTooltip Text="@Localizer["DisserationThesisEdit"]">
-                                    <MudIconButton Size="@Size.Small" Color="Color.Info" Icon="@Icons.Material.Outlined.Edit" Href="@($"/theses/edit/{thesis.Guid}")" />
-                                </MudTooltip>
-                                <MudTooltip Text="@Localizer["DissertationThesisGenerate"]">
-                                    <MudIconButton Size="@Size.Small" Color="Color.Info" Icon="@Icons.Material.Outlined.Print" OnClick="@(async () => await DocumentService.DownloadThesisDocument(thesis))" />
-                                </MudTooltip>
-                            </MudStack>
-                        </Authorized>
-                    </AuthorizeView>
-                    <AuthorizeView Roles="@($"{Teacher.Role}")">
-                        <Authorized>
-                            @if (_currentUserId?.Equals(thesis.Supervisor.User.Id) == true)
-                            {
-                                <MudStack Row Class="mt-2">
-                                    <MudTooltip Text="@Localizer["DissertationThesisDelete"]">
-                                        <MudIconButton Size="@Size.Small" Color="Color.Error" Icon="@Icons.Material.Outlined.Delete" OnClick="@(async () => await DeleteThesis(thesis))" />
-                                    </MudTooltip>
-                                    <MudTooltip Text="@Localizer["DisserationThesisEdit"]">
-                                        <MudIconButton Size="@Size.Small" Color="Color.Info" Icon="@Icons.Material.Outlined.Edit" Href="@($"/theses/edit/{thesis.Guid}")" />
-                                    </MudTooltip>
-                                    <MudTooltip Text="@Localizer["DissertationThesisGenerate"]">
-                                        <MudIconButton Size="@Size.Small" Color="Color.Info" Icon="@Icons.Material.Outlined.Print" OnClick="@(async () => await DocumentService.DownloadThesisDocument(thesis))" />
-                                    </MudTooltip>
-                                </MudStack>
-                            }
-                        </Authorized>
-                    </AuthorizeView>
                 </MudPaper>
             </MudItem>
         }
@@ -143,39 +104,25 @@
     private IEnumerable<StudyProgram>? _studyPrograms;
     private IEnumerable<Teacher>? _teachers;
     private IEnumerable<string>? _schoolYears;
-    private string? _currentUserId;
 
-    private string _search = "";
+    private string? _currentUserId;
     private StudyProgram? _selectedStudyProgram;
     private Teacher? _selectedTeacher;
     private string? _selectedSchoolYear;
     private bool? _available;
     private bool? _studyForm;
+    private string _search = "";
 
     protected override async Task OnInitializedAsync()
     {
-        var theses = await UnitOfWork.Theses.GetAllAsync();
-        _theses = theses?.Where(t => t.IsApproved).ToArray();
+        _theses = await UnitOfWork.Theses.GetAllAsync();
+        _theses = _theses?.Where(t => t.IsApproved).ToArray();
         _studyPrograms = await UnitOfWork.StudyPrograms.GetAllAsync();
         _teachers = await UnitOfWork.Teachers.GetAllAsync();
         _schoolYears = await UnitOfWork.Theses.GetAllSchoolYearsAsync();
         _currentUserId = await UsersService.GetCurrentUserIdAsync();
 
         _selectedSchoolYear = SchoolYearService.CurrentSchoolYear;
-    }
-
-    private async Task DeleteThesis(Thesis thesis)
-    {
-        bool? result = await DialogService.ShowMessageBox(Localizer["DissertationThesisDelete"], Localizer["DissertationThesisDeleteConfirmation"], Localizer["Yes"], Localizer["No"]);
-        if (result == false) return;
-
-        foreach (var comment in thesis.Comments)
-        {
-            UnitOfWork.Comments.Delete(comment);
-        }
-        UnitOfWork.Theses.Delete(thesis);
-        await UnitOfWork.CompleteAsync();
-        _theses = _theses?.Where(t => t.Id != thesis.Id);
     }
 
     private async Task UpdateSearch()

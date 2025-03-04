@@ -48,8 +48,9 @@
         return Task.FromResult(_theses.Where(t => t.Title.Contains(search, StringComparison.OrdinalIgnoreCase)));
     }
 
-    private void HandleDialog()
+    private async Task HandleDialog()
     {
+        await _form.Validate();
         if (!_form.IsValid) return;
 
         MudDialog.Close(DialogResult.Ok(Student));

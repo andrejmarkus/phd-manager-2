@@ -1,0 +1,67 @@
+﻿@using Microsoft.Extensions.Localization
+@using PhDManager.Locales
+@using PhDManager.Models
+@using PhDManager.Services.IRepositories
+
+@inject IStringLocalizer<Resources> Localizer
+@inject IUnitOfWork UnitOfWork
+
+<MudDialog>
+    <TitleContent>
+        <MudText Typo="Typo.h6">@(_add ? Localizer["SubjectAdd"] : Localizer["SubjectEdit"])</MudText>
+    </TitleContent>
+    <DialogContent>
+        <MudForm @ref="_form">
+            @if (Subject is not null)
+            {
+                <MudTextField Label="@Localizer["SubjectName"]" Variant="Variant.Outlined" @bind-Value="Subject.Name" />
+                <MudTextField Label="@Localizer["SubjectSemester"]" Variant="Variant.Outlined" @bind-Value="Subject.Semester" />
+                @if (_studyPrograms is not null)
+                {
+                    <MudSelect Label="@Localizer["StudyProgram"]" Variant="Variant.Outlined" @bind-Value="Subject.StudyProgram">
+                        @foreach (var studyProgram in _studyPrograms)
+                        {
+                            <MudSelectItem Value="@studyProgram">@studyProgram.Name</MudSelectItem>
+                        }
+                    </MudSelect>
+                }
+                <MudSwitch T="bool" Color="Color.Primary" Label="@Localizer["SubjectRequired"]" @bind-Value="Subject.IsRequired" />
+            }
+        </MudForm>
+    </DialogContent>
+    <DialogActions>
+        <MudButton Color="Color.Primary" OnClick="HandleDialog">@(_add ? Localizer["Add"] : Localizer["Edit"])</MudButton>
+        <MudButton Color="Color.Secondary" OnClick="@(() => MudDialog.Cancel())">@Localizer["Cancel"]</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter]
+    private IMudDialogInstance MudDialog { get; set; } = default!;
+
+    [Parameter]
+    public Subject? Subject { get; set; }
+
+    private MudForm _form = default!;
+    private bool _add;
+    private IEnumerable<StudyProgram>? _studyPrograms;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _add = Subject is null;
+        if (Subject is null)
+        {
+            Subject = new();
+        }
+
+        _studyPrograms = await UnitOfWork.StudyPrograms.GetAllAsync();
+    }
+
+    private async Task HandleDialog()
+    {
+        await _form.Validate();
+        if (!_form.IsValid || Subject is null) return;
+
+        MudDialog.Close(DialogResult.Ok(Subject));
+    }
+}

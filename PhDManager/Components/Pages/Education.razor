@@ -1,0 +1,28 @@
+﻿@page "/management/education"
+
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.Extensions.Localization
+@using PhDManager.Components.Shared
+@using PhDManager.Locales
+@using PhDManager.Models
+
+@rendermode InteractiveServer
+
+@inject IStringLocalizer<Resources> Localizer
+
+@attribute [Authorize(Roles = $"{Admin.Role}")]
+
+<PageTitle>@Localizer["Education"] | Admin</PageTitle>
+
+<MudTabs Elevation="0">
+    <MudTabPanel Text="@Localizer["StudyPrograms"]">
+        <StudyPrograms />
+    </MudTabPanel>
+    <MudTabPanel Text="@Localizer["Subjects"]">
+        <Subjects />
+    </MudTabPanel>
+</MudTabs>
+
+@code {
+
+}

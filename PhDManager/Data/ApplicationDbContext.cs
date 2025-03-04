@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using PhDManager.Models;
-using System.Reflection.Emit;
 
 namespace PhDManager.Data
 {
@@ -28,6 +27,10 @@ namespace PhDManager.Data
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
+
+            builder.Entity<SystemState>()
+                .HasData(new SystemState { Id = 1, IsOpen = true });
+
             builder.Entity<ApplicationUser>()
                 .HasOne(u => u.Admin)
                 .WithOne(a => a.User)

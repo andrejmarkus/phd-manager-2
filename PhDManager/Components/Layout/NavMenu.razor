@@ -12,17 +12,25 @@
     <MudNavLink Href="" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Home">@Localizer["Home"]</MudNavLink>
     <AuthorizeView Roles="@($"{Admin.Role}")">
         <Authorized>
-            <MudNavGroup Title="Admin" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.AdminPanelSettings" HideExpandIcon>
-                <MudNavLink Href="/admin/system-settings" Icon="@Icons.Material.Filled.Settings">@Localizer["SystemSettings"]</MudNavLink>
-                <MudNavLink Href="/admin/users" Icon="@Icons.Material.Filled.Group">@Localizer["Users"]</MudNavLink>
-                <MudNavLink Href="/admin/theses" Icon="@Icons.Material.Filled.DocumentScanner">@Localizer["DissertationTheses"]</MudNavLink>
-                <MudNavLink Href="/admin/individual-plans" Icon="@Icons.Material.Filled.ContactPage">@Localizer["IndividualPlans"]</MudNavLink>
+            <MudNavGroup Title="@Localizer["Admin"]" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.AdminPanelSettings" HideExpandIcon>
+                <MudNavLink Href="/management/education" Icon="@Icons.Material.Filled.School">@Localizer["Education"]</MudNavLink>
+                <MudNavLink Href="/management/users" Icon="@Icons.Material.Filled.Group">@Localizer["Users"]</MudNavLink>
+                <MudNavLink Href="/management/theses" Icon="@Icons.Material.Filled.DocumentScanner">@Localizer["DissertationTheses"]</MudNavLink>
+                <MudNavLink Href="/management/individual-plans" Icon="@Icons.Material.Filled.ContactPage">@Localizer["IndividualPlans"]</MudNavLink>
             </MudNavGroup>
         </Authorized>
     </AuthorizeView>
     <AuthorizeView Roles="@($"{Teacher.Role}")">
         <Authorized>
-            <MudNavLink Href="/my-theses" Icon="@Icons.Material.Filled.Apps">@Localizer["DissertationThesesMy"]</MudNavLink>
+            <MudNavGroup Title="@Localizer["Teacher"]" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.AdminPanelSettings" HideExpandIcon>
+                <MudNavLink Href="/management/theses" Icon="@Icons.Material.Filled.DocumentScanner">@Localizer["DissertationTheses"]</MudNavLink>
+                <MudNavLink Href="/management/individual-plans" Icon="@Icons.Material.Filled.ContactPage">@Localizer["IndividualPlans"]</MudNavLink>
+            </MudNavGroup>
+        </Authorized>
+    </AuthorizeView>
+    <AuthorizeView Roles="@($"{Teacher.Role}")">
+        <Authorized>
+            <MudNavLink Href="/management/theses/review" Icon="@Icons.Material.Filled.DocumentScanner">@Localizer["DissertationThesisApprove"]</MudNavLink>
         </Authorized>
     </AuthorizeView>
     <MudNavLink Href="theses" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.List">@Localizer["DissertationTheses"]</MudNavLink>

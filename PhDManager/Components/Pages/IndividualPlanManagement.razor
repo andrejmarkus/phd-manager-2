@@ -1,5 +1,5 @@
-﻿@page "/admin/individual-plans/add"
-@page "/admin/individual-plans/edit/{IndividualPlanGuid}"
+﻿@page "/management/individual-plans/add"
+@page "/management/individual-plans/edit/{IndividualPlanGuid}"
 
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Identity
@@ -17,8 +17,9 @@
 @inject IStringLocalizer<Resources> Localizer
 @inject UserManager<ApplicationUser> UserManager
 @inject NavigationManager NavigationManager
+@inject UsersService UsersService
 
-@attribute [Authorize(Roles = $"{Admin.Role}")]
+@attribute [Authorize(Roles = $"{Admin.Role}, {Teacher.Role}")]
 
 <PageTitle>@Localizer["IndividualPlanCreate"]</PageTitle>
 
@@ -68,19 +69,44 @@
     <MudText Typo="Typo.h4">@Localizer["StudyPart"]</MudText>
 
     <MudText Typo="Typo.h5">@Localizer["IndividualPlanSubjectsInfo"]</MudText>
-    @if (_selectedSubjects.Length == 3)
+    @if (_selectedSubjects.Length == 3 && _subjects is not null)
     {
-        <MudAutocomplete T="Subject" Required RequiredError="@Localizer["IndividualPlanSubjectError"]" Label="@($"{Localizer["Subject"]} 1")" ToStringFunc="@(s => s is null ? null : s.Name)" SearchFunc="SearchSubjects" Variant="Variant.Outlined" @bind-Value="_selectedSubjects[0]" />
-        <MudAutocomplete T="Subject" Required RequiredError="@Localizer["IndividualPlanSubjectError"]" Label="@($"{Localizer["Subject"]} 2")" ToStringFunc="@(s => s is null ? null : s.Name)" SearchFunc="SearchSubjects" Variant="Variant.Outlined" @bind-Value="_selectedSubjects[1]" />
-        <MudAutocomplete T="Subject" Required RequiredError="@Localizer["IndividualPlanSubjectError"]" Label="@($"{Localizer["Subject"]} 3")" ToStringFunc="@(s => s is null ? null : s.Name)" SearchFunc="SearchSubjects" Variant="Variant.Outlined" @bind-Value="_selectedSubjects[2]" />
+        <MudSelect T="Subject" Required RequiredError="@Localizer["IndividualPlanSubjectError"]" Label="@($"{Localizer["Subject"]} 1")" ToStringFunc="@(s => s is null ? null : s.Name)" Variant="Variant.Outlined" @bind-Value="_selectedSubjects[0]">
+            @foreach (var subject in _subjects)
+            {
+                <MudSelectItem Value="subject">@subject.Name</MudSelectItem>
+            }
+        </MudSelect>
+        <MudSelect T="Subject" Required RequiredError="@Localizer["IndividualPlanSubjectError"]" Label="@($"{Localizer["Subject"]} 2")" ToStringFunc="@(s => s is null ? null : s.Name)" Variant="Variant.Outlined" @bind-Value="_selectedSubjects[1]">
+            @foreach (var subject in _subjects)
+            {
+                <MudSelectItem Value="subject">@subject.Name</MudSelectItem>
+            }
+        </MudSelect>
+        <MudSelect T="Subject" Required RequiredError="@Localizer["IndividualPlanSubjectError"]" Label="@($"{Localizer["Subject"]} 3")" ToStringFunc="@(s => s is null ? null : s.Name)" Variant="Variant.Outlined" @bind-Value="_selectedSubjects[2]">
+            @foreach (var subject in _subjects)
+            {
+                <MudSelectItem Value="subject">@subject.Name</MudSelectItem>
+            }
+        </MudSelect>
     }
     <MudTextField T="string" Label="@Localizer["IndividualPlanThematicAreas"]" Variant="Variant.Outlined" @bind-Value="_individualPlan.ThematicAreas" />
 
     <MudText Typo="Typo.h5">@Localizer["IndividualPlanAdditionalSubjectsInfo"]</MudText>
-    @if (_selectedOptionalSubjects.Length == 2)
+    @if (_selectedOptionalSubjects.Length == 2 && _subjects is not null)
     {
-    <MudAutocomplete T="Subject" Label="@($"{Localizer["Subject"]} 1")" ToStringFunc="@(s => s is null ? null : s.Name)" SearchFunc="SearchSubjects" Variant="Variant.Outlined" @bind-Value="@_selectedOptionalSubjects[0]" />
-    <MudAutocomplete T="Subject" Label="@($"{Localizer["Subject"]} 2")" ToStringFunc="@(s => s is null ? null : s.Name)" SearchFunc="SearchSubjects" Variant="Variant.Outlined" @bind-Value="@_selectedOptionalSubjects[1]" />
+        <MudSelect T="Subject" Label="@($"{Localizer["Subject"]} 1")" ToStringFunc="@(s => s is null ? null : s.Name)" Variant="Variant.Outlined" @bind-Value="_selectedOptionalSubjects[0]">
+            @foreach (var subject in _subjects)
+            {
+                <MudSelectItem Value="subject">@subject.Name</MudSelectItem>
+            }
+        </MudSelect>
+        <MudSelect T="Subject" Label="@($"{Localizer["Subject"]} 2")" ToStringFunc="@(s => s is null ? null : s.Name)" Variant="Variant.Outlined" @bind-Value="_selectedOptionalSubjects[1]">
+            @foreach (var subject in _subjects)
+            {
+                <MudSelectItem Value="subject">@subject.Name</MudSelectItem>
+            }
+        </MudSelect>
     }
 
     <MudText Typo="Typo.h5">@Localizer["IndividualPlanWrittenThesisInfo"]</MudText>
@@ -139,6 +165,9 @@
     [Parameter]
     public string? IndividualPlanGuid { get; set; }
 
+    private string? _currentUserRole;
+    private string? _currentUserId;
+
     private MudForm? _form;
     private IEnumerable<Student>? _students;
     private IEnumerable<Subject>? _subjects;
@@ -150,6 +179,9 @@
 
     protected override async Task OnInitializedAsync()
     {
+        _currentUserRole = await UsersService.GetCurrentUserRoleAsync();
+        _currentUserId = await UsersService.GetCurrentUserIdAsync();
+
         if (IndividualPlanGuid is not null)
         {
             var individualPlan = await UnitOfWork.IndividualPlans.GetByGuidAsync(IndividualPlanGuid);
@@ -181,6 +213,11 @@
 
         _students = await UnitOfWork.Students.GetAllAsync();
         _subjects = await UnitOfWork.Subjects.GetAllAsync();
+
+        if (_currentUserRole == Teacher.Role)
+        {
+            _students = _students?.Where(s => s.Thesis?.Supervisor.User.Id == _currentUserId);
+        }
     }
 
     private Task<IEnumerable<Student>?> SearchStudents(string search, CancellationToken token)
@@ -230,7 +267,7 @@
             }
 
             await UnitOfWork.CompleteAsync();
-            NavigationManager.NavigateTo("/admin/individual-plans");
+            NavigationManager.NavigateTo("/management/individual-plans");
         }
     }
 }

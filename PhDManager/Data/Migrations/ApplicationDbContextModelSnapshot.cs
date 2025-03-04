@@ -630,6 +630,29 @@ namespace PhDManager.Data.Migrations
                         });
                 });
 
+            modelBuilder.Entity("PhDManager.Models.SystemState", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("IsOpen")
+                        .HasColumnType("boolean");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("SystemState");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            IsOpen = true
+                        });
+                });
+
             modelBuilder.Entity("PhDManager.Models.Teacher", b =>
                 {
                     b.Property<int>("Id")

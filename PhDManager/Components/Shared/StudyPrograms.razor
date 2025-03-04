@@ -1,0 +1,126 @@
+﻿@using LdapForNet
+@using Microsoft.Extensions.Localization
+@using PhDManager.Components.Dialogs
+@using PhDManager.Locales
+@using PhDManager.Models
+@using PhDManager.Services
+@using PhDManager.Services.IRepositories
+
+@rendermode InteractiveServer
+
+@inject IDialogService DialogService
+@inject IStringLocalizer<Resources> Localizer
+@inject IUnitOfWork UnitOfWork
+@inject UsersService UsersService
+
+<MudDataGrid T="StudyProgram" Items="@_studyPrograms" Hover SortMode="SortMode.Multiple" QuickFilter="@_quickFilter" Elevation="0">
+    <ToolBarContent>
+        <MudText Typo="Typo.h6" GutterBottom="false">@Localizer["StudyPrograms"]</MudText>
+        <MudSpacer />
+        <MudButton class="mx-4" Variant="Variant.Filled" Color="Color.Primary" OnClick="AddStudyProgram">@Localizer["StudyProgramAdd"]</MudButton>
+        <MudTextField Variant="Variant.Outlined" Placeholder="@Localizer["Search"]" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" @bind-Value="_search" />
+    </ToolBarContent>
+    <Columns>
+        <PropertyColumn Property="sp => sp.Name" Title="@Localizer["StudyProgramName"]" />
+        <PropertyColumn Property="sp => sp.Code" Title="@Localizer["StudyProgramCode"]" />
+        <PropertyColumn Property="sp => sp.StudyFieldName" Title="@Localizer["StudyFieldName"]" />
+        <TemplateColumn Title="@Localizer["StudyProgramEdit"]">
+            <CellTemplate>
+                <MudStack Row>
+                    <MudTooltip Text="@Localizer["StudyProgramDelete"]">
+                        <MudIconButton Size="@Size.Small" Color="Color.Error" Icon="@Icons.Material.Outlined.Delete" OnClick="@(() => DeleteStudyProgram(context.Item))" />
+                    </MudTooltip>
+                    <MudTooltip Text="@Localizer["StudyProgramEdit"]">
+                        <MudIconButton Size="@Size.Small" Color="Color.Info" Icon="@Icons.Material.Outlined.Edit" OnClick="@(() => UpdateStudyProgram(context.Item))" />
+                    </MudTooltip>
+                </MudStack>
+            </CellTemplate>
+        </TemplateColumn>
+    </Columns>
+    <PagerContent>
+        <MudDataGridPager T="StudyProgram" />
+    </PagerContent>
+</MudDataGrid>
+
+@code {
+    private IEnumerable<StudyProgram>? _studyPrograms;
+
+    private string _search = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadStudyPrograms();
+    }
+
+    private Func<StudyProgram, bool> _quickFilter => sp =>
+    {
+        if (string.IsNullOrWhiteSpace(_search))
+            return true;
+
+        if (sp.Name.Contains(_search, StringComparison.OrdinalIgnoreCase) == true)
+            return true;
+
+        if ($"{sp.Name}".Contains(_search))
+            return true;
+
+        return false;
+    };
+
+    private async Task AddStudyProgram()
+    {
+        var dialog = await DialogService.ShowAsync<ManageStudyProgramDialog>(Localizer["StudyProgramAdd"], new DialogOptions() { FullWidth = true, MaxWidth = MaxWidth.Medium });
+        var result = await dialog.Result;
+
+        if (result is null || result.Canceled) return;
+
+        var studyProgram = result.Data as StudyProgram;
+
+        if (studyProgram is null) return;
+
+        await UnitOfWork.StudyPrograms.AddAsync(studyProgram);
+        await UnitOfWork.CompleteAsync();
+        await LoadStudyPrograms();
+    }
+
+    private async Task UpdateStudyProgram(StudyProgram studyProgram)
+    {
+        var parameters = new DialogParameters<ManageStudyProgramDialog> { { d => d.StudyProgram, studyProgram } };
+        var dialog = await DialogService.ShowAsync<ManageStudyProgramDialog>(Localizer["StudyProgramEdit"], parameters, new() { FullWidth = true, MaxWidth = MaxWidth.Medium });
+        var result = await dialog.Result;
+
+        if (result is null || result.Canceled) return;
+
+        var updatedStudyProgram = result.Data as StudyProgram;
+
+        if (updatedStudyProgram is null) return;
+
+        await UnitOfWork.StudyPrograms.UpdateAsync(updatedStudyProgram);
+        await UnitOfWork.CompleteAsync();
+        await LoadStudyPrograms();
+    }
+
+    private async Task DeleteStudyProgram(StudyProgram studyProgram)
+    {
+        bool? result = await DialogService.ShowMessageBox(Localizer["StudyProgramDelete"], Localizer["StudyProgramDeleteConfirmation"], Localizer["Yes"], Localizer["No"]);
+        if (result == false) return;
+
+        foreach (var subject in studyProgram.Subjects)
+        {
+            UnitOfWork.Subjects.Delete(subject);
+        }
+
+        foreach (var thesis in studyProgram.Theses)
+        {
+            UnitOfWork.Theses.Delete(thesis);
+        }
+
+        UnitOfWork.StudyPrograms.Delete(studyProgram);
+        await UnitOfWork.CompleteAsync();
+        await LoadStudyPrograms();
+    }
+
+    private async Task LoadStudyPrograms()
+    {
+        _studyPrograms = await UnitOfWork.StudyPrograms.GetAllAsync();
+    }
+}

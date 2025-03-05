@@ -63,23 +63,21 @@
         {
             <MudStack Spacing="0">
                 <MudText>Povinné študijné jednotky</MudText>
-                @{int index = 1;}
-                @foreach (var subject in _thesis.StudyProgram.ThesisSubjects)
+                @foreach (var subject in _thesis.StudyProgram.ThesisSubjects.Select((e, i) => new { Element = e, Index = i }))
                 {
-                    <MudField T="string" Label="@($"{Localizer["Subject"]} {index}")" Variant="Variant.Outlined">@subject</MudField>
-                    index++;
+                    <MudField T="string" Label="@($"{Localizer["Subject"]} {subject.Index + 1}")" Variant="Variant.Outlined">@subject.Element</MudField>
                 }
             </MudStack>
         }
 
         <MudText Typo="Typo.h5">Špecifikácia témy</MudText>
-        <MudTextField T="string" Required RequiredError="@Localizer["DissertationThesisDescriptionError"]" Label="@Localizer["DissertationThesisDescription"]" AutoGrow Lines="5" Variant="Variant.Outlined" @bind-Value="_thesis.Description" />
+        <MudTextField Style="white-space: pre-wrap;" T="string" Required RequiredError="@Localizer["DissertationThesisDescriptionError"]" Label="@Localizer["DissertationThesisDescription"]" AutoGrow Lines="5" Variant="Variant.Outlined" @bind-Value="_thesis.Description" />
         @if (_isEnglish)
         {
-            <MudTextField T="string" Label="Detailed problem description" AutoGrow Lines="5" Variant="Variant.Outlined" @bind-Value="_thesis.DescriptionEnglish" />
+            <MudTextField Style="white-space: pre-wrap;" T="string" Label="Detailed problem description" AutoGrow Lines="5" Variant="Variant.Outlined" @bind-Value="_thesis.DescriptionEnglish" />
         }
-        <MudTextField T="string" Required RequiredError="@Localizer["DissertationThesisScientificContributionError"]" Label="@Localizer["DissertationThesisScientificContribution"]" AutoGrow Lines="3" Variant="Variant.Outlined" @bind-Value="_thesis.ScientificContribution" />
-        <MudTextField T="string" Required RequiredError="@Localizer["DissertationThesisScientificProgressError"]" Label="@Localizer["DissertationThesisScientificProgress"]" AutoGrow Lines="3" Variant="Variant.Outlined" @bind-Value="_thesis.ScientificProgress" />
+        <MudTextField Style="white-space: pre-wrap;" T="string" Required RequiredError="@Localizer["DissertationThesisScientificContributionError"]" Label="@Localizer["DissertationThesisScientificContribution"]" AutoGrow Lines="3" Variant="Variant.Outlined" @bind-Value="_thesis.ScientificContribution" />
+        <MudTextField Style="white-space: pre-wrap;" T="string" Required RequiredError="@Localizer["DissertationThesisScientificProgressError"]" Label="@Localizer["DissertationThesisScientificProgress"]" AutoGrow Lines="3" Variant="Variant.Outlined" @bind-Value="_thesis.ScientificProgress" />
 
         <MudText Typo="Typo.h5">@Localizer["MoreInformations"]</MudText>
         <MudStack>
@@ -90,9 +88,9 @@
             </MudSelect>
             <MudText>@Localizer["ResearchTypeInfo"]</MudText>
         </MudStack>
-        <MudTextField T="string" Required RequiredError="@Localizer["DissertationThesisResearchTaskError"]" Label="@Localizer["DissertationThesisResearchTask"]" AutoGrow Lines="4" Variant="Variant.Outlined" @bind-Value="_thesis.ResearchTask" />
+        <MudTextField Style="white-space: pre-wrap;" T="string" Required RequiredError="@Localizer["DissertationThesisResearchTaskError"]" Label="@Localizer["DissertationThesisResearchTask"]" AutoGrow Lines="4" Variant="Variant.Outlined" @bind-Value="_thesis.ResearchTask" />
         <MudStack>
-            <MudTextField T="string" Required RequiredError="@Localizer["DissertationThesisSolutionResultsError"]" Label="@Localizer["DissertationThesisSolutionResults"]" AutoGrow Lines="6" Variant="Variant.Outlined" @bind-Value="_thesis.SolutionResults" />
+            <MudTextField Style="white-space: pre-wrap;" T="string" Required RequiredError="@Localizer["DissertationThesisSolutionResultsError"]" Label="@Localizer["DissertationThesisSolutionResults"]" AutoGrow Lines="6" Variant="Variant.Outlined" @bind-Value="_thesis.SolutionResults" />
             <MudText>@Localizer["DissertationThesisSolutionResultsInfo"]</MudText>
         </MudStack>
 

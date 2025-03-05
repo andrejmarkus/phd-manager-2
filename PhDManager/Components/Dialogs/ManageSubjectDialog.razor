@@ -1,10 +1,13 @@
 ﻿@using Microsoft.Extensions.Localization
 @using PhDManager.Locales
 @using PhDManager.Models
+@using PhDManager.Models.Enums
+@using PhDManager.Services
 @using PhDManager.Services.IRepositories
 
 @inject IStringLocalizer<Resources> Localizer
 @inject IUnitOfWork UnitOfWork
+@inject EnumService EnumService
 
 <MudDialog>
     <TitleContent>
@@ -15,7 +18,12 @@
             @if (Subject is not null)
             {
                 <MudTextField Label="@Localizer["SubjectName"]" Variant="Variant.Outlined" @bind-Value="Subject.Name" />
-                <MudTextField Label="@Localizer["SubjectSemester"]" Variant="Variant.Outlined" @bind-Value="Subject.Semester" />
+                <MudSelect Label="@Localizer["SubjectSemester"]" Variant="Variant.Outlined" @bind-Value="Subject.Semester">
+                    @foreach (var semester in _semesters)
+                    {
+                        <MudSelectItem Value="@semester.Item1">@semester.Item2</MudSelectItem>
+                    }
+                </MudSelect>
                 @if (_studyPrograms is not null)
                 {
                     <MudSelect Label="@Localizer["StudyProgram"]" Variant="Variant.Outlined" @bind-Value="Subject.StudyProgram">
@@ -45,6 +53,7 @@
     private MudForm _form = default!;
     private bool _add;
     private IEnumerable<StudyProgram>? _studyPrograms;
+    private List<(Semester, string)> _semesters = [];
 
     protected override async Task OnInitializedAsync()
     {
@@ -55,6 +64,7 @@
         }
 
         _studyPrograms = await UnitOfWork.StudyPrograms.GetAllAsync();
+        _semesters = EnumService.GetLocalizedEnumValues<Semester>();
     }
 
     private async Task HandleDialog()

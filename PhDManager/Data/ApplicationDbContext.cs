@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using PhDManager.Models;
+using PhDManager.Models.Enums;
 
 namespace PhDManager.Data
 {
@@ -17,6 +18,8 @@ namespace PhDManager.Data
         public DbSet<Student> Students { get; init; }
         public DbSet<External> Externals { get; init; }
         public DbSet<Teacher> Teachers { get; init; }
+        public DbSet<SystemState> SystemState { get; init; }
+        public DbSet<Department> Departments { get; init; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -70,11 +73,10 @@ namespace PhDManager.Data
 
             builder.Entity<IndividualPlan>()
                 .HasMany(ip => ip.Subjects)
-                .WithMany(s => s.IndividualPlans);
-
-            builder.Entity<IndividualPlan>()
-                .HasMany(ip => ip.OptionalSubjects)
-                .WithMany(s => s.OptionalIndividualPlans);
+                .WithMany(s => s.IndividualPlans)
+                .UsingEntity<IndividualPlanSubjectGrade>(
+                    l => l.HasOne(e => e.Subject).WithMany(s => s.SubjectGrades),
+                    r => r.HasOne(e => e.IndividualPlan).WithMany(ip => ip.SubjectGrades));
 
             builder.Entity<StudyProgram>()
                 .HasData(
@@ -108,24 +110,14 @@ namespace PhDManager.Data
 
             builder.Entity<Subject>()
                 .HasData(
-                    new Subject { Id = 1, Variant = 'A', Name = "Matematické princípy informatiky - A: Deterministické metódy", Semester = "zimný", StudyProgramId = 1 },
-                    new Subject { Id = 2, Variant = 'B', Name = "Matematické princípy informatiky - B: Stochastické metódy", Semester = "zimný", StudyProgramId = 1 },
-                    new Subject { Id = 3, Variant = 'A', Name = "Teória a metodológia aplikovanej informatiky - A: Znalostné systémy a algoritmy", Semester = "letný", StudyProgramId = 1 },
-                    new Subject { Id = 4, Variant = 'B', Name = "Teória a metodológia aplikovanej informatiky - B: Výpočtová inteligencia", Semester = "letný", StudyProgramId = 1 },
-                    new Subject { Id = 5, Name = "Predmet špecializácie", Semester = "letný", StudyProgramId = 1 },
-                    new Subject { Id = 6, Name = "Manažérske teórie", Semester = "zimný", StudyProgramId = 2 },
-                    new Subject { Id = 7, Name = "Metodológia výskumu v manažmente", Semester = "zimný", StudyProgramId = 2 },
-                    new Subject { Id = 8, Name = "Predmet špecializácie", Semester = "letný", StudyProgramId = 2 }
-
-                    //new Subject { Id = 9, IsRequired = false, Name = "Predmet špecializácie", Semester = "letný", StudyProgramId = 2 },
-                    //new Subject { Id = 10, IsRequired = false, Name = "Predmet špecializácie", Semester = "letný", StudyProgramId = 2 },
-                    //new Subject { Id = 11, IsRequired = false, Name = "Predmet špecializácie", Semester = "letný", StudyProgramId = 2 },
-                    //new Subject { Id = 12, IsRequired = false, Name = "Predmet špecializácie", Semester = "letný", StudyProgramId = 2 },
-                    //new Subject { Id = 13, IsRequired = false, Name = "Predmet špecializácie", Semester = "letný", StudyProgramId = 2 },
-                    //new Subject { Id = 14, IsRequired = false, Name = "Predmet špecializácie", Semester = "letný", StudyProgramId = 2 },
-                    //new Subject { Id = 15, IsRequired = false, Name = "Predmet špecializácie", Semester = "letný", StudyProgramId = 2 },
-                    //new Subject { Id = 16, IsRequired = false, Name = "Predmet špecializácie", Semester = "letný", StudyProgramId = 2 },
-                    //new Subject { Id = 17, IsRequired = false, Name = "Predmet špecializácie", Semester = "letný", StudyProgramId = 2 }
+                    new Subject { Id = 1, Variant = 'A', Name = "Matematické princípy informatiky - A: Deterministické metódy", Semester = Semester.Winter, StudyProgramId = 1 },
+                    new Subject { Id = 2, Variant = 'B', Name = "Matematické princípy informatiky - B: Stochastické metódy", Semester = Semester.Winter, StudyProgramId = 1 },
+                    new Subject { Id = 3, Variant = 'A', Name = "Teória a metodológia aplikovanej informatiky - A: Znalostné systémy a algoritmy", Semester = Semester.Summer, StudyProgramId = 1 },
+                    new Subject { Id = 4, Variant = 'B', Name = "Teória a metodológia aplikovanej informatiky - B: Výpočtová inteligencia", Semester = Semester.Summer, StudyProgramId = 1 },
+                    new Subject { Id = 5, Name = "Predmet špecializácie", Semester = Semester.Summer, StudyProgramId = 1 },
+                    new Subject { Id = 6, Name = "Manažérske teórie", Semester = Semester.Winter, StudyProgramId = 2 },
+                    new Subject { Id = 7, Name = "Metodológia výskumu v manažmente", Semester = Semester.Winter, StudyProgramId = 2 },
+                    new Subject { Id = 8, Name = "Predmet špecializácie", Semester = Semester.Summer, StudyProgramId = 2 }
                 );
         }
     }

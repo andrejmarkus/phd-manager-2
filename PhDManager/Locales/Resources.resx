@@ -732,4 +732,43 @@
   <data name="StudyPrograms" xml:space="preserve">
     <value>Study programs</value>
   </data>
+  <data name="ThesisSubjectDelete" xml:space="preserve">
+    <value>Delete thesis subject</value>
+  </data>
+  <data name="Department" xml:space="preserve">
+    <value>Department</value>
+  </data>
+  <data name="Departments" xml:space="preserve">
+    <value>Departments</value>
+  </data>
+  <data name="DepartmentAdd" xml:space="preserve">
+    <value>Add department</value>
+  </data>
+  <data name="DepartmentDelete" xml:space="preserve">
+    <value>Delete department</value>
+  </data>
+  <data name="DepartmentEdit" xml:space="preserve">
+    <value>Edit department</value>
+  </data>
+  <data name="DepartmentName" xml:space="preserve">
+    <value>Department name</value>
+  </data>
+  <data name="DepartmentCode" xml:space="preserve">
+    <value>Department code</value>
+  </data>
+  <data name="DepartmentDeleteConfirmation" xml:space="preserve">
+    <value>Do you really want to delete selected department?</value>
+  </data>
+  <data name="AdditionalSubjectAdd" xml:space="preserve">
+    <value>Add additional subject</value>
+  </data>
+  <data name="AdditionalSubjectDelete" xml:space="preserve">
+    <value>Delete additional subject</value>
+  </data>
+  <data name="TaskAdd" xml:space="preserve">
+    <value>Add task</value>
+  </data>
+  <data name="TaskDelete" xml:space="preserve">
+    <value>Delete task</value>
+  </data>
 </root>

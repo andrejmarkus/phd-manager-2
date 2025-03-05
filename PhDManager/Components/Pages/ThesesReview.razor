@@ -45,7 +45,7 @@
                                 <MudIconButton Size="@Size.Small" Color="Color.Error" Icon="@Icons.Material.Outlined.Delete" OnClick="@(async () => await DeleteThesis(context.Item))" />
                             </MudTooltip>
                             <MudTooltip Text="@Localizer["DissertationThesisApprove"]">
-                                <MudIconButton Size="@Size.Small" Color="Color.Info" Icon="@Icons.Material.Outlined.Edit" OnClick="@(async () => await ApproveThesis(context.Item))" />
+                                <MudIconButton Size="@Size.Small" Color="Color.Info" Icon="@Icons.Material.Outlined.Check" OnClick="@(async () => await ApproveThesis(context.Item))" />
                             </MudTooltip>
                         </Authorized>
                     </AuthorizeView>

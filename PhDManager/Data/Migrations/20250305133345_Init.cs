@@ -270,7 +270,7 @@ namespace PhDManager.Data.Migrations
                     IsRequired = table.Column<bool>(type: "boolean", nullable: false),
                     Variant = table.Column<char>(type: "character(1)", nullable: true),
                     Name = table.Column<string>(type: "text", nullable: false),
-                    Semester = table.Column<string>(type: "text", nullable: false),
+                    Semester = table.Column<int>(type: "integer", nullable: false),
                     StudyProgramId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
@@ -495,14 +495,14 @@ namespace PhDManager.Data.Migrations
                 columns: new[] { "Id", "IsRequired", "Name", "Semester", "StudyProgramId", "Variant" },
                 values: new object[,]
                 {
-                    { 1, true, "Matematické princípy informatiky - A: Deterministické metódy", "zimný", 1, 'A' },
-                    { 2, true, "Matematické princípy informatiky - B: Stochastické metódy", "zimný", 1, 'B' },
-                    { 3, true, "Teória a metodológia aplikovanej informatiky - A: Znalostné systémy a algoritmy", "letný", 1, 'A' },
-                    { 4, true, "Teória a metodológia aplikovanej informatiky - B: Výpočtová inteligencia", "letný", 1, 'B' },
-                    { 5, true, "Predmet špecializácie", "letný", 1, null },
-                    { 6, true, "Manažérske teórie", "zimný", 2, null },
-                    { 7, true, "Metodológia výskumu v manažmente", "zimný", 2, null },
-                    { 8, true, "Predmet špecializácie", "letný", 2, null }
+                    { 1, true, "Matematické princípy informatiky - A: Deterministické metódy", 0, 1, 'A' },
+                    { 2, true, "Matematické princípy informatiky - B: Stochastické metódy", 0, 1, 'B' },
+                    { 3, true, "Teória a metodológia aplikovanej informatiky - A: Znalostné systémy a algoritmy", 1, 1, 'A' },
+                    { 4, true, "Teória a metodológia aplikovanej informatiky - B: Výpočtová inteligencia", 1, 1, 'B' },
+                    { 5, true, "Predmet špecializácie", 1, 1, null },
+                    { 6, true, "Manažérske teórie", 0, 2, null },
+                    { 7, true, "Metodológia výskumu v manažmente", 0, 2, null },
+                    { 8, true, "Predmet špecializácie", 1, 2, null }
                 });
 
             migrationBuilder.CreateIndex(

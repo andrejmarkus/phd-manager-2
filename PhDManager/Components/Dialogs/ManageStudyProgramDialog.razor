@@ -15,11 +15,17 @@
                 <MudTextField Label="@Localizer["StudyProgramName"]" Variant="Variant.Outlined" @bind-Value="StudyProgram.Name" />
                 <MudTextField Label="@Localizer["StudyProgramCode"]" Variant="Variant.Outlined" @bind-Value="StudyProgram.Code" />
                 <MudTextField Label="@Localizer["StudyFieldName"]" Variant="Variant.Outlined" @bind-Value="StudyProgram.StudyFieldName" />
-                <MudText>@Localizer["ThesisSubjects"]</MudText>
+                <MudText Class="mt-2">@Localizer["ThesisSubjects"]</MudText>
                 <MudStack Spacing="2">
-                    @for (int i = 0; i < _thesisSubjects.Count; i++)
+                    @foreach (var thesisSubject in _thesisSubjects.Select((e, i) => new { Element = e, Index = i }))
                     {
-                        <MudTextField Variant="Variant.Outlined" @bind-Value="_thesisSubjects[i]" />
+                        <MudStack Row AlignItems="AlignItems.Center">
+                            <MudTextField Variant="Variant.Outlined" @bind-Value="_thesisSubjects[thesisSubject.Index]" />
+                            <MudTooltip Text="@Localizer["ThesisSubjectDelete"]">
+                                <MudIconButton Size="@Size.Small" Color="Color.Error" Icon="@Icons.Material.Outlined.Delete" OnClick="@(() => _thesisSubjects.RemoveAt(thesisSubject.Index))" />
+                            </MudTooltip>
+                        </MudStack>
+                        
                     }
                 </MudStack>
                 <MudButton Class="mt-4" Color="Color.Primary" Variant="Variant.Filled" OnClick="@(() => _thesisSubjects.Add(""))">@Localizer["ThesisSubjectAdd"]</MudButton>

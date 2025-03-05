@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using PhDManager.Models.Enums;
+using System.Text.Json.Serialization;
 
 namespace PhDManager.Models
 {
@@ -7,12 +8,12 @@ namespace PhDManager.Models
         public bool IsRequired { get; set; } = true;
         public char? Variant { get; set; }
         public string Name { get; set; } = string.Empty;
-        public string Semester { get; set; } = string.Empty;
+        public Semester Semester { get; set; }
 
         public int StudyProgramId { get; set; }
         [JsonIgnore]
         public virtual StudyProgram StudyProgram { get; set; } = default!;
         public virtual List<IndividualPlan> IndividualPlans { get; set; } = [];
-        public virtual List<IndividualPlan> OptionalIndividualPlans { get; set; } = [];
+        public virtual List<IndividualPlanSubjectGrade> SubjectGrades { get; set; } = [];
     }
 }

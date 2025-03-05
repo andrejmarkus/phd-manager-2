@@ -79,6 +79,24 @@ namespace PhDManager.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Add additional subject.
+        /// </summary>
+        public static string AdditionalSubjectAdd {
+            get {
+                return ResourceManager.GetString("AdditionalSubjectAdd", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Delete additional subject.
+        /// </summary>
+        public static string AdditionalSubjectDelete {
+            get {
+                return ResourceManager.GetString("AdditionalSubjectDelete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Address.
         /// </summary>
         public static string Address {
@@ -255,6 +273,78 @@ namespace PhDManager.Locales {
         public static string Deadlines {
             get {
                 return ResourceManager.GetString("Deadlines", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Department.
+        /// </summary>
+        public static string Department {
+            get {
+                return ResourceManager.GetString("Department", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add department.
+        /// </summary>
+        public static string DepartmentAdd {
+            get {
+                return ResourceManager.GetString("DepartmentAdd", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Department code.
+        /// </summary>
+        public static string DepartmentCode {
+            get {
+                return ResourceManager.GetString("DepartmentCode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Delete department.
+        /// </summary>
+        public static string DepartmentDelete {
+            get {
+                return ResourceManager.GetString("DepartmentDelete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Do you really want to delete selected department?.
+        /// </summary>
+        public static string DepartmentDeleteConfirmation {
+            get {
+                return ResourceManager.GetString("DepartmentDeleteConfirmation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Edit department.
+        /// </summary>
+        public static string DepartmentEdit {
+            get {
+                return ResourceManager.GetString("DepartmentEdit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Department name.
+        /// </summary>
+        public static string DepartmentName {
+            get {
+                return ResourceManager.GetString("DepartmentName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Departments.
+        /// </summary>
+        public static string Departments {
+            get {
+                return ResourceManager.GetString("Departments", resourceCulture);
             }
         }
         
@@ -1744,6 +1834,24 @@ namespace PhDManager.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Add task.
+        /// </summary>
+        public static string TaskAdd {
+            get {
+                return ResourceManager.GetString("TaskAdd", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Delete task.
+        /// </summary>
+        public static string TaskDelete {
+            get {
+                return ResourceManager.GetString("TaskDelete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Teacher.
         /// </summary>
         public static string Teacher {
@@ -1794,6 +1902,15 @@ namespace PhDManager.Locales {
         public static string ThesisSubjectAdd {
             get {
                 return ResourceManager.GetString("ThesisSubjectAdd", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Delete thesis subject.
+        /// </summary>
+        public static string ThesisSubjectDelete {
+            get {
+                return ResourceManager.GetString("ThesisSubjectDelete", resourceCulture);
             }
         }
         

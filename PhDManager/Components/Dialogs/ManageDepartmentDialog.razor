@@ -1,0 +1,52 @@
+﻿@using Microsoft.Extensions.Localization
+@using PhDManager.Locales
+@using PhDManager.Models
+
+@inject IStringLocalizer<Resources> Localizer
+
+<MudDialog>
+    <TitleContent>
+        <MudText Typo="Typo.h6">@(_add ? Localizer["DepartmentAdd"] : Localizer["DepartmentEdit"])</MudText>
+    </TitleContent>
+    <DialogContent>
+        <MudForm @ref="_form">
+            @if (Department is not null)
+            {
+                <MudTextField Label="@Localizer["DepartmentName"]" Variant="Variant.Outlined" @bind-Value="Department.Name" />
+                <MudTextField Label="@Localizer["DepartmentCode"]" Variant="Variant.Outlined" @bind-Value="Department.Code" />
+            }
+        </MudForm>
+    </DialogContent>
+    <DialogActions>
+        <MudButton Color="Color.Primary" OnClick="HandleDialog">@(_add ? Localizer["Add"] : Localizer["Edit"])</MudButton>
+        <MudButton Color="Color.Secondary" OnClick="@(() => MudDialog.Cancel())">@Localizer["Cancel"]</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter]
+    private IMudDialogInstance MudDialog { get; set; } = default!;
+
+    [Parameter]
+    public Department? Department { get; set; }
+
+    private MudForm _form = default!;
+    private bool _add;
+
+    protected override void OnInitialized()
+    {
+        _add = Department is null;
+        if (Department is null)
+        {
+           Department = new();
+        }
+    }
+
+    private async Task HandleDialog()
+    {
+        await _form.Validate();
+        if (!_form.IsValid || Department is null) return;
+
+        MudDialog.Close(DialogResult.Ok(Department));
+    }
+}

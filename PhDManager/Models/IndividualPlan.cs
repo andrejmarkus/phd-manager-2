@@ -20,6 +20,6 @@ namespace PhDManager.Models
         [JsonIgnore]
         public virtual Student Student { get; set; } = default!;
         public virtual List<Subject> Subjects { get; set; } = [];
-        public virtual List<Subject> OptionalSubjects { get; set; } = [];
+        public virtual List<IndividualPlanSubjectGrade> SubjectGrades { get; set; } = [];
     }
 }

@@ -12,8 +12,8 @@ using PhDManager.Data;
 namespace PhDManager.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250304181943_Init")]
-    partial class Init
+    [Migration("20250305174333_IndividualPlanSubjectRelationship")]
+    partial class IndividualPlanSubjectRelationship
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -27,36 +27,6 @@ namespace PhDManager.Data.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
-
-            modelBuilder.Entity("IndividualPlanSubject", b =>
-                {
-                    b.Property<int>("IndividualPlansId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("SubjectsId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("IndividualPlansId", "SubjectsId");
-
-                    b.HasIndex("SubjectsId");
-
-                    b.ToTable("IndividualPlanSubject");
-                });
-
-            modelBuilder.Entity("IndividualPlanSubject1", b =>
-                {
-                    b.Property<int>("OptionalIndividualPlansId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("OptionalSubjectsId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("OptionalIndividualPlansId", "OptionalSubjectsId");
-
-                    b.HasIndex("OptionalSubjectsId");
-
-                    b.ToTable("IndividualPlanSubject1");
-                });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
@@ -341,6 +311,27 @@ namespace PhDManager.Data.Migrations
                     b.ToTable("Comments");
                 });
 
+            modelBuilder.Entity("PhDManager.Models.Department", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Departments");
+                });
+
             modelBuilder.Entity("PhDManager.Models.External", b =>
                 {
                     b.Property<int>("Id")
@@ -412,6 +403,34 @@ namespace PhDManager.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("IndividualPlans");
+                });
+
+            modelBuilder.Entity("PhDManager.Models.IndividualPlanSubjectGrade", b =>
+                {
+                    b.Property<int>("IndividualPlanId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("SubjectId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Grade")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("IndividualPlanId1")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("SubjectId1")
+                        .HasColumnType("integer");
+
+                    b.HasKey("IndividualPlanId", "SubjectId");
+
+                    b.HasIndex("IndividualPlanId1");
+
+                    b.HasIndex("SubjectId");
+
+                    b.HasIndex("SubjectId1");
+
+                    b.ToTable("IndividualPlanSubjectGrade");
                 });
 
             modelBuilder.Entity("PhDManager.Models.Registration", b =>
@@ -546,9 +565,8 @@ namespace PhDManager.Data.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("Semester")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<int>("Semester")
+                        .HasColumnType("integer");
 
                     b.Property<int>("StudyProgramId")
                         .HasColumnType("integer");
@@ -568,7 +586,7 @@ namespace PhDManager.Data.Migrations
                             Id = 1,
                             IsRequired = true,
                             Name = "Matematické princípy informatiky - A: Deterministické metódy",
-                            Semester = "zimný",
+                            Semester = 0,
                             StudyProgramId = 1,
                             Variant = 'A'
                         },
@@ -577,7 +595,7 @@ namespace PhDManager.Data.Migrations
                             Id = 2,
                             IsRequired = true,
                             Name = "Matematické princípy informatiky - B: Stochastické metódy",
-                            Semester = "zimný",
+                            Semester = 0,
                             StudyProgramId = 1,
                             Variant = 'B'
                         },
@@ -586,7 +604,7 @@ namespace PhDManager.Data.Migrations
                             Id = 3,
                             IsRequired = true,
                             Name = "Teória a metodológia aplikovanej informatiky - A: Znalostné systémy a algoritmy",
-                            Semester = "letný",
+                            Semester = 1,
                             StudyProgramId = 1,
                             Variant = 'A'
                         },
@@ -595,7 +613,7 @@ namespace PhDManager.Data.Migrations
                             Id = 4,
                             IsRequired = true,
                             Name = "Teória a metodológia aplikovanej informatiky - B: Výpočtová inteligencia",
-                            Semester = "letný",
+                            Semester = 1,
                             StudyProgramId = 1,
                             Variant = 'B'
                         },
@@ -604,7 +622,7 @@ namespace PhDManager.Data.Migrations
                             Id = 5,
                             IsRequired = true,
                             Name = "Predmet špecializácie",
-                            Semester = "letný",
+                            Semester = 1,
                             StudyProgramId = 1
                         },
                         new
@@ -612,7 +630,7 @@ namespace PhDManager.Data.Migrations
                             Id = 6,
                             IsRequired = true,
                             Name = "Manažérske teórie",
-                            Semester = "zimný",
+                            Semester = 0,
                             StudyProgramId = 2
                         },
                         new
@@ -620,7 +638,7 @@ namespace PhDManager.Data.Migrations
                             Id = 7,
                             IsRequired = true,
                             Name = "Metodológia výskumu v manažmente",
-                            Semester = "zimný",
+                            Semester = 0,
                             StudyProgramId = 2
                         },
                         new
@@ -628,7 +646,7 @@ namespace PhDManager.Data.Migrations
                             Id = 8,
                             IsRequired = true,
                             Name = "Predmet špecializácie",
-                            Semester = "letný",
+                            Semester = 1,
                             StudyProgramId = 2
                         });
                 });
@@ -760,36 +778,6 @@ namespace PhDManager.Data.Migrations
                     b.ToTable("Theses");
                 });
 
-            modelBuilder.Entity("IndividualPlanSubject", b =>
-                {
-                    b.HasOne("PhDManager.Models.IndividualPlan", null)
-                        .WithMany()
-                        .HasForeignKey("IndividualPlansId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("PhDManager.Models.Subject", null)
-                        .WithMany()
-                        .HasForeignKey("SubjectsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("IndividualPlanSubject1", b =>
-                {
-                    b.HasOne("PhDManager.Models.IndividualPlan", null)
-                        .WithMany()
-                        .HasForeignKey("OptionalIndividualPlansId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("PhDManager.Models.Subject", null)
-                        .WithMany()
-                        .HasForeignKey("OptionalSubjectsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -900,6 +888,37 @@ namespace PhDManager.Data.Migrations
                     b.Navigation("Student");
                 });
 
+            modelBuilder.Entity("PhDManager.Models.IndividualPlanSubjectGrade", b =>
+                {
+                    b.HasOne("PhDManager.Models.IndividualPlan", null)
+                        .WithMany()
+                        .HasForeignKey("IndividualPlanId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("PhDManager.Models.IndividualPlan", "IndividualPlan")
+                        .WithMany()
+                        .HasForeignKey("IndividualPlanId1")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("PhDManager.Models.Subject", null)
+                        .WithMany()
+                        .HasForeignKey("SubjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("PhDManager.Models.Subject", "Subject")
+                        .WithMany()
+                        .HasForeignKey("SubjectId1")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("IndividualPlan");
+
+                    b.Navigation("Subject");
+                });
+
             modelBuilder.Entity("PhDManager.Models.Student", b =>
                 {
                     b.HasOne("PhDManager.Models.StudyProgram", "StudyProgram")
@@ -949,7 +968,7 @@ namespace PhDManager.Data.Migrations
                         .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("PhDManager.Models.StudyProgram", "StudyProgram")
-                        .WithMany("Thesis")
+                        .WithMany("Theses")
                         .HasForeignKey("StudyProgramId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -1002,7 +1021,7 @@ namespace PhDManager.Data.Migrations
                 {
                     b.Navigation("Subjects");
 
-                    b.Navigation("Thesis");
+                    b.Navigation("Theses");
                 });
 
             modelBuilder.Entity("PhDManager.Models.Teacher", b =>

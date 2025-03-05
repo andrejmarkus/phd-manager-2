@@ -14,6 +14,7 @@
         IExternalRepository Externals { get; }
         ITeacherRepository Teachers { get; }
         ISystemStateRepository SystemState { get; }
+        IDepartmentRepository Departments { get; }
         Task CompleteAsync();
     }
 }

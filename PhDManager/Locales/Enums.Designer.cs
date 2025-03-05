@@ -61,6 +61,24 @@ namespace PhDManager.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Summer.
+        /// </summary>
+        public static string SemesterSummer {
+            get {
+                return ResourceManager.GetString("SemesterSummer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Winter.
+        /// </summary>
+        public static string SemesterWinter {
+            get {
+                return ResourceManager.GetString("SemesterWinter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Ended.
         /// </summary>
         public static string StudentStateEnded {

@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using PhDManager.Data;
@@ -11,9 +12,11 @@ using PhDManager.Data;
 namespace PhDManager.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250305141308_Department")]
+    partial class Department
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -24,6 +27,36 @@ namespace PhDManager.Data.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+
+            modelBuilder.Entity("IndividualPlanSubject", b =>
+                {
+                    b.Property<int>("IndividualPlansId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("SubjectsId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("IndividualPlansId", "SubjectsId");
+
+                    b.HasIndex("SubjectsId");
+
+                    b.ToTable("IndividualPlanSubject");
+                });
+
+            modelBuilder.Entity("IndividualPlanSubject1", b =>
+                {
+                    b.Property<int>("OptionalIndividualPlansId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("OptionalSubjectsId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("OptionalIndividualPlansId", "OptionalSubjectsId");
+
+                    b.HasIndex("OptionalSubjectsId");
+
+                    b.ToTable("IndividualPlanSubject1");
+                });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
@@ -402,24 +435,6 @@ namespace PhDManager.Data.Migrations
                     b.ToTable("IndividualPlans");
                 });
 
-            modelBuilder.Entity("PhDManager.Models.IndividualPlanSubjectGrade", b =>
-                {
-                    b.Property<int>("IndividualPlanId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("SubjectId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("Grade")
-                        .HasColumnType("integer");
-
-                    b.HasKey("IndividualPlanId", "SubjectId");
-
-                    b.HasIndex("SubjectId");
-
-                    b.ToTable("IndividualPlanSubjectGrade");
-                });
-
             modelBuilder.Entity("PhDManager.Models.Registration", b =>
                 {
                     b.Property<int>("Id")
@@ -765,6 +780,36 @@ namespace PhDManager.Data.Migrations
                     b.ToTable("Theses");
                 });
 
+            modelBuilder.Entity("IndividualPlanSubject", b =>
+                {
+                    b.HasOne("PhDManager.Models.IndividualPlan", null)
+                        .WithMany()
+                        .HasForeignKey("IndividualPlansId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("PhDManager.Models.Subject", null)
+                        .WithMany()
+                        .HasForeignKey("SubjectsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("IndividualPlanSubject1", b =>
+                {
+                    b.HasOne("PhDManager.Models.IndividualPlan", null)
+                        .WithMany()
+                        .HasForeignKey("OptionalIndividualPlansId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("PhDManager.Models.Subject", null)
+                        .WithMany()
+                        .HasForeignKey("OptionalSubjectsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -875,25 +920,6 @@ namespace PhDManager.Data.Migrations
                     b.Navigation("Student");
                 });
 
-            modelBuilder.Entity("PhDManager.Models.IndividualPlanSubjectGrade", b =>
-                {
-                    b.HasOne("PhDManager.Models.IndividualPlan", "IndividualPlan")
-                        .WithMany("SubjectGrades")
-                        .HasForeignKey("IndividualPlanId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("PhDManager.Models.Subject", "Subject")
-                        .WithMany("SubjectGrades")
-                        .HasForeignKey("SubjectId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("IndividualPlan");
-
-                    b.Navigation("Subject");
-                });
-
             modelBuilder.Entity("PhDManager.Models.Student", b =>
                 {
                     b.HasOne("PhDManager.Models.StudyProgram", "StudyProgram")
@@ -983,11 +1009,6 @@ namespace PhDManager.Data.Migrations
                     b.Navigation("Comments");
                 });
 
-            modelBuilder.Entity("PhDManager.Models.IndividualPlan", b =>
-                {
-                    b.Navigation("SubjectGrades");
-                });
-
             modelBuilder.Entity("PhDManager.Models.Student", b =>
                 {
                     b.Navigation("Address");
@@ -1002,11 +1023,6 @@ namespace PhDManager.Data.Migrations
                     b.Navigation("Subjects");
 
                     b.Navigation("Theses");
-                });
-
-            modelBuilder.Entity("PhDManager.Models.Subject", b =>
-                {
-                    b.Navigation("SubjectGrades");
                 });
 
             modelBuilder.Entity("PhDManager.Models.Teacher", b =>

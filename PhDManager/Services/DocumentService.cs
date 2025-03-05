@@ -13,24 +13,22 @@ namespace PhDManager.Services
         {
             var documentName = NormalizeName(thesis.Title) + ".docx";
             var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "templates", "thesis_template.docx");
-            var replacements = new Dictionary<string, string?>()
+            var replacements = new Dictionary<string, List<string?>>()
             {
-                {"{Title}", thesis.Title},
-                {"{Supervisor}", thesis.Supervisor.User.DisplayName},
-                {"{SupervisorSpecialist}", thesis.SupervisorSpecialist?.User.DisplayName},
-                {"{StudyProgram}", thesis.StudyProgram.Name},
-                {"{StudyField}", thesis.StudyProgram.StudyFieldName},
-                {"{DailyStudy}", thesis.DailyStudy ? "☑" : "☐"},
-                {"{ExternalStudy}", thesis.ExternalStudy ? "☑" : "☐"},
-                {"{Subject1}", thesis.StudyProgram.ThesisSubjects[0]},
-                {"{Subject2}", thesis.StudyProgram.ThesisSubjects[1]},
-                {"{Subject3}", thesis.StudyProgram.ThesisSubjects[2]},
-                {"{Description}", thesis.Description},
-                {"{ScientificContribution}", thesis.ScientificContribution},
-                {"{ScientificProgress}", thesis.ScientificProgress},
-                {"{ResearchType}", thesis.ResearchType},
-                {"{ResearchTask}", thesis.ResearchTask},
-                {"{SolutionResults}", thesis.SolutionResults}
+                {"{Title}", new() { thesis.Title } },
+                {"{Supervisor}", new() { thesis.Supervisor.User.DisplayName } },
+                {"{SupervisorSpecialist}", new() { thesis.SupervisorSpecialist?.User.DisplayName } },
+                {"{StudyProgram}", new() { thesis.StudyProgram.Name }},
+                {"{StudyField}", new() { thesis.StudyProgram.StudyFieldName } },
+                {"{DailyStudy}", new() { thesis.DailyStudy? "☑" : "☐" } },
+                {"{ExternalStudy}", new() { thesis.ExternalStudy ? "☑" : "☐" } },
+                {"{Subjects}", thesis.StudyProgram.ThesisSubjects.ToList<string?>() },
+                {"{Description}", new() { thesis.Description }},
+                {"{ScientificContribution}", new() { thesis.ScientificContribution }},
+                {"{ScientificProgress}", new() { thesis.ScientificProgress }},
+                {"{ResearchType}", new() { thesis.ResearchType }},
+                {"{ResearchTask}", new() { thesis.ResearchTask }},
+                {"{SolutionResults}", new() { thesis.SolutionResults }}
             };
 
             var document = GenerateDocumentData(path, replacements);
@@ -43,45 +41,32 @@ namespace PhDManager.Services
         {
             var documentName = NormalizeName(individualPlan.Student.User.DisplayName?? "") + ".docx";
             var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "templates", "individual_plan_template.docx");
-            var replacements = new Dictionary<string, string?>()
+            var replacements = new Dictionary<string, List<string?>>()
             {
-                {"{Student}", individualPlan.Student.User.DisplayName},
-                {"{Birthdate}", individualPlan.Student.User.Birthdate?.ToString("dd.MM.yyyy")},
-                {"{FullAddress}", individualPlan.Student.Address?.FullAddress },
-                {"{PhoneNumber}", individualPlan.Student.User.PhoneNumber},
-                {"{StudyForm}", individualPlan.Student.IsExternal ? "Externá" : "Denná"},
-                {"{StudyProgram}", individualPlan.Student.Thesis?.StudyProgram.Name},
-                {"{StudyField}", individualPlan.Student.Thesis?.StudyProgram.StudyFieldName},
-                {"{Supervisor}", individualPlan.Student.Thesis?.Supervisor.User.DisplayName},
-                {"{StudyStartDate}", individualPlan.StudyStartDate?.ToString("dd.MM.yyyy")},
-                {"{DissertationExamDate}", individualPlan.DissertationExamDate?.ToString("dd.MM.yyyy")},
-                {"{DissertationSubmissionDate}", individualPlan.DissertationSubmissionDate?.ToString("MMMM yyyy")},
-                {"{StudyEndDate}", individualPlan.StudyEndDate?.ToString("dd.MM.yyyy")},
-                {"{Subject1}", individualPlan.Subjects[0].Name},
-                {"{Subject2}", individualPlan.Subjects[1].Name},
-                {"{Subject3}", individualPlan.Subjects[2].Name},
-                {"{OptionalSubject1}", individualPlan.OptionalSubjects.Count >= 1 ? individualPlan.OptionalSubjects[0].Name : null},
-                {"{OptionalSubject2}", individualPlan.OptionalSubjects.Count >= 2 ? individualPlan.OptionalSubjects[1].Name : null},
-                {"{WrittenThesisTitle}", individualPlan.WrittenThesisTitle},
-                {"{WrittenThesisRequiredLiterature}", individualPlan.WrittenThesisRequiredLiterature},
-                {"{WrittenThesisRecommendedLiterature}", individualPlan.WrittenThesisRecommendedLiterature},
-                {"{WrittenThesisRecommendedLectures}", individualPlan.WrittenThesisRecommendedLectures},
-                {"{ThesisTitle}", individualPlan.Student.Thesis?.Title},
-                {"{ThesisReasearchTask}", individualPlan.Student.Thesis?.ResearchTask},
-                {"{ThesisSolutionResults}", individualPlan.Student.Thesis?.SolutionResults},
-                {"{Task1}", individualPlan.Tasks[0]},
-                {"{Task2}", individualPlan.Tasks[1]},
-                {"{Task3}", individualPlan.Tasks[2]},
-                {"{Task4}", individualPlan.Tasks[3]},
-                {"{Task5}", individualPlan.Tasks[4]},
-                {"{Task6}", individualPlan.Tasks[5]},
-                {"{TaskDeadline1}", individualPlan.TaskDeadlines[0]?.ToString("MMMM yyyy")},
-                {"{TaskDeadline2}", individualPlan.TaskDeadlines[1]?.ToString("MMMM yyyy")},
-                {"{TaskDeadline3}", individualPlan.TaskDeadlines[2]?.ToString("MMMM yyyy")},
-                {"{TaskDeadline4}", individualPlan.TaskDeadlines[3]?.ToString("MMMM yyyy")},
-                {"{TaskDeadline5}", individualPlan.TaskDeadlines[4]?.ToString("MMMM yyyy")},
-                {"{TaskDeadline6}", individualPlan.TaskDeadlines[5]?.ToString("MMMM yyyy")},
-                {"{CurrentDate}", DateTime.Today.ToString("dd.MM.yyyy")},
+                {"{Student}", new() { individualPlan.Student.User.DisplayName } },
+                {"{Birthdate}", new() { individualPlan.Student.User.Birthdate?.ToString("dd.MM.yyyy") }},
+                {"{FullAddress}", new() { individualPlan.Student.Address?.FullAddress } },
+                {"{PhoneNumber}", new() { individualPlan.Student.User.PhoneNumber }},
+                {"{StudyForm}", new() { individualPlan.Student.IsExternal? "Externá" : "Denná" }},
+                {"{StudyProgram}", new() { individualPlan.Student.Thesis?.StudyProgram.Name }},
+                {"{StudyField}", new() { individualPlan.Student.Thesis?.StudyProgram.StudyFieldName }},
+                {"{Supervisor}", new() { individualPlan.Student.Thesis?.Supervisor.User.DisplayName }},
+                {"{StudyStartDate}", new() { individualPlan.StudyStartDate?.ToString("dd.MM.yyyy") }},
+                {"{DissertationExamDate}", new() { individualPlan.DissertationExamDate ?.ToString("dd.MM.yyyy") }},
+                {"{DissertationSubmissionDate}", new() { individualPlan.DissertationSubmissionDate ?.ToString("MMMM yyyy") }},
+                {"{StudyEndDate}", new() { individualPlan.StudyEndDate?.ToString("dd.MM.yyyy") }},
+                {"{Subjects}", individualPlan.Subjects.Where(s => s.IsRequired).Select(s => s.Name).ToList<string?>() },
+                {"{OptionalSubjects}", individualPlan.Subjects.Where(s => !s.IsRequired).Select(s => s.Name).ToList<string?>() },
+                {"{WrittenThesisTitle}", new() { individualPlan.WrittenThesisTitle } },
+                {"{WrittenThesisRequiredLiterature}", new() { individualPlan.WrittenThesisRequiredLiterature } },
+                {"{WrittenThesisRecommendedLiterature}", new() { individualPlan.WrittenThesisRecommendedLiterature } },
+                {"{WrittenThesisRecommendedLectures}", new() { individualPlan.WrittenThesisRecommendedLectures } },
+                {"{ThesisTitle}", new() { individualPlan.Student.Thesis?.Title } },
+                {"{ThesisReasearchTask}", new() { individualPlan.Student.Thesis?.ResearchTask } },
+                {"{ThesisSolutionResults}", new() { individualPlan.Student.Thesis?.SolutionResults } },
+                {"{Tasks}", individualPlan.Tasks.ToList<string?>() },
+                {"{TaskDeadlines}", individualPlan.TaskDeadlines.Select(d => (d ?? DateTime.Now).ToString("MMMM yyyy")).ToList<string?>() },
+                {"{CurrentDate}", new() {DateTime.Today.ToString("dd.MM.yyyy") } },
             };
 
             var document = GenerateDocumentData(path, replacements);
@@ -95,7 +80,7 @@ namespace PhDManager.Services
             return new string(name.Normalize(NormalizationForm.FormD).Where(c => CharUnicodeInfo.GetUnicodeCategory(c) != UnicodeCategory.NonSpacingMark).Select(c => c == ' ' ? '_' : c).ToArray());
         }
 
-        private Stream GenerateDocumentData(string path, Dictionary<string, string?> replacements)
+        private Stream GenerateDocumentData(string path, Dictionary<string, List<string?>> replacements)
         {
             var documentStream = new MemoryStream();
 
@@ -106,7 +91,7 @@ namespace PhDManager.Services
 
                 foreach (var replacement in replacements)
                 {
-                    var lines = replacement.Value?.Split('\n');
+                    var lines = replacement.Value?.Select(v => v?.Split('\n')).ToArray();
                     var texts = body.Descendants<Text>().ToList();
                     foreach (var text in texts)
                     {
@@ -114,18 +99,25 @@ namespace PhDManager.Services
 
                         if (lines is not null)
                         {
-                            var run = new Run();
-                            for (int i = 0; i < lines.Length; i++)
+                            for (int i = 0; i < lines?.Length; i++)
                             {
-                                run.AppendChild(new Text(lines[i]));
-                                if (i < lines.Length - 1) run.AppendChild(new Break());
+                                if (lines[i] is null) continue;
+                                var run = new Run();
+                                for (int j = 0; j < lines[i]?.Length; j++)
+                                {
+                                    if (lines[i]?[j] is null) continue;
+
+                                    run.AppendChild(new Text(lines[i]![j]));
+                                    if (j < lines[i]?.Length - 1) run.AppendChild(new Break());
+                                }
+                                if (i < lines?.Length - 1) run.AppendChild(new Break());
+                                text.Parent?.AppendChild(run);
                             }
-                            text.Parent?.AppendChild(run);
                         }
                         text.Remove();
                     }
                 }
-
+                
                 document.Clone(documentStream);
             }
 

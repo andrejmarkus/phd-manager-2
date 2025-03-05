@@ -12,6 +12,7 @@
 @inject IStringLocalizer<Resources> Localizer
 @inject IUnitOfWork UnitOfWork
 @inject UsersService UsersService
+@inject EnumService EnumService
 
 <MudDataGrid T="Subject" Items="@_subjects" Hover SortMode="SortMode.Multiple" QuickFilter="@_quickFilter" Elevation="0">
     <ToolBarContent>
@@ -22,7 +23,7 @@
     </ToolBarContent>
     <Columns>
         <PropertyColumn Property="s => s.Name" Title="@Localizer["SubjectName"]" />
-        <PropertyColumn Property="s => s.Semester" Title="@Localizer["SubjectSemester"]" />
+        <PropertyColumn Property="s => EnumService.GetLocalizedEnumValue(s.Semester)" Title="@Localizer["SubjectSemester"]" />
         <PropertyColumn Property="s => s.StudyProgram.Name" Title="@Localizer["StudyProgram"]" />
         <TemplateColumn Title="@Localizer["SubjectEdit"]">
             <CellTemplate>
@@ -60,10 +61,7 @@
         if (s.Name.Contains(_search, StringComparison.OrdinalIgnoreCase) == true)
             return true;
 
-        if (s.Semester.Contains(_search, StringComparison.OrdinalIgnoreCase) == true)
-            return true;
-
-        if ($"{s.Name} {s.Semester}".Contains(_search))
+        if ($"{s.Name}".Contains(_search))
             return true;
 
         return false;

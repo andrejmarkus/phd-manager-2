@@ -14,6 +14,6 @@ namespace PhDManager.Models
         [JsonIgnore]
         public virtual StudyProgram StudyProgram { get; set; } = default!;
         public virtual List<IndividualPlan> IndividualPlans { get; set; } = [];
-        public virtual List<IndividualPlanSubjectGrade> SubjectGrades { get; set; } = [];
+        public virtual List<IndividualPlanSubject> IndividualPlanSubjects { get; set; } = [];
     }
 }

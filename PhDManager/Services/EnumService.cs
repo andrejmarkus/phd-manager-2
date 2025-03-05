@@ -14,7 +14,7 @@ namespace PhDManager.Services
             {
                 var key = $"{typeof(TEnum).Name}{value}";
                 var localized = Localizer[key];
-                result.Add((value, string.IsNullOrEmpty(localized) ? value.ToString() : localized));
+                result.Add((value, localized.ResourceNotFound ? value.ToString() : localized));
             }
 
             return result;
@@ -25,7 +25,7 @@ namespace PhDManager.Services
             var key = $"{typeof(TEnum).Name}{value}";
             var localized = Localizer[key];
 
-            return string.IsNullOrEmpty(localized) ? value.ToString() : localized;
+            return localized.ResourceNotFound ? value.ToString() : localized;
         }
     }
 }

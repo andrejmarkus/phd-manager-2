@@ -2,7 +2,7 @@
 
 namespace PhDManager.Models
 {
-    public class IndividualPlanSubjectGrade
+    public class IndividualPlanSubject : BaseModel
     {
         public int IndividualPlanId { get; set; }
         public virtual IndividualPlan IndividualPlan { get; set; } = default!;

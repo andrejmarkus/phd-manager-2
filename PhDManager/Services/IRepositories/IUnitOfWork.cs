@@ -15,6 +15,7 @@
         ITeacherRepository Teachers { get; }
         ISystemStateRepository SystemState { get; }
         IDepartmentRepository Departments { get; }
+        IIndividualPlanSubjectRepository IndividualPlanSubjects { get; }
         Task CompleteAsync();
     }
 }

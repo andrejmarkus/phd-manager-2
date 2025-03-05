@@ -1,0 +1,66 @@
+﻿@using Microsoft.Extensions.Localization
+@using PhDManager.Locales
+@using PhDManager.Models
+@using PhDManager.Models.Enums
+@using PhDManager.Services
+@using PhDManager.Services.IRepositories
+
+@rendermode InteractiveServer
+
+@inject IStringLocalizer<Resources> Localizer
+@inject IUnitOfWork UnitOfWork
+@inject EnumService EnumService
+
+<MudDialog>
+    <TitleContent>
+        <MudText Typo="Typo.h6">@Localizer["Grades"]</MudText>
+    </TitleContent>
+    <DialogContent>
+        <MudForm @ref="_form">
+            <MudGrid>
+                @foreach (var individualPlanSubject in IndividualPlanSubjects.Select((e, i) => new { Element = e, Index = i }))
+                {
+                    <MudItem xs="9">
+                        <MudText Class="d-flex align-center mud-height-full">@individualPlanSubject.Element.Subject.Name</MudText>
+                    </MudItem>
+                    <MudItem xs="3">
+                        <MudSelect Label="@Localizer["Grade"]" Variant="Variant.Outlined" @bind-Value="IndividualPlanSubjects.ElementAt(individualPlanSubject.Index).Grade">
+                            @foreach (var grade in _grades)
+                            {
+                                <MudSelectItem Value="@grade.Item1">@grade.Item2</MudSelectItem>
+                            }
+                        </MudSelect>
+                    </MudItem>
+                }
+            </MudGrid>
+        </MudForm>
+    </DialogContent>
+    <DialogActions>
+        <MudButton Color="Color.Primary" OnClick="HandleDialog">@Localizer["Edit"]</MudButton>
+        <MudButton Color="Color.Secondary" OnClick="@(() => MudDialog.Cancel())">@Localizer["Cancel"]</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter]
+    private IMudDialogInstance MudDialog { get; set; } = default!;
+
+    [Parameter]
+    public IEnumerable<IndividualPlanSubject> IndividualPlanSubjects { get; set; } = [];
+
+    private MudForm _form = default!;
+    private List<(Grade, string)> _grades = [];
+
+    protected override void OnInitialized()
+    {
+        _grades = EnumService.GetLocalizedEnumValues<Grade>();
+    }
+
+    private async Task HandleDialog()
+    {
+        await _form.Validate();
+        if (!_form.IsValid) return;
+
+        MudDialog.Close(DialogResult.Ok(IndividualPlanSubjects));
+    }
+}

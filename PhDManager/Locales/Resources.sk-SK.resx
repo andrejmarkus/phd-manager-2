@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="FindThesis" xml:space="preserve">
-    <value>Nájdi tému</value>
+    <value>Nájsť tému</value>
   </data>
   <data name="HomeHeading" xml:space="preserve">
     <value>Uľahčite si štúdium.</value>
@@ -142,7 +142,7 @@
     <value>Individuálne plány</value>
   </data>
   <data name="CreateRegistration" xml:space="preserve">
-    <value>Vytvor registráciu</value>
+    <value>Vytvoriť registráciu</value>
   </data>
   <data name="LoginRequired" xml:space="preserve">
     <value>Potrebné prihlásenie</value>
@@ -268,10 +268,10 @@
     <value>Štát</value>
   </data>
   <data name="Edit" xml:space="preserve">
-    <value>Uprav</value>
+    <value>Upraviť</value>
   </data>
   <data name="IndividualPlanCreate" xml:space="preserve">
-    <value>Vytvorenie individualného plánu</value>
+    <value>Vytvoriť individualy plán</value>
   </data>
   <data name="IndividualPlanTitle" xml:space="preserve">
     <value>Individuálny študijný plán doktoranda</value>
@@ -349,7 +349,7 @@
     <value>Školitel</value>
   </data>
   <data name="IndividualPlanAdd" xml:space="preserve">
-    <value>Pridaj individuálny plán</value>
+    <value>Pridať individuálny plán</value>
   </data>
   <data name="DissertationThesisTitle" xml:space="preserve">
     <value>Názov dizertačnej témy</value>
@@ -367,10 +367,10 @@
     <value>Email študenta</value>
   </data>
   <data name="IndividualPlanEdit" xml:space="preserve">
-    <value>Úprava individuálného plánu</value>
+    <value>Úpraviť individuálny plán</value>
   </data>
   <data name="DissertationThesisAdd" xml:space="preserve">
-    <value>Pridaj dizertačnú tému</value>
+    <value>Pridať dizertačnú tému</value>
   </data>
   <data name="ResearchType" xml:space="preserve">
     <value>Druh výskumu</value>
@@ -382,7 +382,7 @@
     <value>Počet komentárov</value>
   </data>
   <data name="DisserationThesisEdit" xml:space="preserve">
-    <value>Úprava dizertačnej témy</value>
+    <value>Úpraviť dizertačnú tému</value>
   </data>
   <data name="DissertationThesisDelete" xml:space="preserve">
     <value>Vymazať dizertačnú tému</value>
@@ -595,7 +595,7 @@
     <value>Priradiť</value>
   </data>
   <data name="Create" xml:space="preserve">
-    <value>Vytvor</value>
+    <value>Vytvoriť</value>
   </data>
   <data name="IndividualPlanWrittenThesisRequiredLiterature" xml:space="preserve">
     <value>Študijná literatúra - povinná</value>
@@ -652,10 +652,10 @@
     <value>Vymaž doktoranda</value>
   </data>
   <data name="ExternalDelete" xml:space="preserve">
-    <value>Vymaž externistu</value>
+    <value>Vymazať externistu</value>
   </data>
   <data name="IndividualPlanGenerate" xml:space="preserve">
-    <value>Vygeneruj individuálny plán</value>
+    <value>Vygenerovať individuálny plán</value>
   </data>
   <data name="AdminDelete" xml:space="preserve">
     <value>Vymaž admina</value>
@@ -748,7 +748,7 @@
     <value>Vymazať katedru</value>
   </data>
   <data name="DepartmentEdit" xml:space="preserve">
-    <value>Úprava katedry</value>
+    <value>Úpraviť katedru</value>
   </data>
   <data name="DepartmentName" xml:space="preserve">
     <value>Názov katedry</value>
@@ -770,5 +770,14 @@
   </data>
   <data name="TaskDelete" xml:space="preserve">
     <value>Vymazať úlohu</value>
+  </data>
+  <data name="Grades" xml:space="preserve">
+    <value>Známky</value>
+  </data>
+  <data name="Grade" xml:space="preserve">
+    <value>Známka</value>
+  </data>
+  <data name="GradesEdit" xml:space="preserve">
+    <value>Uprav známky</value>
   </data>
 </root>

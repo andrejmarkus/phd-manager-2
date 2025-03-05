@@ -74,9 +74,9 @@ namespace PhDManager.Data
             builder.Entity<IndividualPlan>()
                 .HasMany(ip => ip.Subjects)
                 .WithMany(s => s.IndividualPlans)
-                .UsingEntity<IndividualPlanSubjectGrade>(
-                    l => l.HasOne(e => e.Subject).WithMany(s => s.SubjectGrades),
-                    r => r.HasOne(e => e.IndividualPlan).WithMany(ip => ip.SubjectGrades));
+                .UsingEntity<IndividualPlanSubject>(
+                    l => l.HasOne(e => e.Subject).WithMany(s => s.IndividualPlanSubjects),
+                    r => r.HasOne(e => e.IndividualPlan).WithMany(ip => ip.IndividualPlanSubjects));
 
             builder.Entity<StudyProgram>()
                 .HasData(

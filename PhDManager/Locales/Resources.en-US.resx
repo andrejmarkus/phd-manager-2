@@ -771,4 +771,13 @@
   <data name="TaskDelete" xml:space="preserve">
     <value>Delete task</value>
   </data>
+  <data name="Grades" xml:space="preserve">
+    <value>Grades</value>
+  </data>
+  <data name="Grade" xml:space="preserve">
+    <value>Grade</value>
+  </data>
+  <data name="GradesEdit" xml:space="preserve">
+    <value>Edit grades</value>
+  </data>
 </root>

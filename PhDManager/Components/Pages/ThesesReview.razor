@@ -49,8 +49,8 @@
                             </MudTooltip>
                         </Authorized>
                     </AuthorizeView>
-                    <MudTooltip Text="@Localizer["DissertationThesisShow"]">
-                        <MudIconButton Size="@Size.Small" Color="Color.Info" Icon="@Icons.Material.Outlined.Edit" Href="@($"/management/theses/{context.Item.Guid}")" />
+                    <MudTooltip Text="@Localizer["DissertationThesisEdit"]">
+                        <MudIconButton Size="@Size.Small" Color="Color.Info" Icon="@Icons.Material.Outlined.Edit" Href="@($"/management/theses/edit/{context.Item.Guid}")" />
                     </MudTooltip>
                 </MudStack>
             </CellTemplate>

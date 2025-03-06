@@ -52,6 +52,16 @@ namespace PhDManager.Data
                 .HasForeignKey<External>();
 
             builder.Entity<Student>()
+                .HasOne(s => s.SubjectsExamApplication)
+                .WithOne(s => s.Student)
+                .HasForeignKey<SubjectsExamApplication>();
+
+            builder.Entity<Student>()
+                .HasOne(s => s.ExamApplication)
+                .WithOne(e => e.Student)
+                .HasForeignKey<ExamApplication>();
+
+            builder.Entity<Student>()
                 .HasOne(s => s.Address)
                 .WithOne(a => a.Student)
                 .HasForeignKey<Address>()

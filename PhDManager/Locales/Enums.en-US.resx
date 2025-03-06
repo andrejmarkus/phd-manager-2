@@ -135,4 +135,10 @@
   <data name="StudentStateUnfinished" xml:space="preserve">
     <value>Unfinished</value>
   </data>
+  <data name="StudyFormDaily" xml:space="preserve">
+    <value>Daily</value>
+  </data>
+  <data name="StudyFormExternal" xml:space="preserve">
+    <value>External</value>
+  </data>
 </root>

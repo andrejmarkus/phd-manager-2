@@ -34,9 +34,10 @@
         </Authorized>
     </AuthorizeView>
     <MudNavLink Href="theses" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.List">@Localizer["DissertationTheses"]</MudNavLink>
-    <AuthorizeView Roles="User">
+    <AuthorizeView Roles="@($"{Student.Role}")">
         <Authorized>
-            <MudNavLink Href="/individual-plan" Icon="@Icons.Material.Filled.ContactPage">@Localizer["IndividualPlans"]</MudNavLink>
+            <MudNavLink Href="/individual-plan" Icon="@Icons.Material.Filled.ContactPage">@Localizer["IndividualPlan"]</MudNavLink>
+            <MudNavLink Href="/applications" Icon="@Icons.Material.Filled.ListAlt">@Localizer["Applications"]</MudNavLink>
         </Authorized>
     </AuthorizeView>
     <MudNavLink Href="auth" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.Lock">@Localizer["LoginRequired"]</MudNavLink>

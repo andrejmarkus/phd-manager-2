@@ -1,13 +1,14 @@
 ﻿using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
 using Microsoft.JSInterop;
+using PhDManager.Components.Pages;
 using PhDManager.Models;
 using System.Globalization;
 using System.Text;
 
 namespace PhDManager.Services
 {
-    public class DocumentService(IJSRuntime JSRuntime)
+    public class DocumentService(IJSRuntime JSRuntime, EnumService EnumService)
     {
         public async Task DownloadThesisDocument(Thesis thesis)
         {
@@ -47,7 +48,7 @@ namespace PhDManager.Services
                 {"{Birthdate}", new() { individualPlan.Student.User.Birthdate?.ToString("dd.MM.yyyy") }},
                 {"{FullAddress}", new() { individualPlan.Student.Address?.FullAddress } },
                 {"{PhoneNumber}", new() { individualPlan.Student.User.PhoneNumber }},
-                {"{StudyForm}", new() { individualPlan.Student.IsExternal? "Externá" : "Denná" }},
+                {"{StudyForm}", new() { EnumService.GetLocalizedEnumValue(individualPlan.Student.StudyForm) }},
                 {"{StudyProgram}", new() { individualPlan.Student.Thesis?.StudyProgram.Name }},
                 {"{StudyField}", new() { individualPlan.Student.Thesis?.StudyProgram.StudyFieldName }},
                 {"{Supervisor}", new() { individualPlan.Student.Thesis?.Supervisor.User.DisplayName }},
@@ -66,7 +67,55 @@ namespace PhDManager.Services
                 {"{ThesisSolutionResults}", new() { individualPlan.Student.Thesis?.SolutionResults } },
                 {"{Tasks}", individualPlan.Tasks.ToList<string?>() },
                 {"{TaskDeadlines}", individualPlan.TaskDeadlines.Select(d => (d ?? DateTime.Now).ToString("MMMM yyyy")).ToList<string?>() },
-                {"{CurrentDate}", new() {DateTime.Today.ToString("dd.MM.yyyy") } },
+                {"{CurrentDate}", new() { DateTime.Today.ToString("dd.MM.yyyy") } }
+            };
+
+            var document = GenerateDocumentData(path, replacements);
+            using var documentStream = new DotNetStreamReference(document);
+
+            await JSRuntime.InvokeVoidAsync("saveAsFile", documentName, documentStream);
+        }
+
+        public async Task DownloadSubjectsExamApplicationDocument(SubjectsExamApplication subjectsExamApplication)
+        {
+            var documentName = NormalizeName(subjectsExamApplication.Student.User.DisplayName ?? "") + "_predmety_prihlaska" + ".docx";
+            var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "templates", "subjects_exam_application_template.docx");
+            var replacements = new Dictionary<string, List<string?>>()
+            {
+                {"{Student}", new() { subjectsExamApplication.Student.User.DisplayName } },
+                {"{StudyForm}", new() { EnumService.GetLocalizedEnumValue(subjectsExamApplication.Student.StudyForm) } },
+                {"{StudyProgram}", new() { subjectsExamApplication.Student.StudyProgram?.Name } },
+                {"{StudyField}", new() { subjectsExamApplication.Student.StudyProgram?.StudyFieldName } },
+                {"{Department}", new() { subjectsExamApplication.Student.Department?.Code } },
+                {"{Supervisor}", new() { subjectsExamApplication.Student.Thesis?.Supervisor.User.DisplayName } },
+                {"{StudyStartDate}", new() { subjectsExamApplication.Student.IndividualPlan?.StudyStartDate?.ToString("dd.MM.yyyy") } },
+                {"{Subjects}", subjectsExamApplication.Subjects.Select(s => s.Name).ToList<string?>() },
+                {"{CurrentDate}", new() { DateTime.Today.ToString("dd.MM.yyyy") } }
+            };
+
+            var document = GenerateDocumentData(path, replacements);
+            using var documentStream = new DotNetStreamReference(document);
+
+            await JSRuntime.InvokeVoidAsync("saveAsFile", documentName, documentStream);
+        }
+
+        public async Task DownloadExamApplicationDocument(ExamApplication examApplication)
+        {
+            var documentName = NormalizeName(examApplication.Student.User.DisplayName ?? "") + "_prihlaska" + ".docx";
+            var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "templates", "exam_application_template.docx");
+            var replacements = new Dictionary<string, List<string?>>()
+            {
+                {"{Student}", new() { examApplication.Student.User.DisplayName } },
+                {"{StudyForm}", new() { EnumService.GetLocalizedEnumValue(examApplication.Student.StudyForm) } },
+                {"{StudyProgram}", new() { examApplication.Student.StudyProgram?.Name } },
+                {"{StudyField}", new() { examApplication.Student.StudyProgram?.StudyFieldName } },
+                {"{Department}", new() { examApplication.Student.Department?.Code } },
+                {"{Supervisor}", new() { examApplication.Student.Thesis?.Supervisor.User.DisplayName } },
+                {"{StudyStartDate}", new() { examApplication.Student.IndividualPlan?.StudyStartDate?.ToString("dd.MM.yyyy") } },
+                {"{WrittenThesisTitle}", new() { examApplication.WrittenThesisTitle } },
+                {"{WrittenThesisTitleEnglish}", new() { examApplication.WrittenThesisTitleEnglish } },
+                {"{Subjects}", examApplication.Subjects.Select(s => s.Name).ToList<string?>() },
+                {"{CurrentDate}", new() { DateTime.Today.ToString("dd.MM.yyyy") } }
             };
 
             var document = GenerateDocumentData(path, replacements);

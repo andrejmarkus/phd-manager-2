@@ -240,12 +240,6 @@
   <data name="StudyForm" xml:space="preserve">
     <value>Study form</value>
   </data>
-  <data name="StudyFormExternal" xml:space="preserve">
-    <value>External</value>
-  </data>
-  <data name="StudyFormDaily" xml:space="preserve">
-    <value>Daily</value>
-  </data>
   <data name="Birthdate" xml:space="preserve">
     <value>Birthdate</value>
   </data>
@@ -541,7 +535,7 @@
     <value>You have already enrolled for a dissertation thesis.</value>
   </data>
   <data name="StudentAdd" xml:space="preserve">
-    <value>Add student</value>
+    <value>Add doctoral student</value>
   </data>
   <data name="ThesisStudentInfo" xml:space="preserve">
     <value>Your assigned dissertation thesis is:</value>
@@ -637,7 +631,7 @@
     <value>System was closed!</value>
   </data>
   <data name="StudentState" xml:space="preserve">
-    <value>Student state</value>
+    <value>Doctoral student state</value>
   </data>
   <data name="Active" xml:space="preserve">
     <value>Active</value>
@@ -726,9 +720,6 @@
   <data name="SubjectDeleteConfirmation" xml:space="preserve">
     <value>Do you really want to delete selected subject?</value>
   </data>
-  <data name="SubjectRequired" xml:space="preserve">
-    <value>Required subject</value>
-  </data>
   <data name="StudyPrograms" xml:space="preserve">
     <value>Study programs</value>
   </data>
@@ -788,5 +779,44 @@
   </data>
   <data name="Update" xml:space="preserve">
     <value>Update</value>
+  </data>
+  <data name="SubjectRequired" xml:space="preserve">
+    <value>Required subject</value>
+  </data>
+  <data name="SubjectsExamApplicationInfo" xml:space="preserve">
+    <value>I am applying for the state examination in the following subjects</value>
+  </data>
+  <data name="SubjectsExamApplicationNote" xml:space="preserve">
+    <value>Select only those from which you have not yet taken the state exam</value>
+  </data>
+  <data name="ExamApplication" xml:space="preserve">
+    <value>Application for the dissertation examination</value>
+  </data>
+  <data name="ExamApplicationWrittenThesisTitle" xml:space="preserve">
+    <value>Topic of the written part of the dissertation examination</value>
+  </data>
+  <data name="ExamApplicationWrittenThesisTitleEnglish" xml:space="preserve">
+    <value>Topic of the written part of the dissertation examination in English</value>
+  </data>
+  <data name="ExamApplicationWrittenThesisTitleError" xml:space="preserve">
+    <value>It is necessary to submit a written dissertation topic!</value>
+  </data>
+  <data name="ExamApplicationWrittenThesisTitleEnglishError" xml:space="preserve">
+    <value>It is necessary to submit a written dissertation topic in English!</value>
+  </data>
+  <data name="Applications" xml:space="preserve">
+    <value>Applications</value>
+  </data>
+  <data name="SubjectsExamApplication" xml:space="preserve">
+    <value>Application for the state examination in compulsory subjects</value>
+  </data>
+  <data name="ExamApplicationEdit" xml:space="preserve">
+    <value>Edit exam application</value>
+  </data>
+  <data name="ExamApplicationDelete" xml:space="preserve">
+    <value>Delete exam application</value>
+  </data>
+  <data name="ExamApplicationGenerate" xml:space="preserve">
+    <value>Generate exam application</value>
   </data>
 </root>

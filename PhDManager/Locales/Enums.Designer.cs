@@ -113,5 +113,23 @@ namespace PhDManager.Locales {
                 return ResourceManager.GetString("StudentStateUnfinished", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Daily.
+        /// </summary>
+        public static string StudyFormDaily {
+            get {
+                return ResourceManager.GetString("StudyFormDaily", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to External.
+        /// </summary>
+        public static string StudyFormExternal {
+            get {
+                return ResourceManager.GetString("StudyFormExternal", resourceCulture);
+            }
+        }
     }
 }

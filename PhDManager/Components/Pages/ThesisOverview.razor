@@ -192,7 +192,7 @@
 
         _currentUserId = await UsersService.GetCurrentUserIdAsync();
         _currentUser = await UsersService.GetCurrentUserAsync();
-        _currentStudent = await UnitOfWork.Students.GetCurrentByUserId(_currentUserId);
+        _currentStudent = await UnitOfWork.Students.GetByUserIdAsync(_currentUserId);
     }
 
     private async Task AddThesisInterest(Student student)

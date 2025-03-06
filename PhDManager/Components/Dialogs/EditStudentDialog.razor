@@ -33,9 +33,20 @@
                     }
                 }
             </MudSelect>
-            <MudSelect T="bool" Variant="Variant.Outlined" Label="@Localizer["StudyForm"]" @bind-Value="Student.IsExternal" ToStringFunc="@(ie => ie ? Localizer["StudyFormExternal"] : Localizer["StudyFormDaily"])">
-                <MudSelectItem Value="true">@Localizer["StudyFormExternal"]</MudSelectItem>
-                <MudSelectItem Value="false">@Localizer["StudyFormDaily"]</MudSelectItem>
+            <MudSelect T="Department" Variant="Variant.Outlined" Label="@Localizer["Department"]" @bind-Value="Student.Department" ToStringFunc="@(d => d is null ? "" : d.Name)">
+                @if (_departments is not null)
+                {
+                    @foreach (var department in _departments)
+                    {
+                        <MudSelectItem Value="@department">@department.Name</MudSelectItem>
+                    }
+                }
+            </MudSelect>
+            <MudSelect T="StudyForm" Variant="Variant.Outlined" Label="@Localizer["StudyForm"]" @bind-Value="Student.StudyForm" ToStringFunc="@(sf => EnumService.GetLocalizedEnumValue(sf))">
+                @foreach (var studyForm in _studyForms)
+                {
+                    <MudSelectItem T="StudyForm" Value="studyForm.Item1">@studyForm.Item2</MudSelectItem>
+                }
             </MudSelect>
             <MudText Class="mt-4">Osobné údaje</MudText>
             <MudDatePicker ShowToolbar="false" Variant="Variant.Outlined" Label="@Localizer["Birthdate"]" @bind-Date="Student.User.Birthdate" />
@@ -62,14 +73,18 @@
 
     private MudForm _form = default!;
     private IEnumerable<StudyProgram>? _studyPrograms;
+    private IEnumerable<Department>? _departments;
     private List<(StudentState, string)> _studentStates = [];
+    private List<(StudyForm, string)> _studyForms = [];
 
     protected override async Task OnInitializedAsync()
     {
         if (Student.Address is null) Student.Address = new();
 
         _studyPrograms = await UnitOfWork.StudyPrograms.GetAllAsync();
+        _departments = await UnitOfWork.Departments.GetAllAsync();
         _studentStates = EnumService.GetLocalizedEnumValues<StudentState>();
+        _studyForms = EnumService.GetLocalizedEnumValues<StudyForm>();
     }
 
     private void HandleDialog()

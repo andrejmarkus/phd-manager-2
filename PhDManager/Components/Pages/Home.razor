@@ -72,6 +72,6 @@
     protected override async Task OnInitializedAsync()
     {
         var currentUserId = await UsersService.GetCurrentUserIdAsync();
-        _currentStudent = await UnitOfWork.Students.GetCurrentByUserId(currentUserId);
+        _currentStudent = await UnitOfWork.Students.GetByUserIdAsync(currentUserId);
     }
 }

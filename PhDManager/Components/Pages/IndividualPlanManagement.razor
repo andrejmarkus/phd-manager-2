@@ -18,6 +18,7 @@
 @inject UserManager<ApplicationUser> UserManager
 @inject NavigationManager NavigationManager
 @inject UsersService UsersService
+@inject EnumService EnumService
 
 @attribute [Authorize(Roles = $"{Admin.Role}, {Teacher.Role}")]
 
@@ -35,7 +36,7 @@
                 <MudDatePicker ShowToolbar="false" Label="@Localizer["Birthdate"]" Variant="Variant.Outlined" @bind-Date="_selectedStudent.User.Birthdate" ReadOnly />
                 <MudField T="string" Label="@Localizer["Address"]" Variant="Variant.Outlined">@_selectedStudent.Address?.FullAddress</MudField>
                 <MudField T="string" Label="@Localizer["PhoneNumber"]" Variant="Variant.Outlined">@_selectedStudent.User.PhoneNumber</MudField>
-                <MudField T="string" Label="@Localizer["StudyForm"]" Variant="Variant.Outlined">@(_selectedStudent.IsExternal ? Localizer["StudyFormExternal"] : Localizer["StudyFormDaily"])</MudField>
+                <MudField T="string" Label="@Localizer["StudyForm"]" Variant="Variant.Outlined">@(EnumService.GetLocalizedEnumValue(_selectedStudent.StudyForm))</MudField>
                 <MudField T="string" Label="@Localizer["StudyProgram"]" Variant="Variant.Outlined">@_selectedStudent.StudyProgram?.Name</MudField>
                 <MudField T="string" Label="@Localizer["StudyField"]" Variant="Variant.Outlined">@_selectedStudent.StudyProgram?.StudyFieldName</MudField>
                 <MudField T="string" Label="@Localizer["Supervisor"]" Variant="Variant.Outlined">@_selectedStudent.Thesis.Supervisor.User.DisplayName</MudField>
@@ -93,7 +94,7 @@
     @foreach (var subject in _selectedOptionalSubjects.Select((e, i) => new { Element = e, Index = i }))
     {
         <MudStack Row AlignItems="AlignItems.Center">
-            <MudSelect T="Subject" Required RequiredError="@Localizer["IndividualPlanSubjectError"]" Label="@($"{Localizer["Subject"]} 1")" ToStringFunc="@(s => s is null ? null : s.Name)" Variant="Variant.Outlined" @bind-Value="_selectedOptionalSubjects[subject.Index]">
+            <MudSelect T="Subject" Required RequiredError="@Localizer["IndividualPlanSubjectError"]" Label="@($"{Localizer["Subject"]} {subject.Index + 1}")" ToStringFunc="@(s => s is null ? string.Empty : s.Name)" Variant="Variant.Outlined" @bind-Value="_selectedOptionalSubjects[subject.Index]">
                 @if (_subjects is not null)
                 {
                     @foreach (var subject in _subjects.Where(s => !s.IsRequired))
@@ -157,10 +158,10 @@
     private IEnumerable<Subject>? _subjects;
 
     private IndividualPlan _individualPlan = new();
-    private List<Subject> _selectedSubjects = new();
-    private List<Subject> _selectedOptionalSubjects = new();
-    private List<string> _tasks = new();
-    private List<DateTime?> _taskDeadlines = new();
+    private List<Subject> _selectedSubjects = [];
+    private List<Subject> _selectedOptionalSubjects = [];
+    private List<string> _tasks = [];
+    private List<DateTime?> _taskDeadlines = [];
     private Student? _selectedStudent;
 
     protected override async Task OnInitializedAsync()

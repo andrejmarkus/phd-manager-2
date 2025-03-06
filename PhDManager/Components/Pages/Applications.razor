@@ -1,0 +1,78 @@
+﻿@page "/applications"
+
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.Extensions.Localization
+@using PhDManager.Components.Shared
+@using PhDManager.Locales
+@using PhDManager.Models
+@using PhDManager.Services
+@using PhDManager.Services.IRepositories
+
+@rendermode InteractiveServer
+
+@inject IStringLocalizer<Resources> Localizer
+@inject IUnitOfWork UnitOfWork
+@inject UsersService UsersService
+@inject DocumentService DocumentService
+
+@attribute [Authorize(Roles = $"{Student.Role}")]
+
+<PageTitle>@Localizer["Applications"]</PageTitle>
+
+<MudText Typo="Typo.h3">@Localizer["Applications"]</MudText>
+
+@if (_student is not null)
+{
+    <MudStack Class="mt-4">
+        <MudStack Row AlignItems="AlignItems.Center">
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="/applications/subjects-exam-application">@Localizer["SubjectsExamApplication"]</MudButton>
+            @if (_student.SubjectsExamApplication is not null)
+            {
+                <MudTooltip Text="@Localizer["ExamApplicationDelete"]">
+                    <MudIconButton Size="Size.Medium" Color="Color.Error" Icon="@Icons.Material.Filled.Delete" OnClick="DeleteSubjectsExamApplication" />
+                </MudTooltip>
+                <MudTooltip Text="@Localizer["ExamApplicationGenerate"]">
+                    <MudIconButton Size="Size.Medium" Color="Color.Info" Icon="@Icons.Material.Filled.Print" OnClick="@(() => DocumentService.DownloadSubjectsExamApplicationDocument(_student.SubjectsExamApplication))" />
+                </MudTooltip>
+            }
+        </MudStack>
+        <MudStack Row AlignItems="AlignItems.Center">
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="/applications/exam-application">@Localizer["ExamApplication"]</MudButton>
+            @if (_student.ExamApplication is not null)
+            {
+                <MudTooltip Text="@Localizer["ExamApplicationDelete"]">
+                    <MudIconButton Size="Size.Medium" Color="Color.Error" Icon="@Icons.Material.Filled.Delete" OnClick="DeleteExamApplication" />
+                </MudTooltip>
+                <MudTooltip Text="@Localizer["ExamApplicationGenerate"]">
+                    <MudIconButton Size="Size.Medium" Color="Color.Info" Icon="@Icons.Material.Filled.Print" OnClick="@(() => DocumentService.DownloadExamApplicationDocument(_student.ExamApplication))" />
+                </MudTooltip>
+            }
+        </MudStack>
+    </MudStack>
+}
+
+@code {
+    private Student? _student;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var currentUserId = await UsersService.GetCurrentUserIdAsync();
+        _student = await UnitOfWork.Students.GetByUserIdAsync(currentUserId);
+    }
+
+    private async Task DeleteSubjectsExamApplication()
+    {
+        if (_student?.SubjectsExamApplication is null) return;
+
+        UnitOfWork.SubjectsExamApplications.Delete(_student.SubjectsExamApplication);
+        await UnitOfWork.CompleteAsync();
+    }
+
+    private async Task DeleteExamApplication()
+    {
+        if (_student?.ExamApplication is null) return;
+
+        UnitOfWork.ExamApplications.Delete(_student.ExamApplication);
+        await UnitOfWork.CompleteAsync();
+    }
+}

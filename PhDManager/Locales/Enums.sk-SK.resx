@@ -135,4 +135,10 @@
   <data name="StudentStateUnfinished" xml:space="preserve">
     <value>Nedokončené</value>
   </data>
+  <data name="StudyFormDaily" xml:space="preserve">
+    <value>Denná</value>
+  </data>
+  <data name="StudyFormExternal" xml:space="preserve">
+    <value>Externá</value>
+  </data>
 </root>

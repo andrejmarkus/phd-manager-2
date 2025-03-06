@@ -24,6 +24,8 @@ namespace PhDManager.Services.Repositories
         public ISystemStateRepository SystemState { get; private set; }
         public IDepartmentRepository Departments { get; private set; }
         public IIndividualPlanSubjectRepository IndividualPlanSubjects { get; private set; }
+        public ISubjectsExamApplicationRepository SubjectsExamApplications { get; private set; }
+        public IExamApplicationRepository ExamApplications { get; private set; }
 
         public UnitOfWork(IDbContextFactory<ApplicationDbContext> contextFactory, ILoggerFactory loggerFactory, SchoolYearService schoolYearService)
         {
@@ -45,6 +47,8 @@ namespace PhDManager.Services.Repositories
             SystemState = new SystemStateRepository(_context, _logger);
             Departments = new DepartmentRepository(_context, _logger);
             IndividualPlanSubjects = new IndividualPlanSubjectRepository(_context, _logger);
+            SubjectsExamApplications = new SubjectsExamApplicationRepository(_context, _logger);
+            ExamApplications = new ExamApplicationRepository(_context, _logger);
         }
 
         public async Task CompleteAsync()

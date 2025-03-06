@@ -1,19 +1,20 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PhDManager.Data;
 using PhDManager.Models;
+using PhDManager.Models.Enums;
 using PhDManager.Services.IRepositories;
 
 namespace PhDManager.Services.Repositories
 {
     public class StudentRepository(ApplicationDbContext context, ILogger logger, SchoolYearService schoolYearService) : Repository<Student>(context, logger), IStudentRepository
     {
-        public async Task<Student?> GetCurrentByUserId(string? userId)
+        public async Task<Student?> GetByUserIdAsync(string? userId)
         {
             if (userId is null) return null;
 
             try
             {
-                return await _dbSet.FirstOrDefaultAsync(ds => ds.User.Id == userId && ds.StartSchoolYear == schoolYearService.CurrentSchoolYear);
+                return await _dbSet.FirstOrDefaultAsync(s => s.User.Id == userId && s.State == StudentState.Study);
             }
             catch (Exception e)
             {

@@ -151,6 +151,15 @@ namespace PhDManager.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Applications.
+        /// </summary>
+        public static string Applications {
+            get {
+                return ResourceManager.GetString("Applications", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Approved.
         /// </summary>
         public static string Approved {
@@ -633,6 +642,78 @@ namespace PhDManager.Locales {
         public static string EnrolError {
             get {
                 return ResourceManager.GetString("EnrolError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Application for the dissertation examination.
+        /// </summary>
+        public static string ExamApplication {
+            get {
+                return ResourceManager.GetString("ExamApplication", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Delete exam application.
+        /// </summary>
+        public static string ExamApplicationDelete {
+            get {
+                return ResourceManager.GetString("ExamApplicationDelete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Edit exam application.
+        /// </summary>
+        public static string ExamApplicationEdit {
+            get {
+                return ResourceManager.GetString("ExamApplicationEdit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Generate exam application.
+        /// </summary>
+        public static string ExamApplicationGenerate {
+            get {
+                return ResourceManager.GetString("ExamApplicationGenerate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Topic of the written part of the dissertation examination.
+        /// </summary>
+        public static string ExamApplicationWrittenThesisTitle {
+            get {
+                return ResourceManager.GetString("ExamApplicationWrittenThesisTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Topic of the written part of the dissertation examination in English.
+        /// </summary>
+        public static string ExamApplicationWrittenThesisTitleEnglish {
+            get {
+                return ResourceManager.GetString("ExamApplicationWrittenThesisTitleEnglish", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to It is necessary to submit a written dissertation topic in English!.
+        /// </summary>
+        public static string ExamApplicationWrittenThesisTitleEnglishError {
+            get {
+                return ResourceManager.GetString("ExamApplicationWrittenThesisTitleEnglishError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to It is necessary to submit a written dissertation topic!.
+        /// </summary>
+        public static string ExamApplicationWrittenThesisTitleError {
+            get {
+                return ResourceManager.GetString("ExamApplicationWrittenThesisTitleError", resourceCulture);
             }
         }
         
@@ -1510,7 +1591,7 @@ namespace PhDManager.Locales {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Add student.
+        ///   Looks up a localized string similar to Add doctoral student.
         /// </summary>
         public static string StudentAdd {
             get {
@@ -1564,7 +1645,7 @@ namespace PhDManager.Locales {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Student state.
+        ///   Looks up a localized string similar to Doctoral student state.
         /// </summary>
         public static string StudentState {
             get {
@@ -1596,24 +1677,6 @@ namespace PhDManager.Locales {
         public static string StudyForm {
             get {
                 return ResourceManager.GetString("StudyForm", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Daily.
-        /// </summary>
-        public static string StudyFormDaily {
-            get {
-                return ResourceManager.GetString("StudyFormDaily", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to External.
-        /// </summary>
-        public static string StudyFormExternal {
-            get {
-                return ResourceManager.GetString("StudyFormExternal", resourceCulture);
             }
         }
         
@@ -1794,6 +1857,33 @@ namespace PhDManager.Locales {
         public static string SubjectSemester {
             get {
                 return ResourceManager.GetString("SubjectSemester", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Application for the state examination in compulsory subjects.
+        /// </summary>
+        public static string SubjectsExamApplication {
+            get {
+                return ResourceManager.GetString("SubjectsExamApplication", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to I am applying for the state examination in the following subjects.
+        /// </summary>
+        public static string SubjectsExamApplicationInfo {
+            get {
+                return ResourceManager.GetString("SubjectsExamApplicationInfo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select only those from which you have not yet taken the state exam.
+        /// </summary>
+        public static string SubjectsExamApplicationNote {
+            get {
+                return ResourceManager.GetString("SubjectsExamApplicationNote", resourceCulture);
             }
         }
         

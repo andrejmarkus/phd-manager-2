@@ -11,14 +11,17 @@ namespace PhDManager.Models
 
         public string StartSchoolYear { get; set; } = string.Empty;
         public string EndSchoolYear { get; set; } = string.Empty;
-        public bool IsExternal { get; set; } = false;
+        public StudyForm StudyForm { get; set; } = StudyForm.Daily;
         public StudentState State { get; set; } = StudentState.Study;
 
+        public virtual Department? Department { get; set; }
         public virtual Address? Address { get; set; }
         public virtual StudyProgram? StudyProgram { get; set; }
         public virtual Thesis? ThesisInterest { get; set; }
         public virtual Thesis? Thesis { get; set; }
         public virtual IndividualPlan? IndividualPlan { get; set; }
+        public virtual SubjectsExamApplication? SubjectsExamApplication { get; set; }
+        public virtual ExamApplication? ExamApplication { get; set; }
         public virtual ApplicationUser User { get; set; } = default!;
 
         [NotMapped]

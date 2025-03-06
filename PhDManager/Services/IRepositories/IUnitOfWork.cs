@@ -16,6 +16,8 @@
         ISystemStateRepository SystemState { get; }
         IDepartmentRepository Departments { get; }
         IIndividualPlanSubjectRepository IndividualPlanSubjects { get; }
+        ISubjectsExamApplicationRepository SubjectsExamApplications { get; }
+        IExamApplicationRepository ExamApplications { get; }
         Task CompleteAsync();
     }
 }

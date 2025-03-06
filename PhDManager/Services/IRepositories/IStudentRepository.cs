@@ -4,6 +4,6 @@ namespace PhDManager.Services.IRepositories
 {
     public interface IStudentRepository : IRepository<Student>
     {
-        Task<Student?> GetCurrentByUserId(string? userId);
+        Task<Student?> GetByUserIdAsync(string? userId);
     }
 }

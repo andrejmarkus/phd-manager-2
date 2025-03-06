@@ -19,21 +19,19 @@
 @if (_individualPlan is not null && _individualPlan.Student.Thesis is not null)
 {
     <MudText Align="Align.Center" Typo="Typo.h4">@Localizer["IndividualPlan"]</MudText>
-    <MudPaper Class="pa-2">
-        <MudStack Spacing="5">
-            <MudStack>
-                <MudText Typo="Typo.h6">@Localizer["DissertationThesis"]</MudText>
-                <MudLink Typo="Typo.body1" Href="@($"/theses/{_individualPlan.Student.Thesis.Guid}")">@_individualPlan.Student.Thesis.Title</MudLink>
-            </MudStack>
-            <MudStack>
-                <MudText Typo="Typo.h6">@Localizer["Subjects"]</MudText>
-                @foreach (var subject in _individualPlan.Subjects)
-                {
-                    <MudText>@subject.Name</MudText>
-                }
-            </MudStack>
+    <MudStack Spacing="5">
+        <MudStack>
+            <MudText Typo="Typo.h6">@Localizer["DissertationThesis"]</MudText>
+            <MudLink Typo="Typo.body1" Href="@($"/theses/{_individualPlan.Student.Thesis.Guid}")">@_individualPlan.Student.Thesis.Title</MudLink>
         </MudStack>
-    </MudPaper>
+        <MudStack>
+            <MudText Typo="Typo.h6">@Localizer["Subjects"]</MudText>
+            @foreach (var subject in _individualPlan.Subjects)
+            {
+                <MudText>@subject.Name</MudText>
+            }
+        </MudStack>
+    </MudStack>
 }
 else
 {

@@ -126,6 +126,8 @@
         var user = student.User;
 
         if (student.Address is not null) UnitOfWork.Addresses.Delete(student.Address);
+        if (student.SubjectsExamApplication is not null) UnitOfWork.SubjectsExamApplications.Delete(student.SubjectsExamApplication);
+        if (student.ExamApplication is not null) UnitOfWork.ExamApplications.Delete(student.ExamApplication);
         UnitOfWork.Students.Delete(student);
         await UnitOfWork.CompleteAsync();
         await UsersService.DeleteUserAsync(user);

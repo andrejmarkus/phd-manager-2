@@ -1,6 +1,7 @@
 ﻿using LdapForNet;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
+using PhDManager.Components.Shared;
 using PhDManager.Data;
 using PhDManager.Models;
 using PhDManager.Services.IRepositories;
@@ -59,6 +60,33 @@ namespace PhDManager.Services
             if (unusedUser is null) return;
 
             unusedUser.Students.Add(student);
+            await UserManager.UpdateAsync(unusedUser);
+        }
+
+        public async Task AddAdminToUser(ApplicationUser user, Admin admin)
+        {
+            var unusedUser = await UserManager.FindByIdAsync(user.Id);
+            if (unusedUser is null) return;
+
+            unusedUser.Admin = admin;
+            await UserManager.UpdateAsync(unusedUser);
+        }
+
+        public async Task AddTeacherToUser(ApplicationUser user, Teacher teacher)
+        {
+            var unusedUser = await UserManager.FindByIdAsync(user.Id);
+            if (unusedUser is null) return;
+
+            unusedUser.Teacher = teacher;
+            await UserManager.UpdateAsync(unusedUser);
+        }
+
+        public async Task AddExternalToUser(ApplicationUser user, External external)
+        {
+            var unusedUser = await UserManager.FindByIdAsync(user.Id);
+            if (unusedUser is null) return;
+
+            unusedUser.External = external;
             await UserManager.UpdateAsync(unusedUser);
         }
 

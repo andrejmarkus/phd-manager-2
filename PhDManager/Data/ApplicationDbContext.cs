@@ -31,6 +31,8 @@ namespace PhDManager.Data
         {
             base.OnModelCreating(builder);
 
+            var openDate = new DateTime(DateTime.Now.Year, 12, 1);
+            var closeDate = new DateTime(DateTime.Now.Year, 2, 15);
             builder.Entity<SystemState>()
                 .HasData(new SystemState { Id = 1, IsOpen = true });
 

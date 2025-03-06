@@ -780,4 +780,13 @@
   <data name="GradesEdit" xml:space="preserve">
     <value>Uprav známky</value>
   </data>
+  <data name="SystemOpening" xml:space="preserve">
+    <value>Otvorenie</value>
+  </data>
+  <data name="SystemClosing" xml:space="preserve">
+    <value>Uzatvorenie</value>
+  </data>
+  <data name="Update" xml:space="preserve">
+    <value>Aktualizovať</value>
+  </data>
 </root>

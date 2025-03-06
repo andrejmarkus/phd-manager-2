@@ -780,4 +780,13 @@
   <data name="GradesEdit" xml:space="preserve">
     <value>Edit grades</value>
   </data>
+  <data name="SystemOpening" xml:space="preserve">
+    <value>Opening</value>
+  </data>
+  <data name="SystemClosing" xml:space="preserve">
+    <value>Closing</value>
+  </data>
+  <data name="Update" xml:space="preserve">
+    <value>Update</value>
+  </data>
 </root>

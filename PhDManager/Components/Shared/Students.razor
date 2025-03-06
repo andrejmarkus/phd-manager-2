@@ -17,7 +17,7 @@
 @inject SchoolYearService SchoolYearService
 @inject EnumService EnumService
 
-<MudDataGrid T="Student" Items="@_students" Hover SortMode="SortMode.Multiple" QuickFilter="@_quickFilter" Elevation="0">
+<MudDataGrid @ref="_dataGrid" T="Student" Items="@_students" Hover SortMode="SortMode.Multiple" QuickFilter="@_quickFilter" Elevation="0">
     <ToolBarContent>
         <MudText Typo="Typo.h6" GutterBottom="false">@Localizer["Students"]</MudText>
         <MudSpacer />
@@ -59,6 +59,8 @@
 </MudDataGrid>
 
 @code {
+    private MudDataGrid<Student> _dataGrid = default!;
+
     private IEnumerable<Student>? _students;
     private List<(StudentState, string)> _studentStates = [];
 
@@ -73,25 +75,18 @@
 
     private Func<Student, bool> _quickFilter => ds =>
     {
+        if (_studentState is not null && ds.State != _studentState)
+            return false;
+
         if (string.IsNullOrWhiteSpace(_search))
             return true;
 
-        if (ds.State == _studentState)
-            return true;
+        string searchLower = _search.ToLower();
 
-        if (ds.User.UserName?.Contains(_search, StringComparison.OrdinalIgnoreCase) == true)
-            return true;
-
-        if (ds.User.DisplayName?.Contains(_search, StringComparison.OrdinalIgnoreCase) == true)
-            return true;
-
-        if (ds.User.Email?.Contains(_search, StringComparison.OrdinalIgnoreCase) == true)
-            return true;
-
-        if ($"{ds.User.UserName} {ds.User.DisplayName} {ds.User.Email}".Contains(_search))
-            return true;
-
-        return false;
+        return (ds.User.UserName?.Contains(searchLower, StringComparison.OrdinalIgnoreCase) == true ||
+            ds.User.DisplayName?.Contains(searchLower, StringComparison.OrdinalIgnoreCase) == true ||
+            ds.User.Email?.Contains(searchLower, StringComparison.OrdinalIgnoreCase) == true ||
+            $"{ds.User.UserName} {ds.User.DisplayName} {ds.User.Email}".ToLower().Contains(searchLower));
     };
 
     private async Task AddStudent()

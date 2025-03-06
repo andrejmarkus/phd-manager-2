@@ -1,5 +1,6 @@
 ﻿@page "/management/theses"
 
+@using Hangfire
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.Extensions.Localization
 @using PhDManager.Locales
@@ -16,6 +17,7 @@
 @inject DocumentService DocumentService
 @inject UsersService UsersService
 @inject SchoolYearService SchoolYearService
+@inject JobService JobService
 
 @attribute [Authorize(Roles = $"{Admin.Role}, {Teacher.Role}")]
 
@@ -62,6 +64,16 @@
         @if (_systemState is not null)
         {
             <MudSwitch Class="mt-4" Label="@Localizer["SystemEnabled"]" Color="Color.Primary" @bind-Value="_systemState.IsOpen" @bind-Value:after="UpdateSystemState" />
+            <MudStack Class="mt-4" Row>
+                <MudStack Row AlignItems="AlignItems.Center">
+                    <MudText>@Localizer["SystemOpening"]</MudText>
+                    <MudDatePicker Class="flex-none" @bind-Date="_openDate" @bind-Date:after="UpdateSystemOpenDate" DateFormat="dd.MM." Variant="Variant.Outlined" OpenTo="OpenTo.Month" FixYear="null" ShowToolbar="false" />
+                </MudStack>
+                <MudStack Row AlignItems="AlignItems.Center">
+                    <MudText>@Localizer["SystemClosing"]</MudText>
+                    <MudDatePicker Class="flex-none" @bind-Date="_closeDate" @bind-Date:after="UpdateSystemCloseDate" DateFormat="dd.MM." Variant="Variant.Outlined" OpenTo="OpenTo.Month" FixYear="null" ShowToolbar="false" />
+                </MudStack>
+            </MudStack>
         }
     </Authorized>
 </AuthorizeView>
@@ -70,12 +82,21 @@
     private IEnumerable<Thesis>? _theses;
     private SystemState? _systemState;
 
+    private DateTime? _openDate;
+    private DateTime? _closeDate;
+
     private string? _currentUserRole;
     private string? _currentUserId;
     private string _search = string.Empty;
 
     protected override async Task OnInitializedAsync()
     {
+        var systemState = await UnitOfWork.SystemState.GetAsync();
+        if (systemState is null) return;
+
+        _openDate = systemState.OpenDate;
+        _closeDate = systemState.CloseDate;
+
         _currentUserRole = await UsersService.GetCurrentUserRoleAsync();
         _currentUserId = await UsersService.GetCurrentUserIdAsync();
 
@@ -103,6 +124,35 @@
 
         return false;
     };
+
+    private async Task UpdateSystemOpenDate()
+    {
+        var systemState = await UnitOfWork.SystemState.GetAsync();
+        if (systemState is null) return;
+
+        var openDate = _openDate ?? DateTime.Now;
+        systemState.OpenDate = openDate.ToUniversalTime();
+
+        RecurringJob.AddOrUpdate(JobService.OpenSystemId, () => JobService.SetSystemOpenAsync(true), $"0 0 {openDate.Day} {openDate.Month} *");
+
+        await UnitOfWork.SystemState.UpdateAsync(systemState);
+        await UnitOfWork.CompleteAsync();
+    }
+
+    private async Task UpdateSystemCloseDate()
+    {
+        var systemState = await UnitOfWork.SystemState.GetAsync();
+        if (systemState is null) return;
+
+        var closeDate = _closeDate ?? DateTime.Now;
+        systemState.CloseDate = closeDate.ToUniversalTime();
+
+        RecurringJob.AddOrUpdate(JobService.CloseSystemId, () => JobService.SetSystemOpenAsync(false), $"0 0 {closeDate.Day} {closeDate.Month} *");
+
+        await UnitOfWork.SystemState.UpdateAsync(systemState);
+        await UnitOfWork.CompleteAsync();
+    }
+
 
     private async Task UpdateSystemState()
     {

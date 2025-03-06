@@ -1852,11 +1852,29 @@ namespace PhDManager.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Closing.
+        /// </summary>
+        public static string SystemClosing {
+            get {
+                return ResourceManager.GetString("SystemClosing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Dissertation thesis creation enabled.
         /// </summary>
         public static string SystemEnabled {
             get {
                 return ResourceManager.GetString("SystemEnabled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Opening.
+        /// </summary>
+        public static string SystemOpening {
+            get {
+                return ResourceManager.GetString("SystemOpening", resourceCulture);
             }
         }
         
@@ -1956,6 +1974,15 @@ namespace PhDManager.Locales {
         public static string Unactive {
             get {
                 return ResourceManager.GetString("Unactive", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Update.
+        /// </summary>
+        public static string Update {
+            get {
+                return ResourceManager.GetString("Update", resourceCulture);
             }
         }
         

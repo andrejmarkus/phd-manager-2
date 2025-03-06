@@ -143,17 +143,17 @@
                 }
             case Admin.Role:
                 {
-                    await UnitOfWork.Admins.AddAsync(new() { User = user });
+                    await UsersService.AddAdminToUser(user, new());
                     break;
                 }
             case Teacher.Role:
                 {
-                    await UnitOfWork.Teachers.AddAsync(new() { User = user });
+                    await UsersService.AddTeacherToUser(user, new());
                     break;
                 }
             case External.Role:
                 {
-                    await UnitOfWork.Externals.AddAsync(new() { User = user });
+                    await UsersService.AddExternalToUser(user, new());
                     break;
                 }
             default:

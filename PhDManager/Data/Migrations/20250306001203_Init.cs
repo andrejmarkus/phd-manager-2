@@ -57,6 +57,20 @@ namespace PhDManager.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Departments",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Name = table.Column<string>(type: "text", nullable: false),
+                    Code = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Departments", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Registrations",
                 columns: table => new
                 {
@@ -94,7 +108,9 @@ namespace PhDManager.Data.Migrations
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    IsOpen = table.Column<bool>(type: "boolean", nullable: false)
+                    IsOpen = table.Column<bool>(type: "boolean", nullable: false),
+                    OpenDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    CloseDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -350,45 +366,24 @@ namespace PhDManager.Data.Migrations
                 name: "IndividualPlanSubject",
                 columns: table => new
                 {
-                    IndividualPlansId = table.Column<int>(type: "integer", nullable: false),
-                    SubjectsId = table.Column<int>(type: "integer", nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    IndividualPlanId = table.Column<int>(type: "integer", nullable: false),
+                    SubjectId = table.Column<int>(type: "integer", nullable: false),
+                    Grade = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_IndividualPlanSubject", x => new { x.IndividualPlansId, x.SubjectsId });
+                    table.PrimaryKey("PK_IndividualPlanSubject", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_IndividualPlanSubject_IndividualPlans_IndividualPlansId",
-                        column: x => x.IndividualPlansId,
+                        name: "FK_IndividualPlanSubject_IndividualPlans_IndividualPlanId",
+                        column: x => x.IndividualPlanId,
                         principalTable: "IndividualPlans",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_IndividualPlanSubject_Subjects_SubjectsId",
-                        column: x => x.SubjectsId,
-                        principalTable: "Subjects",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "IndividualPlanSubject1",
-                columns: table => new
-                {
-                    OptionalIndividualPlansId = table.Column<int>(type: "integer", nullable: false),
-                    OptionalSubjectsId = table.Column<int>(type: "integer", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_IndividualPlanSubject1", x => new { x.OptionalIndividualPlansId, x.OptionalSubjectsId });
-                    table.ForeignKey(
-                        name: "FK_IndividualPlanSubject1_IndividualPlans_OptionalIndividualPl~",
-                        column: x => x.OptionalIndividualPlansId,
-                        principalTable: "IndividualPlans",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_IndividualPlanSubject1_Subjects_OptionalSubjectsId",
-                        column: x => x.OptionalSubjectsId,
+                        name: "FK_IndividualPlanSubject_Subjects_SubjectId",
+                        column: x => x.SubjectId,
                         principalTable: "Subjects",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -487,8 +482,8 @@ namespace PhDManager.Data.Migrations
 
             migrationBuilder.InsertData(
                 table: "SystemState",
-                columns: new[] { "Id", "IsOpen" },
-                values: new object[] { 1, true });
+                columns: new[] { "Id", "CloseDate", "IsOpen", "OpenDate" },
+                values: new object[] { 1, null, true, null });
 
             migrationBuilder.InsertData(
                 table: "Subjects",
@@ -565,14 +560,14 @@ namespace PhDManager.Data.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_IndividualPlanSubject_SubjectsId",
+                name: "IX_IndividualPlanSubject_IndividualPlanId",
                 table: "IndividualPlanSubject",
-                column: "SubjectsId");
+                column: "IndividualPlanId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_IndividualPlanSubject1_OptionalSubjectsId",
-                table: "IndividualPlanSubject1",
-                column: "OptionalSubjectsId");
+                name: "IX_IndividualPlanSubject_SubjectId",
+                table: "IndividualPlanSubject",
+                column: "SubjectId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Students_StudyProgramId",
@@ -685,10 +680,10 @@ namespace PhDManager.Data.Migrations
                 name: "Comments");
 
             migrationBuilder.DropTable(
-                name: "IndividualPlanSubject");
+                name: "Departments");
 
             migrationBuilder.DropTable(
-                name: "IndividualPlanSubject1");
+                name: "IndividualPlanSubject");
 
             migrationBuilder.DropTable(
                 name: "Registrations");

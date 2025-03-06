@@ -12,8 +12,8 @@ using PhDManager.Data;
 namespace PhDManager.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250305195234_IndividualPlanSubjectRelationship4")]
-    partial class IndividualPlanSubjectRelationship4
+    [Migration("20250306001203_Init")]
+    partial class Init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -657,8 +657,14 @@ namespace PhDManager.Data.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
+                    b.Property<DateTime?>("CloseDate")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<bool>("IsOpen")
                         .HasColumnType("boolean");
+
+                    b.Property<DateTime?>("OpenDate")
+                        .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
 

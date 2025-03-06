@@ -15,8 +15,6 @@ namespace PhDManager.Services
         {
             RecurringJob.AddOrUpdate(UpdateLdapUserId, () => UsersService.UpdateUsers(), Cron.Daily);
             RecurringJob.AddOrUpdate(ClearRegistrationsId, () => UsersService.ClearRegistrations(), Cron.Daily);
-            RecurringJob.AddOrUpdate(OpenSystemId, () => SetSystemOpenAsync(true), "0 0 1 12 *");
-            RecurringJob.AddOrUpdate(CloseSystemId, () => SetSystemOpenAsync(false), "0 0 15 2 *");
         }
 
         public async Task SetSystemOpenAsync(bool open)

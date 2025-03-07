@@ -58,8 +58,13 @@ namespace PhDManager.Data
 
             builder.Entity<Student>()
                 .HasOne(s => s.ExamApplication)
-                .WithOne(e => e.Student)
+                .WithOne(ea => ea.Student)
                 .HasForeignKey<ExamApplication>();
+
+            builder.Entity<Student>()
+                .HasOne(s => s.StudentEvaluation)
+                .WithOne(se => se.Student)
+                .HasForeignKey<StudentEvaluation>();
 
             builder.Entity<Student>()
                 .HasOne(s => s.Address)

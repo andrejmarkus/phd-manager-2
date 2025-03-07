@@ -1,0 +1,158 @@
+﻿@page "/management/evaluations/add"
+@page "/management/evaluations/edit/{StudentEvaluationGuid}"
+
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.Extensions.Localization
+@using PhDManager.Locales
+@using PhDManager.Models
+@using PhDManager.Models.Enums
+@using PhDManager.Services
+@using PhDManager.Services.IRepositories
+
+@rendermode InteractiveServer
+
+@inject IUnitOfWork UnitOfWork
+@inject IStringLocalizer<Resources> Localizer
+@inject NavigationManager NavigationManager
+@inject UsersService UsersService
+@inject EnumService EnumService
+@inject SchoolYearService SchoolYearService
+
+@attribute [Authorize(Roles = $"{Admin.Role}, {Teacher.Role}")]
+
+<PageTitle>@Localizer["StudentEvaluation"]</PageTitle>
+
+<MudText Typo="Typo.h3">@Localizer["StudentEvaluation"]</MudText>
+
+<MudForm @ref="_form">
+    <MudAutocomplete ReadOnly="@(StudentEvaluationGuid is not null)" T="Student" Required RequiredError="@Localizer["IndividualPlanStudentError"]" Label="@Localizer["Student"]" ToStringFunc="@(s => s is null ? null : s.User.DisplayName)" SearchFunc="SearchStudents" Variant="Variant.Outlined" @bind-Value="@_studentEvaluation.Student" />
+    @if (_studentEvaluation.Student is not null && _studentEvaluation.Student.IndividualPlan is not null && _studentEvaluation.Student.Thesis is not null)
+    {
+        <MudField T="string" Label="@Localizer["StudyForm"]" Variant="Variant.Outlined">@(EnumService.GetLocalizedEnumValue(_studentEvaluation.Student.StudyForm))</MudField>
+        <MudField T="string" Label="@Localizer["StudyProgram"]" Variant="Variant.Outlined">@_studentEvaluation.Student.StudyProgram?.Name</MudField>
+        <MudField T="string" Label="@Localizer["StudyField"]" Variant="Variant.Outlined">@_studentEvaluation.Student.StudyProgram?.StudyFieldName</MudField>
+        <MudField T="string" Label="@Localizer["Department"]" Variant="Variant.Outlined">@_studentEvaluation.Student.Department?.Name</MudField>
+        <MudField T="string" Label="@Localizer["Supervisor"]" Variant="Variant.Outlined">@_studentEvaluation.Student.Thesis?.Supervisor.User.DisplayName</MudField>
+        <MudDatePicker ReadOnly Label="@Localizer["IndividualPlanStudyStartDate"]" Variant="Variant.Outlined" @bind-Date="_studentEvaluation.Student.IndividualPlan.StudyStartDate" />
+
+        <MudText Typo="Typo.h6">@Localizer["DissertationExam"]</MudText>
+        <MudText>@Localizer["StudentEvaluationSubjects"]</MudText>
+        <MudGrid Spacing="3">
+            @foreach (var subject in _studentEvaluation.Student.IndividualPlan!.Subjects.Select((e, i) => new { Element = e, Index = i }))
+            {
+                <MudItem xs="9">
+                    <MudField T="string" Label="@($"{Localizer["Subject"]} {subject.Index + 1}")" Variant="Variant.Outlined">@subject.Element.Name</MudField>
+                </MudItem>
+                <MudItem xs="3">
+                    <MudField T="Grade" Label="@($"{Localizer["Grade"]} {subject.Index + 1}")" Variant="Variant.Outlined">@_studentEvaluation.Student.IndividualPlan.IndividualPlanSubjects[subject.Index].Grade</MudField>
+                </MudItem>
+            }
+        </MudGrid>
+        <MudText Class="mt-2">@Localizer["ExamApplicationWrittenThesisTitle"]</MudText>
+        <MudField T="string" Label="@Localizer["ExamApplicationWrittenThesisTitle"]" Variant="Variant.Outlined">@_studentEvaluation.Student.IndividualPlan.WrittenThesisTitle</MudField>
+        <MudGrid>
+            <MudItem xs="2">
+                <MudText Class="d-flex align-center mud-height-full">@Localizer["IndividualPlanDissertationSubmissionDate"]</MudText>
+            </MudItem>
+            <MudItem xs="5">
+                <MudDatePicker ShowToolbar="false" ReadOnly Label="@Localizer["PlannedDeadline"]" Variant="Variant.Outlined" @bind-Date="_studentEvaluation.Student.IndividualPlan.DissertationSubmissionDate" />
+            </MudItem>
+            <MudItem xs="5">
+                <MudDatePicker ShowToolbar="false" Label="@Localizer["RealDeadline"]" Variant="Variant.Outlined" @bind-Date="_studentEvaluation.RealDissertationSubmissionDate" />
+            </MudItem>
+            <MudItem xs="2">
+                <MudText Class="d-flex align-center mud-height-full">@Localizer["ExamDate"]</MudText>
+            </MudItem>
+            <MudItem xs="5">
+                <MudDatePicker ShowToolbar="false" ReadOnly Label="@Localizer["PlannedDeadline"]" Variant="Variant.Outlined" @bind-Date="_studentEvaluation.Student.IndividualPlan.StudyEndDate" />
+            </MudItem>
+            <MudItem xs="5">
+                <MudDatePicker ShowToolbar="false" Label="@Localizer["RealDeadline"]" Variant="Variant.Outlined" @bind-Date="_studentEvaluation.RealStudyEndDate" />
+            </MudItem>
+        </MudGrid>
+
+        <MudText Typo="Typo.h6">@Localizer["DissertationThesis"]</MudText>
+        <MudField T="string" Label="@Localizer["DissertationThesis"]" Variant="Variant.Outlined">@_studentEvaluation.Student.Thesis.Title</MudField>
+        <MudTextField Style="white-space: pre-wrap;" T="string" Label="@Localizer["ThesisState"]" Variant="Variant.Outlined" AutoGrow Lines="3" @bind-Value="_studentEvaluation.ThesisState" />
+        <MudGrid>
+            <MudItem class="justify-center" xs="2">
+                <MudText Class="d-flex align-center mud-height-full">@Localizer["DefenceApplicationDate"]</MudText>
+            </MudItem>
+            <MudItem xs="5">
+                <MudDatePicker ShowToolbar="false" ReadOnly Label="@Localizer["PlannedDeadline"]" Variant="Variant.Outlined" @bind-Date="_studentEvaluation.Student.IndividualPlan.DissertationExamDate" />
+            </MudItem>
+            <MudItem xs="5">
+                <MudDatePicker ShowToolbar="false" Label="@Localizer["RealDeadline"]" Variant="Variant.Outlined" @bind-Date="_studentEvaluation.RealDissertationExamDate" />
+            </MudItem>
+        </MudGrid>
+
+        <MudText Typo="Typo.h6">@Localizer["StudentEvaluationSupervisorEvaluation"]</MudText>
+        <MudTextField Style="white-space: pre-wrap;" T="string" Label="@Localizer["StudentEvaluationCreditsEvaluation"]" Variant="Variant.Outlined" AutoGrow Lines="3" @bind-Value="_studentEvaluation.CreditsEvaluation" />
+        <MudTextField Style="white-space: pre-wrap;" T="string" Label="@Localizer["StudentEvaluationScientificEvaluation"]" Variant="Variant.Outlined" AutoGrow Lines="3" @bind-Value="_studentEvaluation.ScientificEvaluation" />
+        <MudTextField Style="white-space: pre-wrap;" T="string" Label="@Localizer["StudentEvaluationAssignmentsState"]" Variant="Variant.Outlined" AutoGrow Lines="3" @bind-Value="_studentEvaluation.AssignmentsState" />
+        <MudTextField Style="white-space: pre-wrap;" T="string" Label="@Localizer["StudentEvaluationModificationProposal"]" Variant="Variant.Outlined" AutoGrow Lines="3" @bind-Value="_studentEvaluation.ModificationProposal" />
+        <MudSelect T="Conclusion" Required Label="@Localizer["StudentEvaluationConclusion"]" Variant="Variant.Outlined" @bind-Value="_studentEvaluation.Conclusion">
+            @foreach (var conclusion in EnumService.GetLocalizedEnumValues<Conclusion>())
+            {
+                <MudSelectItem Value="@conclusion.Item1">@conclusion.Item2</MudSelectItem>
+            }
+        </MudSelect>
+        <MudTextField Style="white-space: pre-wrap;" T="string" Label="@Localizer["StudentEvaluationAdditionalEvaluation"]" Variant="Variant.Outlined" AutoGrow Lines="3" @bind-Value="_studentEvaluation.AdditionalEvaluation" />
+
+        <MudButton Class="mt-4" Variant="Variant.Filled" Color="Color.Primary" OnClick="HandleStudentEvaluation">@(StudentEvaluationGuid is null ? Localizer["Add"] : Localizer["Edit"])</MudButton>
+    }
+</MudForm>
+
+@code {
+    [Parameter]
+    public string? StudentEvaluationGuid { get; set; }
+
+    private string? _currentUserRole;
+    private string? _currentUserId;
+
+    private MudForm _form = default!;
+    private IEnumerable<Student>? _students;
+
+    private StudentEvaluation? _studentEvaluation = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        _currentUserRole = await UsersService.GetCurrentUserRoleAsync();
+        _currentUserId = await UsersService.GetCurrentUserIdAsync();
+
+        _students = await UnitOfWork.Students.GetAllAsync();
+
+        if (StudentEvaluationGuid is not null)
+        {
+            _studentEvaluation = await UnitOfWork.StudentEvaluations.GetByGuidAsync(StudentEvaluationGuid);
+        }
+    }
+
+    private Task<IEnumerable<Student>?> SearchStudents(string search, CancellationToken token)
+    {
+        var students = _students?.Where(s => s.IndividualPlan is not null);
+        if (string.IsNullOrWhiteSpace(search))
+            return Task.FromResult(students);
+
+        return Task.FromResult(students?.Where(s => s.User.DisplayName is not null && s.User.DisplayName.Contains(search, StringComparison.OrdinalIgnoreCase)));
+    }
+
+    private async Task HandleStudentEvaluation()
+    {
+        await _form.Validate();
+        if (!_form.IsValid) return;
+
+        if (StudentEvaluationGuid is null)
+        {
+            _studentEvaluation.SchoolYear = SchoolYearService.CurrentSchoolYear;
+            await UnitOfWork.StudentEvaluations.AddAsync(_studentEvaluation);
+        }
+        else
+        {
+            await UnitOfWork.StudentEvaluations.UpdateAsync(_studentEvaluation);
+        }
+
+        await UnitOfWork.CompleteAsync();
+        NavigationManager.NavigateTo("/management/evaluations");
+    }
+}

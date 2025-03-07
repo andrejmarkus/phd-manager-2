@@ -61,6 +61,42 @@ namespace PhDManager.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to I propose the continuation of doctoral studies..
+        /// </summary>
+        public static string ConclusionContinue {
+            get {
+                return ResourceManager.GetString("ConclusionContinue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to I propose to continue with the extra length of the doctoral study..
+        /// </summary>
+        public static string ConclusionContinueExtended {
+            get {
+                return ResourceManager.GetString("ConclusionContinueExtended", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to I propose the end of doctoral study..
+        /// </summary>
+        public static string ConclusionEnd {
+            get {
+                return ResourceManager.GetString("ConclusionEnd", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to I propose expulsion from doctoral studies..
+        /// </summary>
+        public static string ConclusionExpulsion {
+            get {
+                return ResourceManager.GetString("ConclusionExpulsion", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Summer.
         /// </summary>
         public static string SemesterSummer {

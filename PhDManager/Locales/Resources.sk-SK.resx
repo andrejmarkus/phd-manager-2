@@ -283,7 +283,7 @@
     <value>Meno a priezvisko, titul</value>
   </data>
   <data name="IndividualPlanStudentError" xml:space="preserve">
-    <value>Je nutné zvoliť študenta!</value>
+    <value>Je nutné zvoliť doktoranda!</value>
   </data>
   <data name="IndividualPlanStudyStartDate" xml:space="preserve">
     <value>Nástup na doktorandské štúdium</value>
@@ -818,5 +818,68 @@
   </data>
   <data name="ExamApplicationGenerate" xml:space="preserve">
     <value>Vygeneruj prihlášku na skúšku</value>
+  </data>
+  <data name="Evaluations" xml:space="preserve">
+    <value>Hodnotenia</value>
+  </data>
+  <data name="StudentEvaluationAdd" xml:space="preserve">
+    <value>Pridať hodnotenie študenta</value>
+  </data>
+  <data name="WrittenDissertationThesisTitle" xml:space="preserve">
+    <value>Názov písomnej dizertačnej témy</value>
+  </data>
+  <data name="StudentEvaluationEdit" xml:space="preserve">
+    <value>Upraviť hodnotenie študenta</value>
+  </data>
+  <data name="StudentEvaluationDelete" xml:space="preserve">
+    <value>Vymazať hodnotenie študenta</value>
+  </data>
+  <data name="StudentEvaluation" xml:space="preserve">
+    <value>Ročné hodnotenie študenta</value>
+  </data>
+  <data name="Student" xml:space="preserve">
+    <value>Doktorand</value>
+  </data>
+  <data name="DissertationExam" xml:space="preserve">
+    <value>Dizertačná skúška</value>
+  </data>
+  <data name="StudentEvaluationSubjects" xml:space="preserve">
+    <value>Predmety individuálneho študijného plánu</value>
+  </data>
+  <data name="PlannedDeadline" xml:space="preserve">
+    <value>Plánovaný termín</value>
+  </data>
+  <data name="RealDeadline" xml:space="preserve">
+    <value>Skutočný termín</value>
+  </data>
+  <data name="ExamDate" xml:space="preserve">
+    <value>Termín vykonania skúšky</value>
+  </data>
+  <data name="ThesisState" xml:space="preserve">
+    <value>Stav rozpracovania</value>
+  </data>
+  <data name="DefenceApplicationDate" xml:space="preserve">
+    <value>Termín prihlásenia na obhajobu</value>
+  </data>
+  <data name="StudentEvaluationSupervisorEvaluation" xml:space="preserve">
+    <value>Hodnotenie práce doktoranda školiteľom</value>
+  </data>
+  <data name="StudentEvaluationCreditsEvaluation" xml:space="preserve">
+    <value>Pridelené kredity za hodnotený rok (rozpísať predmety a činnosti s počtom pridelených kreditov)</value>
+  </data>
+  <data name="StudentEvaluationScientificEvaluation" xml:space="preserve">
+    <value>Zhodnotenie stavu a úrovne vedeckej výchovy</value>
+  </data>
+  <data name="StudentEvaluationAssignmentsState" xml:space="preserve">
+    <value>Stav plnenia úloh študijného a vedeckého programu</value>
+  </data>
+  <data name="StudentEvaluationModificationProposal" xml:space="preserve">
+    <value>Prípadný zdôvodnený návrh na úpravu študijného a vedeckého  programu</value>
+  </data>
+  <data name="StudentEvaluationConclusion" xml:space="preserve">
+    <value />
+  </data>
+  <data name="StudentEvaluationAdditionalEvaluation" xml:space="preserve">
+    <value>Prípadné ďalšie zhodnotenie</value>
   </data>
 </root>

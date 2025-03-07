@@ -819,4 +819,67 @@
   <data name="ExamApplicationGenerate" xml:space="preserve">
     <value>Generate exam application</value>
   </data>
+  <data name="Evaluations" xml:space="preserve">
+    <value>Evaluations</value>
+  </data>
+  <data name="StudentEvaluationAdd" xml:space="preserve">
+    <value>Add student evaluation</value>
+  </data>
+  <data name="WrittenDissertationThesisTitle" xml:space="preserve">
+    <value>Written dissertation thesis title</value>
+  </data>
+  <data name="StudentEvaluationEdit" xml:space="preserve">
+    <value>Edit student evaluation</value>
+  </data>
+  <data name="StudentEvaluationDelete" xml:space="preserve">
+    <value>Delete student evaluation</value>
+  </data>
+  <data name="StudentEvaluation" xml:space="preserve">
+    <value>Annual evaluation of the student</value>
+  </data>
+  <data name="Student" xml:space="preserve">
+    <value>Doctoral student</value>
+  </data>
+  <data name="DissertationExam" xml:space="preserve">
+    <value>Dissertation exam</value>
+  </data>
+  <data name="StudentEvaluationSubjects" xml:space="preserve">
+    <value>Subjects of the individual study plan</value>
+  </data>
+  <data name="PlannedDeadline" xml:space="preserve">
+    <value>Planned deadline</value>
+  </data>
+  <data name="RealDeadline" xml:space="preserve">
+    <value>Real deadline</value>
+  </data>
+  <data name="ExamDate" xml:space="preserve">
+    <value>Exam date</value>
+  </data>
+  <data name="ThesisState" xml:space="preserve">
+    <value>Thesis state</value>
+  </data>
+  <data name="DefenceApplicationDate" xml:space="preserve">
+    <value>Deadline for applying for the defence</value>
+  </data>
+  <data name="StudentEvaluationSupervisorEvaluation" xml:space="preserve">
+    <value>Evaluation of the doctoral student's work by the supervisor</value>
+  </data>
+  <data name="StudentEvaluationCreditsEvaluation" xml:space="preserve">
+    <value>Credits awarded for the year under review (list courses and activities with the number of credits awarded)</value>
+  </data>
+  <data name="StudentEvaluationScientificEvaluation" xml:space="preserve">
+    <value>Assessment of the state and level of science education</value>
+  </data>
+  <data name="StudentEvaluationAssignmentsState" xml:space="preserve">
+    <value>Status of fulfilment of the tasks of the study and scientific programme</value>
+  </data>
+  <data name="StudentEvaluationModificationProposal" xml:space="preserve">
+    <value>Reasoned proposal for modification of the study and research programme, if any</value>
+  </data>
+  <data name="StudentEvaluationConclusion" xml:space="preserve">
+    <value>Conclusions of the supervisor</value>
+  </data>
+  <data name="StudentEvaluationAdditionalEvaluation" xml:space="preserve">
+    <value>Possible further evaluation</value>
+  </data>
 </root>

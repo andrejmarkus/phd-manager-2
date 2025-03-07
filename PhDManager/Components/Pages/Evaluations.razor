@@ -1,0 +1,112 @@
+﻿@page "/management/evaluations"
+
+@using Hangfire
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.Extensions.Localization
+@using PhDManager.Locales
+@using PhDManager.Models
+@using PhDManager.Services
+@using PhDManager.Services.IRepositories
+
+@rendermode InteractiveServer
+
+@inject IJSRuntime JSRuntime
+@inject IUnitOfWork UnitOfWork
+@inject IDialogService DialogService
+@inject IStringLocalizer<Resources> Localizer
+@inject DocumentService DocumentService
+@inject UsersService UsersService
+@inject SchoolYearService SchoolYearService
+@inject JobService JobService
+
+@attribute [Authorize(Roles = $"{Admin.Role}, {Teacher.Role}")]
+
+<PageTitle>@Localizer["Evaluations"]</PageTitle>
+
+<MudDataGrid T="StudentEvaluation" Items="_studentEvaluations" Hover SortMode="SortMode.Multiple" QuickFilter="_quickFilter" Elevation="0">
+    <ToolBarContent>
+        <MudText Typo="Typo.h6" GutterBottom="false">@Localizer["Evaluations"]</MudText>
+        <MudSpacer />
+        <MudButton class="mx-4" Variant="Variant.Filled" Color="Color.Primary" Href="/management/evaluations/add">@Localizer["StudentEvaluationAdd"]</MudButton>
+        <MudTextField Variant="Variant.Outlined" Placeholder="@Localizer["Search"]" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" @bind-Value="_search" />
+    </ToolBarContent>
+    <Columns>
+        <PropertyColumn Property="se => se.Student!.User.DisplayName" Title="@Localizer["FullName"]" />
+        <PropertyColumn Property="se => se.Student!.IndividualPlan!.WrittenThesisTitle" Title="@Localizer["WrittenDissertationThesisTitle"]" />
+        <PropertyColumn Property="se => se.Student!.Thesis!.Title" Title="@Localizer["DissertationThesisTitle"]" />
+        <TemplateColumn Title="@Localizer["StudentEvaluationEdit"]">
+            <CellTemplate>
+                <MudStack Row>
+                    <MudTooltip Text="@Localizer["StudentEvaluationDelete"]">
+                        <MudIconButton Size="@Size.Small" Color="Color.Error" Icon="@Icons.Material.Outlined.Delete" OnClick="@(async () => await DeleteStudentEvaluation(context.Item))" />
+                    </MudTooltip>
+                    <MudTooltip Text="@Localizer["StudentEvaluationEdit"]">
+                        <MudIconButton Size="@Size.Small" Color="Color.Info" Icon="@Icons.Material.Outlined.Edit" Href="@($"/management/evaluations/edit/{context.Item.Guid}")" />
+                    </MudTooltip>
+                    @* <MudTooltip Text="@Localizer["DissertationThesisGenerate"]">
+                        <MudIconButton Size="@Size.Small" Color="Color.Info" Icon="@Icons.Material.Outlined.Print" OnClick="@(async () => await DocumentService.DownloadThesisDocument(context.Item))" />
+                    </MudTooltip> *@
+                </MudStack>
+            </CellTemplate>
+        </TemplateColumn>
+    </Columns>
+</MudDataGrid>
+
+@code {
+    private IEnumerable<StudentEvaluation>? _studentEvaluations;
+
+    private string? _currentUserRole;
+    private string? _currentUserId;
+    private string _search = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var systemState = await UnitOfWork.SystemState.GetAsync();
+        if (systemState is null) return;
+
+        _currentUserRole = await UsersService.GetCurrentUserRoleAsync();
+        _currentUserId = await UsersService.GetCurrentUserIdAsync();
+
+        await LoadStudentEvaluations();
+    }
+
+    private Func<StudentEvaluation, bool> _quickFilter => se =>
+    {
+        if (string.IsNullOrWhiteSpace(_search))
+            return true;
+
+        if (se.Student?.User.DisplayName?.Contains(_search, StringComparison.OrdinalIgnoreCase) == true)
+            return true;
+
+        if (se.Student?.IndividualPlan?.WrittenThesisTitle.Contains(_search, StringComparison.OrdinalIgnoreCase) == true)
+            return true;
+
+        if (se.Student?.Thesis?.Title.Contains(_search, StringComparison.OrdinalIgnoreCase) == true)
+            return true;
+
+        if ($"{se.Student?.User.DisplayName} {se.Student?.IndividualPlan?.WrittenThesisTitle} {se.Student?.Thesis?.Title}".Contains(_search))
+            return true;
+
+        return false;
+    };
+
+    private async Task DeleteStudentEvaluation(StudentEvaluation studentEvaluation)
+    {
+        bool? result = await DialogService.ShowMessageBox(Localizer["DissertationThesisDelete"], Localizer["DissertationThesisDeleteConfirmation"], Localizer["Yes"], Localizer["No"]);
+        if (result == false) return;
+
+        UnitOfWork.StudentEvaluations.Delete(studentEvaluation);
+        await UnitOfWork.CompleteAsync();
+        await LoadStudentEvaluations();
+    }
+
+    private async Task LoadStudentEvaluations()
+    {
+        _studentEvaluations = await UnitOfWork.StudentEvaluations.GetAllAsync();
+
+        if (_currentUserRole == Teacher.Role)
+        {
+            _studentEvaluations = _studentEvaluations?.Where(se => se.Student?.Thesis?.Supervisor.User.Id == _currentUserId);
+        }
+    }
+}

@@ -117,6 +117,18 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="ConclusionContinue" xml:space="preserve">
+    <value>I propose the continuation of doctoral studies.</value>
+  </data>
+  <data name="ConclusionContinueExtended" xml:space="preserve">
+    <value>I propose to continue with the extra length of the doctoral study.</value>
+  </data>
+  <data name="ConclusionEnd" xml:space="preserve">
+    <value>I propose the end of doctoral study.</value>
+  </data>
+  <data name="ConclusionExpulsion" xml:space="preserve">
+    <value>I propose expulsion from doctoral studies.</value>
+  </data>
   <data name="SemesterSummer" xml:space="preserve">
     <value>Summer</value>
   </data>

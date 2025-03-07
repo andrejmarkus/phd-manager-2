@@ -18,7 +18,7 @@ namespace PhDManager.Models
         public DateTime?[] TaskDeadlines { get; set; } = [];
 
         [JsonIgnore]
-        public virtual Student Student { get; set; } = default!;
+        public virtual Student? Student { get; set; } = default!;
         public virtual List<Subject> Subjects { get; set; } = [];
         public virtual List<IndividualPlanSubject> IndividualPlanSubjects { get; set; } = [];
     }

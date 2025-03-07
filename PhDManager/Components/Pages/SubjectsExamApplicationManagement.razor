@@ -24,21 +24,21 @@
 <MudForm @ref="_form">
     @if (_student is not null && _student.IndividualPlan is not null)
     {
-        <MudField T="string" Label="@Localizer["StudentName"]" Variant="Variant.Outlined">@_student.User.DisplayName</MudField>
+        <MudField T="string" Label="@Localizer["Student"]" Variant="Variant.Outlined">@_student.User.DisplayName</MudField>
         <MudField T="string" Label="@Localizer["StudyForm"]" Variant="Variant.Outlined">@(EnumService.GetLocalizedEnumValue(_student.StudyForm))</MudField>
         <MudField T="string" Label="@Localizer["StudyProgram"]" Variant="Variant.Outlined">@_student.StudyProgram?.Name</MudField>
         <MudField T="string" Label="@Localizer["StudyField"]" Variant="Variant.Outlined">@_student.StudyProgram?.StudyFieldName</MudField>
         <MudField T="string" Label="@Localizer["Department"]" Variant="Variant.Outlined">@_student.Department?.Name</MudField>
         <MudField T="string" Label="@Localizer["Supervisor"]" Variant="Variant.Outlined">@_student.Thesis?.Supervisor.User.DisplayName</MudField>
-        <MudDatePicker Editable="false" Label="@Localizer["IndividualPlanStudyStartDate"]" Variant="Variant.Outlined" @bind-Date="_student.IndividualPlan.StudyStartDate" />
+        <MudDatePicker ReadOnly Label="@Localizer["IndividualPlanStudyStartDate"]" Variant="Variant.Outlined" @bind-Date="_student.IndividualPlan.StudyStartDate" />
     }
     <MudText Class="mt-2" Typo="Typo.h6">@Localizer["SubjectsExamApplicationInfo"]</MudText>
     <MudText>@($"({Localizer["SubjectsExamApplicationNote"]})")</MudText>
     <MudStack Spacing="2">
-        @foreach (var subject in _selectedSubjects.Select((e, i) => new { Element = e, Index = i }))
+        @foreach (var subject in _subjectsExamApplication.Subjects.Select((e, i) => new { Element = e, Index = i }))
         {
             <MudStack Row AlignItems="AlignItems.Center">
-                <MudSelect T="Subject" Required RequiredError="@Localizer["IndividualPlanSubjectError"]" Label="@($"{Localizer["Subject"]} {subject.Index + 1}")" ToStringFunc="@(s => s is null ? string.Empty : s.Name)" Variant="Variant.Outlined" @bind-Value="_selectedSubjects[subject.Index]">
+                <MudSelect T="Subject" Required RequiredError="@Localizer["IndividualPlanSubjectError"]" Label="@($"{Localizer["Subject"]} {subject.Index + 1}")" ToStringFunc="@(s => s is null ? string.Empty : s.Name)" Variant="Variant.Outlined" @bind-Value="_subjectsExamApplication.Subjects[subject.Index]">
                     @if (_subjects is not null)
                     {
                         foreach (var subject in _subjects)
@@ -48,11 +48,11 @@
                     }
                 </MudSelect>
                 <MudTooltip Text="@Localizer["SubjectDelete"]">
-                    <MudIconButton Size="@Size.Small" Color="Color.Error" Icon="@Icons.Material.Outlined.Delete" OnClick="@(() => _selectedSubjects.RemoveAt(subject.Index))" />
+                    <MudIconButton Size="@Size.Small" Color="Color.Error" Icon="@Icons.Material.Outlined.Delete" OnClick="@(() => _subjectsExamApplication.Subjects.RemoveAt(subject.Index))" />
                 </MudTooltip>
             </MudStack>
         }
-        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@(() => _selectedSubjects.Add(new()))">@Localizer["SubjectAdd"]</MudButton>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@(() => _subjectsExamApplication.Subjects.Add(new()))">@Localizer["SubjectAdd"]</MudButton>
     </MudStack>
 
     <MudButton class="mt-6" OnClick="CreateSubjectsExamApplication" Variant="Variant.Filled" Color="Color.Primary">@Localizer["Create"]</MudButton>
@@ -64,7 +64,6 @@
     private IEnumerable<Subject>? _subjects;
 
     private SubjectsExamApplication _subjectsExamApplication = new();
-    private List<Subject> _selectedSubjects = [];
 
     protected override async Task OnInitializedAsync()
     {
@@ -74,7 +73,10 @@
         if (_student?.SubjectsExamApplication is not null)
         {
             _subjectsExamApplication = _student.SubjectsExamApplication;
-            _selectedSubjects = _subjectsExamApplication.Subjects;
+        }
+        else
+        {
+            _subjectsExamApplication.Student = _student;
         }
 
         _subjects = _student?.IndividualPlan?.Subjects.Where(s => s.IsRequired);
@@ -84,8 +86,6 @@
     {
         if (_student is null) return;
 
-        _subjectsExamApplication.Student = _student;
-        _subjectsExamApplication.Subjects = _selectedSubjects;
         await UnitOfWork.SubjectsExamApplications.AddAsync(_subjectsExamApplication);
         await UnitOfWork.CompleteAsync();
 

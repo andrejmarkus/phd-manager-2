@@ -18,6 +18,7 @@
         IIndividualPlanSubjectRepository IndividualPlanSubjects { get; }
         ISubjectsExamApplicationRepository SubjectsExamApplications { get; }
         IExamApplicationRepository ExamApplications { get; }
+        IStudentEvaluationRepository StudentEvaluations { get; }
         Task CompleteAsync();
     }
 }

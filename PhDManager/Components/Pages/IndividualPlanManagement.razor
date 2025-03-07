@@ -27,19 +27,19 @@
 <MudText Typo="Typo.h3">@Localizer["IndividualPlanTitle"]</MudText>
 
 <MudForm @ref="_form">
-    <MudAutocomplete T="Student" Required RequiredError="@Localizer["IndividualPlanStudentError"]" Label="@Localizer["IndividualPlanStudent"]" ToStringFunc="@(s => s is null ? null : s.User.DisplayName)" SearchFunc="SearchStudents" Variant="Variant.Outlined" @bind-Value="@_selectedStudent" />
-    @if (_selectedStudent is not null) {
-        @if (_selectedStudent.Thesis is not null)
+    <MudAutocomplete T="Student" Required RequiredError="@Localizer["IndividualPlanStudentError"]" Label="@Localizer["IndividualPlanStudent"]" ToStringFunc="@(s => s is null ? null : s.User.DisplayName)" SearchFunc="SearchStudents" Variant="Variant.Outlined" @bind-Value="@_individualPlan.Student" @bind-Value:after="LoadSubjects" />
+    @if (_individualPlan.Student is not null) {
+        @if (_individualPlan.Student.Thesis is not null)
         {
-            @if (_selectedStudent.HasInfo)
+            @if (_individualPlan.Student.HasInfo)
             {
-                <MudDatePicker ShowToolbar="false" Label="@Localizer["Birthdate"]" Variant="Variant.Outlined" @bind-Date="_selectedStudent.User.Birthdate" ReadOnly />
-                <MudField T="string" Label="@Localizer["Address"]" Variant="Variant.Outlined">@_selectedStudent.Address?.FullAddress</MudField>
-                <MudField T="string" Label="@Localizer["PhoneNumber"]" Variant="Variant.Outlined">@_selectedStudent.User.PhoneNumber</MudField>
-                <MudField T="string" Label="@Localizer["StudyForm"]" Variant="Variant.Outlined">@(EnumService.GetLocalizedEnumValue(_selectedStudent.StudyForm))</MudField>
-                <MudField T="string" Label="@Localizer["StudyProgram"]" Variant="Variant.Outlined">@_selectedStudent.StudyProgram?.Name</MudField>
-                <MudField T="string" Label="@Localizer["StudyField"]" Variant="Variant.Outlined">@_selectedStudent.StudyProgram?.StudyFieldName</MudField>
-                <MudField T="string" Label="@Localizer["Supervisor"]" Variant="Variant.Outlined">@_selectedStudent.Thesis.Supervisor.User.DisplayName</MudField>
+                <MudDatePicker ShowToolbar="false" Label="@Localizer["Birthdate"]" Variant="Variant.Outlined" @bind-Date="_individualPlan.Student.User.Birthdate" ReadOnly />
+                <MudField T="string" Label="@Localizer["Address"]" Variant="Variant.Outlined">@_individualPlan.Student.Address?.FullAddress</MudField>
+                <MudField T="string" Label="@Localizer["PhoneNumber"]" Variant="Variant.Outlined">@_individualPlan.Student.User.PhoneNumber</MudField>
+                <MudField T="string" Label="@Localizer["StudyForm"]" Variant="Variant.Outlined">@(EnumService.GetLocalizedEnumValue(_individualPlan.Student.StudyForm))</MudField>
+                <MudField T="string" Label="@Localizer["StudyProgram"]" Variant="Variant.Outlined">@_individualPlan.Student.StudyProgram?.Name</MudField>
+                <MudField T="string" Label="@Localizer["StudyField"]" Variant="Variant.Outlined">@_individualPlan.Student.StudyProgram?.StudyFieldName</MudField>
+                <MudField T="string" Label="@Localizer["Supervisor"]" Variant="Variant.Outlined">@_individualPlan.Student.Thesis.Supervisor.User.DisplayName</MudField>
                 <MudDatePicker ShowToolbar="false" Required RequiredError="@Localizer["IndividualPlanStudyStartDateError"]" Label="@Localizer["IndividualPlanStudyStartDate"]" Variant="Variant.Outlined" @bind-Date="_individualPlan.StudyStartDate" />
             }
             else
@@ -69,46 +69,49 @@
 
     <MudText Typo="Typo.h4">@Localizer["StudyPart"]</MudText>
 
-    <MudText Typo="Typo.h5">@Localizer["IndividualPlanSubjectsInfo"]</MudText>
-    @foreach (var subject in _selectedSubjects.Select((e, i) => new { Element = e, Index = i }))
+    @if (_individualPlan.Student is not null)
     {
-        <MudStack Row AlignItems="AlignItems.Center">
-            <MudSelect T="Subject" Required RequiredError="@Localizer["IndividualPlanSubjectError"]" Label="@($"{Localizer["Subject"]} {subject.Index + 1}")" ToStringFunc="@(s => s is null ? null : s.Name)" Variant="Variant.Outlined" @bind-Value="_selectedSubjects[subject.Index]">
-                @if (_subjects is not null)
-                {
-                    @foreach (var subject in _subjects.Where(s => s.IsRequired))
+        <MudText Typo="Typo.h5">@Localizer["IndividualPlanSubjectsInfo"]</MudText>
+        @foreach (var subject in _selectedSubjects.Select((e, i) => new { Element = e, Index = i }))
+        {
+            <MudStack Row AlignItems="AlignItems.Center">
+                <MudSelect T="Subject" Required RequiredError="@Localizer["IndividualPlanSubjectError"]" Label="@($"{Localizer["Subject"]} {subject.Index + 1}")" ToStringFunc="@(s => s is null ? null : s.Name)" Variant="Variant.Outlined" @bind-Value="_selectedSubjects[subject.Index]">
+                    @if (_subjects is not null)
                     {
-                        <MudSelectItem Value="subject">@subject.Name</MudSelectItem>
+                        @foreach (var subject in _subjects.Where(s => s.IsRequired))
+                        {
+                            <MudSelectItem Value="subject">@subject.Name</MudSelectItem>
+                        }
                     }
-                }
-            </MudSelect>
-            <MudTooltip Text="@Localizer["SubjectDelete"]">
-                <MudIconButton Size="@Size.Small" Color="Color.Error" Icon="@Icons.Material.Outlined.Delete" OnClick="@(() => _selectedSubjects.RemoveAt(subject.Index))" />
-            </MudTooltip>
-        </MudStack>
-    }
-    <MudTextField T="string" Label="@Localizer["IndividualPlanThematicAreas"]" Variant="Variant.Outlined" @bind-Value="_individualPlan.ThematicAreas" />
-    <MudButton class="my-2" Variant="Variant.Filled" Color="Color.Primary" OnClick="@(() => _selectedSubjects.Add(new()))">@Localizer["SubjectAdd"]</MudButton>
+                </MudSelect>
+                <MudTooltip Text="@Localizer["SubjectDelete"]">
+                    <MudIconButton Size="@Size.Small" Color="Color.Error" Icon="@Icons.Material.Outlined.Delete" OnClick="@(() => _selectedSubjects.RemoveAt(subject.Index))" />
+                </MudTooltip>
+            </MudStack>
+        }
+        <MudTextField T="string" Label="@Localizer["IndividualPlanThematicAreas"]" Variant="Variant.Outlined" @bind-Value="_individualPlan.ThematicAreas" />
+        <MudButton class="my-2" Variant="Variant.Filled" Color="Color.Primary" OnClick="@(() => _selectedSubjects.Add(new()))">@Localizer["SubjectAdd"]</MudButton>
 
-    <MudText Typo="Typo.h5">@Localizer["IndividualPlanAdditionalSubjectsInfo"]</MudText>
-    @foreach (var subject in _selectedOptionalSubjects.Select((e, i) => new { Element = e, Index = i }))
-    {
-        <MudStack Row AlignItems="AlignItems.Center">
-            <MudSelect T="Subject" Required RequiredError="@Localizer["IndividualPlanSubjectError"]" Label="@($"{Localizer["Subject"]} {subject.Index + 1}")" ToStringFunc="@(s => s is null ? string.Empty : s.Name)" Variant="Variant.Outlined" @bind-Value="_selectedOptionalSubjects[subject.Index]">
-                @if (_subjects is not null)
-                {
-                    @foreach (var subject in _subjects.Where(s => !s.IsRequired))
+        <MudText Typo="Typo.h5">@Localizer["IndividualPlanAdditionalSubjectsInfo"]</MudText>
+        @foreach (var subject in _selectedOptionalSubjects.Select((e, i) => new { Element = e, Index = i }))
+        {
+            <MudStack Row AlignItems="AlignItems.Center">
+                <MudSelect T="Subject" Required RequiredError="@Localizer["IndividualPlanSubjectError"]" Label="@($"{Localizer["Subject"]} {subject.Index + 1}")" ToStringFunc="@(s => s is null ? string.Empty : s.Name)" Variant="Variant.Outlined" @bind-Value="_selectedOptionalSubjects[subject.Index]">
+                    @if (_subjects is not null)
                     {
-                        <MudSelectItem Value="subject">@subject.Name</MudSelectItem>
+                        @foreach (var subject in _subjects.Where(s => !s.IsRequired))
+                        {
+                            <MudSelectItem Value="subject">@subject.Name</MudSelectItem>
+                        }
                     }
-                }
-            </MudSelect>
-            <MudTooltip Text="@Localizer["AdditionalSubjectDelete"]">
-                <MudIconButton Size="@Size.Small" Color="Color.Error" Icon="@Icons.Material.Outlined.Delete" OnClick="@(() => _selectedOptionalSubjects.RemoveAt(subject.Index))" />
-            </MudTooltip>
-        </MudStack>
+                </MudSelect>
+                <MudTooltip Text="@Localizer["AdditionalSubjectDelete"]">
+                    <MudIconButton Size="@Size.Small" Color="Color.Error" Icon="@Icons.Material.Outlined.Delete" OnClick="@(() => _selectedOptionalSubjects.RemoveAt(subject.Index))" />
+                </MudTooltip>
+            </MudStack>
+        }
+        <MudButton class="my-2" Variant="Variant.Filled" Color="Color.Primary" OnClick="@(() => _selectedOptionalSubjects.Add(new()))">@Localizer["AdditionalSubjectAdd"]</MudButton>
     }
-    <MudButton class="my-2" Variant="Variant.Filled" Color="Color.Primary" OnClick="@(() => _selectedOptionalSubjects.Add(new()))">@Localizer["AdditionalSubjectAdd"]</MudButton>
 
     <MudText Typo="Typo.h5">@Localizer["IndividualPlanWrittenThesisInfo"]</MudText>
     <MudTextField T="string" Label="@Localizer["IndividualPlanThesis"]" Required RequiredError="@Localizer["IndividualPlanThesisError"]" Variant="Variant.Outlined" @bind-Value="@_individualPlan.WrittenThesisTitle" />
@@ -118,10 +121,10 @@
 
     <MudText Typo="Typo.h4">@Localizer["ScientificPart"]</MudText>
 
-    @if (_selectedStudent?.Thesis is not null) {
-        <MudField T="Thesis" Label="@Localizer["IndividualPlanThesis"]" Variant="Variant.Outlined">@_selectedStudent.Thesis.Title</MudField>
-        <MudField T="string" Label="@Localizer["IndividualThesisResearchTask"]" Variant="Variant.Outlined">@_selectedStudent.Thesis.ResearchTask</MudField>
-        <MudField T="string" Label="@Localizer["IndividualPlanSolutionResults"]" Variant="Variant.Outlined">@_selectedStudent.Thesis.SolutionResults</MudField>
+    @if (_individualPlan.Student?.Thesis is not null) {
+        <MudField T="Thesis" Label="@Localizer["IndividualPlanThesis"]" Variant="Variant.Outlined">@_individualPlan.Student.Thesis.Title</MudField>
+        <MudField T="string" Label="@Localizer["IndividualThesisResearchTask"]" Variant="Variant.Outlined">@_individualPlan.Student.Thesis.ResearchTask</MudField>
+        <MudField T="string" Label="@Localizer["IndividualPlanSolutionResults"]" Variant="Variant.Outlined">@_individualPlan.Student.Thesis.SolutionResults</MudField>
     }
 
     <MudStack>
@@ -153,7 +156,7 @@
     private string? _currentUserRole;
     private string? _currentUserId;
 
-    private MudForm? _form;
+    private MudForm _form = default!;
     private IEnumerable<Student>? _students;
     private IEnumerable<Subject>? _subjects;
 
@@ -162,7 +165,6 @@
     private List<Subject> _selectedOptionalSubjects = [];
     private List<string> _tasks = [];
     private List<DateTime?> _taskDeadlines = [];
-    private Student? _selectedStudent;
 
     protected override async Task OnInitializedAsync()
     {
@@ -175,7 +177,6 @@
             if (individualPlan is not null)
             {
                 _individualPlan = individualPlan;
-                _selectedStudent = _individualPlan.Student;
                 _selectedSubjects = _individualPlan.Subjects.Where(s => s.IsRequired).ToList();
                 _selectedOptionalSubjects = _individualPlan.Subjects.Where(s => !s.IsRequired).ToList();
                 _tasks = _individualPlan.Tasks.ToList();
@@ -199,7 +200,6 @@
         }
 
         _students = await UnitOfWork.Students.GetAllAsync();
-        _subjects = await UnitOfWork.Subjects.GetAllAsync();
 
         if (_currentUserRole == Teacher.Role)
         {
@@ -220,7 +220,7 @@
     {
         if (_subjects is null) return Task.FromResult(Enumerable.Empty<Subject>());
 
-        var subjects = _subjects.Where(t => t.StudyProgram == _selectedStudent?.StudyProgram);
+        var subjects = _subjects.Where(t => t.StudyProgram == _individualPlan.Student?.StudyProgram);
         if (string.IsNullOrWhiteSpace(search))
             return Task.FromResult(subjects);
 
@@ -229,32 +229,35 @@
 
     private async Task HandleIndividualPlan()
     {
-        if (_form is null || _selectedStudent is null || _selectedStudent.Thesis is null) return;
-
         await _form.Validate();
-        if (_form.IsValid)
+        if (!_form.IsValid) return;
+                
+        _individualPlan.StudyStartDate = _individualPlan.StudyStartDate?.ToUniversalTime();
+        _individualPlan.DissertationExamDate = _individualPlan.DissertationExamDate?.ToUniversalTime();
+        _individualPlan.DissertationSubmissionDate = _individualPlan.DissertationSubmissionDate?.ToUniversalTime();
+        _individualPlan.StudyEndDate = _individualPlan.StudyEndDate?.ToUniversalTime();
+
+        _individualPlan.Subjects = _selectedSubjects.Concat(_selectedOptionalSubjects).ToList();
+        _individualPlan.Tasks = _tasks.ToArray();
+        _individualPlan.TaskDeadlines = _taskDeadlines.Select(d => { d = d?.ToUniversalTime(); return d; }).ToArray();
+
+        if (IndividualPlanGuid is null)
         {
-            _individualPlan.StudyStartDate = _individualPlan.StudyStartDate?.ToUniversalTime();
-            _individualPlan.DissertationExamDate = _individualPlan.DissertationExamDate?.ToUniversalTime();
-            _individualPlan.DissertationSubmissionDate = _individualPlan.DissertationSubmissionDate?.ToUniversalTime();
-            _individualPlan.StudyEndDate = _individualPlan.StudyEndDate?.ToUniversalTime();
-
-            _individualPlan.Student = _selectedStudent;
-            _individualPlan.Subjects = _selectedSubjects.Concat(_selectedOptionalSubjects).ToList();
-            _individualPlan.Tasks = _tasks.ToArray();
-            _individualPlan.TaskDeadlines = _taskDeadlines.Select(d => { d = d?.ToUniversalTime(); return d; }).ToArray();
-
-            if (IndividualPlanGuid is null)
-            {
-                await UnitOfWork.IndividualPlans.AddAsync(_individualPlan);
-            }
-            else
-            {
-                await UnitOfWork.IndividualPlans.UpdateAsync(_individualPlan);
-            }
-
-            await UnitOfWork.CompleteAsync();
-            NavigationManager.NavigateTo("/management/individual-plans");
+            await UnitOfWork.IndividualPlans.AddAsync(_individualPlan);
         }
+        else
+        {
+            await UnitOfWork.IndividualPlans.UpdateAsync(_individualPlan);
+        }
+
+        await UnitOfWork.CompleteAsync();
+        NavigationManager.NavigateTo("/management/individual-plans");
+    }
+
+    private async Task LoadSubjects()
+    {
+        if (_individualPlan.Student?.StudyProgram is null) return;
+
+        _subjects = (await UnitOfWork.Subjects.GetAllAsync())?.Where(s => s.StudyProgramId == _individualPlan.Student.StudyProgram.Id);
     }
 }

@@ -22,6 +22,7 @@ namespace PhDManager.Models
         public virtual IndividualPlan? IndividualPlan { get; set; }
         public virtual SubjectsExamApplication? SubjectsExamApplication { get; set; }
         public virtual ExamApplication? ExamApplication { get; set; }
+        public virtual StudentEvaluation? StudentEvaluation { get; set; }
         public virtual ApplicationUser User { get; set; } = default!;
 
         [NotMapped]

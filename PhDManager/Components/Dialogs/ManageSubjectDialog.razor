@@ -19,7 +19,7 @@
             {
                 <MudTextField Label="@Localizer["SubjectName"]" Variant="Variant.Outlined" @bind-Value="Subject.Name" />
                 <MudSelect Label="@Localizer["SubjectSemester"]" Variant="Variant.Outlined" @bind-Value="Subject.Semester">
-                    @foreach (var semester in _semesters)
+                    @foreach (var semester in EnumService.GetLocalizedEnumValues<Semester>())
                     {
                         <MudSelectItem Value="@semester.Item1">@semester.Item2</MudSelectItem>
                     }
@@ -53,7 +53,6 @@
     private MudForm _form = default!;
     private bool _add;
     private IEnumerable<StudyProgram>? _studyPrograms;
-    private List<(Semester, string)> _semesters = [];
 
     protected override async Task OnInitializedAsync()
     {
@@ -64,7 +63,6 @@
         }
 
         _studyPrograms = await UnitOfWork.StudyPrograms.GetAllAsync();
-        _semesters = EnumService.GetLocalizedEnumValues<Semester>();
     }
 
     private async Task HandleDialog()

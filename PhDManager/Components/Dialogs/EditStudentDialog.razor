@@ -18,7 +18,7 @@
     <DialogContent>
         <MudForm @ref="_form">
             <MudSelect T="StudentState" Variant="Variant.Outlined" Label="@Localizer["StudentState"]" @bind-Value="Student.State" ToStringFunc="@(s => EnumService.GetLocalizedEnumValue(s))">
-                @foreach (var studentState in _studentStates)
+                @foreach (var studentState in EnumService.GetLocalizedEnumValues<StudentState>())
                 {
                     <MudSelectItem T="StudentState" Value="studentState.Item1">@studentState.Item2</MudSelectItem>
                 }
@@ -43,7 +43,7 @@
                 }
             </MudSelect>
             <MudSelect T="StudyForm" Variant="Variant.Outlined" Label="@Localizer["StudyForm"]" @bind-Value="Student.StudyForm" ToStringFunc="@(sf => EnumService.GetLocalizedEnumValue(sf))">
-                @foreach (var studyForm in _studyForms)
+                @foreach (var studyForm in EnumService.GetLocalizedEnumValues<StudyForm>())
                 {
                     <MudSelectItem T="StudyForm" Value="studyForm.Item1">@studyForm.Item2</MudSelectItem>
                 }
@@ -74,8 +74,6 @@
     private MudForm _form = default!;
     private IEnumerable<StudyProgram>? _studyPrograms;
     private IEnumerable<Department>? _departments;
-    private List<(StudentState, string)> _studentStates = [];
-    private List<(StudyForm, string)> _studyForms = [];
 
     protected override async Task OnInitializedAsync()
     {
@@ -83,8 +81,6 @@
 
         _studyPrograms = await UnitOfWork.StudyPrograms.GetAllAsync();
         _departments = await UnitOfWork.Departments.GetAllAsync();
-        _studentStates = EnumService.GetLocalizedEnumValues<StudentState>();
-        _studyForms = EnumService.GetLocalizedEnumValues<StudyForm>();
     }
 
     private void HandleDialog()

@@ -61,6 +61,15 @@ namespace PhDManager.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Migrate accounts.
+        /// </summary>
+        public static string AccountsMigrate {
+            get {
+                return ResourceManager.GetString("AccountsMigrate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Active.
         /// </summary>
         public static string Active {
@@ -2298,6 +2307,15 @@ namespace PhDManager.Locales {
         public static string UserEdit {
             get {
                 return ResourceManager.GetString("UserEdit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Migrate user.
+        /// </summary>
+        public static string UserMigrate {
+            get {
+                return ResourceManager.GetString("UserMigrate", resourceCulture);
             }
         }
         

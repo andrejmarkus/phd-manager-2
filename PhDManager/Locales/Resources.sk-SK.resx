@@ -223,7 +223,7 @@
     <value>Zrušiť</value>
   </data>
   <data name="UserEdit" xml:space="preserve">
-    <value>Uprav používateľa</value>
+    <value>Upraviť používateľa</value>
   </data>
   <data name="Role" xml:space="preserve">
     <value>Rola</value>
@@ -361,7 +361,7 @@
     <value>Email doktoranda</value>
   </data>
   <data name="IndividualPlanEdit" xml:space="preserve">
-    <value>Úpraviť individuálny plán</value>
+    <value>Upraviť individuálny plán</value>
   </data>
   <data name="DissertationThesisAdd" xml:space="preserve">
     <value>Pridať dizertačnú tému</value>
@@ -403,7 +403,7 @@
     <value>Potvrdený email</value>
   </data>
   <data name="ProfileEdit" xml:space="preserve">
-    <value>Úprava profilu</value>
+    <value>Upraviť profil</value>
   </data>
   <data name="UserDelete" xml:space="preserve">
     <value>Vymazať užívateľa</value>
@@ -412,7 +412,7 @@
     <value>Naozaj si prajete vymazať zvoleného užívateľa?</value>
   </data>
   <data name="CommentEdit" xml:space="preserve">
-    <value>Uprav komentár</value>
+    <value>Upraviť komentár</value>
   </data>
   <data name="Comment" xml:space="preserve">
     <value>Komentár</value>
@@ -568,7 +568,7 @@
     <value>Školitel špecialista</value>
   </data>
   <data name="StudentEdit" xml:space="preserve">
-    <value>Uprav doktoranda</value>
+    <value>Upraviť doktoranda</value>
   </data>
   <data name="Students" xml:space="preserve">
     <value>Doktorandi</value>
@@ -685,7 +685,7 @@
     <value>Názov študijného odboru</value>
   </data>
   <data name="StudyProgramEdit" xml:space="preserve">
-    <value>Úprava študijného programu</value>
+    <value>Upraviť študijný program</value>
   </data>
   <data name="StudyProgramDelete" xml:space="preserve">
     <value>Vymaž Študijný program</value>
@@ -712,7 +712,7 @@
     <value>Semester predmetu</value>
   </data>
   <data name="SubjectEdit" xml:space="preserve">
-    <value>Uprav predmet</value>
+    <value>Upraviť predmet</value>
   </data>
   <data name="SubjectDelete" xml:space="preserve">
     <value>Vymazať predmet</value>
@@ -769,7 +769,7 @@
     <value>Známka</value>
   </data>
   <data name="GradesEdit" xml:space="preserve">
-    <value>Uprav známky</value>
+    <value>Upraviť známky</value>
   </data>
   <data name="SystemOpening" xml:space="preserve">
     <value>Otvorenie</value>
@@ -877,9 +877,15 @@
     <value>Prípadný zdôvodnený návrh na úpravu študijného a vedeckého  programu</value>
   </data>
   <data name="StudentEvaluationConclusion" xml:space="preserve">
-    <value />
+    <value>Závery školiteľa</value>
   </data>
   <data name="StudentEvaluationAdditionalEvaluation" xml:space="preserve">
     <value>Prípadné ďalšie zhodnotenie</value>
+  </data>
+  <data name="UserMigrate" xml:space="preserve">
+    <value>Migrovať používateľa</value>
+  </data>
+  <data name="AccountsMigrate" xml:space="preserve">
+    <value>Migrovať účty</value>
   </data>
 </root>

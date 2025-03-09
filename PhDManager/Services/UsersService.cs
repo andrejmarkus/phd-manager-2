@@ -19,6 +19,11 @@ namespace PhDManager.Services
     {
         public IEnumerable<IdentityRole> Roles => RoleManager.Roles;
 
+        public IEnumerable<ApplicationUser>? GetAll()
+        {
+            return UserManager.Users;
+        }
+
         public async Task<ApplicationUser?> GetCurrentUserAsync()
         {
             var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
@@ -145,7 +150,7 @@ namespace PhDManager.Services
         public async Task<ApplicationUser> RegisterLdapUserWithoutPasswordAsync(LdapEntry entry, string role)
         {
             var user = await CreateLdapUserAsync(entry);
-            var result = await UserManager.CreateAsync(user);
+            await UserManager.CreateAsync(user);
             await UserManager.AddToRoleAsync(user, role);
 
             return user;
@@ -154,7 +159,7 @@ namespace PhDManager.Services
         public async Task<ApplicationUser> RegisterLdapUserAsync(LdapEntry entry, string password, string role)
         {
             var user = await CreateLdapUserAsync(entry);
-            var result = await UserManager.CreateAsync(user, password);
+            await UserManager.CreateAsync(user, password);
             await UserManager.AddToRoleAsync(user, role);
 
             return user;

@@ -13,6 +13,7 @@
     <AuthorizeView Roles="@($"{Admin.Role}")">
         <Authorized>
             <MudNavGroup Title="@Localizer["Admin"]" Match="NavLinkMatch.Prefix" Icon="@Icons.Material.Filled.AdminPanelSettings" HideExpandIcon>
+                <MudNavLink Href="management/migrate-accounts" Icon="@Icons.Material.Filled.SwapHoriz">@Localizer["AccountsMigrate"]</MudNavLink>
                 <MudNavLink Href="management/education" Icon="@Icons.Material.Filled.School">@Localizer["Education"]</MudNavLink>
                 <MudNavLink Href="management/users" Icon="@Icons.Material.Filled.Group">@Localizer["Users"]</MudNavLink>
                 <MudNavLink Href="management/theses" Icon="@Icons.Material.Filled.DocumentScanner">@Localizer["DissertationTheses"]</MudNavLink>

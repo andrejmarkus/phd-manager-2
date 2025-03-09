@@ -35,7 +35,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        _theses = (await UnitOfWork.Theses.GetAllAsync())?.Where(t => t.Student is null);
+        _theses = (await UnitOfWork.Theses.GetAllAsync())?.Where(t => t.Student is null && Student.StudyProgram == t.StudyProgram);
     }
 
     private Task<IEnumerable<Thesis>> SearchTeachers(string search, CancellationToken token)

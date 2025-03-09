@@ -40,6 +40,8 @@ namespace PhDManager.Services
 
         public async Task DownloadIndividualPlanDocument(IndividualPlan individualPlan)
         {
+            if (individualPlan.Student is null) return;
+
             var documentName = NormalizeName(individualPlan.Student.User.DisplayName?? "") + ".docx";
             var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "templates", "individual_plan_template.docx");
             var replacements = new Dictionary<string, List<string?>>()
@@ -78,6 +80,8 @@ namespace PhDManager.Services
 
         public async Task DownloadSubjectsExamApplicationDocument(SubjectsExamApplication subjectsExamApplication)
         {
+            if (subjectsExamApplication.Student is null) return;
+
             var documentName = NormalizeName(subjectsExamApplication.Student.User.DisplayName ?? "") + "_predmety_prihlaska" + ".docx";
             var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "templates", "subjects_exam_application_template.docx");
             var replacements = new Dictionary<string, List<string?>>()
@@ -101,6 +105,8 @@ namespace PhDManager.Services
 
         public async Task DownloadExamApplicationDocument(ExamApplication examApplication)
         {
+            if (examApplication.Student is null) return;
+
             var documentName = NormalizeName(examApplication.Student.User.DisplayName ?? "") + "_prihlaska" + ".docx";
             var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "templates", "exam_application_template.docx");
             var replacements = new Dictionary<string, List<string?>>()

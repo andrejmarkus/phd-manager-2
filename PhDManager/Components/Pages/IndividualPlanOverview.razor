@@ -16,20 +16,103 @@
 
 <PageTitle>@Localizer["IndividualPlan"]</PageTitle>
 
-@if (_individualPlan is not null && _individualPlan.Student.Thesis is not null)
+@if (_individualPlan is not null && _individualPlan.Student?.Thesis is not null)
 {
     <MudText Align="Align.Center" Typo="Typo.h4">@Localizer["IndividualPlan"]</MudText>
     <MudStack Spacing="5">
         <MudStack>
-            <MudText Typo="Typo.h6">@Localizer["DissertationThesis"]</MudText>
-            <MudLink Typo="Typo.body1" Href="@($"/theses/{_individualPlan.Student.Thesis.Guid}")">@_individualPlan.Student.Thesis.Title</MudLink>
+            <MudText Typo="Typo.h5">@Localizer["DissertationThesis"]</MudText>
+            <MudLink Href="@($"/theses/{_individualPlan.Student.Thesis.Guid}")">@_individualPlan.Student.Thesis.Title</MudLink>
+            <MudStack Row>
+                <MudText><b>@Localizer["Supervisor"]:</b></MudText>
+                <MudText>@_individualPlan.Student.Thesis.Supervisor.User.DisplayName</MudText>
+            </MudStack>
         </MudStack>
         <MudStack>
-            <MudText Typo="Typo.h6">@Localizer["Subjects"]</MudText>
-            @foreach (var subject in _individualPlan.Subjects)
-            {
-                <MudText>@subject.Name</MudText>
-            }
+            <MudText Typo="Typo.h5">@Localizer["Deadlines"]</MudText>
+            <MudGrid>
+                <MudItem xs="6">
+                    <MudText>@Localizer["IndividualPlanDissertationExamDateInfo"]:</MudText>
+                </MudItem>
+                <MudItem xs="6">
+                    <MudText><b>@(_individualPlan.DissertationExamDate?.ToString("dd.MM.yyyy"))</b></MudText>
+                </MudItem>
+                <MudItem xs="6">
+                    <MudText>@Localizer["IndividualPlanDissertationSubmissionDateInfo"]:</MudText>
+                </MudItem>
+                <MudItem xs="6">
+                    <MudText><b>@(_individualPlan.DissertationSubmissionDate?.ToString("MMMM yyyy"))</b></MudText>
+                </MudItem>
+                <MudItem xs="6">
+                    <MudText>@Localizer["IndividualPlanStudyEndDateInfo"]:</MudText>
+                </MudItem>
+                <MudItem xs="6">
+                    <MudText><b>@(_individualPlan.StudyEndDate?.ToString("dd.MM.yyyy"))</b></MudText>
+                </MudItem>
+            </MudGrid>
+        </MudStack>
+        <MudStack>
+            <MudText Typo="Typo.h5">@Localizer["StudyPart"]</MudText>
+            <MudStack>
+                <MudText Typo="Typo.h6">@Localizer["IndividualPlanSubjectsInfo"]: </MudText>
+                @foreach (var subject in _individualPlan.Subjects.Where(s => s.IsRequired))
+                {
+                    <MudText>@subject.Name</MudText>
+                }
+                <MudText Typo="Typo.h6">@Localizer["IndividualPlanAdditionalSubjectsInfo"]: </MudText>
+                @foreach (var subject in _individualPlan.Subjects.Where(s => !s.IsRequired))
+                {
+                    <MudText>@subject.Name</MudText>
+                }
+            </MudStack>
+            <MudStack>
+                <MudText><b>@Localizer["IndividualPlanWrittenThesisInfo"]</b></MudText>
+                <MudText>@_individualPlan.WrittenThesisTitle</MudText>
+            </MudStack>
+            <MudStack>
+                <MudText><b>@Localizer["IndividualPlanWrittenThesisRequiredLiterature"]</b></MudText>
+                <MudText>@_individualPlan.WrittenThesisRecommendedLiterature</MudText>
+            </MudStack>
+            <MudStack>
+                <MudText><b>@Localizer["IndividualPlanWrittenThesisRecommendedLiterature"]</b></MudText>
+                <MudText>@_individualPlan.WrittenThesisRecommendedLiterature</MudText>
+            </MudStack>
+            <MudStack>
+                <MudText><b>@Localizer["IndividualPlanWrittenThesisRecommendedLectures"]</b></MudText>
+                <MudText>@_individualPlan.WrittenThesisRecommendedLectures</MudText>
+            </MudStack>
+        </MudStack>
+        <MudStack>
+            <MudText Typo="Typo.h5">@Localizer["ScientificPart"]</MudText>
+            <MudStack>
+                <MudText><b>@Localizer["IndividualPlanThesis"]</b></MudText>
+                <MudText>@_individualPlan.Student.Thesis?.Title</MudText>
+            </MudStack>
+            <MudStack>
+                <MudText><b>@Localizer["IndividualThesisResearchTask"]</b></MudText>
+                <MudText>@_individualPlan.Student.Thesis?.ResearchTask</MudText>
+            </MudStack>
+            <MudStack>
+                <MudText><b>@Localizer["IndividualPlanSolutionResults"]</b></MudText>
+                <MudText>@_individualPlan.Student.Thesis?.SolutionResults</MudText>
+            </MudStack>
+            <MudStack>
+                <MudStack Row>
+                    <MudText Typo="Typo.h6">@Localizer["IndividualPlanSolvingProcedure"]</MudText>
+                    <MudSpacer />
+                    <MudText Typo="Typo.h6">@Localizer["IndividualPlanDeadline"]</MudText>
+                </MudStack>
+                <MudStack>
+                    @foreach (var task in _individualPlan.Tasks.Select((e, i) => new { Element = e, Index = i }))
+                    {
+                        <MudStack Row>
+                            <MudText>@task.Element</MudText>
+                            <MudSpacer />
+                            <MudText>@_individualPlan.TaskDeadlines[task.Index]?.ToString("MMMM yyyy")</MudText>
+                        </MudStack>
+                    }
+                </MudStack>
+            </MudStack>
         </MudStack>
     </MudStack>
 }

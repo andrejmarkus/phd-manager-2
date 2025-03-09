@@ -882,4 +882,10 @@
   <data name="StudentEvaluationAdditionalEvaluation" xml:space="preserve">
     <value>Possible further evaluation</value>
   </data>
+  <data name="UserMigrate" xml:space="preserve">
+    <value>Migrate user</value>
+  </data>
+  <data name="AccountsMigrate" xml:space="preserve">
+    <value>Migrate accounts</value>
+  </data>
 </root>

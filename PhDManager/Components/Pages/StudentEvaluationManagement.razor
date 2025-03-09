@@ -140,7 +140,11 @@
     private async Task HandleStudentEvaluation()
     {
         await _form.Validate();
-        if (!_form.IsValid) return;
+        if (!_form.IsValid || _studentEvaluation is null) return;
+
+        _studentEvaluation.RealStudyEndDate = _studentEvaluation.RealStudyEndDate?.ToUniversalTime();
+        _studentEvaluation.RealDissertationSubmissionDate = _studentEvaluation.RealDissertationSubmissionDate?.ToUniversalTime();
+        _studentEvaluation.RealDissertationExamDate = _studentEvaluation.RealDissertationExamDate?.ToUniversalTime();
 
         if (StudentEvaluationGuid is null)
         {

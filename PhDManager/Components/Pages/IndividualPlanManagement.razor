@@ -29,9 +29,9 @@
 <MudForm @ref="_form">
     <MudAutocomplete T="Student" Required RequiredError="@Localizer["IndividualPlanStudentError"]" Label="@Localizer["IndividualPlanStudent"]" ToStringFunc="@(s => s is null ? null : s.User.DisplayName)" SearchFunc="SearchStudents" Variant="Variant.Outlined" @bind-Value="@_individualPlan.Student" @bind-Value:after="LoadSubjects" />
     @if (_individualPlan.Student is not null) {
-        @if (_individualPlan.Student.Thesis is not null)
+        @if (_individualPlan.Student?.Thesis is not null)
         {
-            @if (_individualPlan.Student.HasInfo)
+            @if (_individualPlan.Student?.HasInfo == true)
             {
                 <MudDatePicker ShowToolbar="false" Label="@Localizer["Birthdate"]" Variant="Variant.Outlined" @bind-Date="_individualPlan.Student.User.Birthdate" ReadOnly />
                 <MudField T="string" Label="@Localizer["Address"]" Variant="Variant.Outlined">@_individualPlan.Student.Address?.FullAddress</MudField>

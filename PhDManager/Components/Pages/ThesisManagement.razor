@@ -15,6 +15,7 @@
 @inject IServiceProvider ServiceProvider
 @inject IUnitOfWork UnitOfWork
 @inject IStringLocalizer<Resources> Localizer
+@inject IStringLocalizer<Enums> EnumLocalizer
 @inject UsersService UsersService
 @inject NavigationManager NavigationManager
 @inject UserManager<ApplicationUser> UserManager
@@ -55,8 +56,8 @@
             <MudField T="string" Label="@Localizer["StudyField"]" Variant="Variant.Outlined">@_thesis.StudyProgram.StudyFieldName</MudField>
         }
         <MudStack Row>
-            <MudCheckBox T="bool" @bind-Value="_thesis.DailyStudy">@Localizer["StudyFormDaily"]</MudCheckBox>
-            <MudCheckBox T="bool" @bind-Value="_thesis.ExternalStudy">@Localizer["StudyFormExternal"]</MudCheckBox>
+            <MudCheckBox T="bool" @bind-Value="_thesis.DailyStudy">@EnumLocalizer["StudyFormDaily"]</MudCheckBox>
+            <MudCheckBox T="bool" @bind-Value="_thesis.ExternalStudy">@EnumLocalizer["StudyFormExternal"]</MudCheckBox>
         </MudStack>
 
         @if (_thesis.StudyProgram is not null)

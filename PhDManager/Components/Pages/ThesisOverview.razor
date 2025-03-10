@@ -1,14 +1,15 @@
 ﻿@page "/theses/{ThesisGuid}"
 
+@using System.Net.Mime
 @using Microsoft.AspNetCore.Identity
 @using Microsoft.Extensions.Localization
 @using PhDManager.Components.Dialogs
 @using PhDManager.Data
 @using PhDManager.Locales
 @using PhDManager.Models
+@using PhDManager.Models.Roles
 @using PhDManager.Services
 @using PhDManager.Services.IRepositories
-@using System.Net.Mime
 
 @rendermode InteractiveServer
 
@@ -93,6 +94,10 @@
             <MudText Typo="Typo.h6">@Localizer["DissertationThesisSolutionResults"]</MudText>
             <MudText Typo="Typo.body1" Class="break-lines">@_thesis.SolutionResults</MudText>
         </MudStack>
+        <MudStack Row Spacing="2">
+            <MudText>@Localizer["IndividualPlanContact"]:</MudText>
+            <MudLink Href="@($"mailto:{@_thesis.Supervisor.User.Email}")">@_thesis.Supervisor.User.Email</MudLink>
+        </MudStack>
     </MudStack>
 
     @if (_thesis.IsApproved && _thesis.Student is null)
@@ -126,7 +131,7 @@
 
     @if (!_thesis.IsApproved)
     {
-        <AuthorizeView Roles="@($"{Admin.Role}, {Teacher.Role}, {External.Role}")">
+        <AuthorizeView Roles="@($"{Admin.Role}, {Teacher.Role}, {ExternalTeacher.Role}")">
             <Authorized>
                 <MudStack Class="mt-5">
                     @if (_thesis.Comments?.Count() > 0)
@@ -136,26 +141,20 @@
                         {
                             <MudPaper Class="pa-2">
                                 <MudStack Row Justify="Justify.SpaceBetween" AlignItems="AlignItems.Center">
-                                    <div>
-                                        <MudText Typo="Typo.h6">@comment.External.User.DisplayName</MudText>
-                                        <MudText Typo="Typo.body1">@comment.Text</MudText>
-                                    </div>
+                                    <MudText Typo="Typo.h6">@comment.External.User.DisplayName</MudText>
+                                    <MudText Typo="Typo.body1">@comment.Text</MudText>
                                     <AuthorizeView Roles="@($"{Admin.Role}")" Context="editContext">
                                         <Authorized>
-                                            <div>
-                                                <MudIconButton Size="@Size.Medium" Color="Color.Error" Icon="@Icons.Material.Outlined.Delete" OnClick="@(() => DeleteComment(comment))" />
-                                                <MudIconButton Size="@Size.Medium" Color="Color.Info" Icon="@Icons.Material.Outlined.Edit" OnClick="@(() => UpdateComment(comment))" />
-                                            </div>
+                                            <MudIconButton Size="@Size.Medium" Color="Color.Error" Icon="@Icons.Material.Outlined.Delete" OnClick="@(() => DeleteComment(comment))" />
+                                            <MudIconButton Size="@Size.Medium" Color="Color.Info" Icon="@Icons.Material.Outlined.Edit" OnClick="@(() => UpdateComment(comment))" />
                                         </Authorized>
                                     </AuthorizeView>
-                                    <AuthorizeView Roles="@($"{External.Role}")" Context="editContext">
+                                    <AuthorizeView Roles="@($"{ExternalTeacher.Role}")" Context="editContext">
                                         <Authorized>
                                             @if (_currentUserId?.Equals(comment.ExternalId) == true)
                                             {
-                                                <div>
-                                                    <MudIconButton Size="@Size.Medium" Color="Color.Error" Icon="@Icons.Material.Outlined.Delete" OnClick="@(() => DeleteComment(comment))" />
-                                                    <MudIconButton Size="@Size.Medium" Color="Color.Info" Icon="@Icons.Material.Outlined.Edit" OnClick="@(() => UpdateComment(comment))" />
-                                                </div>
+                                                <MudIconButton Size="@Size.Medium" Color="Color.Error" Icon="@Icons.Material.Outlined.Delete" OnClick="@(() => DeleteComment(comment))" />
+                                                <MudIconButton Size="@Size.Medium" Color="Color.Info" Icon="@Icons.Material.Outlined.Edit" OnClick="@(() => UpdateComment(comment))" />
                                             }
                                         </Authorized>
                                     </AuthorizeView>
@@ -163,7 +162,7 @@
                             </MudPaper>
                         }
                     }
-                    <AuthorizeView Roles="@($"{External.Role}")" Context="reviewerContext">
+                    <AuthorizeView Roles="@($"{ExternalTeacher.Role}")" Context="reviewerContext">
                         <Authorized>
                             <MudTextField @bind-Value="_commentText" Label="@Localizer["Comment"]" Variant="Variant.Outlined" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Send" OnAdornmentClick="PostComment"></MudTextField>
                         </Authorized>

@@ -1,4 +1,4 @@
-﻿@page "/Account/LoginExtern"
+﻿@page "/Account/Login"
 
 @using System.ComponentModel.DataAnnotations
 @using Microsoft.AspNetCore.Authentication
@@ -6,17 +6,23 @@
 @using Microsoft.Extensions.Localization
 @using PhDManager.Data
 @using PhDManager.Locales
+@using PhDManager.Models
+@using PhDManager.Models.Roles
+@using PhDManager.Services
 
 @inject ILogger<Login> Logger
 @inject IStringLocalizer<Resources> Localizer
 @inject SignInManager<ApplicationUser> SignInManager
 @inject NavigationManager NavigationManager
 @inject IdentityRedirectManager RedirectManager
+@inject UsersService UsersService
+@inject UserManager<ApplicationUser> UserManager
+@inject ActiveDirectoryService ActiveDirectoryService
 
 <PageTitle>@Localizer["SignIn"]</PageTitle>
 
 <MudStack AlignItems="AlignItems.Center" Justify="Justify.Center">
-    <MudText Typo="Typo.h3" GutterBottom="true">@Localizer["SignInExternal"]</MudText>
+    <MudText Typo="Typo.h3" GutterBottom="true">@Localizer["SignIn"]</MudText>
     <MudImage Class="height-half" Src="@Assets["fingerprint.svg"]" />
 
     <MudStack Class="width-three-quarters" Spacing="5">
@@ -24,17 +30,17 @@
         <EditForm Model="Input" method="post" OnValidSubmit="LoginUser" FormName="login">
             <DataAnnotationsValidator />
 
-            <MudText GutterBottom="true" Typo="Typo.body1">@Localizer["SignInExternalMessage"]</MudText>
+            <MudText GutterBottom="true" Typo="Typo.body1">@Localizer["SignInMessage"]</MudText>
 
             <MudStack Spacing="3">
                 <MudStaticTextField For="@(() => Input.Username)" @bind-Value="Input.Username"
-                    Variant="Variant.Outlined"
-                    Label="@Localizer["Username"]"
-                    UserAttributes="@(new() { { "autocomplete", "true" }, { "aria-required", "true" } } )" />
+                Variant="Variant.Outlined"
+                Label="@Localizer["Username"]"
+                UserAttributes="@(new() { { "autocomplete", "true" }, { "aria-required", "true" } } )" />
                 <MudStaticTextField For="@(() => Input.Password)" @bind-Value="Input.Password"
-                    Variant="Variant.Outlined"
-                    Label="@Localizer["Password"]" InputType="InputType.Password"
-                    UserAttributes="@(new() { { "autocomplete", "current-password" }, { "aria-required", "true" } } )" />
+                Variant="Variant.Outlined"
+                Label="@Localizer["Password"]" InputType="InputType.Password"
+                UserAttributes="@(new() { { "autocomplete", "current-password" }, { "aria-required", "true" } } )" />
                 <MudStaticCheckBox For="@(() => Input.RememberMe)" @bind-Value="Input.RememberMe">@Localizer["RememberLogin"]</MudStaticCheckBox>
                 <MudStaticButton Variant="Variant.Filled" Color="Color.Primary" FullWidth="true" FormAction="FormAction.Submit">@Localizer["SignIn"]</MudStaticButton>
             </MudStack>
@@ -45,8 +51,8 @@
 
         <MudGrid>
             <MudItem md="12">
-                <MudLink Href="Account/ForgotPassword">@Localizer["SignInExternalForgottenPassword"]</MudLink><br />
-                <MudLink Href="Account/ResendEmailConfirmation">@Localizer["SignInExternalResendEmail"]</MudLink>
+                <MudLink Href="Account/ForgotPassword">@Localizer["SignInForgottenPassword"]</MudLink><br />
+                <MudLink Href="Account/ResendEmailConfirmation">@Localizer["SignInResendEmail"]</MudLink>
             </MudItem>
         </MudGrid>
     </MudStack>
@@ -77,6 +83,18 @@
     {
         // This doesn't count login failures towards account lockout
         // To enable password failures to trigger account lockout, set lockoutOnFailure: true
+        var user = UsersService.GetUserByUsernameAsync(Input.Username);
+        if (user?.IsExternal == true)
+        {
+            await LoginExternalUser();
+            return;
+        }
+
+        await LoginLdapUser();
+    }
+
+    private async Task LoginExternalUser()
+    {
         var result = await SignInManager.PasswordSignInAsync(Input.Username, Input.Password, Input.RememberMe, lockoutOnFailure: false);
         if (result.Succeeded)
         {
@@ -98,6 +116,36 @@
         {
             errorMessage = "Error: Invalid login attempt.";
         }
+    }
+
+    private async Task LoginLdapUser()
+    {
+        var entry = await ActiveDirectoryService.AuthenticateUserAsync(Input.Username, Input.Password);
+        if (entry is null)
+        {
+            errorMessage = "Error: Invalid username or password.";
+            return;
+        }
+
+        var user = await UserManager.FindByNameAsync(Input.Username);
+        if (user is null)
+        {
+            user = await UsersService.RegisterLdapUserAsync(entry, Input.Password, Student.Role);
+            await UsersService.AddStudentToUser(user, new());
+        }
+        else
+        {
+            if (user.PasswordHash is null)
+            {
+                user.PasswordHash = UserManager.PasswordHasher.HashPassword(user, Input.Password);
+                await UserManager.UpdateAsync(user);
+            }
+        }
+
+        await SignInManager.PasswordSignInAsync(user, Input.Password, Input.RememberMe, lockoutOnFailure: false);
+
+        Logger.LogInformation("User logged in.");
+        RedirectManager.RedirectTo(ReturnUrl);
     }
 
     private sealed class InputModel

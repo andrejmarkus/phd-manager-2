@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using PhDManager.Models.Roles;
+using System.Text.Json.Serialization;
 
 namespace PhDManager.Models
 {

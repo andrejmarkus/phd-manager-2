@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using PhDManager.Models;
 using PhDManager.Models.Enums;
+using PhDManager.Models.Roles;
 
 namespace PhDManager.Data
 {
@@ -14,9 +15,9 @@ namespace PhDManager.Data
         public DbSet<IndividualPlan> IndividualPlans { get; init; }
         public DbSet<Comment> Comments { get; init; }
         public DbSet<Address> Addresses { get; init; }
-        public DbSet<External> Admins { get; init; }
+        public DbSet<ExternalTeacher> Admins { get; init; }
         public DbSet<Student> Students { get; init; }
-        public DbSet<External> Externals { get; init; }
+        public DbSet<ExternalTeacher> Externals { get; init; }
         public DbSet<Teacher> Teachers { get; init; }
         public DbSet<SystemState> SystemState { get; init; }
         public DbSet<Department> Departments { get; init; }
@@ -49,7 +50,7 @@ namespace PhDManager.Data
             builder.Entity<ApplicationUser>()
                 .HasOne(u => u.External)
                 .WithOne(e => e.User)
-                .HasForeignKey<External>();
+                .HasForeignKey<ExternalTeacher>();
 
             builder.Entity<Student>()
                 .HasOne(s => s.SubjectsExamApplication)

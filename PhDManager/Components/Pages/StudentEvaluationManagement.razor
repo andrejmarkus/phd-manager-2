@@ -6,6 +6,7 @@
 @using PhDManager.Locales
 @using PhDManager.Models
 @using PhDManager.Models.Enums
+@using PhDManager.Models.Roles
 @using PhDManager.Services
 @using PhDManager.Services.IRepositories
 
@@ -55,19 +56,19 @@
                 <MudText Class="d-flex align-center mud-height-full">@Localizer["IndividualPlanDissertationSubmissionDate"]</MudText>
             </MudItem>
             <MudItem xs="5">
-                <MudDatePicker ShowToolbar="false" ReadOnly Label="@Localizer["PlannedDeadline"]" Variant="Variant.Outlined" @bind-Date="_studentEvaluation.Student.IndividualPlan.DissertationSubmissionDate" />
+                <MudDatePicker ShowToolbar="false" Label="@Localizer["PlannedDeadline"]" Variant="Variant.Outlined" @bind-Date="_studentEvaluation.PlannedDissertationSubmissionDate" />
             </MudItem>
             <MudItem xs="5">
-                <MudDatePicker ShowToolbar="false" Label="@Localizer["RealDeadline"]" Variant="Variant.Outlined" @bind-Date="_studentEvaluation.RealDissertationSubmissionDate" />
+                <MudDatePicker ShowToolbar="false" ReadOnly Label="@Localizer["RealDeadline"]" Variant="Variant.Outlined" @bind-Date="_studentEvaluation.Student.IndividualPlan.DissertationSubmissionDate" />
             </MudItem>
             <MudItem xs="2">
                 <MudText Class="d-flex align-center mud-height-full">@Localizer["ExamDate"]</MudText>
             </MudItem>
             <MudItem xs="5">
-                <MudDatePicker ShowToolbar="false" ReadOnly Label="@Localizer["PlannedDeadline"]" Variant="Variant.Outlined" @bind-Date="_studentEvaluation.Student.IndividualPlan.StudyEndDate" />
+                <MudDatePicker ShowToolbar="false" Label="@Localizer["PlannedDeadline"]" Variant="Variant.Outlined" @bind-Date="_studentEvaluation.PlannedDissertationExamDate" />
             </MudItem>
             <MudItem xs="5">
-                <MudDatePicker ShowToolbar="false" Label="@Localizer["RealDeadline"]" Variant="Variant.Outlined" @bind-Date="_studentEvaluation.RealStudyEndDate" />
+                <MudDatePicker ShowToolbar="false" ReadOnly Label="@Localizer["RealDeadline"]" Variant="Variant.Outlined" @bind-Date="_studentEvaluation.Student.DissertationExamDate" />
             </MudItem>
         </MudGrid>
 
@@ -79,19 +80,19 @@
                 <MudText Class="d-flex align-center mud-height-full">@Localizer["DefenceApplicationDate"]</MudText>
             </MudItem>
             <MudItem xs="5">
-                <MudDatePicker ShowToolbar="false" ReadOnly Label="@Localizer["PlannedDeadline"]" Variant="Variant.Outlined" @bind-Date="_studentEvaluation.Student.IndividualPlan.DissertationExamDate" />
+                <MudDatePicker ShowToolbar="false" Label="@Localizer["PlannedDeadline"]" Variant="Variant.Outlined" @bind-Date="_studentEvaluation.PlannedDissertationApplicationDate" />
             </MudItem>
             <MudItem xs="5">
-                <MudDatePicker ShowToolbar="false" Label="@Localizer["RealDeadline"]" Variant="Variant.Outlined" @bind-Date="_studentEvaluation.RealDissertationExamDate" />
+                <MudDatePicker ShowToolbar="false" ReadOnly Label="@Localizer["RealDeadline"]" Variant="Variant.Outlined" @bind-Date="_studentEvaluation.Student.IndividualPlan.DissertationApplicationDate" />
             </MudItem>
         </MudGrid>
 
         <MudText Typo="Typo.h6">@Localizer["StudentEvaluationSupervisorEvaluation"]</MudText>
         <MudTextField Style="white-space: pre-wrap;" T="string" Label="@Localizer["StudentEvaluationCreditsEvaluation"]" Variant="Variant.Outlined" AutoGrow Lines="3" @bind-Value="_studentEvaluation.CreditsEvaluation" />
+        <MudTextField Style="white-space: pre-wrap;" T="string" Label="@Localizer["StudentEvaluationCreditsEvaluation"]" Variant="Variant.Outlined" AutoGrow Lines="3" @bind-Value="_studentEvaluation.CreditsEvaluation" />
         <MudTextField Style="white-space: pre-wrap;" T="string" Label="@Localizer["StudentEvaluationScientificEvaluation"]" Variant="Variant.Outlined" AutoGrow Lines="3" @bind-Value="_studentEvaluation.ScientificEvaluation" />
         <MudTextField Style="white-space: pre-wrap;" T="string" Label="@Localizer["StudentEvaluationAssignmentsState"]" Variant="Variant.Outlined" AutoGrow Lines="3" @bind-Value="_studentEvaluation.AssignmentsState" />
-        <MudTextField Style="white-space: pre-wrap;" T="string" Label="@Localizer["StudentEvaluationModificationProposal"]" Variant="Variant.Outlined" AutoGrow Lines="3" @bind-Value="_studentEvaluation.ModificationProposal" />
-        <MudSelect T="Conclusion" Required Label="@Localizer["StudentEvaluationConclusion"]" Variant="Variant.Outlined" @bind-Value="_studentEvaluation.Conclusion">
+        <MudSelect T="Conclusion" Required Label="@Localizer["StudentEvaluationModificationProposal"]" Variant="Variant.Outlined" @bind-Value="_studentEvaluation.Conclusion">
             @foreach (var conclusion in EnumService.GetLocalizedEnumValues<Conclusion>())
             {
                 <MudSelectItem Value="@conclusion.Item1">@conclusion.Item2</MudSelectItem>
@@ -142,9 +143,9 @@
         await _form.Validate();
         if (!_form.IsValid || _studentEvaluation is null) return;
 
-        _studentEvaluation.RealStudyEndDate = _studentEvaluation.RealStudyEndDate?.ToUniversalTime();
-        _studentEvaluation.RealDissertationSubmissionDate = _studentEvaluation.RealDissertationSubmissionDate?.ToUniversalTime();
-        _studentEvaluation.RealDissertationExamDate = _studentEvaluation.RealDissertationExamDate?.ToUniversalTime();
+        _studentEvaluation.PlannedDissertationExamDate = _studentEvaluation.PlannedDissertationExamDate?.ToUniversalTime();
+        _studentEvaluation.PlannedDissertationSubmissionDate = _studentEvaluation.PlannedDissertationSubmissionDate?.ToUniversalTime();
+        _studentEvaluation.PlannedDissertationApplicationDate = _studentEvaluation.PlannedDissertationApplicationDate?.ToUniversalTime();
 
         if (StudentEvaluationGuid is null)
         {

@@ -763,20 +763,20 @@ namespace PhDManager.Locales {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Delete external.
+        ///   Looks up a localized string similar to Delete external teacher.
         /// </summary>
-        public static string ExternalDelete {
+        public static string ExternalTeacherDelete {
             get {
-                return ResourceManager.GetString("ExternalDelete", resourceCulture);
+                return ResourceManager.GetString("ExternalTeacherDelete", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Externals.
+        ///   Looks up a localized string similar to External teachers.
         /// </summary>
-        public static string Externals {
+        public static string ExternalTeachers {
             get {
-                return ResourceManager.GetString("Externals", resourceCulture);
+                return ResourceManager.GetString("ExternalTeachers", resourceCulture);
             }
         }
         
@@ -894,6 +894,15 @@ namespace PhDManager.Locales {
         public static string IndividualPlanAdditionalSubjectsInfo {
             get {
                 return ResourceManager.GetString("IndividualPlanAdditionalSubjectsInfo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to If you have any questions, please contact the thesis leader.
+        /// </summary>
+        public static string IndividualPlanContact {
+            get {
+                return ResourceManager.GetString("IndividualPlanContact", resourceCulture);
             }
         }
         
@@ -1483,6 +1492,15 @@ namespace PhDManager.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Result.
+        /// </summary>
+        public static string Result {
+            get {
+                return ResourceManager.GetString("Result", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Role.
         /// </summary>
         public static string Role {
@@ -1528,42 +1546,6 @@ namespace PhDManager.Locales {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to External sign in.
-        /// </summary>
-        public static string SignInExternal {
-            get {
-                return ResourceManager.GetString("SignInExternal", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Forgot your password?.
-        /// </summary>
-        public static string SignInExternalForgottenPassword {
-            get {
-                return ResourceManager.GetString("SignInExternalForgottenPassword", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Use a local account to log in..
-        /// </summary>
-        public static string SignInExternalMessage {
-            get {
-                return ResourceManager.GetString("SignInExternalMessage", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Resend the confirmation email..
-        /// </summary>
-        public static string SignInExternalResendEmail {
-            get {
-                return ResourceManager.GetString("SignInExternalResendEmail", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Use another service to log in..
         /// </summary>
         public static string SignInExternalService {
@@ -1573,20 +1555,20 @@ namespace PhDManager.Locales {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Login for extern..
+        ///   Looks up a localized string similar to Forgot your password?.
         /// </summary>
-        public static string SignInLdapLink {
+        public static string SignInForgottenPassword {
             get {
-                return ResourceManager.GetString("SignInLdapLink", resourceCulture);
+                return ResourceManager.GetString("SignInForgottenPassword", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Use your LDAP account to sign in..
+        ///   Looks up a localized string similar to Resend the confirmation email..
         /// </summary>
-        public static string SignInLdapMessage {
+        public static string SignInResendEmail {
             get {
-                return ResourceManager.GetString("SignInLdapMessage", resourceCulture);
+                return ResourceManager.GetString("SignInResendEmail", resourceCulture);
             }
         }
         
@@ -2244,6 +2226,15 @@ namespace PhDManager.Locales {
         public static string ThesisSubjects {
             get {
                 return ResourceManager.GetString("ThesisSubjects", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Transcript.
+        /// </summary>
+        public static string Transcript {
+            get {
+                return ResourceManager.GetString("Transcript", resourceCulture);
             }
         }
         

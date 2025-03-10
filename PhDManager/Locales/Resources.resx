@@ -156,12 +156,6 @@
   <data name="Welcome" xml:space="preserve">
     <value>Welcome</value>
   </data>
-  <data name="SignInExternal" xml:space="preserve">
-    <value>External sign in</value>
-  </data>
-  <data name="SignInLdapMessage" xml:space="preserve">
-    <value>Use your LDAP account to sign in.</value>
-  </data>
   <data name="Username" xml:space="preserve">
     <value>Username</value>
   </data>
@@ -171,19 +165,13 @@
   <data name="RememberLogin" xml:space="preserve">
     <value>Remember login</value>
   </data>
-  <data name="SignInLdapLink" xml:space="preserve">
-    <value>Login for extern.</value>
-  </data>
-  <data name="SignInExternalMessage" xml:space="preserve">
-    <value>Use a local account to log in.</value>
-  </data>
   <data name="SignInExternalService" xml:space="preserve">
     <value>Use another service to log in.</value>
   </data>
-  <data name="SignInExternalForgottenPassword" xml:space="preserve">
+  <data name="SignInForgottenPassword" xml:space="preserve">
     <value>Forgot your password?</value>
   </data>
-  <data name="SignInExternalResendEmail" xml:space="preserve">
+  <data name="SignInResendEmail" xml:space="preserve">
     <value>Resend the confirmation email.</value>
   </data>
   <data name="SignUpExpired" xml:space="preserve">
@@ -579,8 +567,8 @@
   <data name="Teachers" xml:space="preserve">
     <value>Teachers</value>
   </data>
-  <data name="Externals" xml:space="preserve">
-    <value>Externals</value>
+  <data name="ExternalTeachers" xml:space="preserve">
+    <value>External teachers</value>
   </data>
   <data name="DissertationThesisAssign" xml:space="preserve">
     <value>Assign dissertation thesis</value>
@@ -645,8 +633,8 @@
   <data name="StudentDelete" xml:space="preserve">
     <value>Delete doctoral student</value>
   </data>
-  <data name="ExternalDelete" xml:space="preserve">
-    <value>Delete external</value>
+  <data name="ExternalTeacherDelete" xml:space="preserve">
+    <value>Delete external teacher</value>
   </data>
   <data name="IndividualPlanGenerate" xml:space="preserve">
     <value>Generate individual plan</value>
@@ -887,5 +875,14 @@
   </data>
   <data name="AccountsMigrate" xml:space="preserve">
     <value>Migrate accounts</value>
+  </data>
+  <data name="IndividualPlanContact" xml:space="preserve">
+    <value>If you have any questions, please contact the thesis leader</value>
+  </data>
+  <data name="Result" xml:space="preserve">
+    <value>Result</value>
+  </data>
+  <data name="Transcript" xml:space="preserve">
+    <value>Transcript</value>
   </data>
 </root>

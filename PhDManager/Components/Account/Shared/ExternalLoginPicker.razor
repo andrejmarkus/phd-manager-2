@@ -24,7 +24,10 @@ else
             <p>
                 @foreach (var provider in externalLogins)
                 {
-                    <button type="submit" class="btn btn-primary" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">@provider.DisplayName</button>
+                    <MudStaticButton Variant="Variant.Filled" type="submit" class="btn btn-primary" name="provider" value="@provider.Name">
+                        <img src="@GetProviderIcon(provider.Name)" class="provider-icon mr-2" alt="@provider.DisplayName icon" />
+                        @provider.DisplayName
+                    </MudStaticButton>
                 }
             </p>
         </div>
@@ -40,5 +43,16 @@ else
     protected override async Task OnInitializedAsync()
     {
         externalLogins = (await SignInManager.GetExternalAuthenticationSchemesAsync()).ToArray();
+    }
+
+    private string GetProviderIcon(string providerName)
+    {
+        return providerName switch
+        {
+            "Google" => "https://img.icons8.com/?size=100&id=17949&format=png&color=000000",
+            "Microsoft" => "https://img.icons8.com/?size=100&id=22989&format=png&color=000000",
+            "GitHub" => "https://img.icons8.com/?size=100&id=62856&format=png&color=000000",
+            _ => "https://img.icons8.com/?size=100&id=74441&format=png&color=000000"
+        };
     }
 }

@@ -6,6 +6,7 @@
 @using PhDManager.Data
 @using PhDManager.Locales
 @using PhDManager.Models
+@using PhDManager.Models.Roles
 @using PhDManager.Services
 @using PhDManager.Services.IRepositories
 
@@ -15,6 +16,7 @@
 @inject IServiceProvider ServiceProvider
 @inject IDialogService DialogService
 @inject IStringLocalizer<Resources> Localizer
+@inject IStringLocalizer<Enums> EnumLocalizer
 @inject UsersService UsersService
 @inject DocumentService DocumentService
 @inject UserManager<ApplicationUser> UserManager
@@ -81,7 +83,7 @@
                         <MudText Typo="Typo.body2"><b>@Localizer["StudyForm"]: </b>
                             @if (thesis.DailyStudy)
                             {
-                                <span>@Localizer["StudyFormDaily"]</span>
+                                <span>@EnumLocalizer["StudyFormDaily"]</span>
                             }
                             @if (thesis.DailyStudy && thesis.ExternalStudy)
                             {
@@ -89,7 +91,7 @@
                             }
                             @if (thesis.ExternalStudy)
                             {
-                                <span>@Localizer["StudyFormExternal"]</span>
+                                <span>@EnumLocalizer["StudyFormExternal"]</span>
                             }
                         </MudText>
                     </MudLink>

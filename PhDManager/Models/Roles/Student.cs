@@ -2,7 +2,7 @@
 using PhDManager.Models.Enums;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace PhDManager.Models
+namespace PhDManager.Models.Roles
 {
     public class Student : BaseModel
     {
@@ -13,6 +13,9 @@ namespace PhDManager.Models
         public string EndSchoolYear { get; set; } = string.Empty;
         public StudyForm StudyForm { get; set; } = StudyForm.Daily;
         public StudentState State { get; set; } = StudentState.Study;
+        public string DissertationExamResult { get; set; } = string.Empty;
+        public string DissertationExamTranscript { get; set; } = string.Empty;
+        public DateTime? DissertationExamDate { get; set; }
 
         public virtual Department? Department { get; set; }
         public virtual Address? Address { get; set; }

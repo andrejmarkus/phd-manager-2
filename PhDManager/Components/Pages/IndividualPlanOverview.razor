@@ -5,6 +5,8 @@
 @using PhDManager.Data
 @using PhDManager.Locales
 @using PhDManager.Models
+@using PhDManager.Models.Enums
+@using PhDManager.Models.Roles
 @using PhDManager.Services
 @using PhDManager.Services.IRepositories
 
@@ -35,7 +37,7 @@
                     <MudText>@Localizer["IndividualPlanDissertationExamDateInfo"]:</MudText>
                 </MudItem>
                 <MudItem xs="6">
-                    <MudText><b>@(_individualPlan.DissertationExamDate?.ToString("dd.MM.yyyy"))</b></MudText>
+                    <MudText><b>@(_individualPlan.DissertationApplicationDate?.ToString("dd.MM.yyyy"))</b></MudText>
                 </MudItem>
                 <MudItem xs="6">
                     <MudText>@Localizer["IndividualPlanDissertationSubmissionDateInfo"]:</MudText>
@@ -55,12 +57,12 @@
             <MudText Typo="Typo.h5">@Localizer["StudyPart"]</MudText>
             <MudStack>
                 <MudText Typo="Typo.h6">@Localizer["IndividualPlanSubjectsInfo"]: </MudText>
-                @foreach (var subject in _individualPlan.Subjects.Where(s => s.IsRequired))
+                @foreach (var subject in _individualPlan.Subjects.Where(s => s.RequirementLevel == RequirementLevel.Compulsory))
                 {
                     <MudText>@subject.Name</MudText>
                 }
                 <MudText Typo="Typo.h6">@Localizer["IndividualPlanAdditionalSubjectsInfo"]: </MudText>
-                @foreach (var subject in _individualPlan.Subjects.Where(s => !s.IsRequired))
+                @foreach (var subject in _individualPlan.Subjects.Where(s => s.RequirementLevel != RequirementLevel.Compulsory))
                 {
                     <MudText>@subject.Name</MudText>
                 }

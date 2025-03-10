@@ -5,6 +5,7 @@
 @using PhDManager.Components.Shared
 @using PhDManager.Locales
 @using PhDManager.Models
+@using PhDManager.Models.Roles
 
 @rendermode InteractiveServer
 
@@ -24,8 +25,8 @@
     <MudTabPanel Text="@Localizer["Teachers"]">
         <Teachers />
     </MudTabPanel>
-    <MudTabPanel Text="@Localizer["Externals"]">
-        <Externals />
+    <MudTabPanel Text="@Localizer["ExternalTeachers"]">
+        <ExternalTeachers />
     </MudTabPanel>
 </MudTabs>
 

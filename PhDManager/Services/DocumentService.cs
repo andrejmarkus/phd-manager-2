@@ -3,6 +3,7 @@ using DocumentFormat.OpenXml.Wordprocessing;
 using Microsoft.JSInterop;
 using PhDManager.Components.Pages;
 using PhDManager.Models;
+using PhDManager.Models.Enums;
 using System.Globalization;
 using System.Text;
 
@@ -55,11 +56,11 @@ namespace PhDManager.Services
                 {"{StudyField}", new() { individualPlan.Student.Thesis?.StudyProgram.StudyFieldName }},
                 {"{Supervisor}", new() { individualPlan.Student.Thesis?.Supervisor.User.DisplayName }},
                 {"{StudyStartDate}", new() { individualPlan.StudyStartDate?.ToString("dd.MM.yyyy") }},
-                {"{DissertationExamDate}", new() { individualPlan.DissertationExamDate ?.ToString("dd.MM.yyyy") }},
+                {"{DissertationExamDate}", new() { individualPlan.DissertationApplicationDate ?.ToString("dd.MM.yyyy") }},
                 {"{DissertationSubmissionDate}", new() { individualPlan.DissertationSubmissionDate ?.ToString("MMMM yyyy") }},
                 {"{StudyEndDate}", new() { individualPlan.StudyEndDate?.ToString("dd.MM.yyyy") }},
-                {"{Subjects}", individualPlan.Subjects.Where(s => s.IsRequired).Select(s => s.Name).ToList<string?>() },
-                {"{OptionalSubjects}", individualPlan.Subjects.Where(s => !s.IsRequired).Select(s => s.Name).ToList<string?>() },
+                {"{Subjects}", individualPlan.Subjects.Where(s => s.RequirementLevel == RequirementLevel.Compulsory).Select(s => s.Name).ToList<string?>() },
+                {"{OptionalSubjects}", individualPlan.Subjects.Where(s => s.RequirementLevel != RequirementLevel.Compulsory).Select(s => s.Name).ToList<string?>() },
                 {"{WrittenThesisTitle}", new() { individualPlan.WrittenThesisTitle } },
                 {"{WrittenThesisRequiredLiterature}", new() { individualPlan.WrittenThesisRequiredLiterature } },
                 {"{WrittenThesisRecommendedLiterature}", new() { individualPlan.WrittenThesisRecommendedLiterature } },
@@ -69,7 +70,7 @@ namespace PhDManager.Services
                 {"{ThesisSolutionResults}", new() { individualPlan.Student.Thesis?.SolutionResults } },
                 {"{Tasks}", individualPlan.Tasks.ToList<string?>() },
                 {"{TaskDeadlines}", individualPlan.TaskDeadlines.Select(d => (d ?? DateTime.Now).ToString("MMMM yyyy")).ToList<string?>() },
-                {"{CurrentDate}", new() { DateTime.Today.ToString("dd.MM.yyyy") } }
+                {"{CurrentDate}", new() { individualPlan.CurrentDate.ToString("dd.MM.yyyy") } }
             };
 
             var document = GenerateDocumentData(path, replacements);
@@ -94,7 +95,7 @@ namespace PhDManager.Services
                 {"{Supervisor}", new() { subjectsExamApplication.Student.Thesis?.Supervisor.User.DisplayName } },
                 {"{StudyStartDate}", new() { subjectsExamApplication.Student.IndividualPlan?.StudyStartDate?.ToString("dd.MM.yyyy") } },
                 {"{Subjects}", subjectsExamApplication.Subjects.Select(s => s.Name).ToList<string?>() },
-                {"{CurrentDate}", new() { DateTime.Today.ToString("dd.MM.yyyy") } }
+                {"{CurrentDate}", new() { subjectsExamApplication.CurrentDate.ToString("dd.MM.yyyy") } }
             };
 
             var document = GenerateDocumentData(path, replacements);
@@ -121,7 +122,7 @@ namespace PhDManager.Services
                 {"{WrittenThesisTitle}", new() { examApplication.WrittenThesisTitle } },
                 {"{WrittenThesisTitleEnglish}", new() { examApplication.WrittenThesisTitleEnglish } },
                 {"{Subjects}", examApplication.Subjects.Select(s => s.Name).ToList<string?>() },
-                {"{CurrentDate}", new() { DateTime.Today.ToString("dd.MM.yyyy") } }
+                {"{CurrentDate}", new() { examApplication.CurrentDate.ToString("dd.MM.yyyy") } }
             };
 
             var document = GenerateDocumentData(path, replacements);

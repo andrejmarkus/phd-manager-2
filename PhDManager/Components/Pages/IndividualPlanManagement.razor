@@ -7,6 +7,8 @@
 @using PhDManager.Data
 @using PhDManager.Locales
 @using PhDManager.Models
+@using PhDManager.Models.Enums
+@using PhDManager.Models.Roles
 @using PhDManager.Services
 @using PhDManager.Services.IRepositories
 
@@ -56,7 +58,7 @@
     <MudText Typo="Typo.h5">@Localizer["Deadlines"]</MudText>
     <MudStack Row AlignItems="AlignItems.Center">
         <MudText Class="width-half">@Localizer["IndividualPlanDissertationExamDateInfo"]</MudText>
-        <MudDatePicker ShowToolbar="false" Required RequiredError="@Localizer["IndividualPlanDissertationExamDateError"]" Label="@Localizer["IndividualPlanDissertationExamDate"]" Variant="Variant.Outlined" @bind-Date="_individualPlan.DissertationExamDate" />
+        <MudDatePicker ShowToolbar="false" Required RequiredError="@Localizer["IndividualPlanDissertationExamDateError"]" Label="@Localizer["IndividualPlanDissertationExamDate"]" Variant="Variant.Outlined" @bind-Date="_individualPlan.DissertationApplicationDate" />
     </MudStack>
     <MudStack Row AlignItems="AlignItems.Center">
         <MudText Class="width-half">@Localizer["IndividualPlanDissertationSubmissionDateInfo"]</MudText>
@@ -78,7 +80,7 @@
                 <MudSelect T="Subject" Required RequiredError="@Localizer["IndividualPlanSubjectError"]" Label="@($"{Localizer["Subject"]} {subject.Index + 1}")" ToStringFunc="@(s => s is null ? null : s.Name)" Variant="Variant.Outlined" @bind-Value="_selectedSubjects[subject.Index]">
                     @if (_subjects is not null)
                     {
-                        @foreach (var subject in _subjects.Where(s => s.IsRequired))
+                        @foreach (var subject in _subjects.Where(s => s.RequirementLevel == RequirementLevel.Compulsory))
                         {
                             <MudSelectItem Value="subject">@subject.Name</MudSelectItem>
                         }
@@ -99,7 +101,7 @@
                 <MudSelect T="Subject" Required RequiredError="@Localizer["IndividualPlanSubjectError"]" Label="@($"{Localizer["Subject"]} {subject.Index + 1}")" ToStringFunc="@(s => s is null ? string.Empty : s.Name)" Variant="Variant.Outlined" @bind-Value="_selectedOptionalSubjects[subject.Index]">
                     @if (_subjects is not null)
                     {
-                        @foreach (var subject in _subjects.Where(s => !s.IsRequired))
+                        @foreach (var subject in _subjects.Where(s => s.RequirementLevel != RequirementLevel.Compulsory))
                         {
                             <MudSelectItem Value="subject">@subject.Name</MudSelectItem>
                         }
@@ -177,8 +179,8 @@
             if (individualPlan is not null)
             {
                 _individualPlan = individualPlan;
-                _selectedSubjects = _individualPlan.Subjects.Where(s => s.IsRequired).ToList();
-                _selectedOptionalSubjects = _individualPlan.Subjects.Where(s => !s.IsRequired).ToList();
+                _selectedSubjects = _individualPlan.Subjects.Where(s => s.RequirementLevel == RequirementLevel.Compulsory).ToList();
+                _selectedOptionalSubjects = _individualPlan.Subjects.Where(s => s.RequirementLevel != RequirementLevel.Compulsory).ToList();
                 _tasks = _individualPlan.Tasks.ToList();
                 _taskDeadlines = _individualPlan.TaskDeadlines.ToList();
             }
@@ -186,7 +188,7 @@
         else
         {
             _individualPlan.StudyStartDate = new DateTime(DateTime.Now.Year, 9, 1);
-            _individualPlan.DissertationExamDate = new DateTime(DateTime.Now.Year + 1, 9, 6);
+            _individualPlan.DissertationApplicationDate = new DateTime(DateTime.Now.Year + 1, 9, 6);
             _individualPlan.DissertationSubmissionDate = new DateTime(DateTime.Now.Year + 3, 4, 1);
             _individualPlan.StudyEndDate = new DateTime(DateTime.Now.Year + 3, 8, 31);
 
@@ -233,13 +235,15 @@
         if (!_form.IsValid) return;
                 
         _individualPlan.StudyStartDate = _individualPlan.StudyStartDate?.ToUniversalTime();
-        _individualPlan.DissertationExamDate = _individualPlan.DissertationExamDate?.ToUniversalTime();
+        _individualPlan.DissertationApplicationDate = _individualPlan.DissertationApplicationDate?.ToUniversalTime();
         _individualPlan.DissertationSubmissionDate = _individualPlan.DissertationSubmissionDate?.ToUniversalTime();
         _individualPlan.StudyEndDate = _individualPlan.StudyEndDate?.ToUniversalTime();
 
         _individualPlan.Subjects = _selectedSubjects.Concat(_selectedOptionalSubjects).ToList();
         _individualPlan.Tasks = _tasks.ToArray();
         _individualPlan.TaskDeadlines = _taskDeadlines.Select(d => { d = d?.ToUniversalTime(); return d; }).ToArray();
+
+        _individualPlan.CurrentDate = DateTime.UtcNow;
 
         if (IndividualPlanGuid is null)
         {

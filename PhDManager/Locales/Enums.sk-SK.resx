@@ -129,6 +129,15 @@
   <data name="ConclusionExpulsion" xml:space="preserve">
     <value>Navrhujem vylúčenie z doktorandského štúdia.</value>
   </data>
+  <data name="RequirementLevelCompulsory" xml:space="preserve">
+    <value>Povinný</value>
+  </data>
+  <data name="RequirementLevelElective" xml:space="preserve">
+    <value>Voliteľný</value>
+  </data>
+  <data name="RequirementLevelRestrictedElective" xml:space="preserve">
+    <value>Povinne voliteľný</value>
+  </data>
   <data name="SemesterSummer" xml:space="preserve">
     <value>Letný</value>
   </data>

@@ -109,6 +109,11 @@
     white-space: pre-line;
 }
 
+.provider-icon {
+    width: 2rem;
+    height: 2rem;
+}
+
 @media (max-width: 1024px) {
     .responsive-row {
         justify-content: center;

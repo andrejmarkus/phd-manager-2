@@ -1,7 +1,7 @@
 ﻿using PhDManager.Data;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace PhDManager.Models
+namespace PhDManager.Models.Roles
 {
     public class Admin : BaseModel
     {

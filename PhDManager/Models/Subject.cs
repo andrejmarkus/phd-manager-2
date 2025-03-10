@@ -5,10 +5,10 @@ namespace PhDManager.Models
 {
     public class Subject : BaseModel
     {
-        public bool IsRequired { get; set; } = true;
         public char? Variant { get; set; }
         public string Name { get; set; } = string.Empty;
         public Semester Semester { get; set; }
+        public RequirementLevel RequirementLevel { get; set; }
 
         public int StudyProgramId { get; set; }
         [JsonIgnore]

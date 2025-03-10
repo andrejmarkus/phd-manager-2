@@ -1,11 +1,12 @@
-﻿using System.Text.Json.Serialization;
+﻿using PhDManager.Models.Roles;
+using System.Text.Json.Serialization;
 
 namespace PhDManager.Models
 {
     public class IndividualPlan : BaseModel
     {
         public string Guid { get; set; } = System.Guid.NewGuid().ToString();
-        public DateTime? DissertationExamDate { get; set; }
+        public DateTime? DissertationApplicationDate { get; set; }
         public DateTime? DissertationSubmissionDate { get; set; }
         public DateTime? StudyStartDate { get; set; }
         public DateTime? StudyEndDate { get; set; }
@@ -16,6 +17,7 @@ namespace PhDManager.Models
         public string WrittenThesisRecommendedLectures { get; set; } = string.Empty;
         public string[] Tasks { get; set; } = [];
         public DateTime?[] TaskDeadlines { get; set; } = [];
+        public DateTime CurrentDate { get; set; } = DateTime.UtcNow;
 
         [JsonIgnore]
         public virtual Student? Student { get; set; } = default!;

@@ -1,4 +1,6 @@
-﻿namespace PhDManager.Models
+﻿using PhDManager.Models.Roles;
+
+namespace PhDManager.Models
 {
     public class Comment : BaseModel
     {
@@ -7,7 +9,7 @@
         public DateTime Created { get; set; }
 
         public string ExternalId { get; set; } = string.Empty;
-        public virtual External External { get; set; } = default!;
+        public virtual ExternalTeacher External { get; set; } = default!;
 
         public int ThesisId { get; set; }
         public virtual Thesis Thesis { get; set; } = default!;

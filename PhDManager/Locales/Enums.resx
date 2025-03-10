@@ -129,6 +129,15 @@
   <data name="ConclusionExpulsion" xml:space="preserve">
     <value>I propose expulsion from doctoral studies.</value>
   </data>
+  <data name="RequirementLevelCompulsory" xml:space="preserve">
+    <value>Compulsory</value>
+  </data>
+  <data name="RequirementLevelElective" xml:space="preserve">
+    <value>Elective</value>
+  </data>
+  <data name="RequirementLevelRestrictedElective" xml:space="preserve">
+    <value>Restricted elective</value>
+  </data>
   <data name="SemesterSummer" xml:space="preserve">
     <value>Summer</value>
   </data>

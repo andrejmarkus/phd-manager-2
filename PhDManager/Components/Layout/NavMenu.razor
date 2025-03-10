@@ -1,6 +1,7 @@
 ﻿@using Microsoft.Extensions.Localization
 @using PhDManager.Locales
 @using PhDManager.Models
+@using PhDManager.Models.Roles
 
 @implements IDisposable
 
@@ -37,7 +38,7 @@
             <MudNavLink Href="applications" Icon="@Icons.Material.Filled.ListAlt">@Localizer["Applications"]</MudNavLink>
         </Authorized>
     </AuthorizeView>
-    <AuthorizeView Roles="@($"{External.Role}")">
+    <AuthorizeView Roles="@($"{ExternalTeacher.Role}")">
         <Authorized>
             <MudNavLink Href="management/theses/review" Icon="@Icons.Material.Filled.DocumentScanner">@Localizer["DissertationThesisPending"]</MudNavLink>
         </Authorized>

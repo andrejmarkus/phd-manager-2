@@ -2,7 +2,7 @@
 
 namespace PhDManager.Services.IRepositories
 {
-    public interface IAdminRepository : IRepository<Admin>
+    public interface IExternalTeacherRepository : IRepository<ExternalTeacher>
     {
     }
 }

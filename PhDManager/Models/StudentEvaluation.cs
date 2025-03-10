@@ -1,4 +1,5 @@
 ﻿using PhDManager.Models.Enums;
+using PhDManager.Models.Roles;
 
 namespace PhDManager.Models
 {
@@ -12,9 +13,9 @@ namespace PhDManager.Models
         public string AssignmentsState { get; set; } = string.Empty;
         public string ModificationProposal { get; set; } = string.Empty;
         public string AdditionalEvaluation { get; set; } = string.Empty;
-        public DateTime? RealDissertationExamDate { get; set; }
-        public DateTime? RealDissertationSubmissionDate { get; set; }
-        public DateTime? RealStudyEndDate { get; set; }
+        public DateTime? PlannedDissertationApplicationDate { get; set; }
+        public DateTime? PlannedDissertationSubmissionDate { get; set; }
+        public DateTime? PlannedDissertationExamDate { get; set; }
         public Conclusion Conclusion { get; set; }
         public virtual Student? Student { get; set; }
     }

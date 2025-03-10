@@ -1,4 +1,4 @@
-﻿using PhDManager.Models;
+﻿using PhDManager.Models.Roles;
 
 namespace PhDManager.Services.IRepositories
 {

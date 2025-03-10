@@ -8,6 +8,7 @@
 @using Microsoft.AspNetCore.WebUtilities
 @using PhDManager.Data
 @using PhDManager.Models
+@using PhDManager.Models.Roles
 
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
@@ -139,7 +140,7 @@
         user.DisplayName = externalLoginInfo.Principal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
 
         var result = await UserManager.CreateAsync(user);
-        await UserManager.AddToRoleAsync(user, External.Role);
+        await UserManager.AddToRoleAsync(user, ExternalTeacher.Role);
 
         if (result.Succeeded)
         {

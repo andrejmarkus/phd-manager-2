@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using PhDManager.Components.Shared;
 using PhDManager.Data;
-using PhDManager.Models;
+using PhDManager.Models.Roles;
 using PhDManager.Services.IRepositories;
 
 namespace PhDManager.Services
@@ -30,12 +30,17 @@ namespace PhDManager.Services
             return await UserManager.GetUserAsync(authState.User);
         }
 
+        public ApplicationUser? GetUserByUsernameAsync(string username)
+        {
+            return UserManager.Users.Where(u => u.UserName == username).FirstOrDefault();
+        }
+
         public async Task<string?> GetUserIdAsync(ApplicationUser user)
         {
             return await UserManager.GetUserIdAsync(user);
         }
 
-        public ApplicationUser? GetUserByIdAsync(string userId)
+        public ApplicationUser? GetUserById(string userId)
         {
             return UserManager.Users.Where(u => u.Id == userId).FirstOrDefault();
         }
@@ -86,7 +91,7 @@ namespace PhDManager.Services
             await UserManager.UpdateAsync(unusedUser);
         }
 
-        public async Task AddExternalToUser(ApplicationUser user, External external)
+        public async Task AddExternalToUser(ApplicationUser user, ExternalTeacher external)
         {
             var unusedUser = await UserManager.FindByIdAsync(user.Id);
             if (unusedUser is null) return;

@@ -2,6 +2,7 @@
 @using PhDManager.Locales
 @using PhDManager.Models
 @using PhDManager.Models.Enums
+@using PhDManager.Models.Roles
 @using PhDManager.Services
 @using PhDManager.Services.IRepositories
 
@@ -23,6 +24,7 @@
                     <MudSelectItem T="StudentState" Value="studentState.Item1">@studentState.Item2</MudSelectItem>
                 }
             </MudSelect>
+
             <MudText Class="mt-4">@Localizer["StudyInformations"]</MudText>
             <MudSelect T="StudyProgram" Variant="Variant.Outlined" Label="@Localizer["StudyProgram"]" @bind-Value="Student.StudyProgram" ToStringFunc="@(sp => sp is null ? "" : sp.Name)">
                 @if (_studyPrograms is not null)
@@ -56,6 +58,11 @@
             <MudTextField T="string" Variant="Variant.Outlined" Label="@Localizer["City"]" @bind-Value="Student.Address.City" />
             <MudTextField T="string" Variant="Variant.Outlined" Label="@Localizer["PostalCode"]" @bind-Value="Student.Address.PostalCode" />
             <MudTextField T="string" Variant="Variant.Outlined" Label="@Localizer["State"]" @bind-Value="Student.Address.Country" />
+
+            <MudText Class="mt-4">@Localizer["DissertationExam"]</MudText>
+            <MudTextField T="string" Variant="Variant.Outlined" Label="@Localizer["Result"]" @bind-Value="Student.DissertationExamResult" />
+            <MudTextField T="string" Variant="Variant.Outlined" Label="@Localizer["Transcript"]" @bind-Value="Student.DissertationExamTranscript" />
+            <MudDatePicker ShowToolbar="false" Variant="Variant.Outlined" Label="@Localizer["ExamDate"]" @bind-Date="Student.DissertationExamDate" />
         </MudForm>
     </DialogContent>
     <DialogActions>

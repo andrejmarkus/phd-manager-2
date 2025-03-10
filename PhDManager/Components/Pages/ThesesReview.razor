@@ -4,6 +4,7 @@
 @using Microsoft.Extensions.Localization
 @using PhDManager.Locales
 @using PhDManager.Models
+@using PhDManager.Models.Roles
 @using PhDManager.Services
 @using PhDManager.Services.IRepositories
 
@@ -17,7 +18,7 @@
 @inject UsersService UsersService
 @inject SchoolYearService SchoolYearService
 
-@attribute [Authorize(Roles = $"{Admin.Role}, {Teacher.Role}, {External.Role}")]
+@attribute [Authorize(Roles = $"{Admin.Role}, {Teacher.Role}, {ExternalTeacher.Role}")]
 
 <PageTitle>@Localizer["DissertationThesisPending"]</PageTitle>
 

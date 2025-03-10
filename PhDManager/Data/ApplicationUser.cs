@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using PhDManager.Models;
+using PhDManager.Models.Roles;
 
 namespace PhDManager.Data
 {
@@ -16,6 +16,6 @@ namespace PhDManager.Data
 
         public virtual Teacher? Teacher { get; set; }
 
-        public virtual External? External { get; set; }
+        public virtual ExternalTeacher? External { get; set; }
     }
 }

@@ -97,6 +97,33 @@ namespace PhDManager.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Compulsory.
+        /// </summary>
+        public static string RequirementLevelCompulsory {
+            get {
+                return ResourceManager.GetString("RequirementLevelCompulsory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Elective.
+        /// </summary>
+        public static string RequirementLevelElective {
+            get {
+                return ResourceManager.GetString("RequirementLevelElective", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Restricted elective.
+        /// </summary>
+        public static string RequirementLevelRestrictedElective {
+            get {
+                return ResourceManager.GetString("RequirementLevelRestrictedElective", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Summer.
         /// </summary>
         public static string SemesterSummer {

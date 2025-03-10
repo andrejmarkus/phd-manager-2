@@ -156,12 +156,6 @@
   <data name="Welcome" xml:space="preserve">
     <value>Vitaj</value>
   </data>
-  <data name="SignInExternal" xml:space="preserve">
-    <value>Externé prishlásenie</value>
-  </data>
-  <data name="SignInLdapMessage" xml:space="preserve">
-    <value>Použi LDAP účet na prihlásenie.</value>
-  </data>
   <data name="Username" xml:space="preserve">
     <value>Používateľské meno</value>
   </data>
@@ -171,19 +165,13 @@
   <data name="RememberLogin" xml:space="preserve">
     <value>Zapamätať si prihlásenie</value>
   </data>
-  <data name="SignInLdapLink" xml:space="preserve">
-    <value>Prihlásenie pre externistu.</value>
-  </data>
-  <data name="SignInExternalMessage" xml:space="preserve">
-    <value>Použi lokálny účet na prihlásenie.</value>
-  </data>
   <data name="SignInExternalService" xml:space="preserve">
     <value>Použi inú službu na prihlásenie.</value>
   </data>
-  <data name="SignInExternalForgottenPassword" xml:space="preserve">
+  <data name="SignInForgottenPassword" xml:space="preserve">
     <value>Zabudnuté heslo?</value>
   </data>
-  <data name="SignInExternalResendEmail" xml:space="preserve">
+  <data name="SignInResendEmail" xml:space="preserve">
     <value>Znovu zaslať potvrdzovací email.</value>
   </data>
   <data name="SignUpExpired" xml:space="preserve">
@@ -579,8 +567,8 @@
   <data name="Teachers" xml:space="preserve">
     <value>Učitelia</value>
   </data>
-  <data name="Externals" xml:space="preserve">
-    <value>Externisti</value>
+  <data name="ExternalTeachers" xml:space="preserve">
+    <value>Externí učitelia</value>
   </data>
   <data name="DissertationThesisAssign" xml:space="preserve">
     <value>Priradenie dizertačnej témy</value>
@@ -645,8 +633,8 @@
   <data name="StudentDelete" xml:space="preserve">
     <value>Vymaž doktoranda</value>
   </data>
-  <data name="ExternalDelete" xml:space="preserve">
-    <value>Vymazať externistu</value>
+  <data name="ExternalTeacherDelete" xml:space="preserve">
+    <value>Vymazať externého učiteľa</value>
   </data>
   <data name="IndividualPlanGenerate" xml:space="preserve">
     <value>Vygenerovať individuálny plán</value>
@@ -887,5 +875,14 @@
   </data>
   <data name="AccountsMigrate" xml:space="preserve">
     <value>Migrovať účty</value>
+  </data>
+  <data name="IndividualPlanContact" xml:space="preserve">
+    <value>V prípade otázok sa obráťte na vedúceho témy</value>
+  </data>
+  <data name="Result" xml:space="preserve">
+    <value>Výsledok</value>
+  </data>
+  <data name="Transcript" xml:space="preserve">
+    <value>Vysvedčenie</value>
   </data>
 </root>

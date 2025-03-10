@@ -8,6 +8,7 @@
 @using PhDManager.Models
 @using PhDManager.Models.DTOs
 @using PhDManager.Models.Enums
+@using PhDManager.Models.Roles
 @using PhDManager.Services
 @using PhDManager.Services.IRepositories
 
@@ -92,7 +93,7 @@
                 var student = userInfo.User.Students.FirstOrDefault(s => s.State == StudentState.Study);
                 if (student is not null) await UsersService.AddStudentToUser(newUser, student);
                 break;
-            case External.Role:
+            case ExternalTeacher.Role:
                 if (userInfo.User.External is not null) await UsersService.AddExternalToUser(newUser, userInfo.User.External);
                 break;
         }

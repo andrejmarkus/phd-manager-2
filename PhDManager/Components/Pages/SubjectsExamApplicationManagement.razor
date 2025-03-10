@@ -4,6 +4,8 @@
 @using Microsoft.Extensions.Localization
 @using PhDManager.Locales
 @using PhDManager.Models
+@using PhDManager.Models.Enums
+@using PhDManager.Models.Roles
 @using PhDManager.Services
 @using PhDManager.Services.IRepositories
 
@@ -55,7 +57,7 @@
         <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@(() => _subjectsExamApplication.Subjects.Add(new()))">@Localizer["SubjectAdd"]</MudButton>
     </MudStack>
 
-    <MudButton class="mt-6" OnClick="CreateSubjectsExamApplication" Variant="Variant.Filled" Color="Color.Primary">@Localizer["Create"]</MudButton>
+    <MudButton class="mt-6" OnClick="HandleSubjectsExamApplication" Variant="Variant.Filled" Color="Color.Primary">@(_add ? Localizer["Create"] : Localizer["Edit"])</MudButton>
 </MudForm>
 
 @code {
@@ -64,29 +66,35 @@
     private IEnumerable<Subject>? _subjects;
 
     private SubjectsExamApplication _subjectsExamApplication = new();
+    private bool _add;
 
     protected override async Task OnInitializedAsync()
     {
         var currentUserId = await UsersService.GetCurrentUserIdAsync();
         _student = await UnitOfWork.Students.GetByUserIdAsync(currentUserId);
 
-        if (_student?.SubjectsExamApplication is not null)
-        {
-            _subjectsExamApplication = _student.SubjectsExamApplication;
-        }
-        else
+        _add = _student?.SubjectsExamApplication is null;
+        if (_add)
         {
             _subjectsExamApplication.Student = _student;
         }
+        else
+        {
+            _subjectsExamApplication = _student!.SubjectsExamApplication!;
+        }
 
-        _subjects = _student?.IndividualPlan?.Subjects.Where(s => s.IsRequired);
+        _subjects = _student?.IndividualPlan?.Subjects.Where(s => s.RequirementLevel == RequirementLevel.Compulsory);
     }
 
-    private async Task CreateSubjectsExamApplication()
+    private async Task HandleSubjectsExamApplication()
     {
         if (_student is null) return;
 
-        await UnitOfWork.SubjectsExamApplications.AddAsync(_subjectsExamApplication);
+        _subjectsExamApplication.CurrentDate = DateTime.UtcNow;
+
+        if (_add) await UnitOfWork.SubjectsExamApplications.AddAsync(_subjectsExamApplication);
+        else await UnitOfWork.SubjectsExamApplications.UpdateAsync(_subjectsExamApplication);
+        
         await UnitOfWork.CompleteAsync();
 
         NavigationManager.NavigateTo("/applications");

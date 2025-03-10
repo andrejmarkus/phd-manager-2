@@ -3,6 +3,7 @@
 @using PhDManager.Components.Dialogs
 @using PhDManager.Locales
 @using PhDManager.Models
+@using PhDManager.Models.Roles
 @using PhDManager.Services
 @using PhDManager.Services.IRepositories
 
@@ -13,7 +14,7 @@
 @inject IUnitOfWork UnitOfWork
 @inject UsersService UsersService
 
-<MudDataGrid T="External" Items="@_externals" Hover SortMode="SortMode.Multiple" QuickFilter="@_quickFilter" Elevation="0">
+<MudDataGrid T="ExternalTeacher" Items="@_externals" Hover SortMode="SortMode.Multiple" QuickFilter="@_quickFilter" Elevation="0">
     <ToolBarContent>
         <MudText Typo="Typo.h6" GutterBottom="false">@Localizer["Users"]</MudText>
         <MudSpacer />
@@ -29,7 +30,7 @@
         <TemplateColumn Title="@Localizer["ProfileEdit"]">
             <CellTemplate>
                 <MudStack Row>
-                    <MudTooltip Text="@Localizer["ExternalDelete"]">
+                    <MudTooltip Text="@Localizer["ExternalTeacherDelete"]">
                         <MudIconButton Size="@Size.Small" Color="Color.Error" Icon="@Icons.Material.Outlined.Delete" OnClick="@(() => DeleteExternal(context.Item))" />
                     </MudTooltip>
                 </MudStack>
@@ -37,12 +38,12 @@
         </TemplateColumn>
     </Columns>
     <PagerContent>
-        <MudDataGridPager T="External" />
+        <MudDataGridPager T="ExternalTeacher" />
     </PagerContent>
 </MudDataGrid>
 
 @code {
-    private IEnumerable<External>? _externals;
+    private IEnumerable<ExternalTeacher>? _externals;
 
     private string _search = string.Empty;
 
@@ -51,7 +52,7 @@
         _externals = await UnitOfWork.Externals.GetAllAsync();
     }
 
-    private Func<External, bool> _quickFilter => e =>
+    private Func<ExternalTeacher, bool> _quickFilter => e =>
     {
         if (string.IsNullOrWhiteSpace(_search))
             return true;
@@ -82,14 +83,14 @@
 
         if (entry is null) return;
 
-        var user = await UsersService.RegisterLdapUserWithoutPasswordAsync(entry, External.Role);
+        var user = await UsersService.RegisterLdapUserWithoutPasswordAsync(entry, ExternalTeacher.Role);
         await UnitOfWork.Externals.AddAsync(new() { User = user });
         await UnitOfWork.CompleteAsync();
 
         _externals = await UnitOfWork.Externals.GetAllAsync();
     }
 
-    private async Task DeleteExternal(External external)
+    private async Task DeleteExternal(ExternalTeacher external)
     {
         bool? result = await DialogService.ShowMessageBox(Localizer["UserDelete"], Localizer["UserDeleteConfirmation"], Localizer["Yes"], Localizer["No"]);
         if (result == false) return;
@@ -105,7 +106,7 @@
 
     private async Task CreateExternalRegistration()
     {
-        var parameters = new DialogParameters<RegistrationLinkDialog> { { d => d.Role, External.Role } };
+        var parameters = new DialogParameters<RegistrationLinkDialog> { { d => d.Role, ExternalTeacher.Role } };
         await DialogService.ShowAsync<RegistrationLinkDialog>(Localizer["UserRegister"], parameters, new() { FullWidth = true, MaxWidth = MaxWidth.Medium });
     }
 }

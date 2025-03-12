@@ -131,6 +131,49 @@ namespace PhDManager.Services
             await JSRuntime.InvokeVoidAsync("saveAsFile", documentName, documentStream);
         }
 
+        public async Task DownloadStudentEvaluationDocument(StudentEvaluation studentEvaluation)
+        {
+            if (studentEvaluation.Student is null) return;
+
+            var documentName = NormalizeName(studentEvaluation.Student.User.DisplayName ?? "") + "_hodnotenie" + ".docx";
+            var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "templates", "student_evaluation_template.docx");
+            var replacements = new Dictionary<string, List<string?>>()
+            {
+                {"{SchoolYear}", new() { studentEvaluation.SchoolYear } },
+                {"{Student}", new() { studentEvaluation.Student.User.DisplayName } },
+                {"{StudyForm}", new() { EnumService.GetLocalizedEnumValue(studentEvaluation.Student.StudyForm) } },
+                {"{StudyStartDate}", new() { studentEvaluation.Student.IndividualPlan?.StudyStartDate?.ToString("dd.MM.yyyy") } },
+                {"{StudyField}", new() { studentEvaluation.Student.StudyProgram?.StudyFieldName } },
+                {"{StudyProgram}", new() { studentEvaluation.Student.StudyProgram?.Name } },
+                {"{Supervisor}", new() { studentEvaluation.Student.Thesis?.Supervisor.User.DisplayName } },
+                {"{Department}", new() { studentEvaluation.Student.Department?.Code } },
+                {"{SubjectsAndGrades}", studentEvaluation.Student.IndividualPlan.Subjects.Zip(studentEvaluation.Student.IndividualPlan.IndividualPlanSubjects, (subject, grade) => $"{subject.Name}\t{EnumService.GetLocalizedEnumValue(grade.Grade)}").ToList<string?>() },
+                {"{WrittenThesisTitle}", new() { studentEvaluation.Student.IndividualPlan.WrittenThesisTitle } },
+                {"{PlannedDissertationSubmissionDate}", new() { studentEvaluation.PlannedDissertationSubmissionDate?.ToString("dd.MM.yyyy") } },
+                {"{DissertationSubmissionDate}", new() { studentEvaluation.Student.IndividualPlan.DissertationSubmissionDate?.ToString("dd.MM.yyyy") } },
+                {"{PlannedDissertationExamDate}", new() { studentEvaluation.PlannedDissertationExamDate?.ToString("dd.MM.yyyy") } },
+                {"{DissertationExamDate}", new() { studentEvaluation.Student.DissertationExamDate?.ToString("dd.MM.yyyy") } },
+                {"{DissertationExamResult}", new() { studentEvaluation.Student.DissertationExamResult } },
+                {"{DissertationExamTranscript}", new() { studentEvaluation.Student.DissertationExamTranscript } },
+                {"{ThesisTitle}", new() { studentEvaluation.Student.Thesis.Title } },
+                {"{ThesisState}", new() { studentEvaluation.ThesisState } },
+                {"{PlannedDissertationApplicationDate}", new() { studentEvaluation.PlannedDissertationApplicationDate?.ToString("dd.MM.yyyy") } },
+                {"{DissertationApplicationDate}", new() { studentEvaluation.Student.IndividualPlan.DissertationApplicationDate?.ToString("dd.MM.yyyy") } },
+                {"{CreditsEvaluation}", new() { studentEvaluation.CreditsEvaluation } },
+                {"{ScientificEvaluation}", new() { studentEvaluation.ScientificEvaluation } },
+                {"{AssignmentsState}", new() { studentEvaluation.AssignmentsState } },
+                {"{ModificationProposal}", new() { studentEvaluation.ModificationProposal } },
+                {"{Conclusion}", new() { EnumService.GetLocalizedEnumValue(studentEvaluation.Conclusion) } },
+                {"{AdditionalEvaluation}", new() { studentEvaluation.AdditionalEvaluation } },
+                {"{CurrentDate}", new() { studentEvaluation.CurrentDate.ToString("dd.MM.yyyy") } }
+            };
+
+            var document = GenerateDocumentData(path, replacements);
+            using var documentStream = new DotNetStreamReference(document);
+
+            await JSRuntime.InvokeVoidAsync("saveAsFile", documentName, documentStream);
+        }
+
         private string NormalizeName(string name)
         {
             return new string(name.Normalize(NormalizationForm.FormD).Where(c => CharUnicodeInfo.GetUnicodeCategory(c) != UnicodeCategory.NonSpacingMark).Select(c => c == ' ' ? '_' : c).ToArray());

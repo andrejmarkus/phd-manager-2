@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using PhDManager.Models;
 using PhDManager.Models.Enums;
 using PhDManager.Models.Roles;
+using System.Reflection.Emit;
 
 namespace PhDManager.Data
 {
@@ -15,9 +16,9 @@ namespace PhDManager.Data
         public DbSet<IndividualPlan> IndividualPlans { get; init; }
         public DbSet<Comment> Comments { get; init; }
         public DbSet<Address> Addresses { get; init; }
-        public DbSet<ExternalTeacher> Admins { get; init; }
+        public DbSet<Admin> Admins { get; init; }
         public DbSet<Student> Students { get; init; }
-        public DbSet<ExternalTeacher> Externals { get; init; }
+        public DbSet<ExternalTeacher> ExternalTeachers { get; init; }
         public DbSet<Teacher> Teachers { get; init; }
         public DbSet<SystemState> SystemState { get; init; }
         public DbSet<Department> Departments { get; init; }
@@ -32,8 +33,6 @@ namespace PhDManager.Data
         {
             base.OnModelCreating(builder);
 
-            var openDate = new DateTime(DateTime.Now.Year, 12, 1);
-            var closeDate = new DateTime(DateTime.Now.Year, 2, 15);
             builder.Entity<SystemState>()
                 .HasData(new SystemState { Id = 1, IsOpen = true });
 
@@ -45,12 +44,12 @@ namespace PhDManager.Data
             builder.Entity<ApplicationUser>()
                 .HasOne(u => u.Teacher)
                 .WithOne(t => t.User)
-                .HasForeignKey<Teacher>();
+                .HasForeignKey<Teacher>(t => t.UserId);
 
-            builder.Entity<ApplicationUser>()
-                .HasOne(u => u.External)
-                .WithOne(e => e.User)
-                .HasForeignKey<ExternalTeacher>();
+            builder.Entity<Teacher>()
+                .HasDiscriminator<string>("TeacherType")
+                .HasValue<Teacher>("Teacher")
+                .HasValue<ExternalTeacher>("ExternalTeacher");
 
             builder.Entity<Student>()
                 .HasOne(s => s.SubjectsExamApplication)

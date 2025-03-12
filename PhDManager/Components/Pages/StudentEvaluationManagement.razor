@@ -19,7 +19,7 @@
 @inject EnumService EnumService
 @inject SchoolYearService SchoolYearService
 
-@attribute [Authorize(Roles = $"{Admin.Role}, {Teacher.Role}")]
+@attribute [Authorize(Roles = $"{Admin.Role}, {Teacher.Role}, {ExternalTeacher.Role}")]
 
 <PageTitle>@Localizer["StudentEvaluation"]</PageTitle>
 
@@ -69,6 +69,15 @@
             </MudItem>
             <MudItem xs="5">
                 <MudDatePicker ShowToolbar="false" ReadOnly Label="@Localizer["RealDeadline"]" Variant="Variant.Outlined" @bind-Date="_studentEvaluation.Student.DissertationExamDate" />
+            </MudItem>
+            <MudItem xs="2">
+                <MudText Class="d-flex align-center mud-height-full">@Localizer["ExamResult"]</MudText>
+            </MudItem>
+            <MudItem xs="5">
+                <MudField T="string" Label="@Localizer["Result"]" Variant="Variant.Outlined">@_studentEvaluation.Student.DissertationExamResult</MudField>
+            </MudItem>
+            <MudItem xs="5">
+                <MudField T="string" Label="@Localizer["Transcript"]" Variant="Variant.Outlined">@_studentEvaluation.Student.DissertationExamTranscript</MudField>
             </MudItem>
         </MudGrid>
 
@@ -146,6 +155,8 @@
         _studentEvaluation.PlannedDissertationExamDate = _studentEvaluation.PlannedDissertationExamDate?.ToUniversalTime();
         _studentEvaluation.PlannedDissertationSubmissionDate = _studentEvaluation.PlannedDissertationSubmissionDate?.ToUniversalTime();
         _studentEvaluation.PlannedDissertationApplicationDate = _studentEvaluation.PlannedDissertationApplicationDate?.ToUniversalTime();
+
+        _studentEvaluation.CurrentDate = DateTime.UtcNow;
 
         if (StudentEvaluationGuid is null)
         {

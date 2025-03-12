@@ -16,6 +16,7 @@ namespace PhDManager.Models
         public DateTime? PlannedDissertationApplicationDate { get; set; }
         public DateTime? PlannedDissertationSubmissionDate { get; set; }
         public DateTime? PlannedDissertationExamDate { get; set; }
+        public DateTime CurrentDate { get; set; } = DateTime.UtcNow;
         public Conclusion Conclusion { get; set; }
         public virtual Student? Student { get; set; }
     }

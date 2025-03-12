@@ -18,7 +18,7 @@
 @inject DocumentService DocumentService
 @inject UsersService UsersService
 
-@attribute [Authorize(Roles = $"{Admin.Role}, {Teacher.Role}")]
+@attribute [Authorize(Roles = $"{Admin.Role}, {Teacher.Role}, {ExternalTeacher.Role}")]
 
 <PageTitle>@Localizer["IndividualPlans"]</PageTitle>
 
@@ -141,7 +141,7 @@
         _individualPlans = await UnitOfWork.IndividualPlans.GetAllAsync();
         _individualPlans = _individualPlans?.Where(ip => ip.Student.Thesis is not null);
 
-        if (_currentUserRole == Teacher.Role)
+        if (_currentUserRole == Teacher.Role || _currentUserRole == ExternalTeacher.Role)
         {
             _individualPlans = _individualPlans?.Where(ip => ip.Student.Thesis!.Supervisor.User.Id == _currentUserId);
         }

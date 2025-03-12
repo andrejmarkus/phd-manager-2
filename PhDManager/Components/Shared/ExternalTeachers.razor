@@ -18,8 +18,8 @@
     <ToolBarContent>
         <MudText Typo="Typo.h6" GutterBottom="false">@Localizer["Users"]</MudText>
         <MudSpacer />
-        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="AddExternal">@Localizer["UserAddLdap"]</MudButton>
-        <MudButton Class="mx-4" Variant="Variant.Filled" Color="Color.Primary" OnClick="CreateExternalRegistration">@Localizer["UserRegister"]</MudButton>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="AddExternalTeacher">@Localizer["UserAddLdap"]</MudButton>
+        <MudButton Class="mx-4" Variant="Variant.Filled" Color="Color.Primary" OnClick="CreateExternalTeacherRegistration">@Localizer["UserRegister"]</MudButton>
         <MudTextField Variant="Variant.Outlined" Placeholder="@Localizer["Search"]" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" @bind-Value="_search" />
     </ToolBarContent>
     <Columns>
@@ -31,7 +31,7 @@
             <CellTemplate>
                 <MudStack Row>
                     <MudTooltip Text="@Localizer["ExternalTeacherDelete"]">
-                        <MudIconButton Size="@Size.Small" Color="Color.Error" Icon="@Icons.Material.Outlined.Delete" OnClick="@(() => DeleteExternal(context.Item))" />
+                        <MudIconButton Size="@Size.Small" Color="Color.Error" Icon="@Icons.Material.Outlined.Delete" OnClick="@(() => DeleteExternalTeacher(context.Item))" />
                     </MudTooltip>
                 </MudStack>
             </CellTemplate>
@@ -49,30 +49,30 @@
 
     protected override async Task OnInitializedAsync()
     {
-        _externals = await UnitOfWork.Externals.GetAllAsync();
+        await LoadExternalTeachers();
     }
 
-    private Func<ExternalTeacher, bool> _quickFilter => e =>
+    private Func<ExternalTeacher, bool> _quickFilter => et =>
     {
         if (string.IsNullOrWhiteSpace(_search))
             return true;
 
-        if (e.User.UserName?.Contains(_search, StringComparison.OrdinalIgnoreCase) == true)
+        if (et.User.UserName?.Contains(_search, StringComparison.OrdinalIgnoreCase) == true)
             return true;
 
-        if (e.User.DisplayName?.Contains(_search, StringComparison.OrdinalIgnoreCase) == true)
+        if (et.User.DisplayName?.Contains(_search, StringComparison.OrdinalIgnoreCase) == true)
             return true;
 
-        if (e.User.Email?.Contains(_search, StringComparison.OrdinalIgnoreCase) == true)
+        if (et.User.Email?.Contains(_search, StringComparison.OrdinalIgnoreCase) == true)
             return true;
 
-        if ($"{e.User.UserName} {e.User.DisplayName} {e.User.Email}".Contains(_search))
+        if ($"{et.User.UserName} {et.User.DisplayName} {et.User.Email}".Contains(_search))
             return true;
 
         return false;
     };
 
-    private async Task AddExternal()
+    private async Task AddExternalTeacher()
     {
         var dialog = await DialogService.ShowAsync<AddLdapUserDialog>(Localizer["UserAdd"], new DialogOptions() { FullWidth = true, MaxWidth = MaxWidth.Medium });
         var result = await dialog.Result;
@@ -84,30 +84,35 @@
         if (entry is null) return;
 
         var user = await UsersService.RegisterLdapUserWithoutPasswordAsync(entry, ExternalTeacher.Role);
-        await UnitOfWork.Externals.AddAsync(new() { User = user });
+        await UnitOfWork.Teachers.AddAsync(new() { User = user });
         await UnitOfWork.CompleteAsync();
 
-        _externals = await UnitOfWork.Externals.GetAllAsync();
+        await LoadExternalTeachers();
     }
 
-    private async Task DeleteExternal(ExternalTeacher external)
+    private async Task DeleteExternalTeacher(ExternalTeacher externalTeacher)
     {
         bool? result = await DialogService.ShowMessageBox(Localizer["UserDelete"], Localizer["UserDeleteConfirmation"], Localizer["Yes"], Localizer["No"]);
         if (result == false) return;
 
-        var user = external.User;
-        
-        UnitOfWork.Externals.Delete(external);
+        var user = externalTeacher.User;
+
+        UnitOfWork.Teachers.Delete(externalTeacher);
         await UnitOfWork.CompleteAsync();
         await UsersService.DeleteUserAsync(user);
 
-        _externals = await UnitOfWork.Externals.GetAllAsync();
+        await LoadExternalTeachers();
     }
 
-    private async Task CreateExternalRegistration()
+    private async Task CreateExternalTeacherRegistration()
     {
         var parameters = new DialogParameters<RegistrationLinkDialog> { { d => d.Role, ExternalTeacher.Role } };
         await DialogService.ShowAsync<RegistrationLinkDialog>(Localizer["UserRegister"], parameters, new() { FullWidth = true, MaxWidth = MaxWidth.Medium });
+    }
+
+    private async Task LoadExternalTeachers()
+    {
+        _externals = (await UnitOfWork.Teachers.GetAllAsync())?.OfType<ExternalTeacher>();
     }
 }
 

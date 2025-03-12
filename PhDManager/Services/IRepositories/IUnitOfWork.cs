@@ -11,7 +11,6 @@
         IAddressRepository Addresses { get; }
         IAdminRepository Admins { get; }
         IStudentRepository Students { get; }
-        IExternalTeacherRepository Externals { get; }
         ITeacherRepository Teachers { get; }
         ISystemStateRepository SystemState { get; }
         IDepartmentRepository Departments { get; }

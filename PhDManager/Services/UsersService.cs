@@ -91,12 +91,12 @@ namespace PhDManager.Services
             await UserManager.UpdateAsync(unusedUser);
         }
 
-        public async Task AddExternalToUser(ApplicationUser user, ExternalTeacher external)
+        public async Task AddExternalToUser(ApplicationUser user, ExternalTeacher externalTeacher)
         {
             var unusedUser = await UserManager.FindByIdAsync(user.Id);
             if (unusedUser is null) return;
 
-            unusedUser.External = external;
+            unusedUser.Teacher = externalTeacher;
             await UserManager.UpdateAsync(unusedUser);
         }
 

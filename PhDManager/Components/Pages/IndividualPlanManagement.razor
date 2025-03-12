@@ -22,7 +22,7 @@
 @inject UsersService UsersService
 @inject EnumService EnumService
 
-@attribute [Authorize(Roles = $"{Admin.Role}, {Teacher.Role}")]
+@attribute [Authorize(Roles = $"{Admin.Role}, {Teacher.Role}, {ExternalTeacher.Role}")]
 
 <PageTitle>@Localizer["IndividualPlanCreate"]</PageTitle>
 

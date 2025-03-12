@@ -6,7 +6,6 @@ namespace PhDManager.Models.Roles
 {
     public class Student : BaseModel
     {
-        [NotMapped]
         public const string Role = "Študent";
 
         public string StartSchoolYear { get; set; } = string.Empty;

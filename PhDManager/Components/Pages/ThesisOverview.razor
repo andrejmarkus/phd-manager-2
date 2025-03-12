@@ -26,7 +26,7 @@
 
 @if (_thesis is not null)
 {
-    <AuthorizeView Roles="@($"{Admin.Role}, {Teacher.Role}")">
+    <AuthorizeView Roles="@($"{Admin.Role}, {Teacher.Role}, {ExternalTeacher.Role}")">
         <Authorized>
             <MudStack Row Justify="Justify.Center">
                 <MudIconButton Color="Color.Error" Icon="@Icons.Material.Outlined.Delete" OnClick="@(async () => await DeleteThesis(_thesis))" />
@@ -102,7 +102,7 @@
 
     @if (_thesis.IsApproved && _thesis.Student is null)
     {
-        <AuthorizeView Roles="@($"{Admin.Role}, {Teacher.Role}, {Student.Role}")" Context="generalContext">
+        <AuthorizeView Roles="@($"{Admin.Role}, {Teacher.Role}, {ExternalTeacher.Role}, {Student.Role}")" Context="generalContext">
             <Authorized>
                 <MudStack Class="mt-5">
                     <MudText Typo="Typo.h6">@Localizer["Interest"]</MudText>

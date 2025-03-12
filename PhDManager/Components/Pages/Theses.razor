@@ -190,7 +190,7 @@
     {
         _theses = await UnitOfWork.Theses.GetAllAsync();
         
-        if (_currentUserRole == Teacher.Role)
+        if (_currentUserRole == Teacher.Role || _currentUserRole == ExternalTeacher.Role)
         {
             _theses = _theses?.Where(t => t.Supervisor.User.Id == _currentUserId);
         }

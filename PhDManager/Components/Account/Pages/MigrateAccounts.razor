@@ -94,7 +94,7 @@
                 if (student is not null) await UsersService.AddStudentToUser(newUser, student);
                 break;
             case ExternalTeacher.Role:
-                if (userInfo.User.External is not null) await UsersService.AddExternalToUser(newUser, userInfo.User.External);
+                if (userInfo.User.Teacher is not null) await UsersService.AddExternalToUser(newUser, (ExternalTeacher)userInfo.User.Teacher);
                 break;
         }
         await UsersService.DeleteUserAsync(userInfo.User);

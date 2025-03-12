@@ -23,7 +23,7 @@
 @inject SchoolYearService SchoolYearService
 @inject UsersService UsersService
 
-@attribute [Authorize(Roles = $"{Admin.Role}, {Teacher.Role}")]
+@attribute [Authorize(Roles = $"{Admin.Role}, {Teacher.Role}, {ExternalTeacher.Role}")]
 
 <PageTitle>@(ThesisGuid is null ? Localizer["DissertationThesisAdd"] : Localizer["DisserationThesisEdit"])</PageTitle>
 
@@ -146,7 +146,7 @@ else
         _studyPrograms = await UnitOfWork.StudyPrograms.GetAllAsync();
         _systemState = await UnitOfWork.SystemState.GetAsync();
 
-        if (_currentUserRole == Teacher.Role)
+        if (_currentUserRole == Teacher.Role || _currentUserRole == ExternalTeacher.Role)
         {
             _teachers = _teachers?.Where(t => t.User.Id == _currentUserId);
         }

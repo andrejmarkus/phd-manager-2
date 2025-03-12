@@ -20,7 +20,7 @@
 @inject SchoolYearService SchoolYearService
 @inject JobService JobService
 
-@attribute [Authorize(Roles = $"{Admin.Role}, {Teacher.Role}")]
+@attribute [Authorize(Roles = $"{Admin.Role}, {Teacher.Role}, {ExternalTeacher.Role}")]
 
 <PageTitle>@Localizer["Evaluations"]</PageTitle>
 
@@ -44,9 +44,9 @@
                     <MudTooltip Text="@Localizer["StudentEvaluationEdit"]">
                         <MudIconButton Size="@Size.Small" Color="Color.Info" Icon="@Icons.Material.Outlined.Edit" Href="@($"/management/evaluations/edit/{context.Item.Guid}")" />
                     </MudTooltip>
-                    @* <MudTooltip Text="@Localizer["DissertationThesisGenerate"]">
-                        <MudIconButton Size="@Size.Small" Color="Color.Info" Icon="@Icons.Material.Outlined.Print" OnClick="@(async () => await DocumentService.DownloadThesisDocument(context.Item))" />
-                    </MudTooltip> *@
+                    <MudTooltip Text="@Localizer["StudentEvaluationGenerate"]">
+                        <MudIconButton Size="@Size.Small" Color="Color.Info" Icon="@Icons.Material.Outlined.Print" OnClick="@(async () => await DocumentService.DownloadStudentEvaluationDocument(context.Item))" />
+                    </MudTooltip>
                 </MudStack>
             </CellTemplate>
         </TemplateColumn>
@@ -105,7 +105,7 @@
     {
         _studentEvaluations = await UnitOfWork.StudentEvaluations.GetAllAsync();
 
-        if (_currentUserRole == Teacher.Role)
+        if (_currentUserRole == Teacher.Role || _currentUserRole == ExternalTeacher.Role)
         {
             _studentEvaluations = _studentEvaluations?.Where(se => se.Student?.Thesis?.Supervisor.User.Id == _currentUserId);
         }

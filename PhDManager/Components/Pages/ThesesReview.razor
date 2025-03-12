@@ -125,7 +125,7 @@
         _theses = await UnitOfWork.Theses.GetAllAsync();
         _theses = _theses?.Where(t => !t.IsApproved);
 
-        if (_currentUserRole == Teacher.Role)
+        if (_currentUserRole == Teacher.Role || _currentUserRole == ExternalTeacher.Role)
         {
             _theses = _theses?.Where(t => t.Supervisor.User.Id == _currentUserId);
         }

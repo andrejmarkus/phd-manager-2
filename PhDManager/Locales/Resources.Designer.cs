@@ -403,6 +403,15 @@ namespace PhDManager.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Pending dissertation theses.
+        /// </summary>
+        public static string DissertationThesesPending {
+            get {
+                return ResourceManager.GetString("DissertationThesesPending", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Dissertation thesis.
         /// </summary>
         public static string DissertationThesis {
@@ -507,15 +516,6 @@ namespace PhDManager.Locales {
         public static string DissertationThesisGenerate {
             get {
                 return ResourceManager.GetString("DissertationThesisGenerate", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Pending dissertation theses.
-        /// </summary>
-        public static string DissertationThesisPending {
-            get {
-                return ResourceManager.GetString("DissertationThesisPending", resourceCulture);
             }
         }
         
@@ -1749,6 +1749,15 @@ namespace PhDManager.Locales {
         public static string StudentEvaluationEdit {
             get {
                 return ResourceManager.GetString("StudentEvaluationEdit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Generate student evaluation.
+        /// </summary>
+        public static string StudentEvaluationGenerate {
+            get {
+                return ResourceManager.GetString("StudentEvaluationGenerate", resourceCulture);
             }
         }
         

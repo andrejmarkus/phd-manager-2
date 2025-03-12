@@ -405,7 +405,7 @@
   <data name="Comment" xml:space="preserve">
     <value>Comment</value>
   </data>
-  <data name="DissertationThesisPending" xml:space="preserve">
+  <data name="DissertationThesesPending" xml:space="preserve">
     <value>Pending dissertation theses</value>
   </data>
   <data name="DissertationThesis" xml:space="preserve">
@@ -884,5 +884,8 @@
   </data>
   <data name="Transcript" xml:space="preserve">
     <value>Transcript</value>
+  </data>
+  <data name="StudentEvaluationGenerate" xml:space="preserve">
+    <value>Generate student evaluation</value>
   </data>
 </root>

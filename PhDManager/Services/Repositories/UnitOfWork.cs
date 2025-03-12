@@ -19,7 +19,6 @@ namespace PhDManager.Services.Repositories
         public IAddressRepository Addresses { get; private set; }
         public IAdminRepository Admins { get; private set; }
         public IStudentRepository Students { get; private set; }
-        public IExternalTeacherRepository Externals { get; private set; }
         public ITeacherRepository Teachers { get; private set; }
         public ISystemStateRepository SystemState { get; private set; }
         public IDepartmentRepository Departments { get; private set; }
@@ -43,7 +42,6 @@ namespace PhDManager.Services.Repositories
             Addresses = new AddressRepository(_context, _logger);
             Admins = new AdminRepository(_context, _logger);
             Students = new StudentRepository(_context, _logger, _schoolYearService);
-            Externals = new ExternalTeacherRepository(_context, _logger);
             Teachers = new TeacherRepository(_context, _logger);
             SystemState = new SystemStateRepository(_context, _logger);
             Departments = new DepartmentRepository(_context, _logger);

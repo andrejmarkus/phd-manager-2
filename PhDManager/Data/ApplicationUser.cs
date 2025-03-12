@@ -15,7 +15,5 @@ namespace PhDManager.Data
         public virtual List<Student> Students { get; set; } = [];
 
         public virtual Teacher? Teacher { get; set; }
-
-        public virtual ExternalTeacher? External { get; set; }
     }
 }

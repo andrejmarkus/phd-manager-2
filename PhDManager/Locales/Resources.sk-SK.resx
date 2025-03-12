@@ -405,7 +405,7 @@
   <data name="Comment" xml:space="preserve">
     <value>Komentár</value>
   </data>
-  <data name="DissertationThesisPending" xml:space="preserve">
+  <data name="DissertationThesesPending" xml:space="preserve">
     <value>Čakajúce dizertačné témy</value>
   </data>
   <data name="DissertationThesis" xml:space="preserve">
@@ -643,7 +643,7 @@
     <value>Vymaž admina</value>
   </data>
   <data name="DissertationThesisGenerate" xml:space="preserve">
-    <value>Vygeneruj dizertačnú tému</value>
+    <value>Vygenerovať dizertačnú tému</value>
   </data>
   <data name="UserRegister" xml:space="preserve">
     <value>Zaregistuj používateľa</value>
@@ -805,7 +805,7 @@
     <value>Vymazať prihlášku na skúšku</value>
   </data>
   <data name="ExamApplicationGenerate" xml:space="preserve">
-    <value>Vygeneruj prihlášku na skúšku</value>
+    <value>Vygenerovať prihlášku na skúšku</value>
   </data>
   <data name="Evaluations" xml:space="preserve">
     <value>Hodnotenia</value>
@@ -884,5 +884,8 @@
   </data>
   <data name="Transcript" xml:space="preserve">
     <value>Vysvedčenie</value>
+  </data>
+  <data name="StudentEvaluationGenerate" xml:space="preserve">
+    <value>Vygenerovať hodnotenie študenta</value>
   </data>
 </root>

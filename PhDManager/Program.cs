@@ -27,6 +27,7 @@ builder.Services.AddLocalization();
 builder.Services.AddControllers();
 
 builder.Services.Configure<ActiveDirectoryOptions>(builder.Configuration.GetSection(ActiveDirectoryOptions.ActiveDirectory));
+builder.Services.Configure<GoogleOptions>(builder.Configuration.GetSection(GoogleOptions.Google));
 
 builder.Services.AddCascadingAuthenticationState();
 builder.Services.AddScoped<IdentityUserAccessor>();
@@ -65,7 +66,7 @@ builder.Services.AddIdentityCore<ApplicationUser>(options => options.SignIn.Requ
     .AddSignInManager()
     .AddDefaultTokenProviders();
 
-builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
+builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityEmailSender>();
 builder.Services.AddSingleton<SchoolYearService>();
 builder.Services.AddSingleton<EnumService>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();

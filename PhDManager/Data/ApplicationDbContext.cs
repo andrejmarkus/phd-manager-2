@@ -51,6 +51,22 @@ namespace PhDManager.Data
                 .HasValue<Teacher>("Teacher")
                 .HasValue<ExternalTeacher>("ExternalTeacher");
 
+            builder.Entity<Teacher>()
+                .HasMany(t => t.Examiners)
+                .WithOne(ea => ea.Examiner);
+
+            builder.Entity<Teacher>()
+                .HasMany(t => t.Chairpersons)
+                .WithOne(ea => ea.Chairperson);
+
+            builder.Entity<Teacher>()
+                .HasMany(t => t.AcademicCommitteeMembers)
+                .WithOne(ea => ea.AcademicCommitteeMember);
+
+            builder.Entity<Teacher>()
+                .HasMany(t => t.AdditionalMembers)
+                .WithOne(ea => ea.AdditionalMember);
+
             builder.Entity<Student>()
                 .HasOne(s => s.SubjectsExamApplication)
                 .WithOne(s => s.Student)
@@ -82,6 +98,16 @@ namespace PhDManager.Data
                 .HasOne(s => s.IndividualPlan)
                 .WithOne(ip => ip.Student)
                 .HasForeignKey<IndividualPlan>();
+
+            builder.Entity<Student>()
+                .HasOne(s => s.ExamSupervisor)
+                .WithOne(ea => ea.Student)
+                .HasForeignKey<ExamSupervisor>();
+
+            builder.Entity<Student>()
+                .HasOne(s => s.DissertationDefenseSupervisor)
+                .WithOne(dds => dds.Student)
+                .HasForeignKey<DissertationDefenseSupervisor>();
 
             builder.Entity<Teacher>()
                 .HasMany(t => t.SpecialistTheses)

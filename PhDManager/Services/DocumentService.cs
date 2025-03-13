@@ -155,7 +155,7 @@ namespace PhDManager.Services
                 {"{DissertationExamDate}", new() { studentEvaluation.Student.DissertationExamDate?.ToString("dd.MM.yyyy") } },
                 {"{DissertationExamResult}", new() { studentEvaluation.Student.DissertationExamResult } },
                 {"{DissertationExamTranscript}", new() { studentEvaluation.Student.DissertationExamTranscript } },
-                {"{ThesisTitle}", new() { studentEvaluation.Student.Thesis.Title } },
+                {"{ThesisTitle}", new() { studentEvaluation.Student.Thesis?.Title } },
                 {"{ThesisState}", new() { studentEvaluation.ThesisState } },
                 {"{PlannedDissertationApplicationDate}", new() { studentEvaluation.PlannedDissertationApplicationDate?.ToString("dd.MM.yyyy") } },
                 {"{DissertationApplicationDate}", new() { studentEvaluation.Student.IndividualPlan.DissertationApplicationDate?.ToString("dd.MM.yyyy") } },
@@ -166,6 +166,82 @@ namespace PhDManager.Services
                 {"{Conclusion}", new() { EnumService.GetLocalizedEnumValue(studentEvaluation.Conclusion) } },
                 {"{AdditionalEvaluation}", new() { studentEvaluation.AdditionalEvaluation } },
                 {"{CurrentDate}", new() { studentEvaluation.CurrentDate.ToString("dd.MM.yyyy") } }
+            };
+
+            var document = GenerateDocumentData(path, replacements);
+            using var documentStream = new DotNetStreamReference(document);
+
+            await JSRuntime.InvokeVoidAsync("saveAsFile", documentName, documentStream);
+        }
+
+        public async Task DownloadExamSupervisorDocument(ExamSupervisor examSupervisor)
+        {
+            var documentName = NormalizeName(examSupervisor.Student.User.DisplayName ?? "") + "_ds_skolitel" + ".docx";
+            var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "templates", "exam_supervisor_template.docx");
+            var replacements = new Dictionary<string, List<string?>>()
+            {
+                {"{Student}", new() { examSupervisor.Student.User.UserName } },
+                {"{Supervisor}", new() { examSupervisor.Student.Thesis?.Supervisor.User.DisplayName } },
+                {"{Opponent}", new() { examSupervisor.OpponentDisplayName} },
+                {"{OpponentMail}", new() { examSupervisor.OpponentMail } },
+                {"{OpponentPhoneNumber}", new() { examSupervisor.OpponentPhoneNumber } },
+                {"{OpponentDepartment}", new() { examSupervisor.OpponentDepartment } },
+                {"{Examiner}", new() { examSupervisor.Examiner.User.DisplayName } },
+                {"{Chairperson}", new() { examSupervisor.Chairperson.User.DisplayName } },
+                {"{ChairpersonDepartment}", new() { examSupervisor.Chairperson.Department?.Code } },
+                {"{ChairpersonMail}", new() { examSupervisor.Chairperson.User.Email } },
+                {"{ChairpersonPhoneNumber}", new() { examSupervisor.Chairperson.User.PhoneNumber } },
+                {"{ExternalMember}", new() { examSupervisor.ExternalMember.User.DisplayName } },
+                {"{ExternalMemberDepartment}", new() { examSupervisor.ExternalMember.Department?.Code } },
+                {"{ExternalMemberMail}", new() { examSupervisor.ExternalMember.User.Email } },
+                {"{ExternalMemberPhoneNumber}", new() { examSupervisor.ExternalMember.User.PhoneNumber } },
+                {"{AcademicCommitteeMember}", new() { examSupervisor.AcademicCommitteeMember.User.DisplayName } },
+                {"{AcademicCommitteeMemberDepartment}", new() { examSupervisor.AcademicCommitteeMember.Department?.Code } },
+                {"{AcademicCommitteeMemberMail}", new() { examSupervisor.AcademicCommitteeMember.User.Email } },
+                {"{AcademicCommitteeMemberPhoneNumber}", new() { examSupervisor.AcademicCommitteeMember.User.PhoneNumber } },
+                {"{AdditionalMember}", new() { examSupervisor.AdditionalMember.User.DisplayName } },
+                {"{AdditionalMemberDepartment}", new() { examSupervisor.AdditionalMember.Department?.Code } },
+                {"{AdditionalMemberMail}", new() { examSupervisor.AdditionalMember.User.Email } },
+                {"{AdditionalMemberPhoneNumber}", new() { examSupervisor.AdditionalMember.User.PhoneNumber } },
+                {"{CurrentDate}", new() { examSupervisor.CurrentDate.ToString("dd.MM.yyyy") } }
+            };
+
+            var document = GenerateDocumentData(path, replacements);
+            using var documentStream = new DotNetStreamReference(document);
+
+            await JSRuntime.InvokeVoidAsync("saveAsFile", documentName, documentStream);
+        }
+
+        public async Task DownloadDissertationDefenseSupervisorDocument(DissertationDefenseSupervisor dissertationDefenseSupervisor)
+        {
+            var documentName = NormalizeName(dissertationDefenseSupervisor.Student.User.DisplayName ?? "") + "_ds_skolitel" + ".docx";
+            var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "templates", "exam_supervisor_template.docx");
+            var replacements = new Dictionary<string, List<string?>>()
+            {
+                {"{Student}", new() { dissertationDefenseSupervisor.Student.User.UserName } },
+                {"{StudyForm}", new() { EnumService.GetLocalizedEnumValue(dissertationDefenseSupervisor.Student.StudyForm) } },
+                {"{StudyProgram}", new() { dissertationDefenseSupervisor.Student.StudyProgram?.Name } },
+                {"{StudyField}", new() { dissertationDefenseSupervisor.Student.StudyProgram?.StudyFieldName } },
+                {"{Department}", new() { dissertationDefenseSupervisor.Student.Department?.Code } },
+                {"{Supervisor}", new() { dissertationDefenseSupervisor.Student.Thesis?.Supervisor.User.DisplayName } },
+                {"{StudyStartDate}", new() { dissertationDefenseSupervisor.Student.IndividualPlan?.StudyStartDate?.ToString("dd.MM.yyyy") } },
+                {"{StudyEndDate}", new() { dissertationDefenseSupervisor.Student.IndividualPlan?.StudyEndDate?.ToString("dd.MM.yyyy") } },
+                {"{CreditsCount}", new() { dissertationDefenseSupervisor.CreditsCount.ToString() } },
+                {"{ApplicationYear}", new() { dissertationDefenseSupervisor.ApplicationYear.ToString() } },
+                {"{ThesisTitle}", new() { dissertationDefenseSupervisor.Student.Thesis?.Title } },
+                {"{Opponent1}", new() { dissertationDefenseSupervisor.OpponentDisplayNames[0] } },
+                {"{Opponent1WorkplaceAddress}", new() { dissertationDefenseSupervisor.OpponentWorkplaceAddresses[0] } },
+                {"{Opponent1PhoneNumber}", new() { dissertationDefenseSupervisor.OpponentPhoneNumbers[0] } },
+                {"{Opponent1Mail}", new() { dissertationDefenseSupervisor.OpponentEmails[0] } },
+                {"{Opponent2}", new() { dissertationDefenseSupervisor.OpponentDisplayNames[1] } },
+                {"{Opponent2WorkplaceAddress}", new() { dissertationDefenseSupervisor.OpponentWorkplaceAddresses[1] } },
+                {"{Opponent2PhoneNumber}", new() { dissertationDefenseSupervisor.OpponentPhoneNumbers[1] } },
+                {"{Opponent2Mail}", new() { dissertationDefenseSupervisor.OpponentEmails[1] } },
+                {"{Opponent3}", new() { dissertationDefenseSupervisor.OpponentDisplayNames[2] } },
+                {"{Opponent3WorkplaceAddress}", new() { dissertationDefenseSupervisor.OpponentWorkplaceAddresses[2] } },
+                {"{Opponent3PhoneNumber}", new() { dissertationDefenseSupervisor.OpponentPhoneNumbers[2] } },
+                {"{Opponent3Mail}", new() { dissertationDefenseSupervisor.OpponentEmails[2] } },
+                {"{CurrentDate}", new() { dissertationDefenseSupervisor.CurrentDate.ToString("dd.MM.yyyy") } }
             };
 
             var document = GenerateDocumentData(path, replacements);

@@ -261,38 +261,23 @@
   <data name="Address" xml:space="preserve">
     <value>Address</value>
   </data>
-  <data name="IndividualPlanError" xml:space="preserve">
-    <value>User does not have profile information filled in!</value>
-  </data>
   <data name="Deadlines" xml:space="preserve">
     <value>Deadlines</value>
   </data>
   <data name="IndividualPlanStudent" xml:space="preserve">
     <value>Name and surname, title</value>
   </data>
-  <data name="IndividualPlanStudentError" xml:space="preserve">
-    <value>It is necessary to select a student!</value>
-  </data>
   <data name="IndividualPlanStudyStartDate" xml:space="preserve">
     <value>Entry to doctoral studies</value>
   </data>
-  <data name="IndividualPlanStudyStartDateError" xml:space="preserve">
-    <value>It is necessary to enter the date of arrival!</value>
-  </data>
   <data name="IndividualPlanDissertationExamDateInfo" xml:space="preserve">
     <value>The deadline for submitting the application for the dissertation examination, including the submission of the written dissertation for the dissertation exam (usually the first half of September in the 2nd year)</value>
-  </data>
-  <data name="IndividualPlanDissertationExamDateError" xml:space="preserve">
-    <value>You must specify the application deadline!</value>
   </data>
   <data name="IndividualPlanDissertationExamDate" xml:space="preserve">
     <value>Application deadline</value>
   </data>
   <data name="IndividualPlanDissertationSubmissionDate" xml:space="preserve">
     <value>Submission deadline</value>
-  </data>
-  <data name="IndividualPlanDissertationSubmissionDateError" xml:space="preserve">
-    <value>It is necessary to specify the submission date!</value>
   </data>
   <data name="IndividualPlanDissertationSubmissionDateInfo" xml:space="preserve">
     <value>Dissertation submission date (usually April in the year of graduation)</value>
@@ -303,17 +288,11 @@
   <data name="IndividualPlanStudyEndDateInfo" xml:space="preserve">
     <value>Date of completion of doctoral studies, including the defence of the dissertation (usually 31.8. after 3 years of study for internal doctoral students and after 4 years for external doctoral students)</value>
   </data>
-  <data name="IndividualPlanStudyEndDateError" xml:space="preserve">
-    <value>It is necessary to specify the date of graduation!</value>
-  </data>
   <data name="StudyPart" xml:space="preserve">
     <value>Study part</value>
   </data>
   <data name="Subject" xml:space="preserve">
     <value>Subject</value>
-  </data>
-  <data name="IndividualPlanSubjectError" xml:space="preserve">
-    <value>It is necessary to choose a subject!</value>
   </data>
   <data name="IndividualPlanSubjectsInfo" xml:space="preserve">
     <value>Subjects with thematic headings for the dissertation examination</value>
@@ -438,23 +417,11 @@
   <data name="DissertationThesisEnglish" xml:space="preserve">
     <value>Is it possible to develop a thesis in English?</value>
   </data>
-  <data name="DissertationThesisTitleError" xml:space="preserve">
-    <value>You must enter a topic title!</value>
-  </data>
-  <data name="SupervisorError" xml:space="preserve">
-    <value>It is necessary to choose a supervisor!</value>
-  </data>
-  <data name="StudyProgramError" xml:space="preserve">
-    <value>It is necessary to choose a study program!</value>
-  </data>
   <data name="DissertationThesisClassification" xml:space="preserve">
     <value>Dissertation thesis classification</value>
   </data>
   <data name="DissertationThesisDescription" xml:space="preserve">
     <value>Detailed problem description</value>
-  </data>
-  <data name="DissertationThesisDescriptionError" xml:space="preserve">
-    <value>You must enter a description of the problem!</value>
   </data>
   <data name="MoreInformations" xml:space="preserve">
     <value>More informations</value>
@@ -462,17 +429,8 @@
   <data name="DissertationThesisScientificContribution" xml:space="preserve">
     <value>Expected scientific contribution (algorithms, methodologies, ...)</value>
   </data>
-  <data name="DissertationThesisScientificContributionError" xml:space="preserve">
-    <value>It is necessary to specify the expected scientific contribution!</value>
-  </data>
   <data name="DissertationThesisScientificProgress" xml:space="preserve">
     <value>Recommended practice of scientific research</value>
-  </data>
-  <data name="DissertationThesisScientificProgressError" xml:space="preserve">
-    <value>It is necessary to specify the recommended procedure for scientific research!</value>
-  </data>
-  <data name="ResearchTypeError" xml:space="preserve">
-    <value>It is necessary to choose the research type!</value>
   </data>
   <data name="ResearchTypeAppliedExperimental" xml:space="preserve">
     <value>Applied research and experimental development</value>
@@ -489,14 +447,8 @@
   <data name="DissertationThesisResearchTask" xml:space="preserve">
     <value>The research task, which will include the thesis to be addressed</value>
   </data>
-  <data name="DissertationThesisResearchTaskError" xml:space="preserve">
-    <value>It is necessary to assign a research task</value>
-  </data>
   <data name="DissertationThesisSolutionResults" xml:space="preserve">
     <value>Results to date of the solution at the training site, including references to available resources</value>
-  </data>
-  <data name="DissertationThesisSolutionResultsError" xml:space="preserve">
-    <value>It is necessary to submit the results of the solution so far at the training site!</value>
   </data>
   <data name="DissertationThesisSolutionResultsInfo" xml:space="preserve">
     <value>List the literature in the same style as it is displayed in the University Library of the University of Žilina.</value>
@@ -530,9 +482,6 @@
   </data>
   <data name="ThesisStudentInterestInfo" xml:space="preserve">
     <value>Dissertation thesis, that you are interested in:</value>
-  </data>
-  <data name="IndividualPlanThesisError" xml:space="preserve">
-    <value>The user is not assigned a dissertation topic!</value>
   </data>
   <data name="Occupancy" xml:space="preserve">
     <value>Occupancy</value>
@@ -585,14 +534,8 @@
   <data name="IndividualPlanWrittenThesisRecommendedLiterature" xml:space="preserve">
     <value>Study literature - recommended</value>
   </data>
-  <data name="IndividualPlanWrittenThesisLiteratureError" xml:space="preserve">
-    <value>It is necessary to enter the study literature!</value>
-  </data>
   <data name="IndividualPlanWrittenThesisRecommendedLectures" xml:space="preserve">
     <value>Recommended professional lectures, seminars and conferences</value>
-  </data>
-  <data name="IndividualPlanWrittenThesisRecommendedLecturesError" xml:space="preserve">
-    <value>It is necessary to enter recommended professional lectures, seminars or conferences</value>
   </data>
   <data name="ScientificPart" xml:space="preserve">
     <value>Scientific part</value>
@@ -612,9 +555,6 @@
   <data name="IndividualPlanThematicAreas" xml:space="preserve">
     <value>Thematic areas</value>
   </data>
-  <data name="IndividualPlanTaskError" xml:space="preserve">
-    <value>It is necessary to enter the task!</value>
-  </data>
   <data name="SystemClosedError" xml:space="preserve">
     <value>System was closed!</value>
   </data>
@@ -627,8 +567,8 @@
   <data name="Unactive" xml:space="preserve">
     <value>Unactive</value>
   </data>
-  <data name="TeacherRemove" xml:space="preserve">
-    <value>Remove teacher</value>
+  <data name="TeacherDelete" xml:space="preserve">
+    <value>Delete teacher</value>
   </data>
   <data name="StudentDelete" xml:space="preserve">
     <value>Delete doctoral student</value>
@@ -786,12 +726,6 @@
   <data name="ExamApplicationWrittenThesisTitleEnglish" xml:space="preserve">
     <value>Topic of the written part of the dissertation examination in English</value>
   </data>
-  <data name="ExamApplicationWrittenThesisTitleError" xml:space="preserve">
-    <value>It is necessary to submit a written dissertation topic!</value>
-  </data>
-  <data name="ExamApplicationWrittenThesisTitleEnglishError" xml:space="preserve">
-    <value>It is necessary to submit a written dissertation topic in English!</value>
-  </data>
   <data name="Applications" xml:space="preserve">
     <value>Applications</value>
   </data>
@@ -887,5 +821,164 @@
   </data>
   <data name="StudentEvaluationGenerate" xml:space="preserve">
     <value>Generate student evaluation</value>
+  </data>
+  <data name="PersonalData" xml:space="preserve">
+    <value>Personal data</value>
+  </data>
+  <data name="TeacherEdit" xml:space="preserve">
+    <value>Edit teacher</value>
+  </data>
+  <data name="ExternalTeacherEdit" xml:space="preserve">
+    <value>Edit external teacher</value>
+  </data>
+  <data name="IndividualPlanError" xml:space="preserve">
+    <value>User does not have profile information filled in!</value>
+  </data>
+  <data name="IndividualPlanThesisError" xml:space="preserve">
+    <value>The user is not assigned a dissertation topic!</value>
+  </data>
+  <data name="Required" xml:space="preserve">
+    <value>Required</value>
+  </data>
+  <data name="NameAndTitles" xml:space="preserve">
+    <value>Full name, and titles</value>
+  </data>
+  <data name="Email" xml:space="preserve">
+    <value>E-mail</value>
+  </data>
+  <data name="Workplace" xml:space="preserve">
+    <value>Workplace</value>
+  </data>
+  <data name="ExamSupervisorSubjects" xml:space="preserve">
+    <value>Subjects of the doctoral examination</value>
+  </data>
+  <data name="Examiner" xml:space="preserve">
+    <value>Examiner</value>
+  </data>
+  <data name="ExamSupervisorExaminerInfo" xml:space="preserve">
+    <value>Approved by the Scientific Council of FRI</value>
+  </data>
+  <data name="SpecializationSubject" xml:space="preserve">
+    <value>Subject of specialization</value>
+  </data>
+  <data name="CommitteeMembersProposal" xml:space="preserve">
+    <value>Committee members proposal</value>
+  </data>
+  <data name="CommitteeMembersProposalInfo" xml:space="preserve">
+    <value>The committee and examiners for other subjects will be appointed by the department committee. The supervisor may propose potential candidates. (Email and phone should be provided only if the proposed candidate is not from ŽU)</value>
+  </data>
+  <data name="ExamSupervisorChairperson" xml:space="preserve">
+    <value>Chairperson (prof. title)</value>
+  </data>
+  <data name="ExamSupervisorExternalMember" xml:space="preserve">
+    <value>External member (not from the faculty where the PhD student is enrolled)</value>
+  </data>
+  <data name="AcademicCommitteeMember" xml:space="preserve">
+    <value>Academic committee member</value>
+  </data>
+  <data name="AdditionalMember" xml:space="preserve">
+    <value>Additional member</value>
+  </data>
+  <data name="StudyCompletionExpectedDate" xml:space="preserve">
+    <value>Expected date of study completion</value>
+  </data>
+  <data name="ApplicationSubmissionCreditsNumber" xml:space="preserve">
+    <value>Number of credits at the time of application submission</value>
+  </data>
+  <data name="ApplicationSubmissionYear" xml:space="preserve">
+    <value>Year of application submission</value>
+  </data>
+  <data name="DissertationTopic" xml:space="preserve">
+    <value>Dissertation topic</value>
+  </data>
+  <data name="DissertationOpponents" xml:space="preserve">
+    <value>Opponents of the dissertation (Directive ŽU No. 110, Part III, Article 14)</value>
+  </data>
+  <data name="DissertationOpponentsInfo1" xml:space="preserve">
+    <value>Each opponent must be from a different organization.</value>
+  </data>
+  <data name="DissertationOpponentsInfo2" xml:space="preserve">
+    <value>One opponent may be from UNIZA.</value>
+  </data>
+  <data name="DissertationOpponentsInfo3" xml:space="preserve">
+    <value>Two opponents are recommended; in justified cases, three may be appointed.</value>
+  </data>
+  <data name="DissertationOpponentsInfo4" xml:space="preserve">
+    <value>Please include only those opponents in the proposal who have preliminarily agreed to the review.</value>
+  </data>
+  <data name="DissertationDefenseSupervisorOpponent1" xml:space="preserve">
+    <value>1st opponent (prof. title)</value>
+  </data>
+  <data name="DissertationDefenseSupervisorOpponent2" xml:space="preserve">
+    <value>2nd opponent (Prof. or Assoc. Prof. title, or a distinguished expert in the field from practice with a PhD./CSc. degree)</value>
+  </data>
+  <data name="DissertationDefenseSupervisorOpponent3" xml:space="preserve">
+    <value>3rd opponent (Prof. or Assoc. Prof. title, or a distinguished expert in the field from practice with a PhD./CSc. degree)</value>
+  </data>
+  <data name="WorkplaceAddress" xml:space="preserve">
+    <value>Workplace address</value>
+  </data>
+  <data name="DissertationDefenseSupervisorTitle" xml:space="preserve">
+    <value>Proposal for the appointment of opponents for the dissertation defense</value>
+  </data>
+  <data name="RequiredSection" xml:space="preserve">
+    <value>Required section</value>
+  </data>
+  <data name="ExamSupervisorOpponent" xml:space="preserve">
+    <value>Opponent (an expert with a PhD title who does not work at the same faculty as the doctoral candidate)</value>
+  </data>
+  <data name="SupervisorDocuments" xml:space="preserve">
+    <value>Supervisor documents</value>
+  </data>
+  <data name="DissertationSupervisor" xml:space="preserve">
+    <value>Dissertation supervisor</value>
+  </data>
+  <data name="DissertationDefenseSupervisor" xml:space="preserve">
+    <value>Dissertation defense supervisor</value>
+  </data>
+  <data name="Chairperson" xml:space="preserve">
+    <value>Chairperson</value>
+  </data>
+  <data name="ExternalMember" xml:space="preserve">
+    <value>External member</value>
+  </data>
+  <data name="StudentEvaluationDeleteConfirmation" xml:space="preserve">
+    <value>Do you really want to delete selected student evaluation?</value>
+  </data>
+  <data name="ExamSupervisorEdit" xml:space="preserve">
+    <value>Edit exam supervisor</value>
+  </data>
+  <data name="ExamSupervisorAdd" xml:space="preserve">
+    <value>Add exam supervisor</value>
+  </data>
+  <data name="ExamSupervisorDelete" xml:space="preserve">
+    <value>Delete exam supervisor</value>
+  </data>
+  <data name="ExamSupervisorGenerate" xml:space="preserve">
+    <value>Generate exam supervisor</value>
+  </data>
+  <data name="DissertationDefenseSupervisorAdd" xml:space="preserve">
+    <value>Add dissertation defense supervisor</value>
+  </data>
+  <data name="DissertationDefenseSupervisorEdit" xml:space="preserve">
+    <value>Edit dissertation defense supervisor</value>
+  </data>
+  <data name="DissertationDefenseSupervisorDelete" xml:space="preserve">
+    <value>Delete dissertation defense supervisor</value>
+  </data>
+  <data name="DissertationDefenseSupervisorGenerate" xml:space="preserve">
+    <value>Generate dissertation defense supervisor</value>
+  </data>
+  <data name="DissertationDefenseSupervisorDeleteConfirmation" xml:space="preserve">
+    <value>Do you really want to delete selected dissertation defense supervisor?</value>
+  </data>
+  <data name="Opponent1" xml:space="preserve">
+    <value>1st opponent</value>
+  </data>
+  <data name="Opponent2" xml:space="preserve">
+    <value>2nd opponent</value>
+  </data>
+  <data name="Opponent3" xml:space="preserve">
+    <value>3rd opponent</value>
   </data>
 </root>

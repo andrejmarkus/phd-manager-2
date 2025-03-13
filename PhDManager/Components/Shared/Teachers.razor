@@ -31,8 +31,11 @@
         <TemplateColumn Title="@Localizer["ProfileEdit"]">
             <CellTemplate>
                 <MudStack Row>
-                    <MudTooltip Text="@Localizer["TeacherRemove"]">
+                    <MudTooltip Text="@Localizer["TeacherDelete"]">
                         <MudIconButton Size="@Size.Small" Color="Color.Error" Icon="@Icons.Material.Outlined.Delete" OnClick="@(() => DeleteTeacher(context.Item))" />
+                    </MudTooltip>
+                    <MudTooltip Text="@Localizer["StudentEdit"]">
+                        <MudIconButton Size="@Size.Small" Color="Color.Info" Icon="@Icons.Material.Outlined.Edit" OnClick="@(() => UpdateTeacher(context.Item))" />
                     </MudTooltip>
                 </MudStack>
             </CellTemplate>
@@ -111,9 +114,24 @@
         await LoadTeachers();
     }
 
+    private async Task UpdateTeacher(Teacher teacher)
+    {
+        var parameters = new DialogParameters<EditTeacherDialog> { { d => d.Teacher, teacher } };
+        var dialog = await DialogService.ShowAsync<EditTeacherDialog>(Localizer["UserEdit"], parameters, new() { FullWidth = true, MaxWidth = MaxWidth.Medium });
+        var result = await dialog.Result;
+
+        if (result is null || result.Canceled) return;
+
+        var updatedTeacher = result.Data as Teacher;
+
+        if (updatedTeacher is null) return;
+
+        await UnitOfWork.Teachers.UpdateAsync(updatedTeacher);
+        await UnitOfWork.CompleteAsync();
+    }
+
     private async Task LoadTeachers()
     {
         _teachers = (await UnitOfWork.Teachers.GetAllAsync())?.Where(t => t is not ExternalTeacher);
     }
 }
-

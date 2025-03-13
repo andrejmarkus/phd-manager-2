@@ -18,6 +18,8 @@
         ISubjectsExamApplicationRepository SubjectsExamApplications { get; }
         IExamApplicationRepository ExamApplications { get; }
         IStudentEvaluationRepository StudentEvaluations { get; }
+        IExamSupervisorRepository ExamSupervisors { get; }
+        IDissertationDefenseSupervisorRepository DissertationDefenseSupervisors { get; }
         Task CompleteAsync();
     }
 }

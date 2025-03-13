@@ -1,0 +1,117 @@
+﻿@using Microsoft.AspNetCore.Authorization
+@using Microsoft.Extensions.Localization
+@using PhDManager.Locales
+@using PhDManager.Models
+@using PhDManager.Models.Roles
+@using PhDManager.Services
+@using PhDManager.Services.IRepositories
+
+@rendermode InteractiveServer
+
+@inject IJSRuntime JSRuntime
+@inject IUnitOfWork UnitOfWork
+@inject IDialogService DialogService
+@inject IStringLocalizer<Resources> Localizer
+@inject DocumentService DocumentService
+@inject UsersService UsersService
+
+<MudDataGrid T="ExamSupervisor" Items="_examSupervisors" Hover SortMode="SortMode.Multiple" QuickFilter="_quickFilter" Elevation="0">
+    <ToolBarContent>
+        <MudText Typo="Typo.h6" GutterBottom="false">@Localizer["DissertationSupervisor"]</MudText>
+        <MudSpacer />
+        <MudButton class="mx-4" Variant="Variant.Filled" Color="Color.Primary" Href="management/exam-supervisors/add">@Localizer["ExamSupervisorAdd"]</MudButton>
+        <MudTextField Variant="Variant.Outlined" Placeholder="@Localizer["Search"]" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" @bind-Value="_search" />
+    </ToolBarContent>
+    <Columns>
+        <PropertyColumn Property="se => se.Student!.User.DisplayName" Title="@Localizer["Student"]" />
+        <PropertyColumn Property="se => se.Examiner.User.DisplayName" Title="@Localizer["Examiner"]" />
+        <PropertyColumn Property="se => se.Chairperson.User.DisplayName" Title="@Localizer["Chairperson"]" />
+        <PropertyColumn Property="se => se.ExternalMember.User.DisplayName" Title="@Localizer["ExternalMember"]" />
+        <PropertyColumn Property="se => se.AcademicCommitteeMember.User.DisplayName" Title="@Localizer["AcademicCommitteeMember"]" />
+        <PropertyColumn Property="se => se.AdditionalMember.User.DisplayName" Title="@Localizer["AdditionalMember"]" />
+        <TemplateColumn Title="@Localizer["ExamSupervisorEdit"]">
+            <CellTemplate>
+                <MudStack Row>
+                    <MudTooltip Text="@Localizer["ExamSupervisorDelete"]">
+                        <MudIconButton Size="@Size.Small" Color="Color.Error" Icon="@Icons.Material.Outlined.Delete" OnClick="@(async () => await DeleteExamSupervisor(context.Item))" />
+                    </MudTooltip>
+                    <MudTooltip Text="@Localizer["ExamSupervisorEdit"]">
+                        <MudIconButton Size="@Size.Small" Color="Color.Info" Icon="@Icons.Material.Outlined.Edit" Href="@($"management/exam-supervisors/edit/{context.Item.Guid}")" />
+                    </MudTooltip>
+                    <MudTooltip Text="@Localizer["ExamSupervisorGenerate"]">
+                        <MudIconButton Size="@Size.Small" Color="Color.Info" Icon="@Icons.Material.Outlined.Print" OnClick="@(async () => await DocumentService.DownloadExamSupervisorDocument(context.Item))" />
+                    </MudTooltip>
+                </MudStack>
+            </CellTemplate>
+        </TemplateColumn>
+    </Columns>
+    <PagerContent>
+        <MudDataGridPager T="ExamSupervisor" />
+    </PagerContent>
+</MudDataGrid>
+
+@code {
+    private IEnumerable<ExamSupervisor>? _examSupervisors;
+
+    private string? _currentUserRole;
+    private string? _currentUserId;
+    private string _search = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _currentUserRole = await UsersService.GetCurrentUserRoleAsync();
+        _currentUserId = await UsersService.GetCurrentUserIdAsync();
+
+        await LoadExamSupervisors();
+    }
+
+    private Func<ExamSupervisor, bool> _quickFilter => es =>
+    {
+        if (string.IsNullOrWhiteSpace(_search))
+            return true;
+
+        if (es.Student?.User.DisplayName?.Contains(_search, StringComparison.OrdinalIgnoreCase) == true)
+            return true;
+
+        if (es.Examiner.User.DisplayName?.Contains(_search, StringComparison.OrdinalIgnoreCase) == true)
+            return true;
+
+        if (es.Chairperson.User.DisplayName?.Contains(_search, StringComparison.OrdinalIgnoreCase) == true)
+            return true;
+
+        if (es.ExternalMember.User.DisplayName?.Contains(_search, StringComparison.OrdinalIgnoreCase) == true)
+            return true;
+
+        if (es.AcademicCommitteeMember.User.DisplayName?.Contains(_search, StringComparison.OrdinalIgnoreCase) == true)
+            return true;
+
+        if (es.AdditionalMember.User.DisplayName?.Contains(_search, StringComparison.OrdinalIgnoreCase) == true)
+            return true;
+
+        if ($"{es.Student?.User.DisplayName} {es.Examiner.User.DisplayName} {es.Chairperson.User.DisplayName} {es.ExternalMember.User.DisplayName} {es.AcademicCommitteeMember.User.DisplayName} {es.AdditionalMember.User.DisplayName}".Contains(_search))
+            return true;
+
+        return false;
+    };
+
+    private async Task DeleteExamSupervisor(ExamSupervisor examSupervisor)
+    {
+        bool? result = await DialogService.ShowMessageBox(Localizer["DissertationThesisDelete"], Localizer["DissertationThesisDeleteConfirmation"], Localizer["Yes"], Localizer["No"]);
+        if (result == false) return;
+
+        UnitOfWork.ExamSupervisors.Delete(examSupervisor);
+        await UnitOfWork.CompleteAsync();
+
+        await LoadExamSupervisors();
+    }
+
+    private async Task LoadExamSupervisors()
+    {
+        _examSupervisors = await UnitOfWork.ExamSupervisors.GetAllAsync();
+
+        if (_currentUserRole == Teacher.Role || _currentUserRole == ExternalTeacher.Role)
+        {
+            _examSupervisors = _examSupervisors?.Where(se => se.Student?.Thesis?.Supervisor.User.Id == _currentUserId);
+        }
+    }
+}

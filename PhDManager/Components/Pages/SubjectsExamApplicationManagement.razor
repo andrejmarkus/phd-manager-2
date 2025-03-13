@@ -40,7 +40,7 @@
         @foreach (var subject in _subjectsExamApplication.Subjects.Select((e, i) => new { Element = e, Index = i }))
         {
             <MudStack Row AlignItems="AlignItems.Center">
-                <MudSelect T="Subject" Required RequiredError="@Localizer["IndividualPlanSubjectError"]" Label="@($"{Localizer["Subject"]} {subject.Index + 1}")" ToStringFunc="@(s => s is null ? string.Empty : s.Name)" Variant="Variant.Outlined" @bind-Value="_subjectsExamApplication.Subjects[subject.Index]">
+                <MudSelect T="Subject" Required RequiredError="@Localizer["Required"]" Label="@($"{Localizer["Subject"]} {subject.Index + 1}")" ToStringFunc="@(s => s is null ? string.Empty : s.Name)" Variant="Variant.Outlined" @bind-Value="_subjectsExamApplication.Subjects[subject.Index]">
                     @if (_subjects is not null)
                     {
                         foreach (var subject in _subjects)

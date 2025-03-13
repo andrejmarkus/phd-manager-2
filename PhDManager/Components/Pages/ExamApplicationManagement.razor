@@ -35,8 +35,8 @@
         <MudDatePicker ReadOnly Label="@Localizer["IndividualPlanStudyStartDate"]" Variant="Variant.Outlined" @bind-Date="_student.IndividualPlan.StudyStartDate" />
     }
 
-    <MudTextField T="string" Required RequiredError="@Localizer["ExamApplicationWrittenThesisTitleError"]" Label="@Localizer["ExamApplicationWrittenThesisTitle"]" Variant="Variant.Outlined" @bind-Value="_examApplication.WrittenThesisTitle" />
-    <MudTextField T="string" Required RequiredError="@Localizer["ExamApplicationWrittenThesisTitleEnglishError"]" Label="@Localizer["ExamApplicationWrittenThesisTitleEnglish"]" Variant="Variant.Outlined" @bind-Value="_examApplication.WrittenThesisTitleEnglish" />
+    <MudTextField T="string" Required RequiredError="@Localizer["Required"]" Label="@Localizer["ExamApplicationWrittenThesisTitle"]" Variant="Variant.Outlined" @bind-Value="_examApplication.WrittenThesisTitle" />
+    <MudTextField T="string" Required RequiredError="@Localizer["Required"]" Label="@Localizer["ExamApplicationWrittenThesisTitleEnglish"]" Variant="Variant.Outlined" @bind-Value="_examApplication.WrittenThesisTitleEnglish" />
 
     <MudText Class="mt-2" Typo="Typo.h6">@Localizer["SubjectsExamApplicationInfo"]</MudText>
     <MudText>@($"({Localizer["SubjectsExamApplicationNote"]})")</MudText>
@@ -44,7 +44,7 @@
         @foreach (var subject in _selectedSubjects.Select((e, i) => new { Element = e, Index = i }))
         {
             <MudStack Row AlignItems="AlignItems.Center">
-                <MudSelect T="Subject" Required RequiredError="@Localizer["IndividualPlanSubjectError"]" Label="@($"{Localizer["Subject"]} {subject.Index + 1}")" ToStringFunc="@(s => s is null ? string.Empty : s.Name)" Variant="Variant.Outlined" @bind-Value="_selectedSubjects[subject.Index]">
+                <MudSelect T="Subject" Required RequiredError="@Localizer["Required"]" Label="@($"{Localizer["Subject"]} {subject.Index + 1}")" ToStringFunc="@(s => s is null ? string.Empty : s.Name)" Variant="Variant.Outlined" @bind-Value="_selectedSubjects[subject.Index]">
                     @if (_subjects is not null)
                     {
                         foreach (var subject in _subjects)

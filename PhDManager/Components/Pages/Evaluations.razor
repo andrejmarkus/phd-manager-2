@@ -51,6 +51,9 @@
             </CellTemplate>
         </TemplateColumn>
     </Columns>
+    <PagerContent>
+        <MudDataGridPager T="StudentEvaluation" />
+    </PagerContent>
 </MudDataGrid>
 
 @code {
@@ -93,7 +96,7 @@
 
     private async Task DeleteStudentEvaluation(StudentEvaluation studentEvaluation)
     {
-        bool? result = await DialogService.ShowMessageBox(Localizer["DissertationThesisDelete"], Localizer["DissertationThesisDeleteConfirmation"], Localizer["Yes"], Localizer["No"]);
+        bool? result = await DialogService.ShowMessageBox(Localizer["StudentEvaluationDelete"], Localizer["StudentEvaluationDeleteConfirmation"], Localizer["Yes"], Localizer["No"]);
         if (result == false) return;
 
         UnitOfWork.StudentEvaluations.Delete(studentEvaluation);

@@ -61,6 +61,15 @@ namespace PhDManager.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Academic committee member.
+        /// </summary>
+        public static string AcademicCommitteeMember {
+            get {
+                return ResourceManager.GetString("AcademicCommitteeMember", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Migrate accounts.
         /// </summary>
         public static string AccountsMigrate {
@@ -84,6 +93,15 @@ namespace PhDManager.Locales {
         public static string Add {
             get {
                 return ResourceManager.GetString("Add", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Additional member.
+        /// </summary>
+        public static string AdditionalMember {
+            get {
+                return ResourceManager.GetString("AdditionalMember", resourceCulture);
             }
         }
         
@@ -169,6 +187,24 @@ namespace PhDManager.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Number of credits at the time of application submission.
+        /// </summary>
+        public static string ApplicationSubmissionCreditsNumber {
+            get {
+                return ResourceManager.GetString("ApplicationSubmissionCreditsNumber", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Year of application submission.
+        /// </summary>
+        public static string ApplicationSubmissionYear {
+            get {
+                return ResourceManager.GetString("ApplicationSubmissionYear", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Approved.
         /// </summary>
         public static string Approved {
@@ -214,6 +250,15 @@ namespace PhDManager.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Chairperson.
+        /// </summary>
+        public static string Chairperson {
+            get {
+                return ResourceManager.GetString("Chairperson", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to City.
         /// </summary>
         public static string City {
@@ -255,6 +300,24 @@ namespace PhDManager.Locales {
         public static string CommentsCount {
             get {
                 return ResourceManager.GetString("CommentsCount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Committee members proposal.
+        /// </summary>
+        public static string CommitteeMembersProposal {
+            get {
+                return ResourceManager.GetString("CommitteeMembersProposal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The committee and examiners for other subjects will be appointed by the department committee. The supervisor may propose potential candidates. (Email and phone should be provided only if the proposed candidate is not from ŽU).
+        /// </summary>
+        public static string CommitteeMembersProposalInfo {
+            get {
+                return ResourceManager.GetString("CommitteeMembersProposalInfo", resourceCulture);
             }
         }
         
@@ -385,11 +448,155 @@ namespace PhDManager.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Dissertation defense supervisor.
+        /// </summary>
+        public static string DissertationDefenseSupervisor {
+            get {
+                return ResourceManager.GetString("DissertationDefenseSupervisor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add dissertation defense supervisor.
+        /// </summary>
+        public static string DissertationDefenseSupervisorAdd {
+            get {
+                return ResourceManager.GetString("DissertationDefenseSupervisorAdd", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Delete dissertation defense supervisor.
+        /// </summary>
+        public static string DissertationDefenseSupervisorDelete {
+            get {
+                return ResourceManager.GetString("DissertationDefenseSupervisorDelete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Do you really want to delete selected dissertation defense supervisor?.
+        /// </summary>
+        public static string DissertationDefenseSupervisorDeleteConfirmation {
+            get {
+                return ResourceManager.GetString("DissertationDefenseSupervisorDeleteConfirmation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Edit dissertation defense supervisor.
+        /// </summary>
+        public static string DissertationDefenseSupervisorEdit {
+            get {
+                return ResourceManager.GetString("DissertationDefenseSupervisorEdit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Generate dissertation defense supervisor.
+        /// </summary>
+        public static string DissertationDefenseSupervisorGenerate {
+            get {
+                return ResourceManager.GetString("DissertationDefenseSupervisorGenerate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 1st opponent (prof. title).
+        /// </summary>
+        public static string DissertationDefenseSupervisorOpponent1 {
+            get {
+                return ResourceManager.GetString("DissertationDefenseSupervisorOpponent1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 2nd opponent (Prof. or Assoc. Prof. title, or a distinguished expert in the field from practice with a PhD./CSc. degree).
+        /// </summary>
+        public static string DissertationDefenseSupervisorOpponent2 {
+            get {
+                return ResourceManager.GetString("DissertationDefenseSupervisorOpponent2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 3rd opponent (Prof. or Assoc. Prof. title, or a distinguished expert in the field from practice with a PhD./CSc. degree).
+        /// </summary>
+        public static string DissertationDefenseSupervisorOpponent3 {
+            get {
+                return ResourceManager.GetString("DissertationDefenseSupervisorOpponent3", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Proposal for the appointment of opponents for the dissertation defense.
+        /// </summary>
+        public static string DissertationDefenseSupervisorTitle {
+            get {
+                return ResourceManager.GetString("DissertationDefenseSupervisorTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Dissertation exam.
         /// </summary>
         public static string DissertationExam {
             get {
                 return ResourceManager.GetString("DissertationExam", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Opponents of the dissertation (Directive ŽU No. 110, Part III, Article 14).
+        /// </summary>
+        public static string DissertationOpponents {
+            get {
+                return ResourceManager.GetString("DissertationOpponents", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Each opponent must be from a different organization..
+        /// </summary>
+        public static string DissertationOpponentsInfo1 {
+            get {
+                return ResourceManager.GetString("DissertationOpponentsInfo1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to One opponent may be from UNIZA..
+        /// </summary>
+        public static string DissertationOpponentsInfo2 {
+            get {
+                return ResourceManager.GetString("DissertationOpponentsInfo2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Two opponents are recommended; in justified cases, three may be appointed..
+        /// </summary>
+        public static string DissertationOpponentsInfo3 {
+            get {
+                return ResourceManager.GetString("DissertationOpponentsInfo3", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please include only those opponents in the proposal who have preliminarily agreed to the review..
+        /// </summary>
+        public static string DissertationOpponentsInfo4 {
+            get {
+                return ResourceManager.GetString("DissertationOpponentsInfo4", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Dissertation supervisor.
+        /// </summary>
+        public static string DissertationSupervisor {
+            get {
+                return ResourceManager.GetString("DissertationSupervisor", resourceCulture);
             }
         }
         
@@ -493,15 +700,6 @@ namespace PhDManager.Locales {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to You must enter a description of the problem!.
-        /// </summary>
-        public static string DissertationThesisDescriptionError {
-            get {
-                return ResourceManager.GetString("DissertationThesisDescriptionError", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Is it possible to develop a thesis in English?.
         /// </summary>
         public static string DissertationThesisEnglish {
@@ -538,15 +736,6 @@ namespace PhDManager.Locales {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to It is necessary to assign a research task.
-        /// </summary>
-        public static string DissertationThesisResearchTaskError {
-            get {
-                return ResourceManager.GetString("DissertationThesisResearchTaskError", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Expected scientific contribution (algorithms, methodologies, ...).
         /// </summary>
         public static string DissertationThesisScientificContribution {
@@ -556,29 +745,11 @@ namespace PhDManager.Locales {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to It is necessary to specify the expected scientific contribution!.
-        /// </summary>
-        public static string DissertationThesisScientificContributionError {
-            get {
-                return ResourceManager.GetString("DissertationThesisScientificContributionError", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Recommended practice of scientific research.
         /// </summary>
         public static string DissertationThesisScientificProgress {
             get {
                 return ResourceManager.GetString("DissertationThesisScientificProgress", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to It is necessary to specify the recommended procedure for scientific research!.
-        /// </summary>
-        public static string DissertationThesisScientificProgressError {
-            get {
-                return ResourceManager.GetString("DissertationThesisScientificProgressError", resourceCulture);
             }
         }
         
@@ -601,15 +772,6 @@ namespace PhDManager.Locales {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to It is necessary to submit the results of the solution so far at the training site!.
-        /// </summary>
-        public static string DissertationThesisSolutionResultsError {
-            get {
-                return ResourceManager.GetString("DissertationThesisSolutionResultsError", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to List the literature in the same style as it is displayed in the University Library of the University of Žilina..
         /// </summary>
         public static string DissertationThesisSolutionResultsInfo {
@@ -628,11 +790,11 @@ namespace PhDManager.Locales {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to You must enter a topic title!.
+        ///   Looks up a localized string similar to Dissertation topic.
         /// </summary>
-        public static string DissertationThesisTitleError {
+        public static string DissertationTopic {
             get {
-                return ResourceManager.GetString("DissertationThesisTitleError", resourceCulture);
+                return ResourceManager.GetString("DissertationTopic", resourceCulture);
             }
         }
         
@@ -651,6 +813,15 @@ namespace PhDManager.Locales {
         public static string Education {
             get {
                 return ResourceManager.GetString("Education", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to E-mail.
+        /// </summary>
+        public static string Email {
+            get {
+                return ResourceManager.GetString("Email", resourceCulture);
             }
         }
         
@@ -736,24 +907,6 @@ namespace PhDManager.Locales {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to It is necessary to submit a written dissertation topic in English!.
-        /// </summary>
-        public static string ExamApplicationWrittenThesisTitleEnglishError {
-            get {
-                return ResourceManager.GetString("ExamApplicationWrittenThesisTitleEnglishError", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to It is necessary to submit a written dissertation topic!.
-        /// </summary>
-        public static string ExamApplicationWrittenThesisTitleError {
-            get {
-                return ResourceManager.GetString("ExamApplicationWrittenThesisTitleError", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Exam date.
         /// </summary>
         public static string ExamDate {
@@ -763,11 +916,119 @@ namespace PhDManager.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Examiner.
+        /// </summary>
+        public static string Examiner {
+            get {
+                return ResourceManager.GetString("Examiner", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add exam supervisor.
+        /// </summary>
+        public static string ExamSupervisorAdd {
+            get {
+                return ResourceManager.GetString("ExamSupervisorAdd", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Chairperson (prof. title).
+        /// </summary>
+        public static string ExamSupervisorChairperson {
+            get {
+                return ResourceManager.GetString("ExamSupervisorChairperson", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Delete exam supervisor.
+        /// </summary>
+        public static string ExamSupervisorDelete {
+            get {
+                return ResourceManager.GetString("ExamSupervisorDelete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Edit exam supervisor.
+        /// </summary>
+        public static string ExamSupervisorEdit {
+            get {
+                return ResourceManager.GetString("ExamSupervisorEdit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Approved by the Scientific Council of FRI.
+        /// </summary>
+        public static string ExamSupervisorExaminerInfo {
+            get {
+                return ResourceManager.GetString("ExamSupervisorExaminerInfo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to External member (not from the faculty where the PhD student is enrolled).
+        /// </summary>
+        public static string ExamSupervisorExternalMember {
+            get {
+                return ResourceManager.GetString("ExamSupervisorExternalMember", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Generate exam supervisor.
+        /// </summary>
+        public static string ExamSupervisorGenerate {
+            get {
+                return ResourceManager.GetString("ExamSupervisorGenerate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Opponent (an expert with a PhD title who does not work at the same faculty as the doctoral candidate).
+        /// </summary>
+        public static string ExamSupervisorOpponent {
+            get {
+                return ResourceManager.GetString("ExamSupervisorOpponent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Subjects of the doctoral examination.
+        /// </summary>
+        public static string ExamSupervisorSubjects {
+            get {
+                return ResourceManager.GetString("ExamSupervisorSubjects", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to External member.
+        /// </summary>
+        public static string ExternalMember {
+            get {
+                return ResourceManager.GetString("ExternalMember", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Delete external teacher.
         /// </summary>
         public static string ExternalTeacherDelete {
             get {
                 return ResourceManager.GetString("ExternalTeacherDelete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Edit external teacher.
+        /// </summary>
+        public static string ExternalTeacherEdit {
+            get {
+                return ResourceManager.GetString("ExternalTeacherEdit", resourceCulture);
             }
         }
         
@@ -952,15 +1213,6 @@ namespace PhDManager.Locales {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to You must specify the application deadline!.
-        /// </summary>
-        public static string IndividualPlanDissertationExamDateError {
-            get {
-                return ResourceManager.GetString("IndividualPlanDissertationExamDateError", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to The deadline for submitting the application for the dissertation examination, including the submission of the written dissertation for the dissertation exam (usually the first half of September in the 2nd year).
         /// </summary>
         public static string IndividualPlanDissertationExamDateInfo {
@@ -975,15 +1227,6 @@ namespace PhDManager.Locales {
         public static string IndividualPlanDissertationSubmissionDate {
             get {
                 return ResourceManager.GetString("IndividualPlanDissertationSubmissionDate", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to It is necessary to specify the submission date!.
-        /// </summary>
-        public static string IndividualPlanDissertationSubmissionDateError {
-            get {
-                return ResourceManager.GetString("IndividualPlanDissertationSubmissionDateError", resourceCulture);
             }
         }
         
@@ -1069,29 +1312,11 @@ namespace PhDManager.Locales {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to It is necessary to select a student!.
-        /// </summary>
-        public static string IndividualPlanStudentError {
-            get {
-                return ResourceManager.GetString("IndividualPlanStudentError", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Date of graduation.
         /// </summary>
         public static string IndividualPlanStudyEndDate {
             get {
                 return ResourceManager.GetString("IndividualPlanStudyEndDate", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to It is necessary to specify the date of graduation!.
-        /// </summary>
-        public static string IndividualPlanStudyEndDateError {
-            get {
-                return ResourceManager.GetString("IndividualPlanStudyEndDateError", resourceCulture);
             }
         }
         
@@ -1114,38 +1339,11 @@ namespace PhDManager.Locales {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to It is necessary to enter the date of arrival!.
-        /// </summary>
-        public static string IndividualPlanStudyStartDateError {
-            get {
-                return ResourceManager.GetString("IndividualPlanStudyStartDateError", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to It is necessary to choose a subject!.
-        /// </summary>
-        public static string IndividualPlanSubjectError {
-            get {
-                return ResourceManager.GetString("IndividualPlanSubjectError", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Subjects with thematic headings for the dissertation examination.
         /// </summary>
         public static string IndividualPlanSubjectsInfo {
             get {
                 return ResourceManager.GetString("IndividualPlanSubjectsInfo", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to It is necessary to enter the task!.
-        /// </summary>
-        public static string IndividualPlanTaskError {
-            get {
-                return ResourceManager.GetString("IndividualPlanTaskError", resourceCulture);
             }
         }
         
@@ -1195,29 +1393,11 @@ namespace PhDManager.Locales {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to It is necessary to enter the study literature!.
-        /// </summary>
-        public static string IndividualPlanWrittenThesisLiteratureError {
-            get {
-                return ResourceManager.GetString("IndividualPlanWrittenThesisLiteratureError", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Recommended professional lectures, seminars and conferences.
         /// </summary>
         public static string IndividualPlanWrittenThesisRecommendedLectures {
             get {
                 return ResourceManager.GetString("IndividualPlanWrittenThesisRecommendedLectures", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to It is necessary to enter recommended professional lectures, seminars or conferences.
-        /// </summary>
-        public static string IndividualPlanWrittenThesisRecommendedLecturesError {
-            get {
-                return ResourceManager.GetString("IndividualPlanWrittenThesisRecommendedLecturesError", resourceCulture);
             }
         }
         
@@ -1303,6 +1483,15 @@ namespace PhDManager.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Full name, and titles.
+        /// </summary>
+        public static string NameAndTitles {
+            get {
+                return ResourceManager.GetString("NameAndTitles", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Use the sidebar for navigation..
         /// </summary>
         public static string NavigationInfo {
@@ -1357,6 +1546,33 @@ namespace PhDManager.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 1st opponent.
+        /// </summary>
+        public static string Opponent1 {
+            get {
+                return ResourceManager.GetString("Opponent1", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 2nd opponent.
+        /// </summary>
+        public static string Opponent2 {
+            get {
+                return ResourceManager.GetString("Opponent2", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 3rd opponent.
+        /// </summary>
+        public static string Opponent3 {
+            get {
+                return ResourceManager.GetString("Opponent3", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Page not found.
         /// </summary>
         public static string PageNotFound {
@@ -1371,6 +1587,15 @@ namespace PhDManager.Locales {
         public static string Password {
             get {
                 return ResourceManager.GetString("Password", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Personal data.
+        /// </summary>
+        public static string PersonalData {
+            get {
+                return ResourceManager.GetString("PersonalData", resourceCulture);
             }
         }
         
@@ -1438,6 +1663,24 @@ namespace PhDManager.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Required.
+        /// </summary>
+        public static string Required {
+            get {
+                return ResourceManager.GetString("Required", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Required section.
+        /// </summary>
+        public static string RequiredSection {
+            get {
+                return ResourceManager.GetString("RequiredSection", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Research type.
         /// </summary>
         public static string ResearchType {
@@ -1470,15 +1713,6 @@ namespace PhDManager.Locales {
         public static string ResearchTypeBasic {
             get {
                 return ResourceManager.GetString("ResearchTypeBasic", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to It is necessary to choose the research type!.
-        /// </summary>
-        public static string ResearchTypeError {
-            get {
-                return ResourceManager.GetString("ResearchTypeError", resourceCulture);
             }
         }
         
@@ -1618,6 +1852,15 @@ namespace PhDManager.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Subject of specialization.
+        /// </summary>
+        public static string SpecializationSubject {
+            get {
+                return ResourceManager.GetString("SpecializationSubject", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to State.
         /// </summary>
         public static string State {
@@ -1744,6 +1987,15 @@ namespace PhDManager.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Do you really want to delete selected student evaluation?.
+        /// </summary>
+        public static string StudentEvaluationDeleteConfirmation {
+            get {
+                return ResourceManager.GetString("StudentEvaluationDeleteConfirmation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Edit student evaluation.
         /// </summary>
         public static string StudentEvaluationEdit {
@@ -1821,6 +2073,15 @@ namespace PhDManager.Locales {
         public static string StudentState {
             get {
                 return ResourceManager.GetString("StudentState", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Expected date of study completion.
+        /// </summary>
+        public static string StudyCompletionExpectedDate {
+            get {
+                return ResourceManager.GetString("StudyCompletionExpectedDate", resourceCulture);
             }
         }
         
@@ -1920,15 +2181,6 @@ namespace PhDManager.Locales {
         public static string StudyProgramEdit {
             get {
                 return ResourceManager.GetString("StudyProgramEdit", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to It is necessary to choose a study program!.
-        /// </summary>
-        public static string StudyProgramError {
-            get {
-                return ResourceManager.GetString("StudyProgramError", resourceCulture);
             }
         }
         
@@ -2068,20 +2320,20 @@ namespace PhDManager.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Supervisor documents.
+        /// </summary>
+        public static string SupervisorDocuments {
+            get {
+                return ResourceManager.GetString("SupervisorDocuments", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Supervisor email.
         /// </summary>
         public static string SupervisorEmail {
             get {
                 return ResourceManager.GetString("SupervisorEmail", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to It is necessary to choose a supervisor!.
-        /// </summary>
-        public static string SupervisorError {
-            get {
-                return ResourceManager.GetString("SupervisorError", resourceCulture);
             }
         }
         
@@ -2167,11 +2419,20 @@ namespace PhDManager.Locales {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Remove teacher.
+        ///   Looks up a localized string similar to Delete teacher.
         /// </summary>
-        public static string TeacherRemove {
+        public static string TeacherDelete {
             get {
-                return ResourceManager.GetString("TeacherRemove", resourceCulture);
+                return ResourceManager.GetString("TeacherDelete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Edit teacher.
+        /// </summary>
+        public static string TeacherEdit {
+            get {
+                return ResourceManager.GetString("TeacherEdit", resourceCulture);
             }
         }
         
@@ -2352,6 +2613,24 @@ namespace PhDManager.Locales {
         public static string Welcome {
             get {
                 return ResourceManager.GetString("Welcome", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Workplace.
+        /// </summary>
+        public static string Workplace {
+            get {
+                return ResourceManager.GetString("Workplace", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Workplace address.
+        /// </summary>
+        public static string WorkplaceAddress {
+            get {
+                return ResourceManager.GetString("WorkplaceAddress", resourceCulture);
             }
         }
         

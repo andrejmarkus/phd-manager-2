@@ -1,0 +1,29 @@
+﻿@page "/management/supervisor-documents"
+
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.Extensions.Localization
+@using PhDManager.Components.Shared
+@using PhDManager.Locales
+@using PhDManager.Models
+@using PhDManager.Models.Roles
+
+@rendermode InteractiveServer
+
+@inject IStringLocalizer<Resources> Localizer
+
+@attribute [Authorize(Roles = $"{Admin.Role}, {Teacher.Role}, {ExternalTeacher.Role}")]
+
+<PageTitle>@Localizer["SupervisorDocuments"]</PageTitle>
+
+<MudTabs Elevation="0">
+    <MudTabPanel Text="@Localizer["DissertationSupervisor"]">
+        <ExamSupervisors />
+    </MudTabPanel>
+    <MudTabPanel Text="@Localizer["DissertationDefenseSupervisor"]">
+        <DissertationDefenseSupervisors />
+    </MudTabPanel>
+</MudTabs>
+
+@code {
+
+}

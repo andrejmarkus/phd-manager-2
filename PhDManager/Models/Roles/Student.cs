@@ -25,6 +25,8 @@ namespace PhDManager.Models.Roles
         public virtual SubjectsExamApplication? SubjectsExamApplication { get; set; }
         public virtual ExamApplication? ExamApplication { get; set; }
         public virtual StudentEvaluation? StudentEvaluation { get; set; }
+        public virtual ExamSupervisor? ExamSupervisor { get; set; }
+        public virtual DissertationDefenseSupervisor? DissertationDefenseSupervisor { get; set; }
         public virtual ApplicationUser User { get; set; } = default!;
 
         [NotMapped]

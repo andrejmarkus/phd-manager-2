@@ -50,7 +50,7 @@
                     <MudSelectItem T="StudyForm" Value="studyForm.Item1">@studyForm.Item2</MudSelectItem>
                 }
             </MudSelect>
-            <MudText Class="mt-4">Osobné údaje</MudText>
+            <MudText Class="mt-4">@Localizer["PersonalData"]</MudText>
             <MudDatePicker ShowToolbar="false" Variant="Variant.Outlined" Label="@Localizer["Birthdate"]" @bind-Date="Student.User.Birthdate" />
             <MudTextField T="string" Variant="Variant.Outlined" InputType="InputType.Telephone" Label="@Localizer["PhoneNumber"]" @bind-Value="Student.User.PhoneNumber" />
             <MudTextField T="string" Variant="Variant.Outlined" Label="@Localizer["Street"]" @bind-Value="Student.Address!.Street" />

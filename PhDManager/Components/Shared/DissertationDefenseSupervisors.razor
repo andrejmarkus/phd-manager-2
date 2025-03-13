@@ -1,0 +1,109 @@
+﻿@using Microsoft.AspNetCore.Authorization
+@using Microsoft.Extensions.Localization
+@using PhDManager.Locales
+@using PhDManager.Models
+@using PhDManager.Models.Roles
+@using PhDManager.Services
+@using PhDManager.Services.IRepositories
+
+@rendermode InteractiveServer
+
+@inject IJSRuntime JSRuntime
+@inject IUnitOfWork UnitOfWork
+@inject IDialogService DialogService
+@inject IStringLocalizer<Resources> Localizer
+@inject DocumentService DocumentService
+@inject UsersService UsersService
+
+<MudDataGrid T="DissertationDefenseSupervisor" Items="_dissertationDefenseSupervisors" Hover SortMode="SortMode.Multiple" QuickFilter="_quickFilter" Elevation="0">
+    <ToolBarContent>
+        <MudText Typo="Typo.h6" GutterBottom="false">@Localizer["DissertationDefenseSupervisor"]</MudText>
+        <MudSpacer />
+        <MudButton class="mx-4" Variant="Variant.Filled" Color="Color.Primary" Href="management/dissertation-defense-supervisors/add">@Localizer["DissertationDefenseSupervisorAdd"]</MudButton>
+        <MudTextField Variant="Variant.Outlined" Placeholder="@Localizer["Search"]" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" @bind-Value="_search" />
+    </ToolBarContent>
+    <Columns>
+        <PropertyColumn Property="se => se.Student!.User.DisplayName" Title="@Localizer["Student"]" />
+        <PropertyColumn Property="se => se.OpponentDisplayNames[0]" Title="@Localizer["Opponent1"]" />
+        <PropertyColumn Property="se => se.OpponentDisplayNames[0]" Title="@Localizer["Opponent2"]" />
+        <PropertyColumn Property="se => se.OpponentDisplayNames[0]" Title="@Localizer["Opponent3"]" />
+        <TemplateColumn Title="@Localizer["DissertationDefenseSupervisorEdit"]">
+            <CellTemplate>
+                <MudStack Row>
+                    <MudTooltip Text="@Localizer["DissertationDefenseSupervisorDelete"]">
+                        <MudIconButton Size="@Size.Small" Color="Color.Error" Icon="@Icons.Material.Outlined.Delete" OnClick="@(async () => await DeleteDissertationDefenseSupervisor(context.Item))" />
+                    </MudTooltip>
+                    <MudTooltip Text="@Localizer["DissertationDefenseSupervisorEdit"]">
+                        <MudIconButton Size="@Size.Small" Color="Color.Info" Icon="@Icons.Material.Outlined.Edit" Href="@($"management/dissertation-defense-supervisors/edit/{context.Item.Guid}")" />
+                    </MudTooltip>
+                    <MudTooltip Text="@Localizer["DissertationDefenseSupervisorGenerate"]">
+                        <MudIconButton Size="@Size.Small" Color="Color.Info" Icon="@Icons.Material.Outlined.Print" OnClick="@(async () => await DocumentService.DownloadDissertationDefenseSupervisorDocument(context.Item))" />
+                    </MudTooltip>
+                </MudStack>
+            </CellTemplate>
+        </TemplateColumn>
+    </Columns>
+    <PagerContent>
+        <MudDataGridPager T="DissertationDefenseSupervisor" />
+    </PagerContent>
+</MudDataGrid>
+
+@code {
+    private IEnumerable<DissertationDefenseSupervisor>? _dissertationDefenseSupervisors;
+
+    private string? _currentUserRole;
+    private string? _currentUserId;
+    private string _search = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _currentUserRole = await UsersService.GetCurrentUserRoleAsync();
+        _currentUserId = await UsersService.GetCurrentUserIdAsync();
+
+        await LoadDissertationDefenseSupervisor();
+    }
+
+    private Func<DissertationDefenseSupervisor, bool> _quickFilter => dds =>
+    {
+        if (string.IsNullOrWhiteSpace(_search))
+            return true;
+
+        if (dds.Student?.User.DisplayName?.Contains(_search, StringComparison.OrdinalIgnoreCase) == true)
+            return true;
+
+        if (dds.OpponentDisplayNames[0].Contains(_search, StringComparison.OrdinalIgnoreCase) == true)
+            return true;
+
+        if (dds.OpponentDisplayNames[1].Contains(_search, StringComparison.OrdinalIgnoreCase) == true)
+            return true;
+
+        if (dds.OpponentDisplayNames[2].Contains(_search, StringComparison.OrdinalIgnoreCase) == true)
+            return true;
+
+        if ($"{dds.Student?.User.DisplayName} {dds.OpponentDisplayNames[0]} {dds.OpponentDisplayNames[1]} {dds.OpponentDisplayNames[2]}".Contains(_search))
+            return true;
+
+        return false;
+    };
+
+    private async Task DeleteDissertationDefenseSupervisor(DissertationDefenseSupervisor dissertationDefenseSupervisor)
+    {
+        bool? result = await DialogService.ShowMessageBox(Localizer["DissertationDefenseSupervisorDelete"], Localizer["DissertationDefenseSupervisorDeleteConfirmation"], Localizer["Yes"], Localizer["No"]);
+        if (result == false) return;
+
+        UnitOfWork.DissertationDefenseSupervisors.Delete(dissertationDefenseSupervisor);
+        await UnitOfWork.CompleteAsync();
+
+        await LoadDissertationDefenseSupervisor();
+    }
+
+    private async Task LoadDissertationDefenseSupervisor()
+    {
+        _dissertationDefenseSupervisors = await UnitOfWork.DissertationDefenseSupervisors.GetAllAsync();
+
+        if (_currentUserRole == Teacher.Role || _currentUserRole == ExternalTeacher.Role)
+        {
+            _dissertationDefenseSupervisors = _dissertationDefenseSupervisors?.Where(se => se.Student?.Thesis?.Supervisor.User.Id == _currentUserId);
+        }
+    }
+}

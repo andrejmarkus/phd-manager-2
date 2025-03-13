@@ -26,7 +26,7 @@
 <MudText Typo="Typo.h3">@Localizer["StudentEvaluation"]</MudText>
 
 <MudForm @ref="_form">
-    <MudAutocomplete ReadOnly="@(StudentEvaluationGuid is not null)" T="Student" Required RequiredError="@Localizer["IndividualPlanStudentError"]" Label="@Localizer["Student"]" ToStringFunc="@(s => s is null ? null : s.User.DisplayName)" SearchFunc="SearchStudents" Variant="Variant.Outlined" @bind-Value="@_studentEvaluation.Student" />
+    <MudAutocomplete ReadOnly="@(StudentEvaluationGuid is not null)" T="Student" Required RequiredError="@Localizer["Required"]" Label="@Localizer["Student"]" ToStringFunc="@(s => s is null ? null : s.User.DisplayName)" SearchFunc="SearchStudents" Variant="Variant.Outlined" @bind-Value="@_studentEvaluation.Student" />
     @if (_studentEvaluation.Student is not null && _studentEvaluation.Student.IndividualPlan is not null && _studentEvaluation.Student.Thesis is not null)
     {
         <MudField T="string" Label="@Localizer["StudyForm"]" Variant="Variant.Outlined">@(EnumService.GetLocalizedEnumValue(_studentEvaluation.Student.StudyForm))</MudField>

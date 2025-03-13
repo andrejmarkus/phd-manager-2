@@ -261,38 +261,23 @@
   <data name="Address" xml:space="preserve">
     <value>Trvalé bydlisko</value>
   </data>
-  <data name="IndividualPlanError" xml:space="preserve">
-    <value>Uživateľ nemá vyplnené profilové informácie!</value>
-  </data>
   <data name="Deadlines" xml:space="preserve">
     <value>Termíny</value>
   </data>
   <data name="IndividualPlanStudent" xml:space="preserve">
     <value>Meno a priezvisko, titul</value>
   </data>
-  <data name="IndividualPlanStudentError" xml:space="preserve">
-    <value>Je nutné zvoliť doktoranda!</value>
-  </data>
   <data name="IndividualPlanStudyStartDate" xml:space="preserve">
     <value>Nástup na doktorandské štúdium</value>
   </data>
-  <data name="IndividualPlanStudyStartDateError" xml:space="preserve">
-    <value>Je nutné zadať termín nástupu!</value>
-  </data>
   <data name="IndividualPlanDissertationExamDateInfo" xml:space="preserve">
     <value>Termín podania žiadosti o dizertačnú skúšku vrátane odovzdania písomnej práce k diz. skúške (zvyčajne prvá polovica septembra v 2. ročníku)</value>
-  </data>
-  <data name="IndividualPlanDissertationExamDateError" xml:space="preserve">
-    <value>Je nutné zadať termín podania žiadosti!</value>
   </data>
   <data name="IndividualPlanDissertationExamDate" xml:space="preserve">
     <value>Termín podania žiadosti</value>
   </data>
   <data name="IndividualPlanDissertationSubmissionDate" xml:space="preserve">
     <value>Termín odovzdania</value>
-  </data>
-  <data name="IndividualPlanDissertationSubmissionDateError" xml:space="preserve">
-    <value>Je nutné zadať termín odovzdania!</value>
   </data>
   <data name="IndividualPlanDissertationSubmissionDateInfo" xml:space="preserve">
     <value>Termín odovzdania dizertačnej práce (zvyčajne apríl v roku ukončenia štúdia)</value>
@@ -303,17 +288,11 @@
   <data name="IndividualPlanStudyEndDateInfo" xml:space="preserve">
     <value>Termín ukončenia doktorandského štúdia vrátane obhajoby dizertačnej práce (zvyčajne 31.8. po 3 rokoch štúdia interní doktorandi a po 4 rokoch externí doktorandi)</value>
   </data>
-  <data name="IndividualPlanStudyEndDateError" xml:space="preserve">
-    <value>Je nutné zadať termín ukončenia štúdia!</value>
-  </data>
   <data name="StudyPart" xml:space="preserve">
     <value>Študijná časť</value>
   </data>
   <data name="Subject" xml:space="preserve">
     <value>Predmet</value>
-  </data>
-  <data name="IndividualPlanSubjectError" xml:space="preserve">
-    <value>Je nutné zvoliť predmet!</value>
   </data>
   <data name="IndividualPlanSubjectsInfo" xml:space="preserve">
     <value>Predmety s tématickými okruhmi pre dizertačnú skúšku</value>
@@ -438,23 +417,11 @@
   <data name="DissertationThesisEnglish" xml:space="preserve">
     <value>Je možné vypracovať tému v angličtine?</value>
   </data>
-  <data name="DissertationThesisTitleError" xml:space="preserve">
-    <value>Je nutné zadať názov témy!</value>
-  </data>
-  <data name="SupervisorError" xml:space="preserve">
-    <value>Je nutné zvoliť školiteľa!</value>
-  </data>
-  <data name="StudyProgramError" xml:space="preserve">
-    <value>Je nutné zvoliť študijný program!</value>
-  </data>
   <data name="DissertationThesisClassification" xml:space="preserve">
     <value>Zaradenie dizertačnej témy</value>
   </data>
   <data name="DissertationThesisDescription" xml:space="preserve">
     <value>Detailnejší opis problému</value>
-  </data>
-  <data name="DissertationThesisDescriptionError" xml:space="preserve">
-    <value>Je nutné zadať opis problému!</value>
   </data>
   <data name="MoreInformations" xml:space="preserve">
     <value>Ďalšie informácie</value>
@@ -462,17 +429,8 @@
   <data name="DissertationThesisScientificContribution" xml:space="preserve">
     <value>Predpokladaný vedecký prínos (algoritmy, metodológie, ...)</value>
   </data>
-  <data name="DissertationThesisScientificContributionError" xml:space="preserve">
-    <value>Je nutné zadať predpokladaný vedecký prínos!</value>
-  </data>
   <data name="DissertationThesisScientificProgress" xml:space="preserve">
     <value>Odporučány postup vedeckého bádania</value>
-  </data>
-  <data name="DissertationThesisScientificProgressError" xml:space="preserve">
-    <value>Je nutné zadať odporúčaný postup vedeckého bádania!</value>
-  </data>
-  <data name="ResearchTypeError" xml:space="preserve">
-    <value>Je nutné zvoliť druh výskumu!</value>
   </data>
   <data name="ResearchTypeAppliedExperimental" xml:space="preserve">
     <value>Aplikovaný výskum a experimentálny vývoj</value>
@@ -489,14 +447,8 @@
   <data name="DissertationThesisResearchTask" xml:space="preserve">
     <value>Výskumná úloha, ktorej súčasťou bude riešená téma</value>
   </data>
-  <data name="DissertationThesisResearchTaskError" xml:space="preserve">
-    <value>Je nutné zadať výskumnú úlohu</value>
-  </data>
   <data name="DissertationThesisSolutionResults" xml:space="preserve">
     <value>Doterajšie výsledky riešenia na školiacom pracovisku, vrátane odkazov na dostupné zdroje</value>
-  </data>
-  <data name="DissertationThesisSolutionResultsError" xml:space="preserve">
-    <value>Je nutné zadať doterajšie výsledky riešenia na školiacom pracovisku!</value>
   </data>
   <data name="DissertationThesisSolutionResultsInfo" xml:space="preserve">
     <value>Uveďte zoznam literatúry v rovnakom štýle, v akom je zobrazovaná v univerzitnej knižnici ŽU.</value>
@@ -530,9 +482,6 @@
   </data>
   <data name="ThesisStudentInterestInfo" xml:space="preserve">
     <value>Dizertačná práca, o ktorú máte záujem:</value>
-  </data>
-  <data name="IndividualPlanThesisError" xml:space="preserve">
-    <value>Používateľ nemá priradenú dizertačnú tému!</value>
   </data>
   <data name="Occupancy" xml:space="preserve">
     <value>Obsadenosť</value>
@@ -585,14 +534,8 @@
   <data name="IndividualPlanWrittenThesisRecommendedLiterature" xml:space="preserve">
     <value>Študijná literatúra - odporúčaná</value>
   </data>
-  <data name="IndividualPlanWrittenThesisLiteratureError" xml:space="preserve">
-    <value>Je nutné zadať študíjnu literatúru!</value>
-  </data>
   <data name="IndividualPlanWrittenThesisRecommendedLectures" xml:space="preserve">
     <value>Odporúčané odborné prednášky, semináre a konferencie</value>
-  </data>
-  <data name="IndividualPlanWrittenThesisRecommendedLecturesError" xml:space="preserve">
-    <value>Je nutné zadať dporúčané odborné prednášky, semináre alebo konferencie</value>
   </data>
   <data name="ScientificPart" xml:space="preserve">
     <value>Vedecká časť</value>
@@ -612,9 +555,6 @@
   <data name="IndividualPlanThematicAreas" xml:space="preserve">
     <value>Tematické okruhy</value>
   </data>
-  <data name="IndividualPlanTaskError" xml:space="preserve">
-    <value>Je nutné zadať úlohu!</value>
-  </data>
   <data name="SystemClosedError" xml:space="preserve">
     <value>Systém bol uzatvorený!</value>
   </data>
@@ -627,8 +567,8 @@
   <data name="Unactive" xml:space="preserve">
     <value>Neaktívny</value>
   </data>
-  <data name="TeacherRemove" xml:space="preserve">
-    <value>Vymaž učiteľa</value>
+  <data name="TeacherDelete" xml:space="preserve">
+    <value>Vymazať učiteľa</value>
   </data>
   <data name="StudentDelete" xml:space="preserve">
     <value>Vymaž doktoranda</value>
@@ -786,12 +726,6 @@
   <data name="ExamApplicationWrittenThesisTitleEnglish" xml:space="preserve">
     <value>Téma písomnej časti dizertačnej skúšky v angličtine</value>
   </data>
-  <data name="ExamApplicationWrittenThesisTitleError" xml:space="preserve">
-    <value>Je nutné zadať tému písomnej dizertačnej práce!</value>
-  </data>
-  <data name="ExamApplicationWrittenThesisTitleEnglishError" xml:space="preserve">
-    <value>Je nutné zadať tému písomnej dizertačnej práce v angličtine!</value>
-  </data>
   <data name="Applications" xml:space="preserve">
     <value>Prihlášky</value>
   </data>
@@ -887,5 +821,164 @@
   </data>
   <data name="StudentEvaluationGenerate" xml:space="preserve">
     <value>Vygenerovať hodnotenie študenta</value>
+  </data>
+  <data name="PersonalData" xml:space="preserve">
+    <value>Osobné údaje</value>
+  </data>
+  <data name="TeacherEdit" xml:space="preserve">
+    <value>Upraviť učiteľa</value>
+  </data>
+  <data name="ExternalTeacherEdit" xml:space="preserve">
+    <value>Upraviť externého učiteľa</value>
+  </data>
+  <data name="IndividualPlanError" xml:space="preserve">
+    <value>Uživateľ nemá vyplnené profilové informácie!</value>
+  </data>
+  <data name="IndividualPlanThesisError" xml:space="preserve">
+    <value>Používateľ nemá priradenú dizertačnú tému!</value>
+  </data>
+  <data name="Required" xml:space="preserve">
+    <value>Povinné</value>
+  </data>
+  <data name="NameAndTitles" xml:space="preserve">
+    <value>Meno, priezvisko a tituly</value>
+  </data>
+  <data name="Email" xml:space="preserve">
+    <value>E-mail</value>
+  </data>
+  <data name="Workplace" xml:space="preserve">
+    <value>Pracovisko</value>
+  </data>
+  <data name="ExamSupervisorSubjects" xml:space="preserve">
+    <value>Predmety dizertačnej skúšky</value>
+  </data>
+  <data name="Examiner" xml:space="preserve">
+    <value>Skúšajúci</value>
+  </data>
+  <data name="ExamSupervisorExaminerInfo" xml:space="preserve">
+    <value>Schválený vedeckou radou FRI</value>
+  </data>
+  <data name="SpecializationSubject" xml:space="preserve">
+    <value>Predmet špecializácie</value>
+  </data>
+  <data name="CommitteeMembersProposal" xml:space="preserve">
+    <value>Návrh členov komisie</value>
+  </data>
+  <data name="CommitteeMembersProposalInfo" xml:space="preserve">
+    <value>Komisiu a skúšajúcich ostatných predmetov stanoví odborová komisia. Školiteľ môže navrhnúť potenciálnych kandidátov. (E-mail a Telefón vyplňte iba ak navrhovaný nie je zo ŽU)</value>
+  </data>
+  <data name="ExamSupervisorChairperson" xml:space="preserve">
+    <value>Predseda (titul prof.)</value>
+  </data>
+  <data name="ExamSupervisorExternalMember" xml:space="preserve">
+    <value>Člen mimo (nie z fakulty, na ktorej doktorand pôsobí)</value>
+  </data>
+  <data name="AcademicCommitteeMember" xml:space="preserve">
+    <value>Člen z odborovej komisie</value>
+  </data>
+  <data name="AdditionalMember" xml:space="preserve">
+    <value>Ďalší člen</value>
+  </data>
+  <data name="StudyCompletionExpectedDate" xml:space="preserve">
+    <value>Predpokladaný termín ukončenia štúdia</value>
+  </data>
+  <data name="ApplicationSubmissionCreditsNumber" xml:space="preserve">
+    <value>Počet kreditov pri odovzdaní žiadosti</value>
+  </data>
+  <data name="ApplicationSubmissionYear" xml:space="preserve">
+    <value>Rok podania žiadosti</value>
+  </data>
+  <data name="DissertationTopic" xml:space="preserve">
+    <value>Téma dizertačnej práce</value>
+  </data>
+  <data name="DissertationOpponents" xml:space="preserve">
+    <value>Oponenti dizertačnej práce (Smernica ŽU č. 110, časť III, čl. 14)</value>
+  </data>
+  <data name="DissertationOpponentsInfo1" xml:space="preserve">
+    <value>Každý z oponentov musí byť z inej organizácie.</value>
+  </data>
+  <data name="DissertationOpponentsInfo2" xml:space="preserve">
+    <value>Z UNIZA môže byť jeden oponent.</value>
+  </data>
+  <data name="DissertationOpponentsInfo3" xml:space="preserve">
+    <value>Odporúčajú sa dvaja oponenti, v odôvodnených prípadoch traja.</value>
+  </data>
+  <data name="DissertationOpponentsInfo4" xml:space="preserve">
+    <value>Prosíme do návrhu uviesť len tých oponentov, ktorí s oponentúrou predbežne súhlasia.</value>
+  </data>
+  <data name="DissertationDefenseSupervisorOpponent1" xml:space="preserve">
+    <value>1. oponent (titul prof.)</value>
+  </data>
+  <data name="DissertationDefenseSupervisorOpponent2" xml:space="preserve">
+    <value>2. oponent (titul prof. alebo doc. alebo významný odborník v danej oblasti z praxe s titulom PhD./CSc.)</value>
+  </data>
+  <data name="DissertationDefenseSupervisorOpponent3" xml:space="preserve">
+    <value>3. oponent (titul prof. alebo doc. alebo významný odborník v danej oblasti z praxe s titulom PhD./CSc.)</value>
+  </data>
+  <data name="WorkplaceAddress" xml:space="preserve">
+    <value>Adresa pracoviska</value>
+  </data>
+  <data name="DissertationDefenseSupervisorTitle" xml:space="preserve">
+    <value>Návrh na vymenovanie oponentov na obhajobu dizertačnej práce</value>
+  </data>
+  <data name="RequiredSection" xml:space="preserve">
+    <value>Povinná časť</value>
+  </data>
+  <data name="ExamSupervisorOpponent" xml:space="preserve">
+    <value>Oponent (odborník s akad. titulom PhD., ktorý nepôsobí na rovnakej fakulte ako doktorand)</value>
+  </data>
+  <data name="SupervisorDocuments" xml:space="preserve">
+    <value>Dokumenty školiteľa</value>
+  </data>
+  <data name="DissertationSupervisor" xml:space="preserve">
+    <value>Dizertačná práca školiteľ</value>
+  </data>
+  <data name="DissertationDefenseSupervisor" xml:space="preserve">
+    <value>Dizertačná skúška školiteľ</value>
+  </data>
+  <data name="Chairperson" xml:space="preserve">
+    <value>Predseda</value>
+  </data>
+  <data name="ExternalMember" xml:space="preserve">
+    <value>Člen mimo</value>
+  </data>
+  <data name="StudentEvaluationDeleteConfirmation" xml:space="preserve">
+    <value>Naozaj si prajete vymazať zvolené hodnotenie študenta?</value>
+  </data>
+  <data name="ExamSupervisorEdit" xml:space="preserve">
+    <value>Upraviť dizertačná skúška školite</value>
+  </data>
+  <data name="ExamSupervisorAdd" xml:space="preserve">
+    <value>Pridať dizertačná skúška školiteľ</value>
+  </data>
+  <data name="ExamSupervisorDelete" xml:space="preserve">
+    <value>Vymazať dizertačná skúška školiteľ</value>
+  </data>
+  <data name="ExamSupervisorGenerate" xml:space="preserve">
+    <value>Vygenerovať dizertačná skúška školiteľ</value>
+  </data>
+  <data name="DissertationDefenseSupervisorAdd" xml:space="preserve">
+    <value>Pridať dizertačná skúška školiteľ</value>
+  </data>
+  <data name="DissertationDefenseSupervisorEdit" xml:space="preserve">
+    <value>Upraviť dizertačná skúška školiteľ</value>
+  </data>
+  <data name="DissertationDefenseSupervisorDelete" xml:space="preserve">
+    <value>Vymazať dizertačná skúška školiteľ</value>
+  </data>
+  <data name="DissertationDefenseSupervisorGenerate" xml:space="preserve">
+    <value>Vygenerovať dizertačná skúška školiteľ</value>
+  </data>
+  <data name="DissertationDefenseSupervisorDeleteConfirmation" xml:space="preserve">
+    <value>Naozaj si prajete vymazať zvolenú položku dizertačná práca školiteľ?</value>
+  </data>
+  <data name="Opponent1" xml:space="preserve">
+    <value>1. oponent</value>
+  </data>
+  <data name="Opponent2" xml:space="preserve">
+    <value>2. oponent </value>
+  </data>
+  <data name="Opponent3" xml:space="preserve">
+    <value>3. oponent </value>
   </data>
 </root>

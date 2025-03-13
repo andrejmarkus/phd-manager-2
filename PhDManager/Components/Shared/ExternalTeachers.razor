@@ -33,6 +33,9 @@
                     <MudTooltip Text="@Localizer["ExternalTeacherDelete"]">
                         <MudIconButton Size="@Size.Small" Color="Color.Error" Icon="@Icons.Material.Outlined.Delete" OnClick="@(() => DeleteExternalTeacher(context.Item))" />
                     </MudTooltip>
+                    <MudTooltip Text="@Localizer["ExternalTeacherEdit"]">
+                        <MudIconButton Size="@Size.Small" Color="Color.Info" Icon="@Icons.Material.Outlined.Edit" OnClick="@(() => UpdateExternalTeacher(context.Item))" />
+                    </MudTooltip>
                 </MudStack>
             </CellTemplate>
         </TemplateColumn>
@@ -102,6 +105,22 @@
         await UsersService.DeleteUserAsync(user);
 
         await LoadExternalTeachers();
+    }
+
+    private async Task UpdateExternalTeacher(ExternalTeacher externalTeacher)
+    {
+        var parameters = new DialogParameters<EditTeacherDialog> { { d => d.Teacher, externalTeacher } };
+        var dialog = await DialogService.ShowAsync<EditTeacherDialog>(Localizer["UserEdit"], parameters, new() { FullWidth = true, MaxWidth = MaxWidth.Medium });
+        var result = await dialog.Result;
+
+        if (result is null || result.Canceled) return;
+
+        var updatedTeacher = result.Data as Teacher;
+
+        if (updatedTeacher is null) return;
+
+        await UnitOfWork.Teachers.UpdateAsync(updatedTeacher);
+        await UnitOfWork.CompleteAsync();
     }
 
     private async Task CreateExternalTeacherRegistration()

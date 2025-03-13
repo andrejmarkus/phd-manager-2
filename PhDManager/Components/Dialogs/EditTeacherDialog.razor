@@ -1,0 +1,60 @@
+﻿@using Microsoft.Extensions.Localization
+@using PhDManager.Locales
+@using PhDManager.Models
+@using PhDManager.Models.Enums
+@using PhDManager.Models.Roles
+@using PhDManager.Services
+@using PhDManager.Services.IRepositories
+
+@rendermode InteractiveServer
+
+@inject IUnitOfWork UnitOfWork
+@inject IStringLocalizer<Resources> Localizer
+@inject EnumService EnumService
+
+<MudDialog>
+    <TitleContent>
+        <MudText Typo="Typo.h6">@Localizer["StudentEdit"]</MudText>
+    </TitleContent>
+    <DialogContent>
+        <MudForm @ref="_form">
+            <MudSelect T="Department" Variant="Variant.Outlined" Label="@Localizer["Department"]" @bind-Value="Teacher.Department" ToStringFunc="@(d => d is null ? "" : d.Name)">
+                @if (_departments is not null)
+                {
+                    @foreach (var department in _departments)
+                    {
+                        <MudSelectItem Value="@department">@department.Name</MudSelectItem>
+                    }
+                }
+            </MudSelect>
+            <MudTextField T="string" Variant="Variant.Outlined" InputType="InputType.Telephone" Label="@Localizer["PhoneNumber"]" @bind-Value="Teacher.User.PhoneNumber" />
+        </MudForm>
+    </DialogContent>
+    <DialogActions>
+        <MudButton Color="Color.Primary" OnClick="@HandleDialog">@Localizer["Edit"]</MudButton>
+        <MudButton Color="Color.Secondary" OnClick="@(() => MudDialog.Cancel())">@Localizer["Cancel"]</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter]
+    private IMudDialogInstance MudDialog { get; set; } = default!;
+
+    [Parameter]
+    public Teacher Teacher { get; set; } = default!;
+
+    private MudForm _form = default!;
+    private IEnumerable<Department>? _departments;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _departments = await UnitOfWork.Departments.GetAllAsync();
+    }
+
+    private void HandleDialog()
+    {
+        if (!_form.IsValid) return;
+
+        MudDialog.Close(DialogResult.Ok(Teacher));
+    }
+}

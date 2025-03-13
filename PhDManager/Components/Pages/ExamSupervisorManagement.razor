@@ -1,0 +1,166 @@
+﻿@page "/management/exam-supervisors/add"
+@page "/management/exam-supervisors/edit/{ExamSupervisorGuid}"
+
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.Extensions.Localization
+@using PhDManager.Locales
+@using PhDManager.Models
+@using PhDManager.Models.Roles
+@using PhDManager.Services
+@using PhDManager.Services.IRepositories
+
+@rendermode InteractiveServer
+
+@inject IServiceProvider ServiceProvider
+@inject IUnitOfWork UnitOfWork
+@inject IStringLocalizer<Resources> Localizer
+@inject NavigationManager NavigationManager
+@inject UsersService UsersService
+
+@attribute [Authorize(Roles = $"{Admin.Role}, {Teacher.Role}, {ExternalTeacher.Role}")]
+
+<PageTitle>@Localizer["DissertationExam"]</PageTitle>
+
+<MudText Typo="Typo.h3">@Localizer["DissertationExam"]</MudText>
+
+<MudForm @ref="_form">
+    <MudAutocomplete T="Student" ReadOnly="@(ExamSupervisorGuid is not null)" Required RequiredError="@Localizer["Required"]" Label="@Localizer["Student"]" ToStringFunc="@(s => s is null ? null : s.User.DisplayName)" SearchFunc="SearchStudents" Variant="Variant.Outlined" @bind-Value="@_examSupervisor.Student" />
+    @if (_examSupervisor.Student is not null)
+    {
+        <MudField Label="@Localizer["Supervisor"]" Variant="Variant.Outlined">@_examSupervisor.Student.Thesis?.Supervisor.User.DisplayName</MudField>
+    }
+
+    <MudText Typo="Typo.h5">@Localizer["RequiredSection"]</MudText>
+    <MudText>@Localizer["ExamSupervisorOpponent"]</MudText>
+    <MudTextField T="string" Label="@Localizer["NameAndTitles"]" Variant="Variant.Outlined" @bind-Value="_examSupervisor.OpponentDisplayName" />
+    <MudTextField T="string" Label="@Localizer["Email"]" Variant="Variant.Outlined" @bind-Value="_examSupervisor.OpponentMail" />
+    <MudTextField T="string" Label="@Localizer["PhoneNumber"]" Variant="Variant.Outlined" @bind-Value="_examSupervisor.OpponentPhoneNumber" />
+    <MudTextField T="string" Label="@Localizer["Workplace"]" Variant="Variant.Outlined" @bind-Value="_examSupervisor.OpponentDepartment" />
+    <MudText Typo="Typo.h6">@Localizer["ExamSupervisorSubjects"]</MudText>
+    <MudStack Row AlignItems="AlignItems.Center">
+        <MudText>@Localizer["SpecializationSubject"]</MudText>
+        <MudSpacer />
+        <MudAutocomplete T="Teacher" Label="@($"{Localizer["Examiner"]} ({Localizer["ExamSupervisorExaminerInfo"]})")" ToStringFunc="@(t => t is null ? null : t.User.DisplayName)" SearchFunc="SearchTeachers" Variant="Variant.Outlined" @bind-Value="_examSupervisor.Examiner" />
+    </MudStack>
+
+    <MudText Typo="Typo.h5">@Localizer["CommitteeMembersProposal"]</MudText>
+    <MudText>@Localizer["CommitteeMembersProposalInfo"]</MudText>
+    <MudStack Class="mt-3">
+        <MudStack Spacing="0">
+            <MudText>@Localizer["ExamSupervisorChairperson"]</MudText>
+            <MudAutocomplete Label="@Localizer["Teacher"]" T="Teacher" ToStringFunc="@(t => t is null ? null : t.User.DisplayName)" SearchFunc="SearchTeachers" Variant="Variant.Outlined" @bind-Value="_examSupervisor.Chairperson" />
+            @if (_examSupervisor.Chairperson is not null)
+            {
+                <MudField Label="@Localizer["Email"]" Variant="Variant.Outlined">@_examSupervisor.Chairperson.User.Email</MudField>
+                <MudField Label="@Localizer["PhoneNumber"]" Variant="Variant.Outlined">@_examSupervisor.Chairperson.User.PhoneNumber</MudField>
+                <MudField Label="@Localizer["Workplace"]" Variant="Variant.Outlined">@_examSupervisor.Chairperson.Department?.Code</MudField>
+            }
+        </MudStack>
+        <MudStack Spacing="0">
+            <MudText>@Localizer["ExamSupervisorExternalMember"]</MudText>
+            <MudAutocomplete Label="@Localizer["Teacher"]" T="Teacher" ToStringFunc="@(t => t is null ? null : t.User.DisplayName)" SearchFunc="SearchTeachers" Variant="Variant.Outlined" @bind-Value="_examSupervisor.ExternalMember" />
+            @if (_examSupervisor.ExternalMember is not null)
+            {
+                <MudField Label="@Localizer["Email"]" Variant="Variant.Outlined">@_examSupervisor.ExternalMember.User.Email</MudField>
+                <MudField Label="@Localizer["PhoneNumber"]" Variant="Variant.Outlined">@_examSupervisor.ExternalMember.User.PhoneNumber</MudField>
+                <MudField Label="@Localizer["Workplace"]" Variant="Variant.Outlined">@_examSupervisor.ExternalMember.Department?.Code</MudField>
+            }
+        </MudStack>
+        <MudStack Spacing="0">
+            <MudText>@Localizer["AcademicCommitteeMember"]</MudText>
+            <MudAutocomplete Label="@Localizer["Teacher"]" T="Teacher" ToStringFunc="@(t => t is null ? null : t.User.DisplayName)" SearchFunc="SearchTeachers" Variant="Variant.Outlined" @bind-Value="_examSupervisor.AcademicCommitteeMember" />
+            @if (_examSupervisor.AcademicCommitteeMember is not null)
+            {
+                <MudField Label="@Localizer["Email"]" Variant="Variant.Outlined">@_examSupervisor.AcademicCommitteeMember.User.Email</MudField>
+                <MudField Label="@Localizer["PhoneNumber"]" Variant="Variant.Outlined">@_examSupervisor.AcademicCommitteeMember.User.PhoneNumber</MudField>
+                <MudField Label="@Localizer["Workplace"]" Variant="Variant.Outlined">@_examSupervisor.AcademicCommitteeMember.Department?.Code</MudField>
+            }
+        </MudStack>
+        <MudStack Spacing="0">
+            <MudText>@Localizer["AdditionalMember"]</MudText>
+            <MudAutocomplete Label="@Localizer["Teacher"]" T="Teacher" ToStringFunc="@(t => t is null ? null : t.User.DisplayName)" SearchFunc="SearchTeachers" Variant="Variant.Outlined" @bind-Value="_examSupervisor.AdditionalMember" />
+            @if (_examSupervisor.AdditionalMember is not null)
+            {
+                <MudField Label="@Localizer["Email"]" Variant="Variant.Outlined">@_examSupervisor.AdditionalMember.User.Email</MudField>
+                <MudField Label="@Localizer["PhoneNumber"]" Variant="Variant.Outlined">@_examSupervisor.AdditionalMember.User.PhoneNumber</MudField>
+                <MudField Label="@Localizer["Workplace"]" Variant="Variant.Outlined">@_examSupervisor.AdditionalMember.Department?.Code</MudField>
+            }
+        </MudStack>
+    </MudStack>
+
+    <MudButton class="mt-4" OnClick="HandleExamSupervisor" Variant="Variant.Filled" Color="Color.Primary">@(ExamSupervisorGuid is null ? Localizer["Add"] : Localizer["Edit"])</MudButton>
+</MudForm>
+
+@code {
+    [Parameter]
+    public string? ExamSupervisorGuid { get; set; }
+
+    private string? _currentUserRole;
+    private string? _currentUserId;
+
+    private MudForm _form = default!;
+    private IEnumerable<Student>? _students;
+    private IEnumerable<Teacher>? _teachers;
+
+    private ExamSupervisor _examSupervisor = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        _currentUserRole = await UsersService.GetCurrentUserRoleAsync();
+        _currentUserId = await UsersService.GetCurrentUserIdAsync();
+
+        if (ExamSupervisorGuid is not null)
+        {
+            var examSupervisor = await UnitOfWork.ExamSupervisors.GetByGuidAsync(ExamSupervisorGuid);
+            if (examSupervisor is not null)
+            {
+                _examSupervisor = examSupervisor;
+            }
+        }
+
+        _students = await UnitOfWork.Students.GetAllAsync();
+        _teachers = await UnitOfWork.Teachers.GetAllAsync();
+
+        if (_currentUserRole == Teacher.Role || _currentUserRole == ExternalTeacher.Role)
+        {
+            _students = _students?.Where(s => s.Thesis?.Supervisor.User.Id == _currentUserId);
+        }
+    }
+
+    private Task<IEnumerable<Student>?> SearchStudents(string search, CancellationToken token)
+    {
+        var students = _students?.Where(s => s.IndividualPlan is not null);
+        if (string.IsNullOrWhiteSpace(search))
+            return Task.FromResult(students);
+
+        return Task.FromResult(students?.Where(s => s.User.DisplayName is not null && s.User.DisplayName.Contains(search, StringComparison.OrdinalIgnoreCase)));
+    }
+
+    private Task<IEnumerable<Teacher>?> SearchTeachers(string search, CancellationToken token)
+    {
+        if (string.IsNullOrWhiteSpace(search))
+            return Task.FromResult(_teachers);
+
+        return Task.FromResult(_teachers?.Where(t => t.User.DisplayName is not null && t.User.DisplayName.Contains(search, StringComparison.OrdinalIgnoreCase)));
+    }
+
+    private async Task HandleExamSupervisor()
+    {
+        await _form.Validate();
+        if (!_form.IsValid) return;
+
+        _examSupervisor.CurrentDate = DateTime.UtcNow;
+
+        if (ExamSupervisorGuid is null)
+        {
+            await UnitOfWork.ExamSupervisors.AddAsync(_examSupervisor);
+        }
+        else
+        {
+            await UnitOfWork.ExamSupervisors.UpdateAsync(_examSupervisor);
+        }
+
+        await UnitOfWork.CompleteAsync();
+        NavigationManager.NavigateTo("/management/exam-supervisors");
+    }
+}

@@ -30,7 +30,7 @@
         <EditForm Model="Input" method="post" OnValidSubmit="LoginUser" FormName="login">
             <DataAnnotationsValidator />
 
-            <MudText GutterBottom="true" Typo="Typo.body1">@Localizer["SignInMessage"]</MudText>
+            <MudText GutterBottom="true" Typo="Typo.body1">@Localizer["SignIn"]</MudText>
 
             <MudStack Spacing="3">
                 <MudStaticTextField For="@(() => Input.Username)" @bind-Value="Input.Username"

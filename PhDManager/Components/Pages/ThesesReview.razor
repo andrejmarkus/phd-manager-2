@@ -20,7 +20,7 @@
 
 @attribute [Authorize(Roles = $"{Admin.Role}, {Teacher.Role}, {ExternalTeacher.Role}")]
 
-<PageTitle>@Localizer["DissertationThesisPending"]</PageTitle>
+<PageTitle>@Localizer["DissertationThesesPending"]</PageTitle>
 
 <MudDataGrid T="Thesis" Items="_theses" Hover SortMode="SortMode.Multiple" QuickFilter="_quickFilter" Elevation="0">
     <ToolBarContent>

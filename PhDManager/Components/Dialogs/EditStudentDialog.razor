@@ -95,6 +95,7 @@
         if (!_form.IsValid) return;
 
         Student.User.Birthdate = Student.User.Birthdate?.ToUniversalTime();
+        Student.DissertationExamDate = Student.DissertationExamDate?.ToUniversalTime();
 
         MudDialog.Close(DialogResult.Ok(Student));
     }

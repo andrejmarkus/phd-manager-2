@@ -214,7 +214,7 @@ namespace PhDManager.Services
 
         public async Task DownloadDissertationDefenseSupervisorDocument(DissertationDefenseSupervisor dissertationDefenseSupervisor)
         {
-            var documentName = NormalizeName(dissertationDefenseSupervisor.Student.User.DisplayName ?? "") + "_ds_skolitel" + ".docx";
+            var documentName = NormalizeName(dissertationDefenseSupervisor.Student.User.DisplayName ?? "") + "_dp_skolitel" + ".docx";
             var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "templates", "exam_supervisor_template.docx");
             var replacements = new Dictionary<string, List<string?>>()
             {

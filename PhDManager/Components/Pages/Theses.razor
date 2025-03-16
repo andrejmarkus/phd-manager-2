@@ -15,6 +15,7 @@
 @inject IUnitOfWork UnitOfWork
 @inject IDialogService DialogService
 @inject IStringLocalizer<Resources> Localizer
+@inject IStringLocalizer<Enums> EnumLocalizer
 @inject DocumentService DocumentService
 @inject UsersService UsersService
 @inject SchoolYearService SchoolYearService
@@ -39,8 +40,8 @@
         <PropertyColumn Property="t => t.Supervisor.User.Email" Title="@Localizer["SupervisorEmail"]" />
         <PropertyColumn Property="t => t.StudyProgram.Name" Title="@Localizer["StudyProgram"]" />
         <PropertyColumn Property="t => t.ResearchType" Title="@Localizer["ResearchType"]" />
-        <PropertyColumn Property="@(t => t.DailyStudy ? "Áno" : "Nie")" Title="@Localizer["StudyFormDaily"]" />
-        <PropertyColumn Property="@(t => t.ExternalStudy ? "Áno" : "Nie")" Title="@Localizer["StudyFormExternal"]" />
+        <PropertyColumn Property="@(t => t.DailyStudy ? "Áno" : "Nie")" Title="@EnumLocalizer["StudyFormDaily"]" />
+        <PropertyColumn Property="@(t => t.ExternalStudy ? "Áno" : "Nie")" Title="@EnumLocalizer["StudyFormExternal"]" />
         <PropertyColumn Property="t => t.Comments.Count" Title="@Localizer["CommentsCount"]" />
         <TemplateColumn Title="@Localizer["DisserationThesisEdit"]">
             <CellTemplate>

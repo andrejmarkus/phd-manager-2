@@ -28,6 +28,7 @@ namespace PhDManager.Services.Repositories
         public IStudentEvaluationRepository StudentEvaluations { get; private set; }
         public IExamSupervisorRepository ExamSupervisors { get; private set; }
         public IDissertationDefenseSupervisorRepository DissertationDefenseSupervisors { get; private set; }
+        public IDissertationDefenseApplicationRepository DissertationDefenseApplications { get; private set; }
 
         public UnitOfWork(IDbContextFactory<ApplicationDbContext> contextFactory, ILoggerFactory loggerFactory, SchoolYearService schoolYearService)
         {
@@ -53,6 +54,7 @@ namespace PhDManager.Services.Repositories
             StudentEvaluations = new StudentEvaluationRepository(_context, _logger);
             ExamSupervisors = new ExamSupervisorRepository(_context, _logger);
             DissertationDefenseSupervisors = new DissertationDefenseSupervisorRepository(_context, _logger);
+            DissertationDefenseApplications = new DissertationDefenseApplicationRepository(_context, _logger);
         }
 
         public async Task CompleteAsync()

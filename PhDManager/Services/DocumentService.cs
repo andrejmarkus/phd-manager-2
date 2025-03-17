@@ -215,7 +215,7 @@ namespace PhDManager.Services
         public async Task DownloadDissertationDefenseSupervisorDocument(DissertationDefenseSupervisor dissertationDefenseSupervisor)
         {
             var documentName = NormalizeName(dissertationDefenseSupervisor.Student.User.DisplayName ?? "") + "_dp_skolitel" + ".docx";
-            var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "templates", "exam_supervisor_template.docx");
+            var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "templates", "dissertation_defense_supervisor_template.docx");
             var replacements = new Dictionary<string, List<string?>>()
             {
                 {"{Student}", new() { dissertationDefenseSupervisor.Student.User.UserName } },
@@ -242,6 +242,36 @@ namespace PhDManager.Services
                 {"{Opponent3PhoneNumber}", new() { dissertationDefenseSupervisor.OpponentPhoneNumbers[2] } },
                 {"{Opponent3Mail}", new() { dissertationDefenseSupervisor.OpponentEmails[2] } },
                 {"{CurrentDate}", new() { dissertationDefenseSupervisor.CurrentDate.ToString("dd.MM.yyyy") } }
+            };
+
+            var document = GenerateDocumentData(path, replacements);
+            using var documentStream = new DotNetStreamReference(document);
+
+            await JSRuntime.InvokeVoidAsync("saveAsFile", documentName, documentStream);
+        }
+
+        public async Task DownloadDissertationDefenseApplicationDocument(DissertationDefenseApplication dissertationDefenseApplication)
+        {
+            var documentName = NormalizeName(dissertationDefenseApplication.Student.User.DisplayName ?? "") + "_ds_ziadost" + ".docx";
+            var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "templates", "dissertation_defense_application_template.docx");
+            var replacements = new Dictionary<string, List<string?>>()
+            {
+                {"{Student}", new() { dissertationDefenseApplication.Student.User.UserName } },
+                {"{Birthdate}", new() { dissertationDefenseApplication.Student.User.Birthdate?.ToString("dd.MM.yyyy") } },
+                {"{Birthplace}", new() { dissertationDefenseApplication.Student.Address?.Birthplace } },
+                {"{FullAddress}", new() { dissertationDefenseApplication.Student.Address?.FullAddress } },
+                {"{Nationality}", new() { dissertationDefenseApplication.Nationality } },
+                {"{Ethnicity}", new() { dissertationDefenseApplication.Ethnicity } },
+                {"{AchievedHigherEducation}", new() { dissertationDefenseApplication.AchievedHigherEducation } },
+                {"{StudyForm}", new() { EnumService.GetLocalizedEnumValue(dissertationDefenseApplication.Student.StudyForm) } },
+                {"{StudyProgram}", new() { dissertationDefenseApplication.Student.StudyProgram?.Name } },
+                {"{StudyField}", new() { dissertationDefenseApplication.Student.StudyProgram?.StudyFieldName } },
+                {"{Department}", new() { dissertationDefenseApplication.Student.Department?.Code } },
+                {"{Supervisor}", new() { dissertationDefenseApplication.Student.Thesis?.Supervisor.User.DisplayName } },
+                {"{StudyStartDate}", new() { dissertationDefenseApplication.Student.IndividualPlan?.StudyStartDate?.ToString("dd.MM.yyyy") } },
+                {"{ApplicationSubmissionYear}", new() { dissertationDefenseApplication.ApplicationSubmissionYear.ToString() } },
+                {"{ThesisTitle}", new() { dissertationDefenseApplication.Student.Thesis?.Title } },
+                {"{CurrentDate}", new() { dissertationDefenseApplication.CurrentDate.ToString("dd.MM.yyyy") } }
             };
 
             var document = GenerateDocumentData(path, replacements);

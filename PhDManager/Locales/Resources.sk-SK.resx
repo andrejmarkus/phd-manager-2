@@ -981,4 +981,22 @@
   <data name="Opponent3" xml:space="preserve">
     <value>3. oponent </value>
   </data>
+  <data name="Birthplace" xml:space="preserve">
+    <value>Miesto narodenia</value>
+  </data>
+  <data name="DissertationDefenseApplication" xml:space="preserve">
+    <value>Žiadosť o obhajobu dizertačnej práce</value>
+  </data>
+  <data name="Nationality" xml:space="preserve">
+    <value>Štátne občianstvo</value>
+  </data>
+  <data name="Ethnicity" xml:space="preserve">
+    <value>Národnosť</value>
+  </data>
+  <data name="AchievedHigherEducation" xml:space="preserve">
+    <value>Ukončené VŠ vzdelanie</value>
+  </data>
+  <data name="Dissertation" xml:space="preserve">
+    <value>Dizertačná práca</value>
+  </data>
 </root>

@@ -11,6 +11,7 @@ namespace PhDManager.Models
         public string? City { get; set; }
         public string? PostalCode { get; set; }
         public string? Country { get; set; }
+        public string? Birthplace { get; set; }
 
         [JsonIgnore]
         public virtual Student Student { get; set; } = default!;

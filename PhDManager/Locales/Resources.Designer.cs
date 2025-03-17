@@ -79,6 +79,15 @@ namespace PhDManager.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Achieved higher education.
+        /// </summary>
+        public static string AchievedHigherEducation {
+            get {
+                return ResourceManager.GetString("AchievedHigherEducation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Active.
         /// </summary>
         public static string Active {
@@ -237,6 +246,15 @@ namespace PhDManager.Locales {
         public static string Birthdate {
             get {
                 return ResourceManager.GetString("Birthdate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Birthplace.
+        /// </summary>
+        public static string Birthplace {
+            get {
+                return ResourceManager.GetString("Birthplace", resourceCulture);
             }
         }
         
@@ -444,6 +462,24 @@ namespace PhDManager.Locales {
         public static string DisserationThesisEdit {
             get {
                 return ResourceManager.GetString("DisserationThesisEdit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Dissertation.
+        /// </summary>
+        public static string Dissertation {
+            get {
+                return ResourceManager.GetString("Dissertation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Dissertation defense application.
+        /// </summary>
+        public static string DissertationDefenseApplication {
+            get {
+                return ResourceManager.GetString("DissertationDefenseApplication", resourceCulture);
             }
         }
         
@@ -840,6 +876,15 @@ namespace PhDManager.Locales {
         public static string EnrolError {
             get {
                 return ResourceManager.GetString("EnrolError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ethnicity.
+        /// </summary>
+        public static string Ethnicity {
+            get {
+                return ResourceManager.GetString("Ethnicity", resourceCulture);
             }
         }
         
@@ -1488,6 +1533,15 @@ namespace PhDManager.Locales {
         public static string NameAndTitles {
             get {
                 return ResourceManager.GetString("NameAndTitles", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Nationality.
+        /// </summary>
+        public static string Nationality {
+            get {
+                return ResourceManager.GetString("Nationality", resourceCulture);
             }
         }
         

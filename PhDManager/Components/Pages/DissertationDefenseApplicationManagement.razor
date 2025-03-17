@@ -1,0 +1,87 @@
+﻿@page "/applications/disseration-defense-application"
+
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.Extensions.Localization
+@using PhDManager.Locales
+@using PhDManager.Models
+@using PhDManager.Models.Roles
+@using PhDManager.Services
+@using PhDManager.Services.IRepositories
+
+@rendermode InteractiveServer
+
+@inject IUnitOfWork UnitOfWork
+@inject IStringLocalizer<Resources> Localizer
+@inject UsersService UsersService
+@inject NavigationManager NavigationManager
+@inject EnumService EnumService
+
+@attribute [Authorize(Roles = $"{Student.Role}")]
+
+<PageTitle>@Localizer["DissertationDefenseApplication"]</PageTitle>
+
+<MudText Typo="Typo.h3">@Localizer["DissertationDefenseApplication"]</MudText>
+
+<MudForm @ref="_form">
+    @if (_student is not null && _student.IndividualPlan is not null && _student.Thesis is not null)
+    {
+        <MudField T="string" Label="@Localizer["Student"]" Variant="Variant.Outlined">@_student.User.DisplayName</MudField>
+        <MudDatePicker ReadOnly T="string" Label="@Localizer["Birthdate"]" Variant="Variant.Outlined" @bind-Date="_student.User.Birthdate" />
+        <MudField T="string" Label="@Localizer["Birthplace"]" Variant="Variant.Outlined">@_student.Address?.Birthplace</MudField>
+        <MudField T="string" Label="@Localizer["Address"]" Variant="Variant.Outlined">@_student.Address?.FullAddress</MudField>
+        <MudTextField T="string" Required RequiredError="@Localizer["Required"]" Label="@Localizer["Nationality"]" Variant="Variant.Outlined" @bind-Value="_dissertationDefenseApplication.Nationality" />
+        <MudTextField T="string" Required RequiredError="@Localizer["Required"]" Label="@Localizer["Ethnicity"]" Variant="Variant.Outlined" @bind-Value="_dissertationDefenseApplication.Ethnicity" />
+        <MudTextField T="string" Required RequiredError="@Localizer["Required"]" Label="@Localizer["AchievedHigherEducation"]" Variant="Variant.Outlined" @bind-Value="_dissertationDefenseApplication.AchievedHigherEducation" />
+
+        <MudField T="string" Label="@Localizer["StudyForm"]" Variant="Variant.Outlined">@(EnumService.GetLocalizedEnumValue(_student.StudyForm))</MudField>
+        <MudField T="string" Label="@Localizer["StudyProgram"]" Variant="Variant.Outlined">@_student.StudyProgram?.Name</MudField>
+        <MudField T="string" Label="@Localizer["StudyField"]" Variant="Variant.Outlined">@_student.StudyProgram?.StudyFieldName</MudField>
+        <MudField T="string" Label="@Localizer["Department"]" Variant="Variant.Outlined">@_student.Department?.Name</MudField>
+        <MudField T="string" Label="@Localizer["Supervisor"]" Variant="Variant.Outlined">@_student.Thesis?.Supervisor.User.DisplayName</MudField>
+        <MudDatePicker ReadOnly Label = "@Localizer["IndividualPlanStudyStartDate"]" Variant = "Variant.Outlined" @bind-Date="_student.IndividualPlan.StudyStartDate" />
+        <MudDatePicker ReadOnly Label="@Localizer["ExamDate"]" Variant="Variant.Outlined" @bind-Date="_student.DissertationExamDate" />
+        <MudTextField T="int" Required RequiredError="@Localizer["Required"]" Label="@Localizer["ApplicationSubmissionYear"]" Variant="Variant.Outlined" @bind-Value="_dissertationDefenseApplication.ApplicationSubmissionYear" />
+
+        <MudField T="string" Label="@Localizer["DissertationTopic"]" Variant="Variant.Outlined">@_student.Thesis.Title</MudField>
+
+        <MudButton class="mt-4" OnClick="HandleDissertationDefenseApplication" Variant="Variant.Filled" Color="Color.Primary">@(_add ? Localizer["Create"] : Localizer["Edit"])</MudButton>
+    }
+</MudForm>
+
+
+@code {
+    [Parameter]
+    public string? DissertationDefenseApplicationGuid { get; set; }
+
+    private MudForm _form = default!;
+    private DissertationDefenseApplication _dissertationDefenseApplication = new();
+    private Student? _student;
+    private bool _add;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var currentUserId = await UsersService.GetCurrentUserIdAsync();
+        _student = await UnitOfWork.Students.GetByUserIdAsync(currentUserId);
+
+        _add = _student?.DissertationDefenseApplication is null;
+        if (!_add)
+        {
+            _dissertationDefenseApplication = _student!.DissertationDefenseApplication!;
+        }
+    }
+
+    private async Task HandleDissertationDefenseApplication()
+    {
+        if (_student is null) return;
+
+        _dissertationDefenseApplication.Student = _student;
+        _dissertationDefenseApplication.CurrentDate = DateTime.UtcNow;
+
+        if (_add) await UnitOfWork.DissertationDefenseApplications.AddAsync(_dissertationDefenseApplication);
+        else await UnitOfWork.DissertationDefenseApplications.UpdateAsync(_dissertationDefenseApplication);
+
+        await UnitOfWork.CompleteAsync();
+
+        NavigationManager.NavigateTo("/applications");
+    }
+}

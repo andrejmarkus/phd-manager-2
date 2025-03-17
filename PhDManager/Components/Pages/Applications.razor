@@ -25,6 +25,8 @@
 @if (_student is not null)
 {
     <MudStack Class="mt-4">
+
+        <MudText>@Localizer["DissertationExam"]</MudText>
         <MudStack Row AlignItems="AlignItems.Center">
             <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="/applications/subjects-exam-application">@Localizer["SubjectsExamApplication"]</MudButton>
             @if (_student.SubjectsExamApplication is not null)
@@ -46,6 +48,20 @@
                 </MudTooltip>
                 <MudTooltip Text="@Localizer["ExamApplicationGenerate"]">
                     <MudIconButton Size="Size.Medium" Color="Color.Info" Icon="@Icons.Material.Filled.Print" OnClick="@(() => DocumentService.DownloadExamApplicationDocument(_student.ExamApplication))" />
+                </MudTooltip>
+            }
+        </MudStack>
+
+        <MudText>@Localizer["Dissertation"]</MudText>
+        <MudStack Row AlignItems="AlignItems.Center">
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="/applications/disseration-defense-application">@Localizer["DissertationDefenseApplication"]</MudButton>
+            @if (_student.DissertationDefenseApplication is not null)
+            {
+                <MudTooltip Text="@Localizer["ExamApplicationDelete"]">
+                    <MudIconButton Size="Size.Medium" Color="Color.Error" Icon="@Icons.Material.Filled.Delete" OnClick="DeleteDissertationDefenseApplication" />
+                </MudTooltip>
+                <MudTooltip Text="@Localizer["ExamApplicationGenerate"]">
+                    <MudIconButton Size="Size.Medium" Color="Color.Info" Icon="@Icons.Material.Filled.Print" OnClick="@(() => DocumentService.DownloadDissertationDefenseApplicationDocument(_student.DissertationDefenseApplication))" />
                 </MudTooltip>
             }
         </MudStack>
@@ -74,6 +90,14 @@
         if (_student?.ExamApplication is null) return;
 
         UnitOfWork.ExamApplications.Delete(_student.ExamApplication);
+        await UnitOfWork.CompleteAsync();
+    }
+
+    private async Task DeleteDissertationDefenseApplication()
+    {
+        if (_student?.DissertationDefenseApplication is null) return;
+
+        UnitOfWork.DissertationDefenseApplications.Delete(_student.DissertationDefenseApplication);
         await UnitOfWork.CompleteAsync();
     }
 }

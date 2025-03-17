@@ -109,6 +109,11 @@ namespace PhDManager.Data
                 .WithOne(dds => dds.Student)
                 .HasForeignKey<DissertationDefenseSupervisor>();
 
+            builder.Entity<Student>()
+                .HasOne(s => s.DissertationDefenseApplication)
+                .WithOne(dda => dda.Student)
+                .HasForeignKey<DissertationDefenseApplication>();
+
             builder.Entity<Teacher>()
                 .HasMany(t => t.SpecialistTheses)
                 .WithOne(t => t.SupervisorSpecialist)

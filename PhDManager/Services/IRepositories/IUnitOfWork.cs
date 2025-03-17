@@ -20,6 +20,7 @@
         IStudentEvaluationRepository StudentEvaluations { get; }
         IExamSupervisorRepository ExamSupervisors { get; }
         IDissertationDefenseSupervisorRepository DissertationDefenseSupervisors { get; }
+        IDissertationDefenseApplicationRepository DissertationDefenseApplications { get; }
         Task CompleteAsync();
     }
 }

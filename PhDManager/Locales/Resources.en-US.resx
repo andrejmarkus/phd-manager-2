@@ -981,4 +981,22 @@
   <data name="Opponent3" xml:space="preserve">
     <value>3rd opponent</value>
   </data>
+  <data name="Birthplace" xml:space="preserve">
+    <value>Birthplace</value>
+  </data>
+  <data name="DissertationDefenseApplication" xml:space="preserve">
+    <value>Dissertation defense application</value>
+  </data>
+  <data name="Nationality" xml:space="preserve">
+    <value>Nationality</value>
+  </data>
+  <data name="Ethnicity" xml:space="preserve">
+    <value>Ethnicity</value>
+  </data>
+  <data name="AchievedHigherEducation" xml:space="preserve">
+    <value>Achieved higher education</value>
+  </data>
+  <data name="Dissertation" xml:space="preserve">
+    <value>Dissertation</value>
+  </data>
 </root>

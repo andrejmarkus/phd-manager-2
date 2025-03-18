@@ -349,6 +349,42 @@ namespace PhDManager.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Confirm email.
+        /// </summary>
+        public static string ConfirmEmail {
+            get {
+                return ResourceManager.GetString("ConfirmEmail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error confirming your email..
+        /// </summary>
+        public static string ConfirmEmailError {
+            get {
+                return ResourceManager.GetString("ConfirmEmailError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error loading user with ID {0}.
+        /// </summary>
+        public static string ConfirmEmailLoadingError {
+            get {
+                return ResourceManager.GetString("ConfirmEmailLoadingError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Thank you for confirming your email..
+        /// </summary>
+        public static string ConfirmEmailSuccess {
+            get {
+                return ResourceManager.GetString("ConfirmEmailSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Create.
         /// </summary>
         public static string Create {
@@ -1695,6 +1731,33 @@ namespace PhDManager.Locales {
         public static string RealDeadline {
             get {
                 return ResourceManager.GetString("RealDeadline", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Register confirmation.
+        /// </summary>
+        public static string RegisterConfirmation {
+            get {
+                return ResourceManager.GetString("RegisterConfirmation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please check your email to confirm your account..
+        /// </summary>
+        public static string RegisterConfirmationInfo {
+            get {
+                return ResourceManager.GetString("RegisterConfirmationInfo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error finding user for unspecified email.
+        /// </summary>
+        public static string RegisterConfirmationLoadingError {
+            get {
+                return ResourceManager.GetString("RegisterConfirmationLoadingError", resourceCulture);
             }
         }
         

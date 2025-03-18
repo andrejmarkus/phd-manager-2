@@ -571,7 +571,7 @@
     <value>Vymazať učiteľa</value>
   </data>
   <data name="StudentDelete" xml:space="preserve">
-    <value>Vymaž doktoranda</value>
+    <value>Vymazať doktoranda</value>
   </data>
   <data name="ExternalTeacherDelete" xml:space="preserve">
     <value>Vymazať externého učiteľa</value>
@@ -580,7 +580,7 @@
     <value>Vygenerovať individuálny plán</value>
   </data>
   <data name="AdminDelete" xml:space="preserve">
-    <value>Vymaž admina</value>
+    <value>Vymazať admina</value>
   </data>
   <data name="DissertationThesisGenerate" xml:space="preserve">
     <value>Vygenerovať dizertačnú tému</value>
@@ -616,7 +616,7 @@
     <value>Upraviť študijný program</value>
   </data>
   <data name="StudyProgramDelete" xml:space="preserve">
-    <value>Vymaž Študijný program</value>
+    <value>Vymazať študijný program</value>
   </data>
   <data name="StudyProgramDeleteConfirmation" xml:space="preserve">
     <value>Naozaj si prajete vymazať zvolený študijný program?</value>
@@ -998,5 +998,26 @@
   </data>
   <data name="Dissertation" xml:space="preserve">
     <value>Dizertačná práca</value>
+  </data>
+  <data name="ConfirmEmail" xml:space="preserve">
+    <value>Potvrdiť email</value>
+  </data>
+  <data name="ConfirmEmailSuccess" xml:space="preserve">
+    <value>Ďakujeme za potvrdenie vášho emailu.</value>
+  </data>
+  <data name="ConfirmEmailError" xml:space="preserve">
+    <value>Chyba pri potvrdzovaní vášho emailu.</value>
+  </data>
+  <data name="ConfirmEmailLoadingError" xml:space="preserve">
+    <value>Chyba pri načítaní používateľa s ID {0}</value>
+  </data>
+  <data name="RegisterConfirmation" xml:space="preserve">
+    <value>Potvrdenie registrácie</value>
+  </data>
+  <data name="RegisterConfirmationLoadingError" xml:space="preserve">
+    <value>Chyba pri hľadaní používateľa pre nešpecifikovaný e-mail</value>
+  </data>
+  <data name="RegisterConfirmationInfo" xml:space="preserve">
+    <value>Prosím, skontrolujte si email a potvrďte svoj účet.</value>
   </data>
 </root>

@@ -999,4 +999,25 @@
   <data name="Dissertation" xml:space="preserve">
     <value>Dissertation</value>
   </data>
+  <data name="ConfirmEmail" xml:space="preserve">
+    <value>Confirm email</value>
+  </data>
+  <data name="ConfirmEmailSuccess" xml:space="preserve">
+    <value>Thank you for confirming your email.</value>
+  </data>
+  <data name="ConfirmEmailError" xml:space="preserve">
+    <value>Error confirming your email.</value>
+  </data>
+  <data name="ConfirmEmailLoadingError" xml:space="preserve">
+    <value>Error loading user with ID {0}</value>
+  </data>
+  <data name="RegisterConfirmation" xml:space="preserve">
+    <value>Register confirmation</value>
+  </data>
+  <data name="RegisterConfirmationLoadingError" xml:space="preserve">
+    <value>Error finding user for unspecified email</value>
+  </data>
+  <data name="RegisterConfirmationInfo" xml:space="preserve">
+    <value>Please check your email to confirm your account.</value>
+  </data>
 </root>

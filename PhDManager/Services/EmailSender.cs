@@ -32,15 +32,15 @@ namespace PhDManager.Services
             message.Subject = subject;
             message.Body = new TextPart(TextFormat.Html) { Text = htmlMessage };
 
-            using var smtp = new SmtpClient();
-            smtp.Timeout = 10000;
+            using var client = new SmtpClient();
+            client.Timeout = 10000;
             try
             {
-                await smtp.ConnectAsync(host, port, enableSsl);
+                await client.ConnectAsync(host, port, enableSsl);
                 if (!string.IsNullOrEmpty(username))
-                    smtp.Authenticate(username, password);
-                await smtp.SendAsync(message);
-                await smtp.DisconnectAsync(true);
+                    client.Authenticate(username, password);
+                await client.SendAsync(message);
+                await client.DisconnectAsync(true);
             }
             catch (Exception ex)
             {

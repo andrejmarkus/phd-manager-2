@@ -87,7 +87,7 @@
         if (entry is null) return;
 
         var user = await UsersService.RegisterLdapUserWithoutPasswordAsync(entry, ExternalTeacher.Role);
-        await UnitOfWork.Teachers.AddAsync(new() { User = user });
+        await UsersService.AddExternalToUser(user, new());
         await UnitOfWork.CompleteAsync();
 
         await LoadExternalTeachers();

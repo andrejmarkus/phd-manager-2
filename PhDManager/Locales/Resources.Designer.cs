@@ -1303,6 +1303,51 @@ namespace PhDManager.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Add another service to log in..
+        /// </summary>
+        public static string ExternalLoginsAdd {
+            get {
+                return ResourceManager.GetString("ExternalLoginsAdd", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The external login was added..
+        /// </summary>
+        public static string ExternalLoginsAddInfo {
+            get {
+                return ResourceManager.GetString("ExternalLoginsAddInfo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Manage your external logins.
+        /// </summary>
+        public static string ExternalLoginsManage {
+            get {
+                return ResourceManager.GetString("ExternalLoginsManage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Remove this {0} login from your account.
+        /// </summary>
+        public static string ExternalLoginsRemove {
+            get {
+                return ResourceManager.GetString("ExternalLoginsRemove", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The external login was removed..
+        /// </summary>
+        public static string ExternalLoginsRemoveInfo {
+            get {
+                return ResourceManager.GetString("ExternalLoginsRemoveInfo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to External member.
         /// </summary>
         public static string ExternalMember {
@@ -2200,6 +2245,15 @@ namespace PhDManager.Locales {
         public static string RememberLogin {
             get {
                 return ResourceManager.GetString("RememberLogin", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Remove.
+        /// </summary>
+        public static string Remove {
+            get {
+                return ResourceManager.GetString("Remove", resourceCulture);
             }
         }
         

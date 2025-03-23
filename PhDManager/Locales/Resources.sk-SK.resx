@@ -1200,4 +1200,22 @@
   <data name="CommentDelete" xml:space="preserve">
     <value>Vymazať komentár</value>
   </data>
+  <data name="ExternalLoginsManage" xml:space="preserve">
+    <value>Spravujte svoje externé prihlásenia</value>
+  </data>
+  <data name="ExternalLoginsAdd" xml:space="preserve">
+    <value>Pridajte ďalšiu službu na prihlásenie.</value>
+  </data>
+  <data name="Remove" xml:space="preserve">
+    <value>Odstraniť</value>
+  </data>
+  <data name="ExternalLoginsRemove" xml:space="preserve">
+    <value>Odstráňte toto {0} prihlásenie zo svojho účtu</value>
+  </data>
+  <data name="ExternalLoginsRemoveInfo" xml:space="preserve">
+    <value>Externé prihlásenie bolo odstránené.</value>
+  </data>
+  <data name="ExternalLoginsAddInfo" xml:space="preserve">
+    <value>Externé prihlásenie bolo pridané.</value>
+  </data>
 </root>

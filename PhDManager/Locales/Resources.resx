@@ -1201,4 +1201,22 @@ account so you can log in without an external login.</value>
   <data name="CommentDelete" xml:space="preserve">
     <value>Delete comment</value>
   </data>
+  <data name="ExternalLoginsManage" xml:space="preserve">
+    <value>Manage your external logins</value>
+  </data>
+  <data name="ExternalLoginsAdd" xml:space="preserve">
+    <value>Add another service to log in.</value>
+  </data>
+  <data name="Remove" xml:space="preserve">
+    <value>Remove</value>
+  </data>
+  <data name="ExternalLoginsRemove" xml:space="preserve">
+    <value>Remove this {0} login from your account</value>
+  </data>
+  <data name="ExternalLoginsRemoveInfo" xml:space="preserve">
+    <value>The external login was removed.</value>
+  </data>
+  <data name="ExternalLoginsAddInfo" xml:space="preserve">
+    <value>The external login was added.</value>
+  </data>
 </root>

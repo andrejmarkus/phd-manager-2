@@ -2,20 +2,23 @@
 
 @using Microsoft.AspNetCore.Authentication
 @using Microsoft.AspNetCore.Identity
+@using Microsoft.Extensions.Localization
 @using PhDManager.Data
+@using PhDManager.Locales
 
 @inject UserManager<ApplicationUser> UserManager
 @inject SignInManager<ApplicationUser> SignInManager
 @inject IdentityUserAccessor UserAccessor
 @inject IUserStore<ApplicationUser> UserStore
 @inject IdentityRedirectManager RedirectManager
+@inject IStringLocalizer<Resources> Localizer
 
-<PageTitle>Manage your external logins</PageTitle>
+<PageTitle>@Localizer["ExternalLoginsManage"]</PageTitle>
 
 <StatusMessage />
 @if (currentLogins?.Count > 0)
 {
-    <h3>Registered Logins</h3>
+    <MudText Typo="Typo.h6">Registered Logins</MudText>
     <table class="table">
         <tbody>
             @foreach (var login in currentLogins)
@@ -30,7 +33,7 @@
                                 <div>
                                     <input type="hidden" name="@nameof(LoginProvider)" value="@login.LoginProvider" />
                                     <input type="hidden" name="@nameof(ProviderKey)" value="@login.ProviderKey" />
-                                    <button type="submit" class="btn btn-primary" title="Remove this @login.ProviderDisplayName login from your account">Remove</button>
+                                    <button type="submit" class="btn btn-primary" title="@Localizer["ExternalLoginsRemove", login.ProviderDisplayName ?? ""]">@Localizer["Remove"]</button>
                                 </div>
                             </form>
                         }
@@ -46,17 +49,18 @@
 }
 @if (otherLogins?.Count > 0)
 {
-    <h4>Add another service to log in.</h4>
-    <MudDivider />
+    <MudText Typo="Typo.h6">@Localizer["ExternalLoginsAdd"]</MudText>
+    <MudDivider Class="mb-3" />
     <form class="form-horizontal" action="Account/Manage/LinkExternalLogin" method="post">
         <AntiforgeryToken />
         <div>
             <p>
                 @foreach (var provider in otherLogins)
                 {
-                    <button type="submit" class="btn btn-primary" name="Provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">
+                    <MudStaticButton Variant="Variant.Filled" type="submit" class="btn btn-primary" name="provider" value="@provider.Name">
+                        <img src="@GetProviderIcon(provider.Name)" class="provider-icon mr-2" alt="@provider.DisplayName icon" />
                         @provider.DisplayName
-                    </button>
+                    </MudStaticButton>
                 }
             </p>
         </div>
@@ -114,7 +118,7 @@
         }
 
         await SignInManager.RefreshSignInAsync(user);
-        RedirectManager.RedirectToCurrentPageWithStatus("The external login was removed.", HttpContext);
+        RedirectManager.RedirectToCurrentPageWithStatus(Localizer["ExternalLoginsRemoveInfo"], HttpContext);
     }
 
     private async Task OnGetLinkLoginCallbackAsync()
@@ -135,6 +139,17 @@
         // Clear the existing external cookie to ensure a clean login process
         await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
 
-        RedirectManager.RedirectToCurrentPageWithStatus("The external login was added.", HttpContext);
+        RedirectManager.RedirectToCurrentPageWithStatus(Localizer["ExternalLoginsAddInfo"], HttpContext);
+    }
+
+    private string GetProviderIcon(string providerName)
+    {
+        return providerName switch
+        {
+            "Google" => "https://img.icons8.com/?size=100&id=17949&format=png&color=000000",
+            "Microsoft" => "https://img.icons8.com/?size=100&id=22989&format=png&color=000000",
+            "GitHub" => "https://img.icons8.com/?size=100&id=62856&format=png&color=000000",
+            _ => "https://img.icons8.com/?size=100&id=74441&format=png&color=000000"
+        };
     }
 }

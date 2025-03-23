@@ -15,7 +15,7 @@
     </TitleContent>
     <DialogContent>
         <MudForm @ref="_form">
-            <MudAutocomplete T="Thesis" Label="@Localizer["DissertationThesis"]" ToStringFunc="@(t => t is null ? null : t.Title)" SearchFunc="SearchTeachers" Variant="Variant.Outlined" @bind-Value="Student.Thesis" />
+            <MudAutocomplete T="Thesis" Clearable Label="@Localizer["DissertationThesis"]" ToStringFunc="@(t => t is null ? null : t.Title)" SearchFunc="SearchTeachers" Variant="Variant.Outlined" @bind-Value="Student.Thesis" />
         </MudForm>
     </DialogContent>
     <DialogActions>

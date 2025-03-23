@@ -20,52 +20,103 @@
 
 <PageTitle>@Localizer["Applications"]</PageTitle>
 
-<MudText Typo="Typo.h3">@Localizer["Applications"]</MudText>
+<MudText GutterBottom Typo="Typo.h4">@Localizer["Applications"]</MudText>
 
 @if (_student is not null)
 {
-    <MudStack Class="mt-4">
+    @if (_student.IndividualPlan is not null)
+    {
+        <MudStack Class="mt-4">
 
-        <MudText>@Localizer["DissertationExam"]</MudText>
-        <MudStack Row AlignItems="AlignItems.Center">
-            <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="/applications/subjects-exam-application">@Localizer["SubjectsExamApplication"]</MudButton>
-            @if (_student.SubjectsExamApplication is not null)
-            {
-                <MudTooltip Text="@Localizer["ExamApplicationDelete"]">
-                    <MudIconButton Size="Size.Medium" Color="Color.Error" Icon="@Icons.Material.Filled.Delete" OnClick="DeleteSubjectsExamApplication" />
-                </MudTooltip>
-                <MudTooltip Text="@Localizer["ExamApplicationGenerate"]">
-                    <MudIconButton Size="Size.Medium" Color="Color.Info" Icon="@Icons.Material.Filled.Print" OnClick="@(() => DocumentService.DownloadSubjectsExamApplicationDocument(_student.SubjectsExamApplication))" />
-                </MudTooltip>
-            }
-        </MudStack>
-        <MudStack Row AlignItems="AlignItems.Center">
-            <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="/applications/exam-application">@Localizer["ExamApplication"]</MudButton>
-            @if (_student.ExamApplication is not null)
-            {
-                <MudTooltip Text="@Localizer["ExamApplicationDelete"]">
-                    <MudIconButton Size="Size.Medium" Color="Color.Error" Icon="@Icons.Material.Filled.Delete" OnClick="DeleteExamApplication" />
-                </MudTooltip>
-                <MudTooltip Text="@Localizer["ExamApplicationGenerate"]">
-                    <MudIconButton Size="Size.Medium" Color="Color.Info" Icon="@Icons.Material.Filled.Print" OnClick="@(() => DocumentService.DownloadExamApplicationDocument(_student.ExamApplication))" />
-                </MudTooltip>
-            }
-        </MudStack>
+            <MudText Typo="Typo.h6">@Localizer["DissertationExam"]</MudText>
+            <MudGrid>
+                <MudItem xs="8">
+                    <MudText>@Localizer["SubjectsExamApplication"]</MudText>
+                </MudItem>
+                @if (_student.SubjectsExamApplication is null)
+                {
+                    <MudItem xs="4">
+                        <MudTooltip Text="@Localizer["ExamApplicationCreate"]">
+                            <MudIconButton Size="Size.Medium" Color="Color.Info" Icon="@Icons.Material.Filled.Add" Href="/applications/subjects-exam-application" />
+                        </MudTooltip>
+                    </MudItem>
+                }
+                else
+                {
+                    <MudItem xs="4">
+                        <MudTooltip Text="@Localizer["ExamApplicationDelete"]">
+                            <MudIconButton Size="Size.Medium" Color="Color.Error" Icon="@Icons.Material.Filled.Delete" OnClick="DeleteSubjectsExamApplication" />
+                        </MudTooltip>
+                    </MudItem>
+                    <MudItem xs="2">
+                        <MudTooltip Text="@Localizer["ExamApplicationGenerate"]">
+                            <MudIconButton Size="Size.Medium" Color="Color.Info" Icon="@Icons.Material.Filled.Print" OnClick="@(() => DocumentService.DownloadSubjectsExamApplicationDocument(_student.SubjectsExamApplication))" />
+                        </MudTooltip>
+                    </MudItem>
+                }
+            </MudGrid>
+            <MudGrid>
+                <MudItem xs="8">
+                    <MudText>@Localizer["ExamApplication"]</MudText>
+                </MudItem>
+                @if (_student.ExamApplication is null)
+                {
+                    <MudItem xs="4">
+                        <MudTooltip Text="@Localizer["ExamApplicationCreate"]">
+                            <MudIconButton Size="Size.Medium" Color="Color.Info" Icon="@Icons.Material.Filled.Add" Href="/applications/exam-application"></MudIconButton>
+                        </MudTooltip>
+                    </MudItem>
+                }
+                else
+                {
+                    <MudItem xs="2">
+                        <MudTooltip Text="@Localizer["ExamApplicationDelete"]">
+                            <MudIconButton Size="Size.Medium" Color="Color.Error" Icon="@Icons.Material.Filled.Delete" OnClick="DeleteExamApplication" />
+                        </MudTooltip>
+                    </MudItem>
+                    <MudItem xs="2">
+                        <MudTooltip Text="@Localizer["ExamApplicationGenerate"]">
+                            <MudIconButton Size="Size.Medium" Color="Color.Info" Icon="@Icons.Material.Filled.Print" OnClick="@(() => DocumentService.DownloadExamApplicationDocument(_student.ExamApplication))" />
+                        </MudTooltip>
+                    </MudItem>
+                }
+            </MudGrid>
 
-        <MudText>@Localizer["Dissertation"]</MudText>
-        <MudStack Row AlignItems="AlignItems.Center">
-            <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="/applications/disseration-defense-application">@Localizer["DissertationDefenseApplication"]</MudButton>
-            @if (_student.DissertationDefenseApplication is not null)
-            {
-                <MudTooltip Text="@Localizer["ExamApplicationDelete"]">
-                    <MudIconButton Size="Size.Medium" Color="Color.Error" Icon="@Icons.Material.Filled.Delete" OnClick="DeleteDissertationDefenseApplication" />
-                </MudTooltip>
-                <MudTooltip Text="@Localizer["ExamApplicationGenerate"]">
-                    <MudIconButton Size="Size.Medium" Color="Color.Info" Icon="@Icons.Material.Filled.Print" OnClick="@(() => DocumentService.DownloadDissertationDefenseApplicationDocument(_student.DissertationDefenseApplication))" />
-                </MudTooltip>
-            }
+            <MudText Typo="Typo.h6">@Localizer["Dissertation"]</MudText>
+            <MudGrid>
+                <MudItem xs="8">
+                    <MudText>@Localizer["DissertationDefenseApplication"]</MudText>
+                </MudItem>
+                @if (_student.DissertationDefenseApplication is null)
+                {
+                    <MudItem xs="4">
+                        <MudTooltip Text="@Localizer["ExamApplicationCreate"]">
+                            <MudIconButton Size="Size.Medium" Color="Color.Info" Icon="@Icons.Material.Filled.Add" Href="/applications/disseration-defense-application"></MudIconButton>
+                        </MudTooltip>
+                    </MudItem>
+                }
+                else
+                {
+                    <MudItem xs="2">
+                        <MudTooltip Text="@Localizer["ExamApplicationDelete"]">
+                            <MudIconButton Size="Size.Medium" Color="Color.Error" Icon="@Icons.Material.Filled.Delete" OnClick="DeleteDissertationDefenseApplication" />
+                        </MudTooltip>
+                    </MudItem>
+                    <MudItem xs="2">
+                        <MudTooltip Text="@Localizer["ExamApplicationGenerate"]">
+                            <MudIconButton Size="Size.Medium" Color="Color.Info" Icon="@Icons.Material.Filled.Print" OnClick="@(() => DocumentService.DownloadDissertationDefenseApplicationDocument(_student.DissertationDefenseApplication))" />
+                        </MudTooltip>
+                    </MudItem>
+                }
+            </MudGrid>
         </MudStack>
-    </MudStack>
+    }
+    else
+    {
+        <MudAlert Severity="Severity.Error">
+            @Localizer["IndividualPlanAssignError"]
+        </MudAlert>
+    }
 }
 
 @code {

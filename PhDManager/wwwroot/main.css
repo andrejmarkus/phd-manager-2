@@ -2,6 +2,10 @@
     text-decoration: underline var(--mud-palette-primary) 0.5rem;
 }
 
+.text-center {
+    text-align: center;
+}
+
 .circle-image {
     background-color: var(--mud-palette-primary);
     filter: contrast(75%);
@@ -22,21 +26,6 @@
 
 .container-image {
     position: relative;
-}
-
-.circle {
-    background-color: rgba(0, 0, 0, 0);
-    filter: blur(18vw);
-    position: absolute;
-    z-index: -2;
-}
-
-.circle-bottom {
-    background-image: radial-gradient(circle at 0% 100%, var(--mud-palette-primary) 25%, rgba(0, 0, 0, 0) 25%);
-}
-
-.circle-top {
-    background-image: radial-gradient(circle at 100% 0%, var(--mud-palette-primary) 25%, rgba(0, 0, 0, 0) 25%);
 }
 
 .landing-image {

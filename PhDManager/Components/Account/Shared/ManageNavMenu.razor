@@ -1,18 +1,20 @@
 ﻿@using Microsoft.AspNetCore.Identity
+@using Microsoft.Extensions.Localization
 @using PhDManager.Data
+@using PhDManager.Locales
 
 @inject SignInManager<ApplicationUser> SignInManager
+@inject IStringLocalizer<Resources> Localizer
 
 <MudNavMenu>
-    <MudNavLink Href="Account/Manage" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Person">Profile</MudNavLink>
-    <MudNavLink Href="Account/Manage/Email" Icon="@Icons.Material.Filled.Email">Email</MudNavLink>
-    <MudNavLink Href="Account/Manage/ChangePassword" Icon="@Icons.Material.Filled.Lock">Password</MudNavLink>
+    <MudNavLink Href="Account/Manage" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Person">@Localizer["Profile"]</MudNavLink>
+    <MudNavLink Href="Account/Manage/Email" Icon="@Icons.Material.Filled.Email">@Localizer["Email"]</MudNavLink>
+    <MudNavLink Href="Account/Manage/ChangePassword" Icon="@Icons.Material.Filled.Lock">@Localizer["Password"]</MudNavLink>
     @if (hasExternalLogins)
     {
-        <MudNavLink Href="Account/Manage/ExternalLogins" Icon="@Icons.Material.Filled.PhoneLocked">External logins</MudNavLink>
+        <MudNavLink Href="Account/Manage/ExternalLogins" Icon="@Icons.Material.Filled.PhoneLocked">@Localizer["ExternalLogins"]</MudNavLink>
     }
-    <MudNavLink Href="Account/Manage/TwoFactorAuthentication" Icon="@Icons.Material.Filled.LockClock">Two-factor authentication</MudNavLink>
-    <MudNavLink Href="Account/Manage/PersonalData" Icon="@Icons.Material.Filled.PersonRemove">Personal data</MudNavLink>
+    <MudNavLink Href="Account/Manage/PersonalData" Icon="@Icons.Material.Filled.PersonRemove">@Localizer["PersonalData"]</MudNavLink>
 </MudNavMenu>
 
 @code {

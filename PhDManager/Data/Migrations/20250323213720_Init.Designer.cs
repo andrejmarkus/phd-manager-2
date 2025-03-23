@@ -12,15 +12,15 @@ using PhDManager.Data;
 namespace PhDManager.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250313144306_TeacherRelationships")]
-    partial class TeacherRelationships
+    [Migration("20250323213720_Init")]
+    partial class Init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.2")
+                .HasAnnotation("ProductVersion", "9.0.3")
                 .HasAnnotation("Proxies:ChangeTracking", false)
                 .HasAnnotation("Proxies:CheckEquality", false)
                 .HasAnnotation("Proxies:LazyLoading", true)
@@ -253,6 +253,9 @@ namespace PhDManager.Data.Migrations
                     b.Property<int>("Id")
                         .HasColumnType("integer");
 
+                    b.Property<string>("Birthplace")
+                        .HasColumnType("text");
+
                     b.Property<string>("City")
                         .HasColumnType("text");
 
@@ -284,11 +287,7 @@ namespace PhDManager.Data.Migrations
                     b.Property<DateTime>("Created")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("ExternalId")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<int>("ExternalId1")
+                    b.Property<int>("ExternalId")
                         .HasColumnType("integer");
 
                     b.Property<string>("Text")
@@ -300,7 +299,7 @@ namespace PhDManager.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ExternalId1");
+                    b.HasIndex("ExternalId");
 
                     b.HasIndex("ThesisId");
 
@@ -326,6 +325,34 @@ namespace PhDManager.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Departments");
+                });
+
+            modelBuilder.Entity("PhDManager.Models.DissertationDefenseApplication", b =>
+                {
+                    b.Property<int>("Id")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("AchievedHigherEducation")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("ApplicationSubmissionYear")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("CurrentDate")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Ethnicity")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Nationality")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("DissertationDefenseApplication");
                 });
 
             modelBuilder.Entity("PhDManager.Models.DissertationDefenseSupervisor", b =>
@@ -1103,7 +1130,7 @@ namespace PhDManager.Data.Migrations
                 {
                     b.HasOne("PhDManager.Models.Roles.ExternalTeacher", "External")
                         .WithMany("Comments")
-                        .HasForeignKey("ExternalId1")
+                        .HasForeignKey("ExternalId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -1116,6 +1143,17 @@ namespace PhDManager.Data.Migrations
                     b.Navigation("External");
 
                     b.Navigation("Thesis");
+                });
+
+            modelBuilder.Entity("PhDManager.Models.DissertationDefenseApplication", b =>
+                {
+                    b.HasOne("PhDManager.Models.Roles.Student", "Student")
+                        .WithOne("DissertationDefenseApplication")
+                        .HasForeignKey("PhDManager.Models.DissertationDefenseApplication", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Student");
                 });
 
             modelBuilder.Entity("PhDManager.Models.DissertationDefenseSupervisor", b =>
@@ -1372,6 +1410,8 @@ namespace PhDManager.Data.Migrations
             modelBuilder.Entity("PhDManager.Models.Roles.Student", b =>
                 {
                     b.Navigation("Address");
+
+                    b.Navigation("DissertationDefenseApplication");
 
                     b.Navigation("DissertationDefenseSupervisor");
 

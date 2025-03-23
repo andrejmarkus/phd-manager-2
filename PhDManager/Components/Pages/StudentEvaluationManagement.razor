@@ -23,10 +23,10 @@
 
 <PageTitle>@Localizer["StudentEvaluation"]</PageTitle>
 
-<MudText Typo="Typo.h3">@Localizer["StudentEvaluation"]</MudText>
+<MudText Typo="Typo.h4">@Localizer["StudentEvaluation"]</MudText>
 
 <MudForm @ref="_form">
-    <MudAutocomplete ReadOnly="@(StudentEvaluationGuid is not null)" T="Student" Required RequiredError="@Localizer["Required"]" Label="@Localizer["Student"]" ToStringFunc="@(s => s is null ? null : s.User.DisplayName)" SearchFunc="SearchStudents" Variant="Variant.Outlined" @bind-Value="@_studentEvaluation.Student" />
+    <MudAutocomplete Clearable ReadOnly="@(StudentEvaluationGuid is not null)" T="Student" Required RequiredError="@Localizer["Required"]" Label="@Localizer["Student"]" ToStringFunc="@(s => s is null ? null : s.User.DisplayName)" SearchFunc="SearchStudents" Variant="Variant.Outlined" @bind-Value="@_studentEvaluation.Student" />
     @if (_studentEvaluation.Student is not null && _studentEvaluation.Student.IndividualPlan is not null && _studentEvaluation.Student.Thesis is not null)
     {
         <MudField T="string" Label="@Localizer["StudyForm"]" Variant="Variant.Outlined">@(EnumService.GetLocalizedEnumValue(_studentEvaluation.Student.StudyForm))</MudField>
@@ -36,78 +36,81 @@
         <MudField T="string" Label="@Localizer["Supervisor"]" Variant="Variant.Outlined">@_studentEvaluation.Student.Thesis?.Supervisor.User.DisplayName</MudField>
         <MudDatePicker ReadOnly Label="@Localizer["IndividualPlanStudyStartDate"]" Variant="Variant.Outlined" @bind-Date="_studentEvaluation.Student.IndividualPlan.StudyStartDate" />
 
+        <MudDivider Class="my-3" />
         <MudText Typo="Typo.h6">@Localizer["DissertationExam"]</MudText>
         <MudText>@Localizer["StudentEvaluationSubjects"]</MudText>
         <MudGrid Spacing="3">
             @foreach (var subject in _studentEvaluation.Student.IndividualPlan!.Subjects.Select((e, i) => new { Element = e, Index = i }))
             {
-                <MudItem xs="9">
+                <MudItem xs="9" md="11">
                     <MudField T="string" Label="@($"{Localizer["Subject"]} {subject.Index + 1}")" Variant="Variant.Outlined">@subject.Element.Name</MudField>
                 </MudItem>
-                <MudItem xs="3">
+                <MudItem xs="3" md="1">
                     <MudField T="Grade" Label="@($"{Localizer["Grade"]} {subject.Index + 1}")" Variant="Variant.Outlined">@_studentEvaluation.Student.IndividualPlan.IndividualPlanSubjects[subject.Index].Grade</MudField>
                 </MudItem>
             }
         </MudGrid>
         <MudText Class="mt-2">@Localizer["ExamApplicationWrittenThesisTitle"]</MudText>
         <MudField T="string" Label="@Localizer["ExamApplicationWrittenThesisTitle"]" Variant="Variant.Outlined">@_studentEvaluation.Student.IndividualPlan.WrittenThesisTitle</MudField>
-        <MudGrid>
-            <MudItem xs="2">
+        <MudGrid Spacing="3">
+            <MudItem xs="12">
                 <MudText Class="d-flex align-center mud-height-full">@Localizer["IndividualPlanDissertationSubmissionDate"]</MudText>
             </MudItem>
-            <MudItem xs="5">
-                <MudDatePicker ShowToolbar="false" Label="@Localizer["PlannedDeadline"]" Variant="Variant.Outlined" @bind-Date="_studentEvaluation.PlannedDissertationSubmissionDate" />
+            <MudItem xs="6">
+                <MudDatePicker ShowToolbar="false" Required RequiredError="@Localizer["Required"]" Label="@Localizer["PlannedDeadline"]" Variant="Variant.Outlined" @bind-Date="_studentEvaluation.PlannedDissertationSubmissionDate" />
             </MudItem>
-            <MudItem xs="5">
+            <MudItem xs="6">
                 <MudDatePicker ShowToolbar="false" ReadOnly Label="@Localizer["RealDeadline"]" Variant="Variant.Outlined" @bind-Date="_studentEvaluation.Student.IndividualPlan.DissertationSubmissionDate" />
             </MudItem>
-            <MudItem xs="2">
+            <MudItem xs="12">
                 <MudText Class="d-flex align-center mud-height-full">@Localizer["ExamDate"]</MudText>
             </MudItem>
-            <MudItem xs="5">
-                <MudDatePicker ShowToolbar="false" Label="@Localizer["PlannedDeadline"]" Variant="Variant.Outlined" @bind-Date="_studentEvaluation.PlannedDissertationExamDate" />
+            <MudItem xs="6">
+                <MudDatePicker ShowToolbar="false" Required RequiredError="@Localizer["Required"]" Label="@Localizer["PlannedDeadline"]" Variant="Variant.Outlined" @bind-Date="_studentEvaluation.PlannedDissertationExamDate" />
             </MudItem>
-            <MudItem xs="5">
+            <MudItem xs="6">
                 <MudDatePicker ShowToolbar="false" ReadOnly Label="@Localizer["RealDeadline"]" Variant="Variant.Outlined" @bind-Date="_studentEvaluation.Student.DissertationExamDate" />
             </MudItem>
-            <MudItem xs="2">
+            <MudItem xs="12">
                 <MudText Class="d-flex align-center mud-height-full">@Localizer["ExamResult"]</MudText>
             </MudItem>
-            <MudItem xs="5">
+            <MudItem xs="6">
                 <MudField T="string" Label="@Localizer["Result"]" Variant="Variant.Outlined">@_studentEvaluation.Student.DissertationExamResult</MudField>
             </MudItem>
-            <MudItem xs="5">
+            <MudItem xs="6">
                 <MudField T="string" Label="@Localizer["Transcript"]" Variant="Variant.Outlined">@_studentEvaluation.Student.DissertationExamTranscript</MudField>
             </MudItem>
         </MudGrid>
 
+        <MudDivider Class="my-3" />
         <MudText Typo="Typo.h6">@Localizer["DissertationThesis"]</MudText>
         <MudField T="string" Label="@Localizer["DissertationThesis"]" Variant="Variant.Outlined">@_studentEvaluation.Student.Thesis.Title</MudField>
-        <MudTextField Style="white-space: pre-wrap;" T="string" Label="@Localizer["ThesisState"]" Variant="Variant.Outlined" AutoGrow Lines="3" @bind-Value="_studentEvaluation.ThesisState" />
-        <MudGrid>
-            <MudItem class="justify-center" xs="2">
+        <MudTextField Style="white-space: pre-wrap;" T="string" Required RequiredError="@Localizer["Required"]" Label="@Localizer["ThesisState"]" Variant="Variant.Outlined" AutoGrow Lines="3" @bind-Value="_studentEvaluation.ThesisState" />
+        <MudGrid Spacing="3">
+            <MudItem xs="12">
                 <MudText Class="d-flex align-center mud-height-full">@Localizer["DefenceApplicationDate"]</MudText>
             </MudItem>
-            <MudItem xs="5">
-                <MudDatePicker ShowToolbar="false" Label="@Localizer["PlannedDeadline"]" Variant="Variant.Outlined" @bind-Date="_studentEvaluation.PlannedDissertationApplicationDate" />
+            <MudItem xs="6">
+                <MudDatePicker ShowToolbar="false" Required RequiredError="@Localizer["Required"]" Label="@Localizer["PlannedDeadline"]" Variant="Variant.Outlined" @bind-Date="_studentEvaluation.PlannedDissertationApplicationDate" />
             </MudItem>
-            <MudItem xs="5">
+            <MudItem xs="6">
                 <MudDatePicker ShowToolbar="false" ReadOnly Label="@Localizer["RealDeadline"]" Variant="Variant.Outlined" @bind-Date="_studentEvaluation.Student.IndividualPlan.DissertationApplicationDate" />
             </MudItem>
         </MudGrid>
 
+        <MudDivider Class="my-3" />
         <MudText Typo="Typo.h6">@Localizer["StudentEvaluationSupervisorEvaluation"]</MudText>
-        <MudTextField Style="white-space: pre-wrap;" T="string" Label="@Localizer["StudentEvaluationCreditsEvaluation"]" Variant="Variant.Outlined" AutoGrow Lines="3" @bind-Value="_studentEvaluation.CreditsEvaluation" />
-        <MudTextField Style="white-space: pre-wrap;" T="string" Label="@Localizer["StudentEvaluationCreditsEvaluation"]" Variant="Variant.Outlined" AutoGrow Lines="3" @bind-Value="_studentEvaluation.CreditsEvaluation" />
-        <MudTextField Style="white-space: pre-wrap;" T="string" Label="@Localizer["StudentEvaluationScientificEvaluation"]" Variant="Variant.Outlined" AutoGrow Lines="3" @bind-Value="_studentEvaluation.ScientificEvaluation" />
-        <MudTextField Style="white-space: pre-wrap;" T="string" Label="@Localizer["StudentEvaluationAssignmentsState"]" Variant="Variant.Outlined" AutoGrow Lines="3" @bind-Value="_studentEvaluation.AssignmentsState" />
-        <MudSelect T="Conclusion" Required Label="@Localizer["StudentEvaluationModificationProposal"]" Variant="Variant.Outlined" @bind-Value="_studentEvaluation.Conclusion">
+        <MudTextField Style="white-space: pre-wrap;" T="string" Required RequiredError="@Localizer["Required"]" Label="@Localizer["StudentEvaluationCreditsEvaluation"]" Variant="Variant.Outlined" AutoGrow Lines="3" @bind-Value="_studentEvaluation.CreditsEvaluation" />
+        <MudTextField Style="white-space: pre-wrap;" T="string" Required RequiredError="@Localizer["Required"]" Label="@Localizer["StudentEvaluationScientificEvaluation"]" Variant="Variant.Outlined" AutoGrow Lines="3" @bind-Value="_studentEvaluation.ScientificEvaluation" />
+        <MudTextField Style="white-space: pre-wrap;" T="string" Required RequiredError="@Localizer["Required"]" Label="@Localizer["StudentEvaluationAssignmentsState"]" Variant="Variant.Outlined" AutoGrow Lines="3" @bind-Value="_studentEvaluation.AssignmentsState" />
+        <MudTextField Style="white-space: pre-wrap;" T="string" Required RequiredError="@Localizer["Required"]" Label="@Localizer["StudentEvaluationModificationProposal"]" Variant="Variant.Outlined" AutoGrow Lines="3" @bind-Value="_studentEvaluation.ModificationProposal" />
+        <MudSelect T="Conclusion" Required RequiredError="@Localizer["Required"]" Label="@Localizer["StudentEvaluationConclusion"]" Variant="Variant.Outlined" @bind-Value="_studentEvaluation.Conclusion">
             @foreach (var conclusion in EnumService.GetLocalizedEnumValues<Conclusion>())
             {
                 <MudSelectItem Value="@conclusion.Item1">@conclusion.Item2</MudSelectItem>
             }
         </MudSelect>
-        <MudTextField Style="white-space: pre-wrap;" T="string" Label="@Localizer["StudentEvaluationAdditionalEvaluation"]" Variant="Variant.Outlined" AutoGrow Lines="3" @bind-Value="_studentEvaluation.AdditionalEvaluation" />
+        <MudTextField Style="white-space: pre-wrap;" T="string" Required RequiredError="@Localizer["Required"]" Label="@Localizer["StudentEvaluationAdditionalEvaluation"]" Variant="Variant.Outlined" AutoGrow Lines="3" @bind-Value="_studentEvaluation.AdditionalEvaluation" />
 
         <MudButton Class="mt-4" Variant="Variant.Filled" Color="Color.Primary" OnClick="HandleStudentEvaluation">@(StudentEvaluationGuid is null ? Localizer["Add"] : Localizer["Edit"])</MudButton>
     }
@@ -123,7 +126,7 @@
     private MudForm _form = default!;
     private IEnumerable<Student>? _students;
 
-    private StudentEvaluation? _studentEvaluation = new();
+    private StudentEvaluation _studentEvaluation = new();
 
     protected override async Task OnInitializedAsync()
     {
@@ -134,7 +137,11 @@
 
         if (StudentEvaluationGuid is not null)
         {
-            _studentEvaluation = await UnitOfWork.StudentEvaluations.GetByGuidAsync(StudentEvaluationGuid);
+            var studentEvaluation = await UnitOfWork.StudentEvaluations.GetByGuidAsync(StudentEvaluationGuid);
+            if (studentEvaluation is not null)
+            {
+                _studentEvaluation = studentEvaluation;
+            }
         }
     }
 

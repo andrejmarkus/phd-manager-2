@@ -21,7 +21,7 @@
 
 <PageTitle>@Localizer["ExamApplication"]</PageTitle>
 
-<MudText Typo="Typo.h3">@Localizer["ExamApplication"]</MudText>
+<MudText Typo="Typo.h4">@Localizer["ExamApplication"]</MudText>
 
 <MudForm @ref="_form">
     @if (_student is not null && _student.IndividualPlan is not null)
@@ -37,7 +37,8 @@
 
     <MudTextField T="string" Required RequiredError="@Localizer["Required"]" Label="@Localizer["ExamApplicationWrittenThesisTitle"]" Variant="Variant.Outlined" @bind-Value="_examApplication.WrittenThesisTitle" />
     <MudTextField T="string" Required RequiredError="@Localizer["Required"]" Label="@Localizer["ExamApplicationWrittenThesisTitleEnglish"]" Variant="Variant.Outlined" @bind-Value="_examApplication.WrittenThesisTitleEnglish" />
-
+    
+    <MudDivider Class="my-2" />
     <MudText Class="mt-2" Typo="Typo.h6">@Localizer["SubjectsExamApplicationInfo"]</MudText>
     <MudText>@($"({Localizer["SubjectsExamApplicationNote"]})")</MudText>
     <MudStack Spacing="2">
@@ -58,10 +59,15 @@
                 </MudTooltip>
             </MudStack>
         }
-        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@(() => _selectedSubjects.Add(new()))">@Localizer["SubjectAdd"]</MudButton>
+        <MudStack Row Justify="Justify.Center">
+            <MudTooltip Text="@Localizer["SubjectAdd"]">
+                <MudFab Size="Size.Small" Color="Color.Info" StartIcon="@Icons.Material.Filled.Add" OnClick="@(() => _selectedSubjects.Add(new()))" />
+            </MudTooltip>
+        </MudStack>
     </MudStack>
 
-    <MudButton class="mt-6" OnClick="HandleExamApplication" Variant="Variant.Filled" Color="Color.Primary">@(_add ? Localizer["Create"] : Localizer["Edit"])</MudButton>
+    <MudDivider Class="my-4" />
+    <MudButton OnClick="HandleExamApplication" Variant="Variant.Filled" Color="Color.Primary">@(_add ? Localizer["Create"] : Localizer["Edit"])</MudButton>
 </MudForm>
 
 @code {

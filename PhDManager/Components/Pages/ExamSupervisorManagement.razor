@@ -21,34 +21,38 @@
 
 <PageTitle>@Localizer["DissertationExam"]</PageTitle>
 
-<MudText Typo="Typo.h3">@Localizer["DissertationExam"]</MudText>
+<MudText Typo="Typo.h4">@Localizer["DissertationExam"]</MudText>
 
 <MudForm @ref="_form">
-    <MudAutocomplete T="Student" ReadOnly="@(ExamSupervisorGuid is not null)" Required RequiredError="@Localizer["Required"]" Label="@Localizer["Student"]" ToStringFunc="@(s => s is null ? null : s.User.DisplayName)" SearchFunc="SearchStudents" Variant="Variant.Outlined" @bind-Value="@_examSupervisor.Student" />
+    <MudAutocomplete T="Student" Clearable ReadOnly="@(ExamSupervisorGuid is not null)" Required RequiredError="@Localizer["Required"]" Label="@Localizer["Student"]" ToStringFunc="@(s => s is null ? null : s.User.DisplayName)" SearchFunc="SearchStudents" Variant="Variant.Outlined" @bind-Value="@_examSupervisor.Student" />
     @if (_examSupervisor.Student is not null)
     {
         <MudField Label="@Localizer["Supervisor"]" Variant="Variant.Outlined">@_examSupervisor.Student.Thesis?.Supervisor.User.DisplayName</MudField>
     }
 
+    <MudDivider Class="my-3" />
     <MudText Typo="Typo.h5">@Localizer["RequiredSection"]</MudText>
     <MudText>@Localizer["ExamSupervisorOpponent"]</MudText>
-    <MudTextField T="string" Label="@Localizer["NameAndTitles"]" Variant="Variant.Outlined" @bind-Value="_examSupervisor.OpponentDisplayName" />
-    <MudTextField T="string" Label="@Localizer["Email"]" Variant="Variant.Outlined" @bind-Value="_examSupervisor.OpponentMail" />
-    <MudTextField T="string" Label="@Localizer["PhoneNumber"]" Variant="Variant.Outlined" @bind-Value="_examSupervisor.OpponentPhoneNumber" />
-    <MudTextField T="string" Label="@Localizer["Workplace"]" Variant="Variant.Outlined" @bind-Value="_examSupervisor.OpponentDepartment" />
+    <MudTextField T="string" Required RequiredError="@Localizer["Required"]" Label="@Localizer["NameAndTitles"]" Variant="Variant.Outlined" @bind-Value="_examSupervisor.OpponentDisplayName" />
+    <MudTextField T="string" Required RequiredError="@Localizer["Required"]" Label="@Localizer["Email"]" Variant="Variant.Outlined" @bind-Value="_examSupervisor.OpponentMail" />
+    <MudTextField T="string" Required RequiredError="@Localizer["Required"]" Label="@Localizer["PhoneNumber"]" Variant="Variant.Outlined" @bind-Value="_examSupervisor.OpponentPhoneNumber" />
+    <MudTextField T="string" Required RequiredError="@Localizer["Required"]" Label="@Localizer["Workplace"]" Variant="Variant.Outlined" @bind-Value="_examSupervisor.OpponentDepartment" />
+
+    <MudDivider Class="my-3" />
     <MudText Typo="Typo.h6">@Localizer["ExamSupervisorSubjects"]</MudText>
     <MudStack Row AlignItems="AlignItems.Center">
         <MudText>@Localizer["SpecializationSubject"]</MudText>
         <MudSpacer />
-        <MudAutocomplete T="Teacher" Label="@($"{Localizer["Examiner"]} ({Localizer["ExamSupervisorExaminerInfo"]})")" ToStringFunc="@(t => t is null ? null : t.User.DisplayName)" SearchFunc="SearchTeachers" Variant="Variant.Outlined" @bind-Value="_examSupervisor.Examiner" />
+        <MudAutocomplete T="Teacher" Clearable Required RequiredError="@Localizer["Required"]" Label="@($"{Localizer["Examiner"]} ({Localizer["ExamSupervisorExaminerInfo"]})")" ToStringFunc="@(t => t is null ? null : t.User.DisplayName)" SearchFunc="SearchTeachers" Variant="Variant.Outlined" @bind-Value="_examSupervisor.Examiner" />
     </MudStack>
 
+    <MudDivider Class="my-3" />
     <MudText Typo="Typo.h5">@Localizer["CommitteeMembersProposal"]</MudText>
     <MudText>@Localizer["CommitteeMembersProposalInfo"]</MudText>
     <MudStack Class="mt-3">
         <MudStack Spacing="0">
             <MudText>@Localizer["ExamSupervisorChairperson"]</MudText>
-            <MudAutocomplete Label="@Localizer["Teacher"]" T="Teacher" ToStringFunc="@(t => t is null ? null : t.User.DisplayName)" SearchFunc="SearchTeachers" Variant="Variant.Outlined" @bind-Value="_examSupervisor.Chairperson" />
+            <MudAutocomplete Clearable Required RequiredError="@Localizer["Required"]" Label="@Localizer["Teacher"]" T="Teacher" ToStringFunc="@(t => t is null ? null : t.User.DisplayName)" SearchFunc="SearchTeachers" Variant="Variant.Outlined" @bind-Value="_examSupervisor.Chairperson" />
             @if (_examSupervisor.Chairperson is not null)
             {
                 <MudField Label="@Localizer["Email"]" Variant="Variant.Outlined">@_examSupervisor.Chairperson.User.Email</MudField>
@@ -58,7 +62,7 @@
         </MudStack>
         <MudStack Spacing="0">
             <MudText>@Localizer["ExamSupervisorExternalMember"]</MudText>
-            <MudAutocomplete Label="@Localizer["Teacher"]" T="Teacher" ToStringFunc="@(t => t is null ? null : t.User.DisplayName)" SearchFunc="SearchTeachers" Variant="Variant.Outlined" @bind-Value="_examSupervisor.ExternalMember" />
+            <MudAutocomplete Clearable Required RequiredError="@Localizer["Required"]" Label="@Localizer["Teacher"]" T="Teacher" ToStringFunc="@(t => t is null ? null : t.User.DisplayName)" SearchFunc="SearchTeachers" Variant="Variant.Outlined" @bind-Value="_examSupervisor.ExternalMember" />
             @if (_examSupervisor.ExternalMember is not null)
             {
                 <MudField Label="@Localizer["Email"]" Variant="Variant.Outlined">@_examSupervisor.ExternalMember.User.Email</MudField>
@@ -68,7 +72,7 @@
         </MudStack>
         <MudStack Spacing="0">
             <MudText>@Localizer["AcademicCommitteeMember"]</MudText>
-            <MudAutocomplete Label="@Localizer["Teacher"]" T="Teacher" ToStringFunc="@(t => t is null ? null : t.User.DisplayName)" SearchFunc="SearchTeachers" Variant="Variant.Outlined" @bind-Value="_examSupervisor.AcademicCommitteeMember" />
+            <MudAutocomplete Clearable Required RequiredError="@Localizer["Required"]" Label="@Localizer["Teacher"]" T="Teacher" ToStringFunc="@(t => t is null ? null : t.User.DisplayName)" SearchFunc="SearchTeachers" Variant="Variant.Outlined" @bind-Value="_examSupervisor.AcademicCommitteeMember" />
             @if (_examSupervisor.AcademicCommitteeMember is not null)
             {
                 <MudField Label="@Localizer["Email"]" Variant="Variant.Outlined">@_examSupervisor.AcademicCommitteeMember.User.Email</MudField>
@@ -78,7 +82,7 @@
         </MudStack>
         <MudStack Spacing="0">
             <MudText>@Localizer["AdditionalMember"]</MudText>
-            <MudAutocomplete Label="@Localizer["Teacher"]" T="Teacher" ToStringFunc="@(t => t is null ? null : t.User.DisplayName)" SearchFunc="SearchTeachers" Variant="Variant.Outlined" @bind-Value="_examSupervisor.AdditionalMember" />
+            <MudAutocomplete Clearable Required RequiredError="@Localizer["Required"]" Label="@Localizer["Teacher"]" T="Teacher" ToStringFunc="@(t => t is null ? null : t.User.DisplayName)" SearchFunc="SearchTeachers" Variant="Variant.Outlined" @bind-Value="_examSupervisor.AdditionalMember" />
             @if (_examSupervisor.AdditionalMember is not null)
             {
                 <MudField Label="@Localizer["Email"]" Variant="Variant.Outlined">@_examSupervisor.AdditionalMember.User.Email</MudField>

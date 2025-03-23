@@ -8,7 +8,7 @@ namespace PhDManager.Models
         public string Text { get; set; } = default!;
         public DateTime Created { get; set; }
 
-        public string ExternalId { get; set; } = string.Empty;
+        public int ExternalId { get; set; }
         public virtual ExternalTeacher External { get; set; } = default!;
 
         public int ThesisId { get; set; }

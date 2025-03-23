@@ -13,11 +13,12 @@
 @inject IUnitOfWork UnitOfWork
 @inject UsersService UsersService
 
+<MudText Class="mt-2" Typo="Typo.h5" GutterBottom>@Localizer["Departments"]</MudText>
+
 <MudDataGrid T="Department" Items="@_departments" Hover SortMode="SortMode.Multiple" QuickFilter="@_quickFilter" Elevation="0">
     <ToolBarContent>
-        <MudText Typo="Typo.h6" GutterBottom="false">@Localizer["Departments"]</MudText>
+        <MudButton class="mx-4" Variant="Variant.Filled" Color="Color.Primary" OnClick="AddDepartment">@Localizer["Add"]</MudButton>
         <MudSpacer />
-        <MudButton class="mx-4" Variant="Variant.Filled" Color="Color.Primary" OnClick="AddDepartment">@Localizer["DepartmentAdd"]</MudButton>
         <MudTextField Variant="Variant.Outlined" Placeholder="@Localizer["Search"]" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" @bind-Value="_search" />
     </ToolBarContent>
     <Columns>

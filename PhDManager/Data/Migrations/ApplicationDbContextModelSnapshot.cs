@@ -17,7 +17,7 @@ namespace PhDManager.Data.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.2")
+                .HasAnnotation("ProductVersion", "9.0.3")
                 .HasAnnotation("Proxies:ChangeTracking", false)
                 .HasAnnotation("Proxies:CheckEquality", false)
                 .HasAnnotation("Proxies:LazyLoading", true)
@@ -284,11 +284,7 @@ namespace PhDManager.Data.Migrations
                     b.Property<DateTime>("Created")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("ExternalId")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<int>("ExternalId1")
+                    b.Property<int>("ExternalId")
                         .HasColumnType("integer");
 
                     b.Property<string>("Text")
@@ -300,7 +296,7 @@ namespace PhDManager.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ExternalId1");
+                    b.HasIndex("ExternalId");
 
                     b.HasIndex("ThesisId");
 
@@ -1131,7 +1127,7 @@ namespace PhDManager.Data.Migrations
                 {
                     b.HasOne("PhDManager.Models.Roles.ExternalTeacher", "External")
                         .WithMany("Comments")
-                        .HasForeignKey("ExternalId1")
+                        .HasForeignKey("ExternalId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

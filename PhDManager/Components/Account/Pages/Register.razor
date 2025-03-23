@@ -68,7 +68,7 @@
 
                         <MudStaticTextField For="@(() => Input.ConfirmPassword)" @bind-Value="Input.ConfirmPassword"
                         Variant="Variant.Outlined"
-                        Label="@Localizer["ConfirmationPassword"]" InputType="InputType.Password"
+                        Label="@Localizer["ConfirmPassword"]" InputType="InputType.Password"
                         UserAttributes="@(new() { { "autocomplete", "new-password" }, { "aria-required", "true" } } )" />
 
                         <MudStaticButton Variant="Variant.Filled" Color="Color.Primary" FullWidth="true" FormAction="FormAction.Submit">@Localizer["SignUp"]</MudStaticButton>

@@ -18,20 +18,25 @@
 @inject SchoolYearService SchoolYearService
 @inject EnumService EnumService
 
+<MudText Class="mt-2" Typo="Typo.h5" GutterBottom>@Localizer["Students"]</MudText>
+
 <MudDataGrid @ref="_dataGrid" T="Student" Items="@_students" Hover SortMode="SortMode.Multiple" QuickFilter="@_quickFilter" Elevation="0">
     <ToolBarContent>
-        <MudText Typo="Typo.h6" GutterBottom="false">@Localizer["Students"]</MudText>
+        <MudStack Row>
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="AddStudent">@Localizer["Add"]</MudButton>
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="AddStudentRegistration">@Localizer["CreateRegistration"]</MudButton>
+        </MudStack>
         <MudSpacer />
-        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="AddStudent">@Localizer["UserAddLdap"]</MudButton>
-        <MudButton Class="mx-4" Variant="Variant.Filled" Color="Color.Primary" OnClick="AddStudentRegistration">@Localizer["UserRegister"]</MudButton>
-        <MudTextField Class="mr-4" Variant="Variant.Outlined" Placeholder="@Localizer["Search"]" Immediate Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" @bind-Value="_search" />
-        <MudSelect T="StudentState?" Variant="Variant.Outlined" Label="@Localizer["StudentState"]" Immediate ToStringFunc="@(s => s is null ? Localizer["AllPeople"] : EnumService.GetLocalizedEnumValue((StudentState)s))" @bind-Value="_studentState">
-            <MudSelectItem T="StudentState?" Value="null">@Localizer["AllPeople"]</MudSelectItem>
-            @foreach (var studentState in _studentStates)
-            {
-                <MudSelectItem T="StudentState?" Value="studentState.Item1">@studentState.Item2</MudSelectItem>
-            }
-        </MudSelect>
+        <MudStack Row AlignItems="AlignItems.Center">
+            <MudTextField Variant="Variant.Outlined" Label="@Localizer["Search"]" Placeholder="@Localizer["Search"]" Immediate Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" @bind-Value="_search" />
+            <MudSelect T="StudentState?" Variant="Variant.Outlined" Label="@Localizer["StudentState"]" Immediate ToStringFunc="@(s => s is null ? Localizer["AllPeople"] : EnumService.GetLocalizedEnumValue((StudentState)s))" @bind-Value="_studentState">
+                <MudSelectItem T="StudentState?" Value="null">@Localizer["AllPeople"]</MudSelectItem>
+                @foreach (var studentState in _studentStates)
+                {
+                    <MudSelectItem T="StudentState?" Value="studentState.Item1">@studentState.Item2</MudSelectItem>
+                }
+            </MudSelect>
+        </MudStack>
     </ToolBarContent>
     <Columns>
         <PropertyColumn Property="ds => ds.User.UserName" Title="@Localizer["Username"]" />

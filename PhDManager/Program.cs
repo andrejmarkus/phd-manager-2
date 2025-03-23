@@ -4,6 +4,7 @@ using Hangfire.PostgreSql;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using MudBlazor;
 using MudBlazor.Services;
 using PhDManager.Components;
 using PhDManager.Components.Account;
@@ -17,7 +18,10 @@ using PhDManager.Services.Repositories;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add MudBlazor services
-builder.Services.AddMudServices();
+builder.Services.AddMudServices(config =>
+{
+    config.SnackbarConfiguration.PositionClass = Defaults.Classes.Position.TopRight;
+});
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
@@ -68,6 +72,7 @@ builder.Services.AddIdentityCore<ApplicationUser>(options => options.SignIn.Requ
     .AddDefaultTokenProviders();
 
 builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityEmailSender>();
+builder.Services.AddSingleton<InformationEmailSender>();
 builder.Services.AddSingleton<SchoolYearService>();
 builder.Services.AddSingleton<EnumService>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();

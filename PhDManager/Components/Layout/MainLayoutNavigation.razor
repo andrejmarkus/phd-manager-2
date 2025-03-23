@@ -3,9 +3,7 @@
 
 @rendermode InteractiveServer
 
-<MudHidden HiddenChanged="ScreenResized" />
-
-<MudAppBar Fixed Elevation="1">
+<MudAppBar style="position: sticky;" Elevation="1">
     <MudIconButton Color="Color.Inherit" Size="@Size.Medium" Edge="Edge.Start" Icon="@Icons.Material.Filled.Menu" OnClick="ToggleOpen" />
     <MudLink Href="/">
         <MudImage Class="logo" Src="@Assets["uniza_logo.png"]" Height="40" />
@@ -16,17 +14,12 @@
     </MudStack>
 </MudAppBar>
 
-<MudDrawer Class="mud-drawer-fixed" @bind-Open="@_open" Variant="@_variant" OpenMiniOnHover="true" Fixed="false" Breakpoint="Breakpoint.Xs" Elevation="2">
+<MudDrawer Class="mud-drawer-fixed" @bind-Open="@_open" Variant="DrawerVariant.Mini" OpenMiniOnHover="true" Fixed="false" Breakpoint="Breakpoint.Xs" Elevation="2">
     <NavMenu />
 </MudDrawer>
 
 @code {
     private bool _open = false;
-    private DrawerVariant _variant = DrawerVariant.Mini;
-
-    private void ScreenResized(bool hidden) {
-        _variant = hidden ? DrawerVariant.Temporary : DrawerVariant.Mini;
-    }
 
     public void ToggleOpen()
     {

@@ -22,12 +22,13 @@
 
 <PageTitle>@Localizer["IndividualPlans"]</PageTitle>
 
+<MudText Typo="Typo.h5" GutterBottom>@Localizer["IndividualPlans"]</MudText>
+
 <MudDataGrid T="IndividualPlan" Items="_individualPlans" Hover SortMode="SortMode.Multiple" QuickFilter="_quickFilter" Elevation="0">
     <ToolBarContent>
-        <MudText Typo="Typo.h6" GutterBottom="false">@Localizer["IndividualPlans"]</MudText>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="/management/individual-plans/add">@Localizer["Add"]</MudButton>
         <MudSpacer />
-        <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="/management/individual-plans/add">@Localizer["IndividualPlanAdd"]</MudButton>
-        <MudTextField Class="ml-4" Variant="Variant.Outlined" Placeholder="@Localizer["Search"]" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" @bind-Value="_search" />
+        <MudTextField Variant="Variant.Outlined" Placeholder="@Localizer["Search"]" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" @bind-Value="_search" />
     </ToolBarContent>
     <Columns>
         <PropertyColumn Property="ip => ip.Student.Thesis!.Title" Title="@Localizer["DissertationThesisTitle"]" />

@@ -186,9 +186,6 @@
   <data name="FullName" xml:space="preserve">
     <value>Celé meno</value>
   </data>
-  <data name="ConfirmationPassword" xml:space="preserve">
-    <value>Potvrdzovacie heslo</value>
-  </data>
   <data name="SignUpService" xml:space="preserve">
     <value>Použi inú službu pre registráciu.</value>
   </data>
@@ -1019,5 +1016,188 @@
   </data>
   <data name="RegisterConfirmationInfo" xml:space="preserve">
     <value>Prosím, skontrolujte si email a potvrďte svoj účet.</value>
+  </data>
+  <data name="Task" xml:space="preserve">
+    <value>Úloha</value>
+  </data>
+  <data name="Deadline" xml:space="preserve">
+    <value>Termín</value>
+  </data>
+  <data name="TopicSpecification" xml:space="preserve">
+    <value>Špecifikácia témy</value>
+  </data>
+  <data name="StudyTypeError" xml:space="preserve">
+    <value>Je nutné zvoliť aspoň jeden typ štúdia!</value>
+  </data>
+  <data name="TeacherChangeError" xml:space="preserve">
+    <value>Učiteľ už je zvolený!</value>
+  </data>
+  <data name="ExamResult" xml:space="preserve">
+    <value>Výsledok</value>
+  </data>
+  <data name="AccessDenied" xml:space="preserve">
+    <value>Prístup zamietnutý</value>
+  </data>
+  <data name="AccessDeniedError" xml:space="preserve">
+    <value>Nemáte prístup k tomuto zdroju.</value>
+  </data>
+  <data name="ChangePassword" xml:space="preserve">
+    <value>Zmeniť heslo</value>
+  </data>
+  <data name="OldPassword" xml:space="preserve">
+    <value>Staré heslo</value>
+  </data>
+  <data name="OldPasswordHelper" xml:space="preserve">
+    <value>Prosím, zadajte svoje staré heslo.</value>
+  </data>
+  <data name="NewPassword" xml:space="preserve">
+    <value>Nové heslo</value>
+  </data>
+  <data name="NewPasswordHelper" xml:space="preserve">
+    <value>Prosím, zadajte svoje nové heslo.</value>
+  </data>
+  <data name="ConfirmPassword" xml:space="preserve">
+    <value>Potvrďte heslo</value>
+  </data>
+  <data name="ConfirmPasswordHelper" xml:space="preserve">
+    <value>Prosím, potvrďte svoje nové heslo.</value>
+  </data>
+  <data name="UpdatePassword" xml:space="preserve">
+    <value>Aktualizovať heslo</value>
+  </data>
+  <data name="UserPasswordChangeMessage" xml:space="preserve">
+    <value>Používateľ úspešne zmenil svoje heslo.</value>
+  </data>
+  <data name="UserPasswordChangeInfo" xml:space="preserve">
+    <value>Vaše heslo bolo zmenené</value>
+  </data>
+  <data name="PresonalDataDelete" xml:space="preserve">
+    <value>Vymazať osobné údaje</value>
+  </data>
+  <data name="PersonalDataDeleteInfo" xml:space="preserve">
+    <value>Vymazanie týchto údajov trvalo odstráni váš účet a nebude možné ho obnoviť.</value>
+  </data>
+  <data name="PersonalDataDeleteConfirm" xml:space="preserve">
+    <value>Vymazať údaje a uzavrieť môj účet</value>
+  </data>
+  <data name="PersonalDataDeleteError" xml:space="preserve">
+    <value>Nastala neočakávaná chyba pri mazaní používateľa.</value>
+  </data>
+  <data name="ManageEmail" xml:space="preserve">
+    <value>Spravovať e-mail</value>
+  </data>
+  <data name="NewEmail" xml:space="preserve">
+    <value>Nový e-mail</value>
+  </data>
+  <data name="ChangeEmail" xml:space="preserve">
+    <value>Zmeniť e-mail</value>
+  </data>
+  <data name="EmailHelper" xml:space="preserve">
+    <value>Prosím, zadajte svoj e-mail.</value>
+  </data>
+  <data name="EmailSendVerification" xml:space="preserve">
+    <value>Poslať overovací e-mail</value>
+  </data>
+  <data name="NewEmailHelper" xml:space="preserve">
+    <value>Prosím, zadajte nový e-mail.</value>
+  </data>
+  <data name="EmailConfirmation" xml:space="preserve">
+    <value>Potvrdzovací odkaz na zmenu e-mailu bol odoslaný. Skontrolujte si svoj e-mail.</value>
+  </data>
+  <data name="EmailVerification" xml:space="preserve">
+    <value>Overovací e-mail bol odoslaný. Skontrolujte si svoj e-mail.</value>
+  </data>
+  <data name="EmailUnchanged" xml:space="preserve">
+    <value>Váš e-mail zostal nezmenený.</value>
+  </data>
+  <data name="Profile" xml:space="preserve">
+    <value>Profil</value>
+  </data>
+  <data name="UsernameHelper" xml:space="preserve">
+    <value>Prosím, vyberte si svoje používateľské meno.</value>
+  </data>
+  <data name="PhoneNumberHelper" xml:space="preserve">
+    <value>Prosím, zadajte svoje telefónne číslo.</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>Uložiť</value>
+  </data>
+  <data name="ProfileUpdated" xml:space="preserve">
+    <value>Váš profil bol aktualizovaný</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Vymazať</value>
+  </data>
+  <data name="Download" xml:space="preserve">
+    <value>Stiahnúť</value>
+  </data>
+  <data name="PersonalDataDeleteWarning" xml:space="preserve">
+    <value>Vymazanie týchto údajov trvalo odstráni váš účet a nebude možné ho obnoviť.</value>
+  </data>
+  <data name="PersonalDataInfo" xml:space="preserve">
+    <value>Váš účet obsahuje osobné údaje, ktoré ste nám poskytli. Táto stránka vám umožňuje tieto údaje stiahnuť alebo vymazať.</value>
+  </data>
+  <data name="PasswordSet" xml:space="preserve">
+    <value>Nastaviť heslo</value>
+  </data>
+  <data name="PasswordSetYour" xml:space="preserve">
+    <value>Nastavte svoje heslo</value>
+  </data>
+  <data name="PasswordSetMessage" xml:space="preserve">
+    <value>Nemáte miestne používateľské meno/heslo pre túto stránku. Pridajte miestny účet, aby ste sa mohli prihlásiť bez externého prihlásenia.</value>
+  </data>
+  <data name="PasswordSetInfo" xml:space="preserve">
+    <value>Vaše heslo bolo nastavené.</value>
+  </data>
+  <data name="AccountManage" xml:space="preserve">
+    <value>Spravujte svoj účet</value>
+  </data>
+  <data name="AccountManageMeesage" xml:space="preserve">
+    <value>Zmeňte nastavenia svojho účtu</value>
+  </data>
+  <data name="ExternalLogins" xml:space="preserve">
+    <value>Externé prihlásenia</value>
+  </data>
+  <data name="ManageEmailUserError" xml:space="preserve">
+    <value>Zmena e-mailu nie je možná pre LDAP uživateľov.</value>
+  </data>
+  <data name="ChangePasswordUserError" xml:space="preserve">
+    <value>Zmena hesla nie je možná pre LDAP uživateľov.</value>
+  </data>
+  <data name="Approve" xml:space="preserve">
+    <value>Potvrdiť</value>
+  </data>
+  <data name="ExamApplicationCreate" xml:space="preserve">
+    <value>Vytvoriť prihlášku na skúšku</value>
+  </data>
+  <data name="IndividualPlanAssignError" xml:space="preserve">
+    <value>Zatiaľ Vám nebol pridelený individualný plán. Vráťte sa prosím neskôr.</value>
+  </data>
+  <data name="ConfirmYourEmail" xml:space="preserve">
+    <value>Potvrďte Váš email</value>
+  </data>
+  <data name="ConfirmYourEmailHtml" xml:space="preserve">
+    <value>Prosím, potvrďte svoj účet &lt;a href='{0}'&gt;kliknutím sem&lt;/a&gt;.</value>
+  </data>
+  <data name="ResetYourPassword" xml:space="preserve">
+    <value>Obnovte svoje heslo</value>
+  </data>
+  <data name="ResetYourPasswordCodeHtml" xml:space="preserve">
+    <value>Prosím, obnovte svoje heslo pomocou nasledujúceho kódu: {0}</value>
+  </data>
+  <data name="ResetYourPasswordLinkHtml" xml:space="preserve">
+    <value>Prosím, obnovte svoje heslo &lt;a href='{0}'&gt;kliknutím sem&lt;/a&gt;.</value>
+  </data>
+  <data name="NewInterestEmail" xml:space="preserve">
+    <value>Nový záujem o Vašu tému</value>
+  </data>
+  <data name="NewInterestEmailHtml" xml:space="preserve">
+    <value>Študent {0} má záujem o Vašu tému s názvom {1}.</value>
+  </data>
+  <data name="DisserationThesisShow" xml:space="preserve">
+    <value>Zobraziť dizertačnú prácu</value>
+  </data>
+  <data name="CommentDelete" xml:space="preserve">
+    <value>Vymazať komentár</value>
   </data>
 </root>

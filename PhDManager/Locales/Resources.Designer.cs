@@ -70,6 +70,42 @@ namespace PhDManager.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Access denied.
+        /// </summary>
+        public static string AccessDenied {
+            get {
+                return ResourceManager.GetString("AccessDenied", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You do not have access to this resource..
+        /// </summary>
+        public static string AccessDeniedError {
+            get {
+                return ResourceManager.GetString("AccessDeniedError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Manage your account.
+        /// </summary>
+        public static string AccountManage {
+            get {
+                return ResourceManager.GetString("AccountManage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Change your account settings.
+        /// </summary>
+        public static string AccountManageMeesage {
+            get {
+                return ResourceManager.GetString("AccountManageMeesage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Migrate accounts.
         /// </summary>
         public static string AccountsMigrate {
@@ -214,6 +250,15 @@ namespace PhDManager.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Approve.
+        /// </summary>
+        public static string Approve {
+            get {
+                return ResourceManager.GetString("Approve", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Approved.
         /// </summary>
         public static string Approved {
@@ -277,6 +322,33 @@ namespace PhDManager.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Change email.
+        /// </summary>
+        public static string ChangeEmail {
+            get {
+                return ResourceManager.GetString("ChangeEmail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Change password.
+        /// </summary>
+        public static string ChangePassword {
+            get {
+                return ResourceManager.GetString("ChangePassword", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Change of password is not possible for LDAP users..
+        /// </summary>
+        public static string ChangePasswordUserError {
+            get {
+                return ResourceManager.GetString("ChangePasswordUserError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to City.
         /// </summary>
         public static string City {
@@ -291,6 +363,15 @@ namespace PhDManager.Locales {
         public static string Comment {
             get {
                 return ResourceManager.GetString("Comment", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Delete comment.
+        /// </summary>
+        public static string CommentDelete {
+            get {
+                return ResourceManager.GetString("CommentDelete", resourceCulture);
             }
         }
         
@@ -340,15 +421,6 @@ namespace PhDManager.Locales {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Confirmation password.
-        /// </summary>
-        public static string ConfirmationPassword {
-            get {
-                return ResourceManager.GetString("ConfirmationPassword", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Confirm email.
         /// </summary>
         public static string ConfirmEmail {
@@ -385,6 +457,42 @@ namespace PhDManager.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Confirm password.
+        /// </summary>
+        public static string ConfirmPassword {
+            get {
+                return ResourceManager.GetString("ConfirmPassword", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please confirm your new password..
+        /// </summary>
+        public static string ConfirmPasswordHelper {
+            get {
+                return ResourceManager.GetString("ConfirmPasswordHelper", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Confirm your email.
+        /// </summary>
+        public static string ConfirmYourEmail {
+            get {
+                return ResourceManager.GetString("ConfirmYourEmail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please confirm your account by &lt;a href=&apos;{0}&apos;&gt;clicking here&lt;/a&gt;..
+        /// </summary>
+        public static string ConfirmYourEmailHtml {
+            get {
+                return ResourceManager.GetString("ConfirmYourEmailHtml", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Create.
         /// </summary>
         public static string Create {
@@ -403,6 +511,15 @@ namespace PhDManager.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Deadline.
+        /// </summary>
+        public static string Deadline {
+            get {
+                return ResourceManager.GetString("Deadline", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Deadlines.
         /// </summary>
         public static string Deadlines {
@@ -417,6 +534,15 @@ namespace PhDManager.Locales {
         public static string DefenceApplicationDate {
             get {
                 return ResourceManager.GetString("DefenceApplicationDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Delete.
+        /// </summary>
+        public static string Delete {
+            get {
+                return ResourceManager.GetString("Delete", resourceCulture);
             }
         }
         
@@ -498,6 +624,15 @@ namespace PhDManager.Locales {
         public static string DisserationThesisEdit {
             get {
                 return ResourceManager.GetString("DisserationThesisEdit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show dissertation thesis.
+        /// </summary>
+        public static string DisserationThesisShow {
+            get {
+                return ResourceManager.GetString("DisserationThesisShow", resourceCulture);
             }
         }
         
@@ -871,6 +1006,15 @@ namespace PhDManager.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Download.
+        /// </summary>
+        public static string Download {
+            get {
+                return ResourceManager.GetString("Download", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Edit.
         /// </summary>
         public static string Edit {
@@ -894,6 +1038,51 @@ namespace PhDManager.Locales {
         public static string Email {
             get {
                 return ResourceManager.GetString("Email", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Confirmation link to change email sent. Please check your email..
+        /// </summary>
+        public static string EmailConfirmation {
+            get {
+                return ResourceManager.GetString("EmailConfirmation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please enter your email..
+        /// </summary>
+        public static string EmailHelper {
+            get {
+                return ResourceManager.GetString("EmailHelper", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Send verification email.
+        /// </summary>
+        public static string EmailSendVerification {
+            get {
+                return ResourceManager.GetString("EmailSendVerification", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Your email is unchanged..
+        /// </summary>
+        public static string EmailUnchanged {
+            get {
+                return ResourceManager.GetString("EmailUnchanged", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Verification email sent. Please check your email..
+        /// </summary>
+        public static string EmailVerification {
+            get {
+                return ResourceManager.GetString("EmailVerification", resourceCulture);
             }
         }
         
@@ -939,6 +1128,15 @@ namespace PhDManager.Locales {
         public static string ExamApplication {
             get {
                 return ResourceManager.GetString("ExamApplication", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Create exam application.
+        /// </summary>
+        public static string ExamApplicationCreate {
+            get {
+                return ResourceManager.GetString("ExamApplicationCreate", resourceCulture);
             }
         }
         
@@ -1002,6 +1200,15 @@ namespace PhDManager.Locales {
         public static string Examiner {
             get {
                 return ResourceManager.GetString("Examiner", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Exam result.
+        /// </summary>
+        public static string ExamResult {
+            get {
+                return ResourceManager.GetString("ExamResult", resourceCulture);
             }
         }
         
@@ -1083,6 +1290,15 @@ namespace PhDManager.Locales {
         public static string ExamSupervisorSubjects {
             get {
                 return ResourceManager.GetString("ExamSupervisorSubjects", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to External logins.
+        /// </summary>
+        public static string ExternalLogins {
+            get {
+                return ResourceManager.GetString("ExternalLogins", resourceCulture);
             }
         }
         
@@ -1236,6 +1452,15 @@ namespace PhDManager.Locales {
         public static string IndividualPlanAdditionalSubjectsInfo {
             get {
                 return ResourceManager.GetString("IndividualPlanAdditionalSubjectsInfo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You have not been assigned an individual plan yet. Please check back later..
+        /// </summary>
+        public static string IndividualPlanAssignError {
+            get {
+                return ResourceManager.GetString("IndividualPlanAssignError", resourceCulture);
             }
         }
         
@@ -1555,6 +1780,24 @@ namespace PhDManager.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Manage email.
+        /// </summary>
+        public static string ManageEmail {
+            get {
+                return ResourceManager.GetString("ManageEmail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Change of email is not possible for LDAP users..
+        /// </summary>
+        public static string ManageEmailUserError {
+            get {
+                return ResourceManager.GetString("ManageEmailUserError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to More informations.
         /// </summary>
         public static string MoreInformations {
@@ -1587,6 +1830,60 @@ namespace PhDManager.Locales {
         public static string NavigationInfo {
             get {
                 return ResourceManager.GetString("NavigationInfo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to New e-mail.
+        /// </summary>
+        public static string NewEmail {
+            get {
+                return ResourceManager.GetString("NewEmail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please enter new email..
+        /// </summary>
+        public static string NewEmailHelper {
+            get {
+                return ResourceManager.GetString("NewEmailHelper", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to New interest in your topic.
+        /// </summary>
+        public static string NewInterestEmail {
+            get {
+                return ResourceManager.GetString("NewInterestEmail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Student {0} is interested in your topic titled {1}..
+        /// </summary>
+        public static string NewInterestEmailHtml {
+            get {
+                return ResourceManager.GetString("NewInterestEmailHtml", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to New password.
+        /// </summary>
+        public static string NewPassword {
+            get {
+                return ResourceManager.GetString("NewPassword", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please enter your new password..
+        /// </summary>
+        public static string NewPasswordHelper {
+            get {
+                return ResourceManager.GetString("NewPasswordHelper", resourceCulture);
             }
         }
         
@@ -1636,6 +1933,24 @@ namespace PhDManager.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Old password.
+        /// </summary>
+        public static string OldPassword {
+            get {
+                return ResourceManager.GetString("OldPassword", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please enter your old password..
+        /// </summary>
+        public static string OldPasswordHelper {
+            get {
+                return ResourceManager.GetString("OldPasswordHelper", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 1st opponent.
         /// </summary>
         public static string Opponent1 {
@@ -1681,6 +1996,43 @@ namespace PhDManager.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Set password.
+        /// </summary>
+        public static string PasswordSet {
+            get {
+                return ResourceManager.GetString("PasswordSet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Your password has been set..
+        /// </summary>
+        public static string PasswordSetInfo {
+            get {
+                return ResourceManager.GetString("PasswordSetInfo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You do not have a local username/password for this site. Add a local
+        ///account so you can log in without an external login..
+        /// </summary>
+        public static string PasswordSetMessage {
+            get {
+                return ResourceManager.GetString("PasswordSetMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Set your password.
+        /// </summary>
+        public static string PasswordSetYour {
+            get {
+                return ResourceManager.GetString("PasswordSetYour", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Personal data.
         /// </summary>
         public static string PersonalData {
@@ -1690,11 +2042,65 @@ namespace PhDManager.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Delete data and close my account.
+        /// </summary>
+        public static string PersonalDataDeleteConfirm {
+            get {
+                return ResourceManager.GetString("PersonalDataDeleteConfirm", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unexpected error occurred deleting user..
+        /// </summary>
+        public static string PersonalDataDeleteError {
+            get {
+                return ResourceManager.GetString("PersonalDataDeleteError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Deleting this data will permanently remove your account, and this cannot be recovered..
+        /// </summary>
+        public static string PersonalDataDeleteInfo {
+            get {
+                return ResourceManager.GetString("PersonalDataDeleteInfo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Deleting this data will permanently remove your account, and this cannot be recovered..
+        /// </summary>
+        public static string PersonalDataDeleteWarning {
+            get {
+                return ResourceManager.GetString("PersonalDataDeleteWarning", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Your account contains personal data that you have given us. This page allows you to download or delete that data..
+        /// </summary>
+        public static string PersonalDataInfo {
+            get {
+                return ResourceManager.GetString("PersonalDataInfo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Phone number.
         /// </summary>
         public static string PhoneNumber {
             get {
                 return ResourceManager.GetString("PhoneNumber", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please enter your phone number..
+        /// </summary>
+        public static string PhoneNumberHelper {
+            get {
+                return ResourceManager.GetString("PhoneNumberHelper", resourceCulture);
             }
         }
         
@@ -1717,11 +2123,38 @@ namespace PhDManager.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Delete personal data.
+        /// </summary>
+        public static string PresonalDataDelete {
+            get {
+                return ResourceManager.GetString("PresonalDataDelete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Profile.
+        /// </summary>
+        public static string Profile {
+            get {
+                return ResourceManager.GetString("Profile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Edit profile.
         /// </summary>
         public static string ProfileEdit {
             get {
                 return ResourceManager.GetString("ProfileEdit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Your profile has been updated.
+        /// </summary>
+        public static string ProfileUpdated {
+            get {
+                return ResourceManager.GetString("ProfileUpdated", resourceCulture);
             }
         }
         
@@ -1843,6 +2276,33 @@ namespace PhDManager.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Reset your password.
+        /// </summary>
+        public static string ResetYourPassword {
+            get {
+                return ResourceManager.GetString("ResetYourPassword", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please reset your password using the following code: {0}.
+        /// </summary>
+        public static string ResetYourPasswordCodeHtml {
+            get {
+                return ResourceManager.GetString("ResetYourPasswordCodeHtml", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please reset your password by &lt;a href=&apos;{0}&apos;&gt;clicking here&lt;/a&gt;..
+        /// </summary>
+        public static string ResetYourPasswordLinkHtml {
+            get {
+                return ResourceManager.GetString("ResetYourPasswordLinkHtml", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Result.
         /// </summary>
         public static string Result {
@@ -1857,6 +2317,15 @@ namespace PhDManager.Locales {
         public static string Role {
             get {
                 return ResourceManager.GetString("Role", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Save.
+        /// </summary>
+        public static string Save {
+            get {
+                return ResourceManager.GetString("Save", resourceCulture);
             }
         }
         
@@ -2320,6 +2789,15 @@ namespace PhDManager.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to At least one type of study must be selected!.
+        /// </summary>
+        public static string StudyTypeError {
+            get {
+                return ResourceManager.GetString("StudyTypeError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Subject.
         /// </summary>
         public static string Subject {
@@ -2509,6 +2987,15 @@ namespace PhDManager.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Task.
+        /// </summary>
+        public static string Task {
+            get {
+                return ResourceManager.GetString("Task", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Add task.
         /// </summary>
         public static string TaskAdd {
@@ -2532,6 +3019,15 @@ namespace PhDManager.Locales {
         public static string Teacher {
             get {
                 return ResourceManager.GetString("Teacher", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The teacher is already selected!.
+        /// </summary>
+        public static string TeacherChangeError {
+            get {
+                return ResourceManager.GetString("TeacherChangeError", resourceCulture);
             }
         }
         
@@ -2617,6 +3113,15 @@ namespace PhDManager.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Topic specification.
+        /// </summary>
+        public static string TopicSpecification {
+            get {
+                return ResourceManager.GetString("TopicSpecification", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Transcript.
         /// </summary>
         public static string Transcript {
@@ -2640,6 +3145,15 @@ namespace PhDManager.Locales {
         public static string Update {
             get {
                 return ResourceManager.GetString("Update", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Update password.
+        /// </summary>
+        public static string UpdatePassword {
+            get {
+                return ResourceManager.GetString("UpdatePassword", resourceCulture);
             }
         }
         
@@ -2703,6 +3217,33 @@ namespace PhDManager.Locales {
         public static string Username {
             get {
                 return ResourceManager.GetString("Username", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please choose your username..
+        /// </summary>
+        public static string UsernameHelper {
+            get {
+                return ResourceManager.GetString("UsernameHelper", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Your password has been changed.
+        /// </summary>
+        public static string UserPasswordChangeInfo {
+            get {
+                return ResourceManager.GetString("UserPasswordChangeInfo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to User changed their password successfully..
+        /// </summary>
+        public static string UserPasswordChangeMessage {
+            get {
+                return ResourceManager.GetString("UserPasswordChangeMessage", resourceCulture);
             }
         }
         

@@ -14,11 +14,12 @@
 @inject UsersService UsersService
 @inject EnumService EnumService
 
+<MudText Class="mt-2" Typo="Typo.h5" GutterBottom>@Localizer["Subjects"]</MudText>
+
 <MudDataGrid T="Subject" Items="@_subjects" Hover SortMode="SortMode.Multiple" QuickFilter="@_quickFilter" Elevation="0">
     <ToolBarContent>
-        <MudText Typo="Typo.h6" GutterBottom="false">@Localizer["Subjects"]</MudText>
+        <MudButton class="mx-4" Variant="Variant.Filled" Color="Color.Primary" OnClick="AddSubject">@Localizer["Add"]</MudButton>
         <MudSpacer />
-        <MudButton class="mx-4" Variant="Variant.Filled" Color="Color.Primary" OnClick="AddSubject">@Localizer["SubjectAdd"]</MudButton>
         <MudTextField Variant="Variant.Outlined" Placeholder="@Localizer["Search"]" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" @bind-Value="_search" />
     </ToolBarContent>
     <Columns>

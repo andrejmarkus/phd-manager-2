@@ -23,10 +23,10 @@
 
 <PageTitle>@Localizer["DissertationDefenseSupervisorTitle"]</PageTitle>
 
-<MudText Typo="Typo.h3">@Localizer["DissertationDefenseSupervisorTitle"]</MudText>
+<MudText Typo="Typo.h4">@Localizer["DissertationDefenseSupervisorTitle"]</MudText>
 
 <MudForm @ref="_form">
-    <MudAutocomplete ReadOnly="@(DissertationDefenseSupervisorGuid is not null)" T="Student" Required RequiredError="@Localizer["Required"]" Label="@Localizer["Student"]" ToStringFunc="@(s => s is null ? null : s.User.DisplayName)" SearchFunc="SearchStudents" Variant="Variant.Outlined" @bind-Value="@_dissertationDefenseSupervisor.Student" />
+    <MudAutocomplete Clearable ReadOnly="@(DissertationDefenseSupervisorGuid is not null)" T="Student" Required RequiredError="@Localizer["Required"]" Label="@Localizer["Student"]" ToStringFunc="@(s => s is null ? null : s.User.DisplayName)" SearchFunc="SearchStudents" Variant="Variant.Outlined" @bind-Value="@_dissertationDefenseSupervisor.Student" />
     @if (_dissertationDefenseSupervisor.Student is not null)
     {
         <MudField T="string" Label="@Localizer["StudyForm"]" Variant="Variant.Outlined">@(EnumService.GetLocalizedEnumValue(_dissertationDefenseSupervisor.Student.StudyForm))</MudField>
@@ -41,6 +41,7 @@
         <MudField Label="@Localizer["DissertationTopic"]" Variant="Variant.Outlined">@_dissertationDefenseSupervisor.Student.Thesis?.Title</MudField>
     }
 
+    <MudDivider Class="my-3" />
     <MudText Typo="Typo.h6">@Localizer["DissertationOpponents"]:</MudText>
     <ul class="ml-4">
         <li><MudText>@Localizer["DissertationOpponentsInfo1"]</MudText></li>
@@ -54,24 +55,24 @@
         <MudStack Class="mt-4">
             <MudStack Spacing="0">
                 <MudText>@Localizer["DissertationDefenseSupervisorOpponent1"]</MudText>
-                <MudTextField Label="@Localizer["NameAndTitles"]" T="string" Variant="Variant.Outlined" @bind-Value="_dissertationDefenseSupervisor.OpponentDisplayNames[0]" />
-                <MudTextField Label="@Localizer["WorkplaceAddress"]" T="string" Variant="Variant.Outlined" @bind-Value="_dissertationDefenseSupervisor.OpponentWorkplaceAddresses[0]" />
-                <MudTextField Label="@Localizer["PhoneNumber"]" T="string" Variant="Variant.Outlined" @bind-Value="_dissertationDefenseSupervisor.OpponentPhoneNumbers[0]" />
-                <MudTextField Label="@Localizer["Email"]" T="string" Variant="Variant.Outlined" @bind-Value="_dissertationDefenseSupervisor.OpponentEmails[0]" />
+                <MudTextField Required RequiredError="@Localizer["Required"]" Label="@Localizer["NameAndTitles"]" T="string" Variant="Variant.Outlined" @bind-Value="_dissertationDefenseSupervisor.OpponentDisplayNames[0]" />
+                <MudTextField Required RequiredError="@Localizer["Required"]" Label="@Localizer["WorkplaceAddress"]" T="string" Variant="Variant.Outlined" @bind-Value="_dissertationDefenseSupervisor.OpponentWorkplaceAddresses[0]" />
+                <MudTextField Required RequiredError="@Localizer["Required"]" Label="@Localizer["PhoneNumber"]" T="string" Variant="Variant.Outlined" @bind-Value="_dissertationDefenseSupervisor.OpponentPhoneNumbers[0]" />
+                <MudTextField Required RequiredError="@Localizer["Required"]" Label="@Localizer["Email"]" T="string" Variant="Variant.Outlined" @bind-Value="_dissertationDefenseSupervisor.OpponentEmails[0]" />
             </MudStack>
             <MudStack Spacing="0">
                 <MudText>@Localizer["DissertationDefenseSupervisorOpponent2"]</MudText>
-                <MudTextField Label="@Localizer["NameAndTitles"]" T="string" Variant="Variant.Outlined" @bind-Value="_dissertationDefenseSupervisor.OpponentDisplayNames[1]" />
-                <MudTextField Label="@Localizer["WorkplaceAddress"]" T="string" Variant="Variant.Outlined" @bind-Value="_dissertationDefenseSupervisor.OpponentWorkplaceAddresses[1]" />
-                <MudTextField Label="@Localizer["PhoneNumber"]" T="string" Variant="Variant.Outlined" @bind-Value="_dissertationDefenseSupervisor.OpponentPhoneNumbers[1]" />
-                <MudTextField Label="@Localizer["Email"]" T="string" Variant="Variant.Outlined" @bind-Value="_dissertationDefenseSupervisor.OpponentEmails[1]" />
+                <MudTextField Required RequiredError="@Localizer["Required"]" Label="@Localizer["NameAndTitles"]" T="string" Variant="Variant.Outlined" @bind-Value="_dissertationDefenseSupervisor.OpponentDisplayNames[1]" />
+                <MudTextField Required RequiredError="@Localizer["Required"]" Label="@Localizer["WorkplaceAddress"]" T="string" Variant="Variant.Outlined" @bind-Value="_dissertationDefenseSupervisor.OpponentWorkplaceAddresses[1]" />
+                <MudTextField Required RequiredError="@Localizer["Required"]" Label="@Localizer["PhoneNumber"]" T="string" Variant="Variant.Outlined" @bind-Value="_dissertationDefenseSupervisor.OpponentPhoneNumbers[1]" />
+                <MudTextField Required RequiredError="@Localizer["Required"]" Label="@Localizer["Email"]" T="string" Variant="Variant.Outlined" @bind-Value="_dissertationDefenseSupervisor.OpponentEmails[1]" />
             </MudStack>
             <MudStack Spacing="0">
                 <MudText>@Localizer["DissertationDefenseSupervisorOpponent3"]</MudText>
-                <MudTextField Label="@Localizer["NameAndTitles"]" T="string" Variant="Variant.Outlined" @bind-Value="_dissertationDefenseSupervisor.OpponentDisplayNames[2]" />
-                <MudTextField Label="@Localizer["WorkplaceAddress"]" T="string" Variant="Variant.Outlined" @bind-Value="_dissertationDefenseSupervisor.OpponentWorkplaceAddresses[2]" />
-                <MudTextField Label="@Localizer["PhoneNumber"]" T="string" Variant="Variant.Outlined" @bind-Value="_dissertationDefenseSupervisor.OpponentPhoneNumbers[2]" />
-                <MudTextField Label="@Localizer["Email"]" T="string" Variant="Variant.Outlined" @bind-Value="_dissertationDefenseSupervisor.OpponentEmails[2]" />
+                <MudTextField Required RequiredError="@Localizer["Required"]" Label="@Localizer["NameAndTitles"]" T="string" Variant="Variant.Outlined" @bind-Value="_dissertationDefenseSupervisor.OpponentDisplayNames[2]" />
+                <MudTextField Required RequiredError="@Localizer["Required"]" Label="@Localizer["WorkplaceAddress"]" T="string" Variant="Variant.Outlined" @bind-Value="_dissertationDefenseSupervisor.OpponentWorkplaceAddresses[2]" />
+                <MudTextField Required RequiredError="@Localizer["Required"]" Label="@Localizer["PhoneNumber"]" T="string" Variant="Variant.Outlined" @bind-Value="_dissertationDefenseSupervisor.OpponentPhoneNumbers[2]" />
+                <MudTextField Required RequiredError="@Localizer["Required"]" Label="@Localizer["Email"]" T="string" Variant="Variant.Outlined" @bind-Value="_dissertationDefenseSupervisor.OpponentEmails[2]" />
             </MudStack>
         </MudStack>
     }

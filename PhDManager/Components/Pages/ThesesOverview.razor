@@ -24,50 +24,62 @@
 
 <PageTitle>@Localizer["DissertationTheses"]</PageTitle>
 
-<MudText Typo="Typo.h3" GutterBottom="true">@Localizer["DissertationTheses"]</MudText>
+<MudText Typo="Typo.h4" GutterBottom="true">@Localizer["DissertationTheses"]</MudText>
 
-<MudStack Row>
-    <MudTextField FullWidth T="string" @bind-Value="@_search" @bind-Value:after="UpdateSearch" Immediate Label="@Localizer["Search"]" Variant="Variant.Outlined" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Search" />
-    @if (_studyPrograms is not null)
-    {
-        <MudSelect T="StudyProgram" @bind-Value="@_selectedStudyProgram" @bind-Value:after="UpdateSearch" Immediate Label="@Localizer["StudyProgram"]" Variant="Variant.Outlined">
-            <MudSelectItem T="StudyProgram" Value="null">@Localizer["All"]</MudSelectItem>
-            @foreach (var studyProgram in _studyPrograms)
-            {
-                <MudSelectItem Value="@studyProgram">@studyProgram.Name</MudSelectItem>
-            }
+<MudGrid Spacing="2">
+    <MudItem xs="12" md="12" lg="4">
+        <MudTextField FullWidth T="string" @bind-Value="@_search" @bind-Value:after="UpdateSearch" Immediate Label="@Localizer["Search"]" Variant="Variant.Outlined" Adornment="Adornment.End" AdornmentIcon="@Icons.Material.Filled.Search" />
+    </MudItem>
+    <MudItem xs="6" md="3" lg="2">
+        @if (_studyPrograms is not null)
+        {
+            <MudSelect T="StudyProgram" @bind-Value="@_selectedStudyProgram" @bind-Value:after="UpdateSearch" Immediate Label="@Localizer["StudyProgram"]" Variant="Variant.Outlined">
+                <MudSelectItem T="StudyProgram" Value="null">@Localizer["All"]</MudSelectItem>
+                @foreach (var studyProgram in _studyPrograms)
+                {
+                    <MudSelectItem Value="@studyProgram">@studyProgram.Name</MudSelectItem>
+                }
+            </MudSelect>
+        }
+    </MudItem>
+    <MudItem xs="6" md="3" lg="2">
+        @if (_teachers is not null)
+        {
+            <MudSelect T="Teacher" @bind-Value="@_selectedTeacher" @bind-Value:after="UpdateSearch" Immediate Label="@Localizer["Supervisor"]" Variant="Variant.Outlined">
+                <MudSelectItem T="Teacher" Value="null">@Localizer["AllPeople"]</MudSelectItem>
+                @foreach (var teacher in _teachers)
+                {
+                    <MudSelectItem Value="@teacher">@teacher.User.DisplayName</MudSelectItem>
+                }
+            </MudSelect>
+        }
+    </MudItem>
+    <MudItem xs="4" md="2" lg="2">
+        <MudSelect T="bool?" @bind-Value="@_studyForm" @bind-Value:after="UpdateSearch" Immediate Label="@Localizer["StudyForm"]" Variant="Variant.Outlined">
+            <MudSelectItem T="bool?" Value="null">@Localizer["All"]</MudSelectItem>
+            <MudSelectItem T="bool?" Value="true">@EnumLocalizer["StudyFormDaily"]</MudSelectItem>
+            <MudSelectItem T="bool?" Value="false">@EnumLocalizer["StudyFormExternal"]</MudSelectItem>
         </MudSelect>
-    }
-    @if (_teachers is not null)
-    {
-        <MudSelect T="Teacher" @bind-Value="@_selectedTeacher" @bind-Value:after="UpdateSearch" Immediate Label="@Localizer["Supervisor"]" Variant="Variant.Outlined">
-            <MudSelectItem T="Teacher" Value="null">@Localizer["AllPeople"]</MudSelectItem>
-            @foreach (var teacher in _teachers)
-            {
-                <MudSelectItem Value="@teacher">@teacher.User.DisplayName</MudSelectItem>
-            }
+    </MudItem>
+    <MudItem xs="4" md="2" lg="1">
+        <MudSelect T="bool?" @bind-Value="@_available" @bind-Value:after="UpdateSearch" Immediate Label="@Localizer["Occupancy"]" Variant="Variant.Outlined">
+            <MudSelectItem T="bool?" Value="null">@Localizer["All"]</MudSelectItem>
+            <MudSelectItem T="bool?" Value="false">@Localizer["OccupancyAvailable"]</MudSelectItem>
+            <MudSelectItem T="bool?" Value="true">@Localizer["OccupancyOccupied"]</MudSelectItem>
         </MudSelect>
-    }
-    <MudSelect T="bool?" @bind-Value="@_available" @bind-Value:after="UpdateSearch" Immediate Label="@Localizer["Occupancy"]" Variant="Variant.Outlined">
-        <MudSelectItem T="bool?" Value="null">@Localizer["All"]</MudSelectItem>
-        <MudSelectItem T="bool?" Value="false">@Localizer["OccupancyAvailable"]</MudSelectItem>
-        <MudSelectItem T="bool?" Value="true">@Localizer["OccupancyOccupied"]</MudSelectItem>
-    </MudSelect>
-    <MudSelect T="bool?" @bind-Value="@_studyForm" @bind-Value:after="UpdateSearch" Immediate Label="@Localizer["StudyForm"]" Variant="Variant.Outlined">
-        <MudSelectItem T="bool?" Value="null">@Localizer["All"]</MudSelectItem>
-        <MudSelectItem T="bool?" Value="true">@Localizer["StudyFormDaily"]</MudSelectItem>
-        <MudSelectItem T="bool?" Value="false">@Localizer["StudyFormExternal"]</MudSelectItem>
-    </MudSelect>
-    @if (_schoolYears is not null)
-    {
-        <MudSelect T="string" @bind-Value="@_selectedSchoolYear" @bind-Value:after="UpdateSearch" Immediate Label="@Localizer["SchoolYear"]" Variant="Variant.Outlined">
-            @foreach (var schoolYear in _schoolYears)
-            {
-                <MudSelectItem Value="@schoolYear">@schoolYear</MudSelectItem>
-            }
-        </MudSelect>
-    }
-</MudStack>
+    </MudItem>
+    <MudItem xs="4" md="2" lg="1">
+        @if (_schoolYears is not null)
+        {
+            <MudSelect T="string" @bind-Value="@_selectedSchoolYear" @bind-Value:after="UpdateSearch" Immediate Label="@Localizer["SchoolYear"]" Variant="Variant.Outlined">
+                @foreach (var schoolYear in _schoolYears)
+                {
+                    <MudSelectItem Value="@schoolYear">@schoolYear</MudSelectItem>
+                }
+            </MudSelect>
+        }
+    </MudItem>
+</MudGrid>
 
 <MudGrid Class="mt-1">
     @if (_theses is not null)

@@ -186,9 +186,6 @@
   <data name="FullName" xml:space="preserve">
     <value>Full name</value>
   </data>
-  <data name="ConfirmationPassword" xml:space="preserve">
-    <value>Confirmation password</value>
-  </data>
   <data name="SignUpService" xml:space="preserve">
     <value>Use another service to register.</value>
   </data>
@@ -1019,5 +1016,189 @@
   </data>
   <data name="RegisterConfirmationInfo" xml:space="preserve">
     <value>Please check your email to confirm your account.</value>
+  </data>
+  <data name="Task" xml:space="preserve">
+    <value>Task</value>
+  </data>
+  <data name="Deadline" xml:space="preserve">
+    <value>Deadline</value>
+  </data>
+  <data name="TopicSpecification" xml:space="preserve">
+    <value>Topic specification</value>
+  </data>
+  <data name="StudyTypeError" xml:space="preserve">
+    <value>At least one type of study must be selected!</value>
+  </data>
+  <data name="TeacherChangeError" xml:space="preserve">
+    <value>The teacher is already selected!</value>
+  </data>
+  <data name="ExamResult" xml:space="preserve">
+    <value>Exam result</value>
+  </data>
+  <data name="AccessDenied" xml:space="preserve">
+    <value>Access denied</value>
+  </data>
+  <data name="AccessDeniedError" xml:space="preserve">
+    <value>You do not have access to this resource.</value>
+  </data>
+  <data name="ChangePassword" xml:space="preserve">
+    <value>Change password</value>
+  </data>
+  <data name="OldPassword" xml:space="preserve">
+    <value>Old password</value>
+  </data>
+  <data name="OldPasswordHelper" xml:space="preserve">
+    <value>Please enter your old password.</value>
+  </data>
+  <data name="NewPassword" xml:space="preserve">
+    <value>New password</value>
+  </data>
+  <data name="NewPasswordHelper" xml:space="preserve">
+    <value>Please enter your new password.</value>
+  </data>
+  <data name="ConfirmPassword" xml:space="preserve">
+    <value>Confirm password</value>
+  </data>
+  <data name="ConfirmPasswordHelper" xml:space="preserve">
+    <value>Please confirm your new password.</value>
+  </data>
+  <data name="UpdatePassword" xml:space="preserve">
+    <value>Update password</value>
+  </data>
+  <data name="UserPasswordChangeMessage" xml:space="preserve">
+    <value>User changed their password successfully.</value>
+  </data>
+  <data name="UserPasswordChangeInfo" xml:space="preserve">
+    <value>Your password has been changed</value>
+  </data>
+  <data name="PresonalDataDelete" xml:space="preserve">
+    <value>Delete personal data</value>
+  </data>
+  <data name="PersonalDataDeleteInfo" xml:space="preserve">
+    <value>Deleting this data will permanently remove your account, and this cannot be recovered.</value>
+  </data>
+  <data name="PersonalDataDeleteConfirm" xml:space="preserve">
+    <value>Delete data and close my account</value>
+  </data>
+  <data name="PersonalDataDeleteError" xml:space="preserve">
+    <value>Unexpected error occurred deleting user.</value>
+  </data>
+  <data name="ManageEmail" xml:space="preserve">
+    <value>Manage email</value>
+  </data>
+  <data name="NewEmail" xml:space="preserve">
+    <value>New e-mail</value>
+  </data>
+  <data name="ChangeEmail" xml:space="preserve">
+    <value>Change email</value>
+  </data>
+  <data name="EmailHelper" xml:space="preserve">
+    <value>Please enter your email.</value>
+  </data>
+  <data name="EmailSendVerification" xml:space="preserve">
+    <value>Send verification email</value>
+  </data>
+  <data name="NewEmailHelper" xml:space="preserve">
+    <value>Please enter new email.</value>
+  </data>
+  <data name="EmailConfirmation" xml:space="preserve">
+    <value>Confirmation link to change email sent. Please check your email.</value>
+  </data>
+  <data name="EmailVerification" xml:space="preserve">
+    <value>Verification email sent. Please check your email.</value>
+  </data>
+  <data name="EmailUnchanged" xml:space="preserve">
+    <value>Your email is unchanged.</value>
+  </data>
+  <data name="Profile" xml:space="preserve">
+    <value>Profile</value>
+  </data>
+  <data name="UsernameHelper" xml:space="preserve">
+    <value>Please choose your username.</value>
+  </data>
+  <data name="PhoneNumberHelper" xml:space="preserve">
+    <value>Please enter your phone number.</value>
+  </data>
+  <data name="Save" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="ProfileUpdated" xml:space="preserve">
+    <value>Your profile has been updated</value>
+  </data>
+  <data name="Delete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="Download" xml:space="preserve">
+    <value>Download</value>
+  </data>
+  <data name="PersonalDataDeleteWarning" xml:space="preserve">
+    <value>Deleting this data will permanently remove your account, and this cannot be recovered.</value>
+  </data>
+  <data name="PersonalDataInfo" xml:space="preserve">
+    <value>Your account contains personal data that you have given us. This page allows you to download or delete that data.</value>
+  </data>
+  <data name="PasswordSet" xml:space="preserve">
+    <value>Set password</value>
+  </data>
+  <data name="PasswordSetYour" xml:space="preserve">
+    <value>Set your password</value>
+  </data>
+  <data name="PasswordSetMessage" xml:space="preserve">
+    <value>You do not have a local username/password for this site. Add a local
+account so you can log in without an external login.</value>
+  </data>
+  <data name="PasswordSetInfo" xml:space="preserve">
+    <value>Your password has been set.</value>
+  </data>
+  <data name="AccountManage" xml:space="preserve">
+    <value>Manage your account</value>
+  </data>
+  <data name="AccountManageMeesage" xml:space="preserve">
+    <value>Change your account settings</value>
+  </data>
+  <data name="ExternalLogins" xml:space="preserve">
+    <value>External logins</value>
+  </data>
+  <data name="ManageEmailUserError" xml:space="preserve">
+    <value>Change of email is not possible for LDAP users.</value>
+  </data>
+  <data name="ChangePasswordUserError" xml:space="preserve">
+    <value>Change of password is not possible for LDAP users.</value>
+  </data>
+  <data name="Approve" xml:space="preserve">
+    <value>Approve</value>
+  </data>
+  <data name="ExamApplicationCreate" xml:space="preserve">
+    <value>Create exam application</value>
+  </data>
+  <data name="IndividualPlanAssignError" xml:space="preserve">
+    <value>You have not been assigned an individual plan yet. Please check back later.</value>
+  </data>
+  <data name="ConfirmYourEmail" xml:space="preserve">
+    <value>Confirm your email</value>
+  </data>
+  <data name="ConfirmYourEmailHtml" xml:space="preserve">
+    <value>Please confirm your account by &lt;a href='{0}'&gt;clicking here&lt;/a&gt;.</value>
+  </data>
+  <data name="ResetYourPassword" xml:space="preserve">
+    <value>Reset your password</value>
+  </data>
+  <data name="ResetYourPasswordCodeHtml" xml:space="preserve">
+    <value>Please reset your password using the following code: {0}</value>
+  </data>
+  <data name="ResetYourPasswordLinkHtml" xml:space="preserve">
+    <value>Please reset your password by &lt;a href='{0}'&gt;clicking here&lt;/a&gt;.</value>
+  </data>
+  <data name="NewInterestEmail" xml:space="preserve">
+    <value>New interest in your topic</value>
+  </data>
+  <data name="NewInterestEmailHtml" xml:space="preserve">
+    <value>Student {0} is interested in your topic titled {1}.</value>
+  </data>
+  <data name="DisserationThesisShow" xml:space="preserve">
+    <value>Show dissertation thesis</value>
+  </data>
+  <data name="CommentDelete" xml:space="preserve">
+    <value>Delete comment</value>
   </data>
 </root>

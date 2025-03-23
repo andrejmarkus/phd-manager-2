@@ -15,11 +15,12 @@
 @inject DocumentService DocumentService
 @inject UsersService UsersService
 
+<MudText Class="mt-2" Typo="Typo.h5" GutterBottom>@Localizer["DissertationSupervisor"]</MudText>
+
 <MudDataGrid T="ExamSupervisor" Items="_examSupervisors" Hover SortMode="SortMode.Multiple" QuickFilter="_quickFilter" Elevation="0">
     <ToolBarContent>
-        <MudText Typo="Typo.h6" GutterBottom="false">@Localizer["DissertationSupervisor"]</MudText>
+        <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="management/exam-supervisors/add">@Localizer["Add"]</MudButton>
         <MudSpacer />
-        <MudButton class="mx-4" Variant="Variant.Filled" Color="Color.Primary" Href="management/exam-supervisors/add">@Localizer["ExamSupervisorAdd"]</MudButton>
         <MudTextField Variant="Variant.Outlined" Placeholder="@Localizer["Search"]" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" @bind-Value="_search" />
     </ToolBarContent>
     <Columns>

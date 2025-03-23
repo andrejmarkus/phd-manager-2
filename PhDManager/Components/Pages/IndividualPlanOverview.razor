@@ -32,23 +32,23 @@
         </MudStack>
         <MudStack>
             <MudText Typo="Typo.h5">@Localizer["Deadlines"]</MudText>
-            <MudGrid>
-                <MudItem xs="6">
+            <MudGrid Spacing="3">
+                <MudItem xs="12">
                     <MudText>@Localizer["IndividualPlanDissertationExamDateInfo"]:</MudText>
                 </MudItem>
-                <MudItem xs="6">
+                <MudItem xs="12">
                     <MudText><b>@(_individualPlan.DissertationApplicationDate?.ToString("dd.MM.yyyy"))</b></MudText>
                 </MudItem>
-                <MudItem xs="6">
+                <MudItem xs="12">
                     <MudText>@Localizer["IndividualPlanDissertationSubmissionDateInfo"]:</MudText>
                 </MudItem>
-                <MudItem xs="6">
+                <MudItem xs="12">
                     <MudText><b>@(_individualPlan.DissertationSubmissionDate?.ToString("MMMM yyyy"))</b></MudText>
                 </MudItem>
-                <MudItem xs="6">
+                <MudItem xs="12">
                     <MudText>@Localizer["IndividualPlanStudyEndDateInfo"]:</MudText>
                 </MudItem>
-                <MudItem xs="6">
+                <MudItem xs="12">
                     <MudText><b>@(_individualPlan.StudyEndDate?.ToString("dd.MM.yyyy"))</b></MudText>
                 </MudItem>
             </MudGrid>

@@ -24,10 +24,10 @@
 
 <PageTitle>@Localizer["AccountsMigrate"]</PageTitle>
 
+<MudText Typo="Typo.h5" GutterBottom>@Localizer["AccountsMigrate"]</MudText>
+
 <MudDataGrid T="UserInfo" Items="@_users" Hover SortMode="SortMode.Multiple" QuickFilter="@_quickFilter" Elevation="0">
     <ToolBarContent>
-        <MudText Typo="Typo.h6" GutterBottom="false">@Localizer["AccountsMigrate"]</MudText>
-        <MudSpacer />
         <MudTextField Variant="Variant.Outlined" Placeholder="@Localizer["Search"]" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" @bind-Value="_search" />
     </ToolBarContent>
     <Columns>

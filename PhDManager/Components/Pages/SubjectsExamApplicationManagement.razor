@@ -21,7 +21,7 @@
 
 <PageTitle>@Localizer["SubjectsExamApplication"]</PageTitle>
 
-<MudText Typo="Typo.h3">@Localizer["SubjectsExamApplication"]</MudText>
+<MudText Typo="Typo.h4">@Localizer["SubjectsExamApplication"]</MudText>
 
 <MudForm @ref="_form">
     @if (_student is not null && _student.IndividualPlan is not null)
@@ -34,7 +34,9 @@
         <MudField T="string" Label="@Localizer["Supervisor"]" Variant="Variant.Outlined">@_student.Thesis?.Supervisor.User.DisplayName</MudField>
         <MudDatePicker ReadOnly Label="@Localizer["IndividualPlanStudyStartDate"]" Variant="Variant.Outlined" @bind-Date="_student.IndividualPlan.StudyStartDate" />
     }
-    <MudText Class="mt-2" Typo="Typo.h6">@Localizer["SubjectsExamApplicationInfo"]</MudText>
+
+    <MudDivider Class="my-2" />
+    <MudText Typo="Typo.h6">@Localizer["SubjectsExamApplicationInfo"]</MudText>
     <MudText>@($"({Localizer["SubjectsExamApplicationNote"]})")</MudText>
     <MudStack Spacing="2">
         @foreach (var subject in _subjectsExamApplication.Subjects.Select((e, i) => new { Element = e, Index = i }))
@@ -54,10 +56,15 @@
                 </MudTooltip>
             </MudStack>
         }
-        <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@(() => _subjectsExamApplication.Subjects.Add(new()))">@Localizer["SubjectAdd"]</MudButton>
+        <MudStack Row Justify="Justify.Center">
+            <MudTooltip Text="@Localizer["SubjectAdd"]">
+                <MudFab Size="Size.Small" Color="Color.Info" StartIcon="@Icons.Material.Filled.Add" OnClick="@(() => _subjectsExamApplication.Subjects.Add(new()))" />
+            </MudTooltip>
+        </MudStack>
     </MudStack>
 
-    <MudButton class="mt-6" OnClick="HandleSubjectsExamApplication" Variant="Variant.Filled" Color="Color.Primary">@(_add ? Localizer["Create"] : Localizer["Edit"])</MudButton>
+    <MudDivider Class="my-4" />
+    <MudButton OnClick="HandleSubjectsExamApplication" Variant="Variant.Filled" Color="Color.Primary">@(_add ? Localizer["Create"] : Localizer["Edit"])</MudButton>
 </MudForm>
 
 @code {

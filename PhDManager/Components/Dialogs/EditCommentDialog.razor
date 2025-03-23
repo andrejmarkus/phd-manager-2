@@ -12,7 +12,7 @@
         <MudText Typo="Typo.h6">@Localizer["CommentEdit"]</MudText>
     </TitleContent>
     <DialogContent>
-        <MudTextField @bind-Value="@Comment.Text" Label="@Localizer["Comment"]" />
+        <MudTextField @bind-Value="@Comment.Text" Variant="Variant.Outlined" Label="@Localizer["Comment"]" />
     </DialogContent>
     <DialogActions>
         <MudButton Color="Color.Primary" OnClick="UpdateComment">@Localizer["Edit"]</MudButton>

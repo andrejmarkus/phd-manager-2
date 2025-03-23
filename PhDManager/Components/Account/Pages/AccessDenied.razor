@@ -1,5 +1,10 @@
 ﻿@page "/Account/AccessDenied"
 
-<PageTitle>Access denied</PageTitle>
+@using Microsoft.Extensions.Localization
+@using PhDManager.Locales
 
-<MudAlert Severity="Severity.Error">You do not have access to this resource.</MudAlert>
+@inject IStringLocalizer<Resources> Localizer
+
+<PageTitle>@Localizer["AccessDenied"]</PageTitle>
+
+<MudAlert Severity="Severity.Error">@Localizer["AccessDeniedError"]</MudAlert>

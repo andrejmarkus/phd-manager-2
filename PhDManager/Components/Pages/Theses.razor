@@ -25,12 +25,15 @@
 
 <PageTitle>@Localizer["DissertationTheses"]</PageTitle>
 
+<MudText Typo="Typo.h5" GutterBottom>@Localizer["DissertationTheses"]</MudText>
+
 <MudDataGrid T="Thesis" Items="_theses" Hover SortMode="SortMode.Multiple" QuickFilter="_quickFilter" Elevation="0">
     <ToolBarContent>
-        <MudText Typo="Typo.h6" GutterBottom="false">@Localizer["DissertationTheses"]</MudText>
+        <MudStack Row>
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="/management/theses/add">@Localizer["Add"]</MudButton>
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="/management/theses/review">@Localizer["Approve"]</MudButton>
+        </MudStack>
         <MudSpacer />
-        <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="/management/theses/add">@Localizer["DissertationThesisAdd"]</MudButton>
-        <MudButton Class="mx-4" Variant="Variant.Filled" Color="Color.Primary" Href="/management/theses/review">@Localizer["DissertationThesisApprove"]</MudButton>
         <MudTextField Variant="Variant.Outlined" Placeholder="@Localizer["Search"]" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" @bind-Value="_search" />
     </ToolBarContent>
     <Columns>
@@ -65,17 +68,17 @@
     <Authorized>
         @if (_systemState is not null)
         {
-            <MudSwitch Class="mt-4" Label="@Localizer["SystemEnabled"]" Color="Color.Primary" @bind-Value="_systemState.IsOpen" @bind-Value:after="UpdateSystemState" />
-            <MudStack Class="mt-4" Row>
-                <MudStack Row AlignItems="AlignItems.Center">
-                    <MudText>@Localizer["SystemOpening"]</MudText>
-                    <MudDatePicker Class="flex-none" @bind-Date="_openDate" @bind-Date:after="UpdateSystemOpenDate" DateFormat="dd.MM." Variant="Variant.Outlined" OpenTo="OpenTo.Month" FixYear="null" ShowToolbar="false" />
-                </MudStack>
-                <MudStack Row AlignItems="AlignItems.Center">
-                    <MudText>@Localizer["SystemClosing"]</MudText>
-                    <MudDatePicker Class="flex-none" @bind-Date="_closeDate" @bind-Date:after="UpdateSystemCloseDate" DateFormat="dd.MM." Variant="Variant.Outlined" OpenTo="OpenTo.Month" FixYear="null" ShowToolbar="false" />
-                </MudStack>
-            </MudStack>
+            <MudGrid>
+                <MudItem xs="12">
+                    <MudSwitch Class="mt-4" Label="@Localizer["SystemEnabled"]" Color="Color.Primary" @bind-Value="_systemState.IsOpen" @bind-Value:after="UpdateSystemState" />
+                </MudItem>
+                <MudItem xs="12" md="4" lg="3">
+                    <MudDatePicker Class="flex-none" Label="@Localizer["SystemOpening"]" @bind-Date="_openDate" @bind-Date:after="UpdateSystemOpenDate" DateFormat="dd.MM." Variant="Variant.Outlined" OpenTo="OpenTo.Month" FixYear="null" ShowToolbar="false" />
+                </MudItem>
+                <MudItem xs="12" md="4" lg="3">
+                    <MudDatePicker Class="flex-none" Label="@Localizer["SystemClosing"]" @bind-Date="_closeDate" @bind-Date:after="UpdateSystemCloseDate" DateFormat="dd.MM." Variant="Variant.Outlined" OpenTo="OpenTo.Month" FixYear="null" ShowToolbar="false" />
+                </MudItem>
+            </MudGrid>
         }
     </Authorized>
 </AuthorizeView>

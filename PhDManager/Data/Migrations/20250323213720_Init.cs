@@ -299,7 +299,8 @@ namespace PhDManager.Data.Migrations
                     HouseNumber = table.Column<string>(type: "text", nullable: true),
                     City = table.Column<string>(type: "text", nullable: true),
                     PostalCode = table.Column<string>(type: "text", nullable: true),
-                    Country = table.Column<string>(type: "text", nullable: true)
+                    Country = table.Column<string>(type: "text", nullable: true),
+                    Birthplace = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -314,19 +315,34 @@ namespace PhDManager.Data.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Text = table.Column<string>(type: "text", nullable: false),
                     Created = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    ExternalId = table.Column<string>(type: "text", nullable: false),
-                    ExternalId1 = table.Column<int>(type: "integer", nullable: false),
+                    ExternalId = table.Column<int>(type: "integer", nullable: false),
                     ThesisId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Comments", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Comments_Teachers_ExternalId1",
-                        column: x => x.ExternalId1,
+                        name: "FK_Comments_Teachers_ExternalId",
+                        column: x => x.ExternalId,
                         principalTable: "Teachers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "DissertationDefenseApplication",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false),
+                    Nationality = table.Column<string>(type: "text", nullable: false),
+                    Ethnicity = table.Column<string>(type: "text", nullable: false),
+                    AchievedHigherEducation = table.Column<string>(type: "text", nullable: false),
+                    ApplicationSubmissionYear = table.Column<int>(type: "integer", nullable: false),
+                    CurrentDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DissertationDefenseApplication", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -397,11 +413,11 @@ namespace PhDManager.Data.Migrations
                     OpponentMail = table.Column<string>(type: "text", nullable: false),
                     OpponentPhoneNumber = table.Column<string>(type: "text", nullable: false),
                     OpponentDepartment = table.Column<string>(type: "text", nullable: false),
-                    StudentId = table.Column<int>(type: "integer", nullable: false),
-                    ChairpersonId = table.Column<int>(type: "integer", nullable: false),
+                    ExaminerId = table.Column<int>(type: "integer", nullable: true),
+                    ChairpersonId = table.Column<int>(type: "integer", nullable: true),
                     ExternalMemberId = table.Column<int>(type: "integer", nullable: false),
-                    AcademicCommitteeMemberId = table.Column<int>(type: "integer", nullable: false),
-                    AdditionalMemberId = table.Column<int>(type: "integer", nullable: true)
+                    AcademicCommitteeMemberId = table.Column<int>(type: "integer", nullable: true),
+                    AdditionalMemberId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -410,28 +426,26 @@ namespace PhDManager.Data.Migrations
                         name: "FK_ExamSupervisor_Teachers_AcademicCommitteeMemberId",
                         column: x => x.AcademicCommitteeMemberId,
                         principalTable: "Teachers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_ExamSupervisor_Teachers_AdditionalMemberId",
                         column: x => x.AdditionalMemberId,
                         principalTable: "Teachers",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_ExamSupervisor_Teachers_ChairpersonId",
                         column: x => x.ChairpersonId,
                         principalTable: "Teachers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_ExamSupervisor_Teachers_ExaminerId",
+                        column: x => x.ExaminerId,
+                        principalTable: "Teachers",
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_ExamSupervisor_Teachers_ExternalMemberId",
                         column: x => x.ExternalMemberId,
-                        principalTable: "Teachers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_ExamSupervisor_Teachers_Id",
-                        column: x => x.Id,
                         principalTable: "Teachers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -718,9 +732,9 @@ namespace PhDManager.Data.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Comments_ExternalId1",
+                name: "IX_Comments_ExternalId",
                 table: "Comments",
-                column: "ExternalId1");
+                column: "ExternalId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Comments_ThesisId",
@@ -735,32 +749,27 @@ namespace PhDManager.Data.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_ExamSupervisor_AcademicCommitteeMemberId",
                 table: "ExamSupervisor",
-                column: "AcademicCommitteeMemberId",
-                unique: true);
+                column: "AcademicCommitteeMemberId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ExamSupervisor_AdditionalMemberId",
                 table: "ExamSupervisor",
-                column: "AdditionalMemberId",
-                unique: true);
+                column: "AdditionalMemberId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ExamSupervisor_ExaminerId",
+                table: "ExamSupervisor",
+                column: "ExaminerId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ExamSupervisor_ExternalMemberId",
                 table: "ExamSupervisor",
-                column: "ExternalMemberId",
-                unique: true);
+                column: "ExternalMemberId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ExamSupervisor_ChairpersonId",
                 table: "ExamSupervisor",
-                column: "ChairpersonId",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ExamSupervisor_StudentId",
-                table: "ExamSupervisor",
-                column: "StudentId",
-                unique: true);
+                column: "ChairpersonId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_IndividualPlanSubject_IndividualPlanId",
@@ -851,6 +860,14 @@ namespace PhDManager.Data.Migrations
                 onDelete: ReferentialAction.Cascade);
 
             migrationBuilder.AddForeignKey(
+                name: "FK_DissertationDefenseApplication_Students_Id",
+                table: "DissertationDefenseApplication",
+                column: "Id",
+                principalTable: "Students",
+                principalColumn: "Id",
+                onDelete: ReferentialAction.Cascade);
+
+            migrationBuilder.AddForeignKey(
                 name: "FK_DissertationDefenseSupervisor_Students_Id",
                 table: "DissertationDefenseSupervisor",
                 column: "Id",
@@ -867,9 +884,9 @@ namespace PhDManager.Data.Migrations
                 onDelete: ReferentialAction.Cascade);
 
             migrationBuilder.AddForeignKey(
-                name: "FK_ExamSupervisor_Students_StudentId",
+                name: "FK_ExamSupervisor_Students_Id",
                 table: "ExamSupervisor",
-                column: "StudentId",
+                column: "Id",
                 principalTable: "Students",
                 principalColumn: "Id",
                 onDelete: ReferentialAction.Cascade);
@@ -928,6 +945,9 @@ namespace PhDManager.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "Comments");
+
+            migrationBuilder.DropTable(
+                name: "DissertationDefenseApplication");
 
             migrationBuilder.DropTable(
                 name: "DissertationDefenseSupervisor");

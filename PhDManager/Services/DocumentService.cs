@@ -302,12 +302,16 @@ namespace PhDManager.Services
                     {
                         if (!text.Text.Contains(replacement.Key)) continue;
 
+                        var runProperties = text.GetFirstChild<Run>()?.RunProperties;
                         if (lines is not null)
                         {
                             for (int i = 0; i < lines?.Length; i++)
                             {
                                 if (lines[i] is null) continue;
-                                var run = new Run();
+                                var run = new Run
+                                {
+                                    RunProperties = runProperties
+                                };
                                 for (int j = 0; j < lines[i]?.Length; j++)
                                 {
                                     if (lines[i]?[j] is null) continue;

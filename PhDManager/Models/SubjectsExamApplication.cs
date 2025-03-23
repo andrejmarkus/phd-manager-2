@@ -6,6 +6,6 @@ namespace PhDManager.Models
     {
         public DateTime CurrentDate { get; set; } = DateTime.UtcNow;
         public virtual Student? Student { get; set; } = default!;
-        public virtual List<Subject> Subjects { get; set; } = default!;
+        public virtual List<Subject> Subjects { get; set; } = [];
     }
 }

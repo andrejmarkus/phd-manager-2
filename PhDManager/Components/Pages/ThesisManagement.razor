@@ -13,11 +13,11 @@
 @using PhDManager.Services
 @using PhDManager.Services.IRepositories
 
+@inject ISnackbar Snackbar
 @inject IServiceProvider ServiceProvider
 @inject IUnitOfWork UnitOfWork
 @inject IStringLocalizer<Resources> Localizer
 @inject IStringLocalizer<Enums> EnumLocalizer
-@inject UsersService UsersService
 @inject NavigationManager NavigationManager
 @inject UserManager<ApplicationUser> UserManager
 @inject SchoolYearService SchoolYearService
@@ -29,7 +29,7 @@
 
 @if (_systemState is not null && _systemState.IsOpen)
 {
-    <MudText Class="mb-5" Typo="Typo.h3">@Localizer["DissertationThesisProposal"]</MudText>
+    <MudText Typo="Typo.h4">@Localizer["DissertationThesisProposal"]</MudText>
 
     <MudForm @ref="_form">
         <MudText Typo="Typo.h5">@Localizer["DissertationThesisAssignment"]</MudText>
@@ -39,9 +39,10 @@
         {
             <MudTextField T="string" Label="Dissertation thesis title" Variant="Variant.Outlined" @bind-Value="_thesis.TitleEnglish" />
         }
-        <MudAutocomplete T="Teacher" Required RequiredError="@Localizer["Required"]" Label="@Localizer["Supervisor"]" ToStringFunc="@(t => t is null ? null : t.User.DisplayName)" SearchFunc="SearchTeachers" Variant="Variant.Outlined" @bind-Value="_thesis.Supervisor" />
-        <MudAutocomplete T="Teacher" Label="@Localizer["SupervisorSpecialist"]" ToStringFunc="@(t => t is null ? null : t.User.DisplayName)" SearchFunc="SearchTeachers" Variant="Variant.Outlined" @bind-Value="_thesis.SupervisorSpecialist" />
+        <MudAutocomplete T="Teacher" Clearable Required RequiredError="@Localizer["Required"]" Label="@Localizer["Supervisor"]" ToStringFunc="@(t => t is null ? null : t.User.DisplayName)" SearchFunc="SearchTeachers" Variant="Variant.Outlined" @bind-Value="_thesis.Supervisor" @bind-Value:after="HandleSupervisorChange" />
+        <MudAutocomplete T="Teacher" Clearable Label="@Localizer["SupervisorSpecialist"]" ToStringFunc="@(t => t is null ? null : t.User.DisplayName)" SearchFunc="SearchTeachers" Variant="Variant.Outlined" @bind-Value="_thesis.SupervisorSpecialist" @bind-Value:after="HandleSupervisorSpecialistChange" />
 
+        <MudDivider Class="my-3" />
         <MudText Typo="Typo.h5">@Localizer["DissertationThesisClassification"]</MudText>
         @if (_studyPrograms is not null)
         {
@@ -57,9 +58,12 @@
             <MudField T="string" Label="@Localizer["StudyField"]" Variant="Variant.Outlined">@_thesis.StudyProgram.StudyFieldName</MudField>
         }
         <MudStack Row>
-            <MudCheckBox T="bool" @bind-Value="_thesis.DailyStudy">@EnumLocalizer["StudyFormDaily"]</MudCheckBox>
-            <MudCheckBox T="bool" @bind-Value="_thesis.ExternalStudy">@EnumLocalizer["StudyFormExternal"]</MudCheckBox>
+            <MudCheckBox T="bool" @bind-Value="_thesis.DailyStudy" @bind-Value:after="HideStudyTypeError">@EnumLocalizer["StudyFormDaily"]</MudCheckBox>
+            <MudCheckBox T="bool" @bind-Value="_thesis.ExternalStudy" @bind-Value:after="HideStudyTypeError">@EnumLocalizer["StudyFormExternal"]</MudCheckBox>
         </MudStack>
+        @if (_studyTypeError) {
+            <MudText Typo="Typo.caption" Color="Color.Error">@Localizer["StudyTypeError"]</MudText>
+        }
 
         @if (_thesis.StudyProgram is not null)
         {
@@ -72,7 +76,8 @@
             </MudStack>
         }
 
-        <MudText Typo="Typo.h5">Špecifikácia témy</MudText>
+        <MudDivider Class="my-3" />
+        <MudText Typo="Typo.h5">@Localizer["TopicSpecification"]</MudText>
         <MudTextField Style="white-space: pre-wrap;" T="string" Required RequiredError="@Localizer["Required"]" Label="@Localizer["DissertationThesisDescription"]" AutoGrow Lines="5" Variant="Variant.Outlined" @bind-Value="_thesis.Description" />
         @if (_isEnglish)
         {
@@ -81,6 +86,7 @@
         <MudTextField Style="white-space: pre-wrap;" T="string" Required RequiredError="@Localizer["Required"]" Label="@Localizer["DissertationThesisScientificContribution"]" AutoGrow Lines="3" Variant="Variant.Outlined" @bind-Value="_thesis.ScientificContribution" />
         <MudTextField Style="white-space: pre-wrap;" T="string" Required RequiredError="@Localizer["Required"]" Label="@Localizer["DissertationThesisScientificProgress"]" AutoGrow Lines="3" Variant="Variant.Outlined" @bind-Value="_thesis.ScientificProgress" />
 
+        <MudDivider Class="my-3" />
         <MudText Typo="Typo.h5">@Localizer["MoreInformations"]</MudText>
         <MudStack>
             <MudSelect T="string" Required RequiredError="@Localizer["Required"]" Label="@Localizer["ResearchType"]" Variant="Variant.Outlined" @bind-Value="_thesis.ResearchType">
@@ -119,6 +125,8 @@ else
 
     private Thesis _thesis = new();
     private bool _isEnglish = false;
+
+    private bool _studyTypeError = false;
 
     protected override async Task OnInitializedAsync()
     {
@@ -162,11 +170,39 @@ else
         return Task.FromResult(_teachers.Where(t => t.User.UserName is not null && t.User.UserName.Contains(search, StringComparison.OrdinalIgnoreCase)));
     }
 
+    private void HideStudyTypeError()
+    {
+        _studyTypeError = false;
+    }
+
+    private void HandleSupervisorChange()
+    {
+        if (_thesis.Supervisor?.Id != _thesis.SupervisorSpecialist?.Id) return;
+
+        Snackbar.Add(Localizer["TeacherChangeError"], Severity.Error);
+        _thesis.Supervisor = default!;
+    }
+
+    private void HandleSupervisorSpecialistChange()
+    {
+        if (_thesis.Supervisor?.Id != _thesis.SupervisorSpecialist?.Id) return;
+
+        Snackbar.Add(Localizer["TeacherChangeError"], Severity.Error);
+        _thesis.SupervisorSpecialist = null;
+    }
+
     private async Task HandleThesis()
     {
         if (_form is null) return;
 
         await _form.Validate();
+
+        if (!_thesis.DailyStudy && !_thesis.ExternalStudy)
+        {
+            _studyTypeError = true;
+            return;
+        }
+
         if (_form.IsValid)
         {
             if (ThesisGuid is null) 

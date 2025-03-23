@@ -18,12 +18,10 @@
 <PageTitle>@Localizer["Home"]</PageTitle>
 
 <MudStack class="height-screen" StretchItems="StretchItems.Middle">
-    @* <div class="full-size circle circle-bottom"></div>
-    <div class="full-size circle circle-top"></div> *@
     <AuthorizeView>
         <Authorized>
             <MudStack Class="height-full" Justify="Justify.Center" AlignItems="AlignItems.Center">
-                <MudText Class="text-rotate" Typo="Typo.h3">@Localizer["Welcome"], @context.User.Identity?.Name</MudText>
+                <MudText Class="text-rotate text-center" Typo="Typo.h3">@Localizer["Welcome"], @context.User.Identity?.Name</MudText>
                 <MudText>@Localizer["NavigationInfo"]</MudText>
                 <AuthorizeView Roles="@($"{Student.Role}")" Context="studentContext">
                     @if (_currentStudent is not null)
@@ -50,14 +48,14 @@
         </Authorized>
         <NotAuthorized>
             <div class="full-size responsive-row">
-                <div class="d-flex flex-column gap-3">
+                <MudStack Spacing="1">
                     <MudText Typo="Typo.h3"><span class="underline">@Localizer["HomeHeading"]</span></MudText>
                     <MudText Typo="Typo.h5">@Localizer["HomeSubheading"]</MudText>
-                    <div>
-                        <MudButton Class="mr-2 button-shake" Variant="Variant.Filled" Color="Color.Primary" OnClick="@(() => NavigationManager.NavigateTo("Account/Login"))">@Localizer["SignIn"]</MudButton>
-                        <MudButton Class="button-shake" Variant="Variant.Filled" Color="Color.Info" OnClick="@(() => NavigationManager.NavigateTo("theses"))">@Localizer["FindThesis"]</MudButton>
+                    <div class="responsive-row">
+                        <MudButton Size="Size.Large" Class="mr-2 button-shake" Variant="Variant.Filled" Color="Color.Primary" OnClick="@(() => NavigationManager.NavigateTo("Account/Login"))">@Localizer["SignIn"]</MudButton>
+                        <MudButton Size="Size.Large" Class="button-shake" Variant="Variant.Filled" Color="Color.Info" OnClick="@(() => NavigationManager.NavigateTo("theses"))">@Localizer["FindThesis"]</MudButton>
                     </div>
-                </div>
+                </MudStack>
                 <div class="container-image landing-basis">
                     <div class="circle-image"></div>
                     <MudImage Class="full-size landing-image" Src="@Assets["digital-nomad.svg"]" />

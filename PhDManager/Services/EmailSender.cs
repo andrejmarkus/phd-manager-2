@@ -1,8 +1,8 @@
-﻿using Microsoft.AspNetCore.Identity.UI.Services;
-using MimeKit.Text;
-using MimeKit;
-using MailKit.Net.Smtp;
+﻿using MailKit.Net.Smtp;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.Extensions.Options;
+using MimeKit;
+using MimeKit.Text;
 using PhDManager.Models.Options;
 
 namespace PhDManager.Services
@@ -13,38 +13,49 @@ namespace PhDManager.Services
 
         public async Task SendEmailAsync(string email, string subject, string htmlMessage)
         {
-            string host = _emailSenderOptions.Host;
-            int port = _emailSenderOptions.Port;
-            string username = _emailSenderOptions.Username;
-            string password = _emailSenderOptions.Password;
-            string from = _emailSenderOptions.From;
-            string name = _emailSenderOptions.Name;
-            bool enableSsl = _emailSenderOptions.EnableSSL;
-
             var message = new MimeMessage();
 
-            var sender = MailboxAddress.Parse(from);
-            if (!string.IsNullOrEmpty(name))
-                sender.Name = name;
-            message.Sender = sender;
-            message.From.Add(sender);
-            message.To.Add(MailboxAddress.Parse(email));
-            message.Subject = subject;
-            message.Body = new TextPart(TextFormat.Html) { Text = htmlMessage };
-
-            using var client = new SmtpClient();
-            client.Timeout = 10000;
             try
             {
-                await client.ConnectAsync(host, port, enableSsl);
-                if (!string.IsNullOrEmpty(username))
-                    client.Authenticate(username, password);
-                await client.SendAsync(message);
-                await client.DisconnectAsync(true);
+                var sender = MailboxAddress.Parse(_emailSenderOptions.From);
+                if (!string.IsNullOrEmpty(_emailSenderOptions.Name))
+                    sender.Name = _emailSenderOptions.Name;
+
+                message.Sender = sender;
+                message.From.Add(sender);
+                message.To.Add(MailboxAddress.Parse(email));
+                message.Subject = subject;
+                message.Body = new TextPart(TextFormat.Html) { Text = htmlMessage };
             }
             catch (Exception ex)
             {
-                throw new Exception($"Error sending email: {ex.Message}");
+                throw new Exception($"Error creating email: {ex.Message}", ex);
+            }
+
+            using var client = new SmtpClient();
+            client.Timeout = 10000;
+
+            try
+            {
+                await client.ConnectAsync(_emailSenderOptions.Host, _emailSenderOptions.Port, _emailSenderOptions.EnableSSL);
+
+                if (!string.IsNullOrEmpty(_emailSenderOptions.Username))
+                    client.Authenticate(_emailSenderOptions.Username, _emailSenderOptions.Password);
+
+                await client.SendAsync(message);
+                await client.DisconnectAsync(true);
+            }
+            catch (SmtpCommandException ex)
+            {
+                throw new SmtpCommandException(ex.ErrorCode, ex.StatusCode, $"SMTP Command Error: {ex.Message}", ex);
+            }
+            catch (SmtpProtocolException ex)
+            {
+                throw new SmtpProtocolException($"SMTP Protocol Error: {ex.Message}", ex);
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException($"Error sending email: {ex.Message}", ex);
             }
         }
     }

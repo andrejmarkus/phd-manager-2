@@ -18,9 +18,10 @@
 
 <PageTitle>@Localizer["IndividualPlan"]</PageTitle>
 
+<MudText GutterBottom Typo="Typo.h4">@Localizer["IndividualPlan"]</MudText>
+
 @if (_individualPlan is not null && _individualPlan.Student?.Thesis is not null)
 {
-    <MudText Align="Align.Center" Typo="Typo.h4">@Localizer["IndividualPlan"]</MudText>
     <MudStack Spacing="5">
         <MudStack>
             <MudText Typo="Typo.h5">@Localizer["DissertationThesis"]</MudText>
@@ -120,7 +121,9 @@
 }
 else
 {
-    <MudText>@Localizer["IndividualPlanMissing"]</MudText>
+    <MudAlert Severity="Severity.Error">
+        @Localizer["IndividualPlanMissing"]
+    </MudAlert>
 }
 
 @code {

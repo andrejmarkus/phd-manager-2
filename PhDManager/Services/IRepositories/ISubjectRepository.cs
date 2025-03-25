@@ -2,7 +2,7 @@
 
 namespace PhDManager.Services.IRepositories
 {
-    public interface ISubjectRepository: IRepository<Subject>
+    public interface ISubjectRepository : IRepository<Subject>
     {
     }
 }

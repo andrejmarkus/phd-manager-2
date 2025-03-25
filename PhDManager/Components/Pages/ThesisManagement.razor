@@ -55,7 +55,7 @@
         }
         @if (_thesis.StudyProgram is not null)
         {
-            <MudField T="string" Label="@Localizer["StudyField"]" Variant="Variant.Outlined">@_thesis.StudyProgram.StudyFieldName</MudField>
+            <MudField Label="@Localizer["StudyField"]" Variant="Variant.Outlined">@_thesis.StudyProgram.StudyFieldName</MudField>
         }
         <MudStack Row>
             <MudCheckBox T="bool" @bind-Value="_thesis.DailyStudy" @bind-Value:after="HideStudyTypeError">@EnumLocalizer["StudyFormDaily"]</MudCheckBox>
@@ -71,7 +71,7 @@
                 <MudText>Povinné študijné jednotky</MudText>
                 @foreach (var subject in _thesis.StudyProgram.ThesisSubjects.Select((e, i) => new { Element = e, Index = i }))
                 {
-                    <MudField T="string" Label="@($"{Localizer["Subject"]} {subject.Index + 1}")" Variant="Variant.Outlined">@subject.Element</MudField>
+                    <MudField Label="@($"{Localizer["Subject"]} {subject.Index + 1}")" Variant="Variant.Outlined">@subject.Element</MudField>
                 }
             </MudStack>
         }

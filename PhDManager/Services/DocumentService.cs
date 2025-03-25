@@ -1,7 +1,6 @@
 ﻿using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Wordprocessing;
 using Microsoft.JSInterop;
-using PhDManager.Components.Pages;
 using PhDManager.Models;
 using PhDManager.Models.Enums;
 using System.Globalization;
@@ -43,7 +42,7 @@ namespace PhDManager.Services
         {
             if (individualPlan.Student is null) return;
 
-            var documentName = NormalizeName(individualPlan.Student.User.DisplayName?? "") + ".docx";
+            var documentName = NormalizeName(individualPlan.Student.User.DisplayName ?? "") + ".docx";
             var path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "templates", "individual_plan_template.docx");
             var replacements = new Dictionary<string, List<string?>>()
             {
@@ -326,7 +325,7 @@ namespace PhDManager.Services
                         text.Remove();
                     }
                 }
-                
+
                 document.Clone(documentStream);
             }
 

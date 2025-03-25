@@ -1,7 +1,6 @@
 ﻿using LdapForNet;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
-using PhDManager.Components.Shared;
 using PhDManager.Data;
 using PhDManager.Models.Roles;
 using PhDManager.Services.IRepositories;
@@ -10,10 +9,10 @@ namespace PhDManager.Services
 {
     public class UsersService(
         IUnitOfWork UnitOfWork,
-        IUserStore<ApplicationUser> UserStore, 
-        UserManager<ApplicationUser> UserManager, 
-        RoleManager<IdentityRole> RoleManager, 
-        AuthenticationStateProvider AuthenticationStateProvider, 
+        IUserStore<ApplicationUser> UserStore,
+        UserManager<ApplicationUser> UserManager,
+        RoleManager<IdentityRole> RoleManager,
+        AuthenticationStateProvider AuthenticationStateProvider,
         ActiveDirectoryService ActiveDirectoryService
         )
     {

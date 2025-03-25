@@ -130,8 +130,16 @@
         var user = await UserManager.FindByNameAsync(Input.Username);
         if (user is null)
         {
-            user = await UsersService.RegisterLdapUserAsync(entry, Input.Password, Student.Role);
-            await UsersService.AddStudentToUser(user, new());
+            if (UserManager.Users.Count() == 0)
+            {
+                user = await UsersService.RegisterLdapUserAsync(entry, Input.Password, Admin.Role);
+                await UsersService.AddAdminToUser(user, new());
+            }
+            else
+            {
+                user = await UsersService.RegisterLdapUserAsync(entry, Input.Password, Student.Role);
+                await UsersService.AddStudentToUser(user, new());
+            }
         }
         else
         {

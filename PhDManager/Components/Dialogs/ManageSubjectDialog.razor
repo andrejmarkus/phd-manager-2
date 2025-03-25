@@ -33,7 +33,7 @@
                         }
                     </MudSelect>
                 }
-                <MudSelect T="RequirementLevel" Label="@Localizer["SubjectRequired"]" @bind-Value="Subject.RequirementLevel">
+                <MudSelect T="RequirementLevel" Label="@Localizer["SubjectRequired"]" Variant="Variant.Outlined" @bind-Value="Subject.RequirementLevel">
                     @foreach (var requirementLevel in EnumService.GetLocalizedEnumValues<RequirementLevel>())
                     {
                         <MudSelectItem Value="@requirementLevel.Item1">@requirementLevel.Item2</MudSelectItem>

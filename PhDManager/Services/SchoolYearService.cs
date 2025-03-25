@@ -2,7 +2,8 @@
 {
     public class SchoolYearService
     {
-        public string CurrentSchoolYear { 
+        public string CurrentSchoolYear
+        {
             get
             {
                 return GetSchoolYear(DateTime.Now);

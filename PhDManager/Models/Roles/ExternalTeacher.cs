@@ -1,6 +1,4 @@
-﻿using PhDManager.Data;
-
-namespace PhDManager.Models.Roles
+﻿namespace PhDManager.Models.Roles
 {
     public class ExternalTeacher : Teacher
     {

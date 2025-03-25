@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using PhDManager.Data;
+﻿using PhDManager.Data;
 using PhDManager.Models;
 using PhDManager.Services.IRepositories;
 

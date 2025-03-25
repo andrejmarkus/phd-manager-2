@@ -6,7 +6,7 @@ using PhDManager.Services.IRepositories;
 
 namespace PhDManager.Services.Repositories
 {
-    public class StudentRepository(ApplicationDbContext context, ILogger logger, SchoolYearService schoolYearService) : Repository<Student>(context, logger), IStudentRepository
+    public class StudentRepository(ApplicationDbContext context, ILogger logger) : Repository<Student>(context, logger), IStudentRepository
     {
         public async Task<Student?> GetByUserIdAsync(string? userId)
         {

@@ -29,11 +29,11 @@
     <MudAutocomplete Clearable ReadOnly="@(DissertationDefenseSupervisorGuid is not null)" T="Student" Required RequiredError="@Localizer["Required"]" Label="@Localizer["Student"]" ToStringFunc="@(s => s is null ? null : s.User.DisplayName)" SearchFunc="SearchStudents" Variant="Variant.Outlined" @bind-Value="@_dissertationDefenseSupervisor.Student" />
     @if (_dissertationDefenseSupervisor.Student is not null)
     {
-        <MudField T="string" Label="@Localizer["StudyForm"]" Variant="Variant.Outlined">@(EnumService.GetLocalizedEnumValue(_dissertationDefenseSupervisor.Student.StudyForm))</MudField>
-        <MudField T="string" Label="@Localizer["StudyProgram"]" Variant="Variant.Outlined">@_dissertationDefenseSupervisor.Student.StudyProgram?.Name</MudField>
-        <MudField T="string" Label="@Localizer["StudyField"]" Variant="Variant.Outlined">@_dissertationDefenseSupervisor.Student.StudyProgram?.StudyFieldName</MudField>
-        <MudField T="string" Label="@Localizer["Department"]" Variant="Variant.Outlined">@_dissertationDefenseSupervisor.Student.Department?.Name</MudField>
-        <MudField T="string" Label="@Localizer["Supervisor"]" Variant="Variant.Outlined">@_dissertationDefenseSupervisor.Student.Thesis?.Supervisor.User.DisplayName</MudField>
+        <MudField Label="@Localizer["StudyForm"]" Variant="Variant.Outlined">@(EnumService.GetLocalizedEnumValue(_dissertationDefenseSupervisor.Student.StudyForm))</MudField>
+        <MudField Label="@Localizer["StudyProgram"]" Variant="Variant.Outlined">@_dissertationDefenseSupervisor.Student.StudyProgram?.Name</MudField>
+        <MudField Label="@Localizer["StudyField"]" Variant="Variant.Outlined">@_dissertationDefenseSupervisor.Student.StudyProgram?.StudyFieldName</MudField>
+        <MudField Label="@Localizer["Department"]" Variant="Variant.Outlined">@_dissertationDefenseSupervisor.Student.Department?.Name</MudField>
+        <MudField Label="@Localizer["Supervisor"]" Variant="Variant.Outlined">@_dissertationDefenseSupervisor.Student.Thesis?.Supervisor.User.DisplayName</MudField>
         <MudDatePicker ReadOnly Label="@Localizer["IndividualPlanStudyStartDate"]" Variant="Variant.Outlined" @bind-Date="_dissertationDefenseSupervisor.Student.IndividualPlan!.StudyStartDate" />
         <MudDatePicker ReadOnly Label="@Localizer["StudyCompletionExpectedDate"]" Variant="Variant.Outlined" @bind-Date="_dissertationDefenseSupervisor.Student.IndividualPlan!.StudyEndDate" />
         <MudTextField T="int" Required RequiredError="@Localizer["Required"]" Label="@Localizer["ApplicationSubmissionCreditsNumber"]" Variant="Variant.Outlined" @bind-Value="_dissertationDefenseSupervisor.CreditsCount" />

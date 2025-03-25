@@ -7,8 +7,6 @@ namespace PhDManager.Services.Repositories
     public class UnitOfWork : IUnitOfWork
     {
         private readonly ApplicationDbContext _context;
-        private readonly ILogger _logger;
-        private readonly SchoolYearService _schoolYearService;
 
         public IThesisRepository Theses { get; private set; }
         public IRegistrationRepository Registrations { get; private set; }
@@ -30,31 +28,30 @@ namespace PhDManager.Services.Repositories
         public IDissertationDefenseSupervisorRepository DissertationDefenseSupervisors { get; private set; }
         public IDissertationDefenseApplicationRepository DissertationDefenseApplications { get; private set; }
 
-        public UnitOfWork(IDbContextFactory<ApplicationDbContext> contextFactory, ILoggerFactory loggerFactory, SchoolYearService schoolYearService)
+        public UnitOfWork(IDbContextFactory<ApplicationDbContext> contextFactory, ILoggerFactory loggerFactory)
         {
             _context = contextFactory.CreateDbContext();
-            _logger = loggerFactory.CreateLogger("logs");
-            _schoolYearService = schoolYearService;
+            var logger = loggerFactory.CreateLogger("logs");
 
-            Theses = new ThesisRepository(_context, _logger);
-            Registrations = new RegistrationRepository(_context, _logger);
-            StudyPrograms = new StudyProgramRepository(_context, _logger);
-            Subjects = new SubjectRepository(_context, _logger);
-            Comments = new CommentRepository(_context, _logger);
-            IndividualPlans = new IndividualPlanRepository(_context, _logger);
-            Addresses = new AddressRepository(_context, _logger);
-            Admins = new AdminRepository(_context, _logger);
-            Students = new StudentRepository(_context, _logger, _schoolYearService);
-            Teachers = new TeacherRepository(_context, _logger);
-            SystemState = new SystemStateRepository(_context, _logger);
-            Departments = new DepartmentRepository(_context, _logger);
-            IndividualPlanSubjects = new IndividualPlanSubjectRepository(_context, _logger);
-            SubjectsExamApplications = new SubjectsExamApplicationRepository(_context, _logger);
-            ExamApplications = new ExamApplicationRepository(_context, _logger);
-            StudentEvaluations = new StudentEvaluationRepository(_context, _logger);
-            ExamSupervisors = new ExamSupervisorRepository(_context, _logger);
-            DissertationDefenseSupervisors = new DissertationDefenseSupervisorRepository(_context, _logger);
-            DissertationDefenseApplications = new DissertationDefenseApplicationRepository(_context, _logger);
+            Theses = new ThesisRepository(_context, logger);
+            Registrations = new RegistrationRepository(_context, logger);
+            StudyPrograms = new StudyProgramRepository(_context, logger);
+            Subjects = new SubjectRepository(_context, logger);
+            Comments = new CommentRepository(_context, logger);
+            IndividualPlans = new IndividualPlanRepository(_context, logger);
+            Addresses = new AddressRepository(_context, logger);
+            Admins = new AdminRepository(_context, logger);
+            Students = new StudentRepository(_context, logger);
+            Teachers = new TeacherRepository(_context, logger);
+            SystemState = new SystemStateRepository(_context, logger);
+            Departments = new DepartmentRepository(_context, logger);
+            IndividualPlanSubjects = new IndividualPlanSubjectRepository(_context, logger);
+            SubjectsExamApplications = new SubjectsExamApplicationRepository(_context, logger);
+            ExamApplications = new ExamApplicationRepository(_context, logger);
+            StudentEvaluations = new StudentEvaluationRepository(_context, logger);
+            ExamSupervisors = new ExamSupervisorRepository(_context, logger);
+            DissertationDefenseSupervisors = new DissertationDefenseSupervisorRepository(_context, logger);
+            DissertationDefenseApplications = new DissertationDefenseApplicationRepository(_context, logger);
         }
 
         public async Task CompleteAsync()
@@ -65,6 +62,7 @@ namespace PhDManager.Services.Repositories
         public void Dispose()
         {
             _context.Dispose();
+            GC.SuppressFinalize(this);
         }
     }
 }

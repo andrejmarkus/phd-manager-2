@@ -22,7 +22,7 @@
             <ToolBarContent>
                 <MudText Typo="Typo.h6" GutterBottom="false">@Localizer["LdapUsers"]</MudText>
                 <MudSpacer />
-                <MudTextField @bind-Value="@_search" @bind-Value:after="@SearchUsers" Class="mr-4" Variant="Variant.Outlined" Placeholder="@Localizer["Search"]" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium"></MudTextField>
+                <MudTextField Style="height: 100%;" @bind-Value="@_search" @bind-Value:after="@SearchUsers" Class="mr-4" Variant="Variant.Outlined" Placeholder="@Localizer["Search"]" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium"></MudTextField>
             </ToolBarContent>
             <Columns>
                 <SelectColumn T="LdapEntry" />

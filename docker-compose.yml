@@ -9,17 +9,22 @@
     depends_on:
       - phdmanager.db
       - phdmanager.proxy
+    networks:
+      - frontend
+      - backend
 
   phdmanager.db:
-    image: postgres:17.0
+    image: postgres:17.1
     environment:
-      POSTGRES_USER: phdmanager
-      POSTGRES_PASSWORD: phdmanager
-      POSTGRES_DB: phdmanager
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
     ports:
       - "5432:5432"
     volumes:
       - db-data:/var/lib/postgresql/data
+    networks:
+      - backend
 
   phdmanager.proxy:
     image: 'jc21/nginx-proxy-manager:latest'
@@ -31,6 +36,8 @@
     volumes:
       - proxy-data:/data
       - letsencrypt:/etc/letsencrypt
+    networks:
+      - frontend
 
 volumes:
   db-data:
@@ -38,6 +45,5 @@ volumes:
   letsencrypt:
   
 networks:
-  default:
-    external: true
-    name: proxy
+  frontend:
+  backend:

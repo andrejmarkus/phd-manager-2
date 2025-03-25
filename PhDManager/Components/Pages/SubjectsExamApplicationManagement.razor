@@ -26,12 +26,12 @@
 <MudForm @ref="_form">
     @if (_student is not null && _student.IndividualPlan is not null)
     {
-        <MudField T="string" Label="@Localizer["Student"]" Variant="Variant.Outlined">@_student.User.DisplayName</MudField>
-        <MudField T="string" Label="@Localizer["StudyForm"]" Variant="Variant.Outlined">@(EnumService.GetLocalizedEnumValue(_student.StudyForm))</MudField>
-        <MudField T="string" Label="@Localizer["StudyProgram"]" Variant="Variant.Outlined">@_student.StudyProgram?.Name</MudField>
-        <MudField T="string" Label="@Localizer["StudyField"]" Variant="Variant.Outlined">@_student.StudyProgram?.StudyFieldName</MudField>
-        <MudField T="string" Label="@Localizer["Department"]" Variant="Variant.Outlined">@_student.Department?.Name</MudField>
-        <MudField T="string" Label="@Localizer["Supervisor"]" Variant="Variant.Outlined">@_student.Thesis?.Supervisor.User.DisplayName</MudField>
+        <MudField Label="@Localizer["Student"]" Variant="Variant.Outlined">@_student.User.DisplayName</MudField>
+        <MudField Label="@Localizer["StudyForm"]" Variant="Variant.Outlined">@(EnumService.GetLocalizedEnumValue(_student.StudyForm))</MudField>
+        <MudField Label="@Localizer["StudyProgram"]" Variant="Variant.Outlined">@_student.StudyProgram?.Name</MudField>
+        <MudField Label="@Localizer["StudyField"]" Variant="Variant.Outlined">@_student.StudyProgram?.StudyFieldName</MudField>
+        <MudField Label="@Localizer["Department"]" Variant="Variant.Outlined">@_student.Department?.Name</MudField>
+        <MudField Label="@Localizer["Supervisor"]" Variant="Variant.Outlined">@_student.Thesis?.Supervisor.User.DisplayName</MudField>
         <MudDatePicker ReadOnly Label="@Localizer["IndividualPlanStudyStartDate"]" Variant="Variant.Outlined" @bind-Date="_student.IndividualPlan.StudyStartDate" />
     }
 

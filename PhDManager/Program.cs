@@ -58,12 +58,21 @@ var databaseConnectionString = builder.Configuration.GetSection(DatabaseOptions.
 builder.Services.AddDbContextFactory<ApplicationDbContext>(options => options.UseNpgsql(databaseConnectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
+builder.WebHost.UseSentry(options =>
+{
+    var sentryDsn = builder.Configuration.GetSection(SentryAppOptions.SentryApp).Get<SentryAppOptions>()?.Dsn ?? throw new InvalidOperationException("Sentry Dsn not found.");
+    options.Dsn = sentryDsn;
+    options.TracesSampleRate = 1.0;
+});
+
 builder.Services.AddHangfire(options => options
     .UseSimpleAssemblyNameTypeSerializer()
     .UseRecommendedSerializerSettings()
     .UsePostgreSqlStorage(c => c.UseNpgsqlConnection(databaseConnectionString))
 );
 builder.Services.AddHangfireServer();
+
+builder.Services.AddAntiforgery();
 
 builder.Services.AddIdentityCore<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddRoles<IdentityRole>()
@@ -102,8 +111,6 @@ app.UseRequestLocalization(new RequestLocalizationOptions()
     .AddSupportedCultures(supportedCultures)
     .AddSupportedUICultures(supportedCultures));
 
-// app.UseHttpsRedirection();
-
 app.MapStaticAssets();
 app.UseAntiforgery();
 
@@ -117,7 +124,7 @@ app.MapAdditionalIdentityEndpoints();
 
 app.UseHangfireDashboard("/cron/dashboard", new DashboardOptions()
 {
-    Authorization = [ new AuthorizationFilter() ]
+    Authorization = [new AuthorizationFilter()]
 });
 
 using (var scope = app.Services.CreateScope())

@@ -1051,6 +1051,15 @@ namespace PhDManager.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The email was not successfully sent..
+        /// </summary>
+        public static string EmailFailed {
+            get {
+                return ResourceManager.GetString("EmailFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Please enter your email..
         /// </summary>
         public static string EmailHelper {
@@ -1060,11 +1069,29 @@ namespace PhDManager.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Invalid email format..
+        /// </summary>
+        public static string EmailInvalidFormat {
+            get {
+                return ResourceManager.GetString("EmailInvalidFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Send verification email.
         /// </summary>
         public static string EmailSendVerification {
             get {
                 return ResourceManager.GetString("EmailSendVerification", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Email successfully sended..
+        /// </summary>
+        public static string EmailSucessfullySended {
+            get {
+                return ResourceManager.GetString("EmailSucessfullySended", resourceCulture);
             }
         }
         
@@ -1789,6 +1816,42 @@ namespace PhDManager.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Regstration invitation.
+        /// </summary>
+        public static string InvitationEmail {
+            get {
+                return ResourceManager.GetString("InvitationEmail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to You have been invited to register. Please use this link to register &lt;a href=&apos;{0}&apos;&gt;{0}&lt;/a&gt;..
+        /// </summary>
+        public static string InvitationEmailHtml {
+            get {
+                return ResourceManager.GetString("InvitationEmailHtml", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An invitation for the provided email already exists..
+        /// </summary>
+        public static string InvitationExpirationInfo {
+            get {
+                return ResourceManager.GetString("InvitationExpirationInfo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to User is already registered..
+        /// </summary>
+        public static string InvitationUserError {
+            get {
+                return ResourceManager.GetString("InvitationUserError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Last name.
         /// </summary>
         public static string LastName {
@@ -2407,6 +2470,15 @@ namespace PhDManager.Locales {
         public static string Search {
             get {
                 return ResourceManager.GetString("Search", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Send as email.
+        /// </summary>
+        public static string SendAsEmail {
+            get {
+                return ResourceManager.GetString("SendAsEmail", resourceCulture);
             }
         }
         

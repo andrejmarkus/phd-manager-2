@@ -1219,4 +1219,28 @@ account so you can log in without an external login.</value>
   <data name="ExternalLoginsAddInfo" xml:space="preserve">
     <value>The external login was added.</value>
   </data>
+  <data name="InvitationUserError" xml:space="preserve">
+    <value>User is already registered.</value>
+  </data>
+  <data name="InvitationExpirationInfo" xml:space="preserve">
+    <value>An invitation for the provided email already exists.</value>
+  </data>
+  <data name="SendAsEmail" xml:space="preserve">
+    <value>Send as email</value>
+  </data>
+  <data name="EmailSucessfullySended" xml:space="preserve">
+    <value>Email successfully sended.</value>
+  </data>
+  <data name="InvitationEmail" xml:space="preserve">
+    <value>Regstration invitation</value>
+  </data>
+  <data name="InvitationEmailHtml" xml:space="preserve">
+    <value>You have been invited to register. Please use this link to register &lt;a href='{0}'&gt;{0}&lt;/a&gt;.</value>
+  </data>
+  <data name="EmailFailed" xml:space="preserve">
+    <value>The email was not successfully sent.</value>
+  </data>
+  <data name="EmailInvalidFormat" xml:space="preserve">
+    <value>Invalid email format.</value>
+  </data>
 </root>

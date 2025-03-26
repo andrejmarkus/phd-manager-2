@@ -177,7 +177,7 @@
 
     private async Task AddStudentRegistration()
     {
-        var parameters = new DialogParameters<RegistrationLinkDialog> { { d => d.Role, Student.Role } };
-        await DialogService.ShowAsync<RegistrationLinkDialog>(Localizer["UserRegister"], parameters, new() { FullWidth = true, MaxWidth = MaxWidth.Medium });
+        var parameters = new DialogParameters<InvitationLinkDialog> { { d => d.Role, Student.Role } };
+        await DialogService.ShowAsync<InvitationLinkDialog>(Localizer["UserRegister"], parameters, new() { FullWidth = true, MaxWidth = MaxWidth.Medium });
     }
 }

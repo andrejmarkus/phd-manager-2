@@ -172,7 +172,7 @@
     <value>Zabudnuté heslo?</value>
   </data>
   <data name="SignInResendEmail" xml:space="preserve">
-    <value>Znovu zaslať potvrdzovací email.</value>
+    <value>Znovu zaslať potvrdzovací e-mail.</value>
   </data>
   <data name="SignUpExpired" xml:space="preserve">
     <value>Platnosť registračného odkazu vypršala!</value>
@@ -1217,5 +1217,29 @@
   </data>
   <data name="ExternalLoginsAddInfo" xml:space="preserve">
     <value>Externé prihlásenie bolo pridané.</value>
+  </data>
+  <data name="InvitationUserError" xml:space="preserve">
+    <value>Používateľ je už zaregistrovaný.</value>
+  </data>
+  <data name="InvitationExpirationInfo" xml:space="preserve">
+    <value>Pozvánka pre zadaný email existuje.</value>
+  </data>
+  <data name="SendAsEmail" xml:space="preserve">
+    <value>Poslať ako e-mail</value>
+  </data>
+  <data name="EmailSucessfullySended" xml:space="preserve">
+    <value>Email bol úspešne odoslaný.</value>
+  </data>
+  <data name="InvitationEmail" xml:space="preserve">
+    <value>Pozvánka na registráciu</value>
+  </data>
+  <data name="InvitationEmailHtml" xml:space="preserve">
+    <value>Boli ste pozvaní na registráciu. Prosím, použite tento odkaz na registráciu &lt;a href='{0}'&gt;{0}&lt;/a&gt;.</value>
+  </data>
+  <data name="EmailFailed" xml:space="preserve">
+    <value>Email nebol úspešne odoslaný.</value>
+  </data>
+  <data name="EmailInvalidFormat" xml:space="preserve">
+    <value>Neplatný formát emailu.</value>
   </data>
 </root>

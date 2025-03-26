@@ -99,8 +99,8 @@
 
     private async Task CreateTeacherRegistration()
     {
-        var parameters = new DialogParameters<RegistrationLinkDialog> { { d => d.Role, Teacher.Role } };
-        await DialogService.ShowAsync<RegistrationLinkDialog>(Localizer["UserRegister"], parameters, new() { FullWidth = true, MaxWidth = MaxWidth.Medium });
+        var parameters = new DialogParameters<InvitationLinkDialog> { { d => d.Role, Teacher.Role } };
+        await DialogService.ShowAsync<InvitationLinkDialog>(Localizer["UserRegister"], parameters, new() { FullWidth = true, MaxWidth = MaxWidth.Medium });
     }
 
     private async Task DeleteTeacher(Teacher teacher)

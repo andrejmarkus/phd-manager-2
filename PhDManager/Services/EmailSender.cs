@@ -40,7 +40,7 @@ namespace PhDManager.Services
                 await client.ConnectAsync(_emailSenderOptions.Host, _emailSenderOptions.Port, _emailSenderOptions.EnableSSL);
 
                 if (!string.IsNullOrEmpty(_emailSenderOptions.Username))
-                    client.Authenticate(_emailSenderOptions.Username, _emailSenderOptions.Password);
+                    await client.AuthenticateAsync(_emailSenderOptions.Username, _emailSenderOptions.Password);
 
                 await client.SendAsync(message);
                 await client.DisconnectAsync(true);

@@ -12,8 +12,8 @@ using PhDManager.Data;
 namespace PhDManager.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250323213720_Init")]
-    partial class Init
+    [Migration("20250326184145_Changes")]
+    partial class Changes
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -556,13 +556,17 @@ namespace PhDManager.Data.Migrations
                     b.ToTable("IndividualPlanSubject");
                 });
 
-            modelBuilder.Entity("PhDManager.Models.Registration", b =>
+            modelBuilder.Entity("PhDManager.Models.Invitation", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<DateTime>("Expiration")
                         .HasColumnType("timestamp with time zone");
@@ -581,7 +585,7 @@ namespace PhDManager.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Registrations");
+                    b.ToTable("Invitations");
                 });
 
             modelBuilder.Entity("PhDManager.Models.Roles.Admin", b =>

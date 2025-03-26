@@ -1,0 +1,132 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using Microsoft.Extensions.Localization
+@using PhDManager.Data
+@using PhDManager.Locales
+@using PhDManager.Models
+@using PhDManager.Services
+@using PhDManager.Services.IRepositories
+@using PhDManager.Services.Repositories
+@using System.Text.RegularExpressions
+
+@rendermode InteractiveServer
+
+@inject IUnitOfWork UnitOfWork
+@inject ISnackbar Snackbar
+@inject IStringLocalizer<Resources> Localizer
+@inject NavigationManager NavigationManager
+@inject UserManager<ApplicationUser> UserManager
+@inject InformationEmailSender EmailSender
+
+<MudDialog>
+    <TitleContent>
+        <MudText Typo="Typo.h6">@Localizer["UserRegister"]</MudText>
+    </TitleContent>
+    <DialogContent>
+        @if (string.IsNullOrEmpty(_invitation?.Url))
+        {
+            <MudForm @ref="_form">
+                <MudTextField T="string" Validation="new Func<string, string>(ValidateEmail)" Immediate InputType="InputType.Email" Variant="Variant.Outlined" Required RequiredError="@Localizer["Required"]" Label="@Localizer["Email"]" @bind-Value="@_email" />
+
+                <MudButton Class="mt-2" OnClick="CreateInvitation" Variant="Variant.Filled" Color="Color.Primary">@Localizer["Create"]</MudButton>
+            </MudForm>
+        }
+        else
+        {
+            <MudStack>
+                <MudLink Href="@_invitation.Url">@_invitation.Url</MudLink>
+
+                <MudButton Class="mt-2" OnClick="SendInvitation" Variant="Variant.Filled" Color="Color.Primary">@Localizer["SendAsEmail"]</MudButton>
+            </MudStack>
+        }
+    </DialogContent>
+    <DialogActions>
+        <MudButton Color="Color.Error" OnClick="@(() => MudDialog.Cancel())">@Localizer["Cancel"]</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter]
+    private IMudDialogInstance MudDialog { get; set; } = default!;
+
+    [Parameter]
+    public string Role { get; set; } = string.Empty;
+
+    private MudForm _form = new();
+    private Invitation? _invitation;
+    private string _email = string.Empty;
+
+    private async Task CreateInvitation()
+    {
+        await _form.Validate();
+
+        if (!_form.IsValid) return;
+
+        var guid = Guid.NewGuid().ToString();
+
+        _invitation = (await UnitOfWork.Invitations.GetAllAsync())?.FirstOrDefault(i => i.Email == _email);
+        if (_invitation is null)
+        {
+            _invitation = new()
+            {
+                Email = _email,
+                Guid = guid,
+                Url = NavigationManager.BaseUri + "Account/Register/" + guid,
+                Role = Role,
+                Expiration = DateTime.UtcNow.AddDays(7)
+            };
+
+            await UnitOfWork.Invitations.AddAsync(_invitation);
+            await UnitOfWork.CompleteAsync();
+            return;
+        }
+
+        var user = await UserManager.FindByEmailAsync(_invitation.Email);
+        if (user is not null)
+        {
+            _invitation = null;
+            Snackbar.Add(Localizer["InvitationUserError"], Severity.Error);
+            return;
+        }
+
+        if (_invitation.Expiration > DateTime.Now)
+        {
+            Snackbar.Add(Localizer["InvitationExpirationInfo"], Severity.Info);
+            return;
+        }
+
+        _invitation.Guid = guid;
+        _invitation.Url = NavigationManager.BaseUri + "Account/Register/" + guid;
+        _invitation.Role = Role;
+        _invitation.Expiration = DateTime.UtcNow.AddDays(7);
+
+        await UnitOfWork.Invitations.UpdateAsync(_invitation);
+        await UnitOfWork.CompleteAsync();
+        return;
+    }
+
+    private async Task SendInvitation()
+    {
+        if (_invitation is null) return;
+
+        try
+        {
+            await EmailSender.SendInvitationAsync(_invitation.Email, _invitation.Url);
+            Snackbar.Add(Localizer["EmailSucessfullySended"], Severity.Success);
+        }
+        catch
+        {
+            Snackbar.Add(Localizer["EmailFailed"], Severity.Error);
+        }
+    }
+
+    private string ValidateEmail(string value)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+            return Localizer["Required"];
+
+        if (!System.Text.RegularExpressions.Regex.IsMatch(value, @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
+            return Localizer["EmailInvalidFormat"];
+
+        return null!;
+    }
+}

@@ -109,7 +109,7 @@
 
     private async Task CreateAdminRegistration()
     {
-        var parameters = new DialogParameters<RegistrationLinkDialog> { { d => d.Role, Admin.Role } };
-        await DialogService.ShowAsync<RegistrationLinkDialog>(Localizer["UserRegister"], parameters, new() { FullWidth = true, MaxWidth = MaxWidth.Medium });
+        var parameters = new DialogParameters<InvitationLinkDialog> { { d => d.Role, Admin.Role } };
+        await DialogService.ShowAsync<InvitationLinkDialog>(Localizer["UserRegister"], parameters, new() { FullWidth = true, MaxWidth = MaxWidth.Medium });
     }
 }

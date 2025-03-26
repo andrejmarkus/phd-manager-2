@@ -1,4 +1,4 @@
-﻿@page "/Account/Register/{RegistrationGuid}"
+﻿@page "/Account/Register/{InvitationGuid}"
 
 @using System.ComponentModel.DataAnnotations
 @using System.Text
@@ -26,11 +26,11 @@
 
 <PageTitle>@Localizer["SignUp"]</PageTitle>
 
-@if (_registration is not null)
+@if (_invitation is not null)
 {
-    @if (_registrationExpired)
+    @if (_invitationExpired || _userExists)
     {
-        <MudText Typo="Typo.h5">@Localizer["SignUpExpired"]</MudText>
+        <MudAlert Severity="Severity.Error">@Localizer["SignUpExpired"]</MudAlert>
     }
     else
     {
@@ -56,11 +56,6 @@
                         Label="@Localizer["Username"]"
                         UserAttributes="@(new() { { "autocomplete", "true" }, { "aria-required", "true" } } )" />
 
-                        <MudStaticTextField For="@(() => Input.Email)" @bind-Value="Input.Email"
-                        Variant="Variant.Outlined"
-                        Label="Email"
-                        UserAttributes="@(new() { { "autocomplete", "true" }, { "aria-required", "true" } } )" />
-
                         <MudStaticTextField For="@(() => Input.Password)" @bind-Value="Input.Password"
                         Variant="Variant.Outlined"
                         Label="@Localizer["Password"]" InputType="InputType.Password"
@@ -84,7 +79,7 @@
 
 @code {
     [Parameter]
-    public string RegistrationGuid { get; set; } = default!;
+    public string InvitationGuid { get; set; } = default!;
 
     [SupplyParameterFromForm]
     private InputModel Input { get; set; } = new();
@@ -93,41 +88,42 @@
     private string? ReturnUrl { get; set; }
 
     private IEnumerable<IdentityError>? _identityErrors;
-    private Registration? _registration;
-    private bool _registrationExpired = false;
+    private Invitation? _invitation;
+    private bool _invitationExpired = false;
+    private bool _userExists = false;
 
     private string? Message => _identityErrors is null ? null : $"Error: {string.Join(", ", _identityErrors.Select(error => error.Description))}";
 
     protected override async Task OnInitializedAsync()
     {
-        _registration = await UnitOfWork.Registrations.GetByGuidAsync(RegistrationGuid);
-        _registrationExpired = DateTime.UtcNow > _registration?.Expiration;
+        _invitation = await UnitOfWork.Invitations.GetByGuidAsync(InvitationGuid);
 
-        if (_registration is null) return;
-
-        if (_registrationExpired)
+        if (_invitation is null)
         {
-            UnitOfWork.Registrations.Delete(_registration);
-            await UnitOfWork.CompleteAsync();
+            NavigationManager.NavigateTo("/");
+            return;
         }
+
+        _invitationExpired = DateTime.UtcNow > _invitation.Expiration;
+        _userExists = (await UsersService.GetUserByEmailAsync(_invitation.Email)) is not null;
     }
 
     public async Task RegisterUser(EditContext editContext)
     {
-        if (_registration is null) return;
+        if (_invitation is null) return;
 
         var emailStore = GetEmailStore();
         var user = CreateUser();
 
-        if ((await UserManager.FindByEmailAsync(Input.Email)) is not null)
+        if ((await UserManager.FindByEmailAsync(_invitation.Email)) is not null)
         {
             var errorDescriber = new IdentityErrorDescriber();
-            _identityErrors = [ errorDescriber.DuplicateEmail(Input.Email) ];
+            _identityErrors = [ errorDescriber.DuplicateEmail(_invitation.Email) ];
             return;
         }
 
         await UserStore.SetUserNameAsync(user, Input.Username, CancellationToken.None);
-        await emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
+        await emailStore.SetEmailAsync(user, _invitation.Email, CancellationToken.None);
 
         user.IsExternal = true;
         user.DisplayName = Input.DisplayName;
@@ -140,9 +136,9 @@
             return;
         }
 
-        await UserManager.AddToRoleAsync(user, _registration.Role);
+        await UserManager.AddToRoleAsync(user, _invitation.Role);
 
-        switch (_registration.Role) 
+        switch (_invitation.Role) 
         {
             case Student.Role:
                 {
@@ -178,13 +174,13 @@
             NavigationManager.ToAbsoluteUri("Account/ConfirmEmail").AbsoluteUri,
             new Dictionary<string, object?> { ["userId"] = userId, ["code"] = code, ["returnUrl"] = ReturnUrl });
 
-        await EmailSender.SendConfirmationLinkAsync(user, Input.Email, HtmlEncoder.Default.Encode(callbackUrl));
+        await EmailSender.SendConfirmationLinkAsync(user, _invitation.Email, HtmlEncoder.Default.Encode(callbackUrl));
 
         if (UserManager.Options.SignIn.RequireConfirmedAccount)
         {
             RedirectManager.RedirectTo(
                 "Account/RegisterConfirmation",
-                new() { ["email"] = Input.Email, ["returnUrl"] = ReturnUrl });
+                new() { ["email"] = _invitation.Email, ["returnUrl"] = ReturnUrl });
         }
 
         await SignInManager.SignInAsync(user, isPersistent: false);
@@ -222,11 +218,6 @@
         [Required]
         [Display(Name = "Username")]
         public string Username { get; set; } = "";
-
-        [Required]
-        [EmailAddress]
-        [Display(Name = "Email")]
-        public string Email { get; set; } = "";
 
         [Required]
         [StringLength(100, ErrorMessage = "{0} has to be from {2} to {1} characters long.", MinimumLength = 6)]

@@ -9,7 +9,7 @@ namespace PhDManager.Services.Repositories
         private readonly ApplicationDbContext _context;
 
         public IThesisRepository Theses { get; private set; }
-        public IRegistrationRepository Registrations { get; private set; }
+        public IInvitationRepository Invitations { get; private set; }
         public IStudyProgramRepository StudyPrograms { get; private set; }
         public ISubjectRepository Subjects { get; private set; }
         public ICommentRepository Comments { get; private set; }
@@ -34,7 +34,7 @@ namespace PhDManager.Services.Repositories
             var logger = loggerFactory.CreateLogger("logs");
 
             Theses = new ThesisRepository(_context, logger);
-            Registrations = new RegistrationRepository(_context, logger);
+            Invitations = new InvitationRepository(_context, logger);
             StudyPrograms = new StudyProgramRepository(_context, logger);
             Subjects = new SubjectRepository(_context, logger);
             Comments = new CommentRepository(_context, logger);

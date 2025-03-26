@@ -3,7 +3,7 @@
     public interface IUnitOfWork : IDisposable
     {
         IThesisRepository Theses { get; }
-        IRegistrationRepository Registrations { get; }
+        IInvitationRepository Invitations { get; }
         IStudyProgramRepository StudyPrograms { get; }
         ISubjectRepository Subjects { get; }
         ICommentRepository Comments { get; }

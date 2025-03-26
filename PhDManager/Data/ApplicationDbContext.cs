@@ -11,7 +11,7 @@ namespace PhDManager.Data
         public DbSet<Thesis> Theses { get; init; }
         public DbSet<Subject> Subjects { get; init; }
         public DbSet<StudyProgram> StudyPrograms { get; init; }
-        public DbSet<Registration> Registrations { get; init; }
+        public DbSet<Invitation> Invitations { get; init; }
         public DbSet<IndividualPlan> IndividualPlans { get; init; }
         public DbSet<Comment> Comments { get; init; }
         public DbSet<Address> Addresses { get; init; }

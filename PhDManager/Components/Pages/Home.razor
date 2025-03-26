@@ -51,7 +51,7 @@
                 <MudStack Spacing="1">
                     <MudText Typo="Typo.h3"><span class="underline">@Localizer["HomeHeading"]</span></MudText>
                     <MudText Typo="Typo.h5">@Localizer["HomeSubheading"]</MudText>
-                    <div class="responsive-row">
+                    <div class="responsive-row-buttons">
                         <MudButton Size="Size.Large" Class="mr-2 button-shake" Variant="Variant.Filled" Color="Color.Primary" OnClick="@(() => NavigationManager.NavigateTo("Account/Login"))">@Localizer["SignIn"]</MudButton>
                         <MudButton Size="Size.Large" Class="button-shake" Variant="Variant.Filled" Color="Color.Info" OnClick="@(() => NavigationManager.NavigateTo("theses"))">@Localizer["FindThesis"]</MudButton>
                     </div>

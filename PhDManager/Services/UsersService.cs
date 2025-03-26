@@ -50,6 +50,11 @@ namespace PhDManager.Services
             return (await UserManager.GetUserAsync(authState.User))?.Id;
         }
 
+        public async Task<ApplicationUser?> GetUserByEmailAsync(string email)
+        {
+            return await UserManager.FindByEmailAsync(email);
+        }
+
         public async Task<string?> GetUserRoleAsync(ApplicationUser user)
         {
             var roles = await UserManager.GetRolesAsync(user);
@@ -129,25 +134,21 @@ namespace PhDManager.Services
             }
         }
 
-        public async Task ClearRegistrations()
-        {
-            var registrations = (await UnitOfWork.Registrations.GetAllAsync())?.Where(r => r.Expiration < DateTime.Now);
-
-            if (registrations is null) return;
-
-            foreach (var registration in registrations)
-            {
-                UnitOfWork.Registrations.Delete(registration);
-            }
-            await UnitOfWork.CompleteAsync();
-        }
-
         public async Task DeleteUserAsync(ApplicationUser user)
         {
             var unusedUser = await UserManager.FindByIdAsync(user.Id);
 
             if (unusedUser is null) return;
 
+            if (unusedUser.IsExternal && unusedUser.Email is not null)
+            {
+                var invitation = await UnitOfWork.Invitations.GetByEmailAsync(unusedUser.Email);
+                if (invitation is not null)
+                {
+                    UnitOfWork.Invitations.Delete(invitation);
+                    await UnitOfWork.CompleteAsync();
+                }
+            }
             await UserManager.DeleteAsync(unusedUser);
         }
 

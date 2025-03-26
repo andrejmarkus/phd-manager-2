@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Options;
 using PhDManager.Data;
@@ -10,7 +9,7 @@ namespace PhDManager.Services
 {
     public class IdentityEmailSender(IOptions<EmailSenderOptions> emailSenderOptions, IStringLocalizer<Resources> localizer) : IEmailSender<ApplicationUser>
     {
-        private readonly IEmailSender emailSender = new EmailSender(emailSenderOptions);
+        private readonly EmailSender emailSender = new(emailSenderOptions);
 
         public Task SendConfirmationLinkAsync(ApplicationUser user, string email, string confirmationLink) =>
             emailSender.SendEmailAsync(email, localizer["ConfirmYourEmail"], localizer["ConfirmYourEmailHtml", confirmationLink]);

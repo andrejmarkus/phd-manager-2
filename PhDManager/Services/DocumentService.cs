@@ -146,10 +146,10 @@ namespace PhDManager.Services
                 {"{StudyProgram}", new() { studentEvaluation.Student.StudyProgram?.Name } },
                 {"{Supervisor}", new() { studentEvaluation.Student.Thesis?.Supervisor.User.DisplayName } },
                 {"{Department}", new() { studentEvaluation.Student.Department?.Code } },
-                {"{SubjectsAndGrades}", studentEvaluation.Student.IndividualPlan.Subjects.Zip(studentEvaluation.Student.IndividualPlan.IndividualPlanSubjects, (subject, grade) => $"{subject.Name}\t{EnumService.GetLocalizedEnumValue(grade.Grade)}").ToList<string?>() },
-                {"{WrittenThesisTitle}", new() { studentEvaluation.Student.IndividualPlan.WrittenThesisTitle } },
+                {"{SubjectsAndGrades}", studentEvaluation.Student.IndividualPlan?.Subjects.Zip(studentEvaluation.Student.IndividualPlan.IndividualPlanSubjects, (subject, grade) => $"{subject.Name}\t{EnumService.GetLocalizedEnumValue(grade.Grade)}").ToList<string?>() ?? [] },
+                {"{WrittenThesisTitle}", new() { studentEvaluation.Student.IndividualPlan?.WrittenThesisTitle } },
                 {"{PlannedDissertationSubmissionDate}", new() { studentEvaluation.PlannedDissertationSubmissionDate?.ToString("dd.MM.yyyy") } },
-                {"{DissertationSubmissionDate}", new() { studentEvaluation.Student.IndividualPlan.DissertationSubmissionDate?.ToString("dd.MM.yyyy") } },
+                {"{DissertationSubmissionDate}", new() { studentEvaluation.Student.IndividualPlan?.DissertationSubmissionDate?.ToString("dd.MM.yyyy") } },
                 {"{PlannedDissertationExamDate}", new() { studentEvaluation.PlannedDissertationExamDate?.ToString("dd.MM.yyyy") } },
                 {"{DissertationExamDate}", new() { studentEvaluation.Student.DissertationExamDate?.ToString("dd.MM.yyyy") } },
                 {"{DissertationExamResult}", new() { studentEvaluation.Student.DissertationExamResult } },
@@ -157,7 +157,7 @@ namespace PhDManager.Services
                 {"{ThesisTitle}", new() { studentEvaluation.Student.Thesis?.Title } },
                 {"{ThesisState}", new() { studentEvaluation.ThesisState } },
                 {"{PlannedDissertationApplicationDate}", new() { studentEvaluation.PlannedDissertationApplicationDate?.ToString("dd.MM.yyyy") } },
-                {"{DissertationApplicationDate}", new() { studentEvaluation.Student.IndividualPlan.DissertationApplicationDate?.ToString("dd.MM.yyyy") } },
+                {"{DissertationApplicationDate}", new() { studentEvaluation.Student.IndividualPlan?.DissertationApplicationDate?.ToString("dd.MM.yyyy") } },
                 {"{CreditsEvaluation}", new() { studentEvaluation.CreditsEvaluation } },
                 {"{ScientificEvaluation}", new() { studentEvaluation.ScientificEvaluation } },
                 {"{AssignmentsState}", new() { studentEvaluation.AssignmentsState } },
@@ -279,12 +279,12 @@ namespace PhDManager.Services
             await JSRuntime.InvokeVoidAsync("saveAsFile", documentName, documentStream);
         }
 
-        private string NormalizeName(string name)
+        private static string NormalizeName(string name)
         {
-            return new string(name.Normalize(NormalizationForm.FormD).Where(c => CharUnicodeInfo.GetUnicodeCategory(c) != UnicodeCategory.NonSpacingMark).Select(c => c == ' ' ? '_' : c).ToArray());
+            return new string([.. name.Normalize(NormalizationForm.FormD).Where(c => CharUnicodeInfo.GetUnicodeCategory(c) != UnicodeCategory.NonSpacingMark).Select(c => c == ' ' ? '_' : c)]);
         }
 
-        private Stream GenerateDocumentData(string path, Dictionary<string, List<string?>> replacements)
+        private static MemoryStream GenerateDocumentData(string path, Dictionary<string, List<string?>> replacements)
         {
             var documentStream = new MemoryStream();
 

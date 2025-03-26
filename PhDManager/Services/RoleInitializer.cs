@@ -9,7 +9,7 @@ namespace PhDManager.Services
 
         public async Task InitializeAsync()
         {
-            string[] roles = { Admin.Role, ExternalTeacher.Role, Student.Role, Teacher.Role };
+            string[] roles = [Admin.Role, ExternalTeacher.Role, Student.Role, Teacher.Role];
 
             foreach (string role in roles)
             {

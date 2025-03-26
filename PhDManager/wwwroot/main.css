@@ -105,7 +105,7 @@
 }
 
 .break-lines {
-    white-space: pre-line;
+    white-space: pre-wrap;
 }
 
 .provider-icon {

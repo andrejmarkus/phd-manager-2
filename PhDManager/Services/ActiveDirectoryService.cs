@@ -7,7 +7,7 @@ namespace PhDManager.Services
 {
     public class ActiveDirectoryService(IOptions<ActiveDirectoryOptions> options)
     {
-        ActiveDirectoryOptions _options = options.Value;
+        private readonly ActiveDirectoryOptions _options = options.Value;
 
         public async Task<LdapEntry?> AuthenticateUserAsync(string username, string password)
         {

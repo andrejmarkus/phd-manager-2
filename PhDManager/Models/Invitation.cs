@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace PhDManager.Models
+﻿namespace PhDManager.Models
 {
     public class Invitation : BaseModel
     {

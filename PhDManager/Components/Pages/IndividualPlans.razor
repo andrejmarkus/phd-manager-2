@@ -31,15 +31,15 @@
         <MudTextField Variant="Variant.Outlined" Placeholder="@Localizer["Search"]" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" @bind-Value="_search" />
     </ToolBarContent>
     <Columns>
-        <PropertyColumn Property="ip => ip.Student.Thesis!.Title" Title="@Localizer["DissertationThesisTitle"]" />
-        <PropertyColumn Property="ip => ip.Student.Thesis!.Supervisor.User.DisplayName" Title="@Localizer["SupervisorName"]" />
-        <PropertyColumn Property="ip => ip.Student.Thesis!.Supervisor.User.Email" Title="@Localizer["SupervisorEmail"]" />
-        <PropertyColumn Property="ip => ip.Student.User.DisplayName" Title="@Localizer["StudentName"]" />
-        <PropertyColumn Property="ip => ip.Student.User.Email" Title="@Localizer["StudentEmail"]" />
+        <PropertyColumn Property="ip => ip.Student!.Thesis!.Title" Title="@Localizer["DissertationThesisTitle"]" />
+        <PropertyColumn Property="ip => ip.Student!.Thesis!.Supervisor.User.DisplayName" Title="@Localizer["SupervisorName"]" />
+        <PropertyColumn Property="ip => ip.Student!.Thesis!.Supervisor.User.Email" Title="@Localizer["SupervisorEmail"]" />
+        <PropertyColumn Property="ip => ip.Student!.User.DisplayName" Title="@Localizer["StudentName"]" />
+        <PropertyColumn Property="ip => ip.Student!.User.Email" Title="@Localizer["StudentEmail"]" />
         <TemplateColumn Title="@Localizer["IndividualPlanEdit"]">
             <CellTemplate>
                 <MudStack Row>
-                    @if (context.Item.Student.IndividualPlan is not null)
+                    @if (context.Item.Student?.IndividualPlan is not null)
                     {
                         <MudTooltip Text="@Localizer["IndividualPlanDelete"]">
                             <MudIconButton Size="@Size.Small" Color="Color.Error" Icon="@Icons.Material.Outlined.Delete" OnClick="@(async () => await DeleteIndividualPlan(context.Item))" />
@@ -75,12 +75,12 @@
         _currentUserRole = await UsersService.GetCurrentUserRoleAsync();
         _currentUserId = await UsersService.GetCurrentUserIdAsync();
 
-        await LoadUsers();
+        await LoadIndividualPlans();
     }
 
     private Func<IndividualPlan, bool> _quickFilter => ip =>
     {
-        if (ip.Student.Thesis is null)
+        if (ip.Student?.Thesis is null)
             return false;
 
         if (string.IsNullOrWhiteSpace(_search))
@@ -114,12 +114,12 @@
 
         UnitOfWork.IndividualPlans.Delete(individualPlan);
         await UnitOfWork.CompleteAsync();
-        await LoadUsers();
+        await LoadIndividualPlans();
     }
 
     private async Task UpdateGrades(IndividualPlan individualPlan)
     {
-        var subjectGrades = individualPlan.Student.IndividualPlan?.IndividualPlanSubjects;
+        var subjectGrades = individualPlan.Student?.IndividualPlan?.IndividualPlanSubjects;
         var parameters = new DialogParameters<ManageGradesDialog> { { d => d.IndividualPlanSubjects, subjectGrades } };
         var dialog = await DialogService.ShowAsync<ManageGradesDialog>(Localizer["UserEdit"], parameters, new() { FullWidth = true, MaxWidth = MaxWidth.Medium });
         var result = await dialog.Result;
@@ -137,14 +137,14 @@
         await UnitOfWork.CompleteAsync();
     }
 
-    private async Task LoadUsers()
+    private async Task LoadIndividualPlans()
     {
         _individualPlans = await UnitOfWork.IndividualPlans.GetAllAsync();
-        _individualPlans = _individualPlans?.Where(ip => ip.Student.Thesis is not null);
+        _individualPlans = _individualPlans?.Where(ip => ip.Student?.Thesis is not null);
 
         if (_currentUserRole == Teacher.Role || _currentUserRole == ExternalTeacher.Role)
         {
-            _individualPlans = _individualPlans?.Where(ip => ip.Student.Thesis!.Supervisor.User.Id == _currentUserId);
+            _individualPlans = _individualPlans?.Where(ip => ip.Student!.Thesis!.Supervisor.User.Id == _currentUserId);
         }
     }
 }

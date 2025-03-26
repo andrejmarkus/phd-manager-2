@@ -117,9 +117,9 @@
 
     <MudText Typo="Typo.h5">@Localizer["IndividualPlanWrittenThesisInfo"]</MudText>
     <MudTextField T="string" Label="@Localizer["IndividualPlanThesis"]" Required RequiredError="@Localizer["Required"]" Variant="Variant.Outlined" @bind-Value="@_individualPlan.WrittenThesisTitle" />
-    <MudTextField Style="white-space: pre-wrap;" T="string" Label="@Localizer["IndividualPlanWrittenThesisRequiredLiterature"]" Required RequiredError="@Localizer["Required"]" Variant="Variant.Outlined" AutoGrow Lines="10" @bind-Value="@_individualPlan.WrittenThesisRequiredLiterature" />
-    <MudTextField Style="white-space: pre-wrap;" T="string" Label="@Localizer["IndividualPlanWrittenThesisRecommendedLiterature"]" Required RequiredError="@Localizer["Required"]" Variant="Variant.Outlined" AutoGrow Lines="10" @bind-Value="@_individualPlan.WrittenThesisRecommendedLiterature" />
-    <MudTextField Style="white-space: pre-wrap;" T="string" Label="@Localizer["IndividualPlanWrittenThesisRecommendedLectures"]" Required RequiredError="@Localizer["Required"]" Variant="Variant.Outlined" AutoGrow Lines="8" @bind-Value="@_individualPlan.WrittenThesisRecommendedLectures" />
+    <MudTextField Class="break-lines" T="string" Label="@Localizer["IndividualPlanWrittenThesisRequiredLiterature"]" Required RequiredError="@Localizer["Required"]" Variant="Variant.Outlined" AutoGrow Lines="10" @bind-Value="@_individualPlan.WrittenThesisRequiredLiterature" />
+    <MudTextField Class="break-lines" T="string" Label="@Localizer["IndividualPlanWrittenThesisRecommendedLiterature"]" Required RequiredError="@Localizer["Required"]" Variant="Variant.Outlined" AutoGrow Lines="10" @bind-Value="@_individualPlan.WrittenThesisRecommendedLiterature" />
+    <MudTextField Class="break-lines" T="string" Label="@Localizer["IndividualPlanWrittenThesisRecommendedLectures"]" Required RequiredError="@Localizer["Required"]" Variant="Variant.Outlined" AutoGrow Lines="8" @bind-Value="@_individualPlan.WrittenThesisRecommendedLectures" />
 
     <MudDivider Class="my-3" />
     <MudText Typo="Typo.h4">@Localizer["ScientificPart"]</MudText>
@@ -135,7 +135,7 @@
             @foreach (var task in _tasks.Select((e, i) => new { Element = e, Index = i }))
             {
                 <MudItem xs="12" md="8" lg="10">
-                    <MudTextField Style="white-space: pre-wrap;" Class="flex-1" T="string" Label="@Localizer["Task"]" Required RequiredError="@Localizer["Required"]" Variant="Variant.Outlined" AutoGrow @bind-Value="_tasks[task.Index]" />
+                    <MudTextField Class="flex-1 break-lines" T="string" Label="@Localizer["Task"]" Required RequiredError="@Localizer["Required"]" Variant="Variant.Outlined" AutoGrow @bind-Value="_tasks[task.Index]" />
                 </MudItem>
                 <MudItem xs="12" md="4" lg="2">
                     <MudStack Row AlignItems="AlignItems.Center">

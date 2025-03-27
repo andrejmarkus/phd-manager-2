@@ -9,6 +9,7 @@
 @using PhDManager.Models
 @using PhDManager.Models.Roles
 @using PhDManager.Services
+@using PhDManager.Services.IRepositories
 
 @inject ILogger<Login> Logger
 @inject IStringLocalizer<Resources> Localizer
@@ -18,6 +19,7 @@
 @inject UsersService UsersService
 @inject UserManager<ApplicationUser> UserManager
 @inject ActiveDirectoryService ActiveDirectoryService
+@inject IUnitOfWork UnitOfWork
 
 <PageTitle>@Localizer["SignIn"]</PageTitle>
 
@@ -133,13 +135,24 @@
             if (UserManager.Users.Count() == 0)
             {
                 user = await UsersService.RegisterLdapUserAsync(entry, Input.Password, Admin.Role);
+                if (user is null)
+                {
+                    errorMessage = "Error: Cannot create a user.";
+                    return;
+                }
                 await UsersService.AddAdminToUser(user, new());
             }
             else
             {
                 user = await UsersService.RegisterLdapUserAsync(entry, Input.Password, Student.Role);
+                if (user is null)
+                {
+                    errorMessage = "Error: Cannot create a user.";
+                    return;
+                }
                 await UsersService.AddStudentToUser(user, new());
             }
+            await UnitOfWork.CompleteAsync();
         }
         else
         {

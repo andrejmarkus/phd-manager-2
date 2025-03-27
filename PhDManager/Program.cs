@@ -55,6 +55,15 @@ builder.Services.AddAuthentication()
         options.ClientSecret = googleOptions.ClientSecret;
     });
 
+builder.Services.Configure<IdentityOptions>(options =>
+{
+    options.Password.RequireDigit = false;
+    options.Password.RequiredLength = 4;
+    options.Password.RequireUppercase = false;
+    options.Password.RequireLowercase = false;
+    options.Password.RequireNonAlphanumeric = false;
+});
+
 var databaseConnectionString = builder.Configuration.GetSection(DatabaseOptions.Database).Get<DatabaseOptions>()?.ConnectionString ?? throw new InvalidOperationException("Connection string not found.");
 builder.Services.AddDbContextFactory<ApplicationDbContext>(options => options.UseNpgsql(databaseConnectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();

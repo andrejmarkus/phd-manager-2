@@ -87,6 +87,9 @@
         if (entry is null) return;
 
         var user = await UsersService.RegisterLdapUserWithoutPasswordAsync(entry, Admin.Role);
+
+        if (user is null) return;
+
         await UsersService.AddAdminToUser(user, new());
         await UnitOfWork.CompleteAsync();
 

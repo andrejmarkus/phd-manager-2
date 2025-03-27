@@ -58,7 +58,7 @@ namespace PhDManager.Services
         public async Task<string?> GetUserRoleAsync(ApplicationUser user)
         {
             var roles = await UserManager.GetRolesAsync(user);
-            return roles.First();
+            return roles[0];
         }
 
         public async Task<string?> GetCurrentUserRoleAsync()
@@ -152,19 +152,21 @@ namespace PhDManager.Services
             await UserManager.DeleteAsync(unusedUser);
         }
 
-        public async Task<ApplicationUser> RegisterLdapUserWithoutPasswordAsync(LdapEntry entry, string role)
+        public async Task<ApplicationUser?> RegisterLdapUserWithoutPasswordAsync(LdapEntry entry, string role)
         {
             var user = await CreateLdapUserAsync(entry);
-            await UserManager.CreateAsync(user);
+            var result = await UserManager.CreateAsync(user);
+            if (result is null || !result.Succeeded) return null;
             await UserManager.AddToRoleAsync(user, role);
 
             return user;
         }
 
-        public async Task<ApplicationUser> RegisterLdapUserAsync(LdapEntry entry, string password, string role)
+        public async Task<ApplicationUser?> RegisterLdapUserAsync(LdapEntry entry, string password, string role)
         {
             var user = await CreateLdapUserAsync(entry);
-            await UserManager.CreateAsync(user, password);
+            var result = await UserManager.CreateAsync(user, password);
+            if (result is null || !result.Succeeded) return null;
             await UserManager.AddToRoleAsync(user, role);
 
             return user;
@@ -194,7 +196,7 @@ namespace PhDManager.Services
             return (IUserEmailStore<ApplicationUser>)UserStore;
         }
 
-        private ApplicationUser CreateUser()
+        private static ApplicationUser CreateUser()
         {
             try
             {

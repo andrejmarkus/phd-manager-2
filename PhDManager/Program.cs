@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using MudBlazor;
 using MudBlazor.Services;
+using PhDManager;
 using PhDManager.Components;
 using PhDManager.Components.Account;
 using PhDManager.Data;
@@ -141,14 +142,17 @@ using (var scope = app.Services.CreateScope())
 
 app.Run();
 
-public class AuthorizationFilter : IDashboardAuthorizationFilter
+namespace PhDManager
 {
-    public bool Authorize(DashboardContext context)
+    public class AuthorizationFilter : IDashboardAuthorizationFilter
     {
-        var httpContext = context.GetHttpContext();
+        public bool Authorize(DashboardContext context)
+        {
+            var httpContext = context.GetHttpContext();
 
-        var auth = httpContext.User.Identity?.IsAuthenticated ?? false;
-        var role = httpContext.User.IsInRole(Admin.Role);
-        return auth && role;
+            var auth = httpContext.User.Identity?.IsAuthenticated ?? false;
+            var role = httpContext.User.IsInRole(Admin.Role);
+            return auth && role;
+        }
     }
 }

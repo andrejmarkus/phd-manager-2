@@ -1,9 +1,12 @@
-﻿using LdapForNet;
+﻿using DocumentFormat.OpenXml.Packaging;
+using LdapForNet;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using PhDManager.Data;
+using PhDManager.Data.Migrations;
 using PhDManager.Models.Roles;
 using PhDManager.Services.IRepositories;
+using System.Security.Claims;
 
 namespace PhDManager.Services
 {
@@ -68,42 +71,6 @@ namespace PhDManager.Services
             return await GetUserRoleAsync(currentUser);
         }
 
-        public async Task AddStudentToUser(ApplicationUser user, Student student)
-        {
-            var unusedUser = await UserManager.FindByIdAsync(user.Id);
-            if (unusedUser is null) return;
-
-            unusedUser.Students.Add(student);
-            await UserManager.UpdateAsync(unusedUser);
-        }
-
-        public async Task AddAdminToUser(ApplicationUser user, Admin admin)
-        {
-            var unusedUser = await UserManager.FindByIdAsync(user.Id);
-            if (unusedUser is null) return;
-
-            unusedUser.Admin = admin;
-            await UserManager.UpdateAsync(unusedUser);
-        }
-
-        public async Task AddTeacherToUser(ApplicationUser user, Teacher teacher)
-        {
-            var unusedUser = await UserManager.FindByIdAsync(user.Id);
-            if (unusedUser is null) return;
-
-            unusedUser.Teacher = teacher;
-            await UserManager.UpdateAsync(unusedUser);
-        }
-
-        public async Task AddExternalToUser(ApplicationUser user, ExternalTeacher externalTeacher)
-        {
-            var unusedUser = await UserManager.FindByIdAsync(user.Id);
-            if (unusedUser is null) return;
-
-            unusedUser.Teacher = externalTeacher;
-            await UserManager.UpdateAsync(unusedUser);
-        }
-
         public async Task UpdateUserRoleAsync(ApplicationUser user, string role)
         {
             var unusedUser = await UserManager.FindByIdAsync(user.Id);
@@ -156,8 +123,9 @@ namespace PhDManager.Services
         {
             var user = await CreateLdapUserAsync(entry);
             var result = await UserManager.CreateAsync(user);
-            if (result is null || !result.Succeeded) return null;
-            await UserManager.AddToRoleAsync(user, role);
+            if (!result.Succeeded) return null;
+
+            await AssignRole(user, role);
 
             return user;
         }
@@ -166,11 +134,41 @@ namespace PhDManager.Services
         {
             var user = await CreateLdapUserAsync(entry);
             var result = await UserManager.CreateAsync(user, password);
-            if (result is null || !result.Succeeded) return null;
-            await UserManager.AddToRoleAsync(user, role);
+            if (!result.Succeeded) return null;
+
+            await AssignRole(user, role);
 
             return user;
         }
+
+        public async Task<ApplicationUser?> RegisterUserAsync(string email, string username, string displayName, string password)
+        {
+            var invitation = await UnitOfWork.Invitations.GetByEmailAsync(email);
+            if (invitation is null) return null;
+
+            var user = await CreateUserAsync(email, username, displayName);
+            var result = await UserManager.CreateAsync(user, password);
+            if (!result.Succeeded) return null;
+
+            await AssignRole(user, invitation.Role);
+
+            return user;
+        }
+
+        public async Task<ApplicationUser?> RegisterUserAsync(string email, ExternalLoginInfo externalLoginInfo)
+        {
+            var invitation = await UnitOfWork.Invitations.GetByEmailAsync(email);
+            if (invitation is null) return null;
+
+            var user = await CreateUserAsync(email, externalLoginInfo);
+            var result = await UserManager.CreateAsync(user);
+            if (!result.Succeeded) return null;
+
+            await AssignRole(user, invitation.Role);
+
+            return user;
+        }
+
 
         private async Task<ApplicationUser> CreateLdapUserAsync(LdapEntry entry)
         {
@@ -183,6 +181,32 @@ namespace PhDManager.Services
             await emailStore.SetEmailAsync(user, mail, CancellationToken.None);
             user.EmailConfirmed = true;
             user.DisplayName = entry.DirectoryAttributes["displayName"].GetValue<string>();
+
+            return user;
+        }
+
+        private async Task<ApplicationUser> CreateUserAsync(string email, string username, string displayName)
+        {
+            var user = CreateUser();
+
+            await UserStore.SetUserNameAsync(user, username, CancellationToken.None);
+            var emailStore = GetEmailStore();
+            await emailStore.SetEmailAsync(user, email, CancellationToken.None);
+            user.IsExternal = true;
+            user.DisplayName = displayName;
+
+            return user;
+        }
+
+        private async Task<ApplicationUser> CreateUserAsync(string email, ExternalLoginInfo externalLoginInfo)
+        {
+            var user = CreateUser();
+
+            await UserStore.SetUserNameAsync(user, email, CancellationToken.None);
+            var emailStore = GetEmailStore();
+            await emailStore.SetEmailAsync(user, email, CancellationToken.None);
+            user.IsExternal = true;
+            user.DisplayName = externalLoginInfo.Principal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
 
             return user;
         }
@@ -207,6 +231,73 @@ namespace PhDManager.Services
                 throw new InvalidOperationException($"Can't create an instance of '{nameof(ApplicationUser)}'. " +
                     $"Ensure that '{nameof(ApplicationUser)}' is not an abstract class and has a parameterless constructor.");
             }
+        }
+
+        private async Task AssignRole(ApplicationUser user, string role)
+        {
+            await UserManager.AddToRoleAsync(user, role);
+
+            switch (role)
+            {
+                case Admin.Role:
+                    {
+                        await AddAdminToUser(user, new());
+                        break;
+                    }
+                case Student.Role:
+                    {
+                        await AddStudentToUser(user, new());
+                        break;
+                    }
+                case Teacher.Role:
+                    {
+                        await AddTeacherToUser(user, new());
+                        break;
+                    }
+                case ExternalTeacher.Role:
+                    {
+                        await AddExternalTeacherToUser(user, new());
+                        break;
+                    }
+                default: break;
+            }
+            await UnitOfWork.CompleteAsync();
+        }
+
+        private async Task AddStudentToUser(ApplicationUser user, Student student)
+        {
+            var unusedUser = await UserManager.FindByIdAsync(user.Id);
+            if (unusedUser is null) return;
+
+            unusedUser.Students.Add(student);
+            await UserManager.UpdateAsync(unusedUser);
+        }
+
+        private async Task AddAdminToUser(ApplicationUser user, Admin admin)
+        {
+            var unusedUser = await UserManager.FindByIdAsync(user.Id);
+            if (unusedUser is null) return;
+
+            unusedUser.Admin = admin;
+            await UserManager.UpdateAsync(unusedUser);
+        }
+
+        private async Task AddTeacherToUser(ApplicationUser user, Teacher teacher)
+        {
+            var unusedUser = await UserManager.FindByIdAsync(user.Id);
+            if (unusedUser is null) return;
+
+            unusedUser.Teacher = teacher;
+            await UserManager.UpdateAsync(unusedUser);
+        }
+
+        private async Task AddExternalTeacherToUser(ApplicationUser user, ExternalTeacher externalTeacher)
+        {
+            var unusedUser = await UserManager.FindByIdAsync(user.Id);
+            if (unusedUser is null) return;
+
+            unusedUser.Teacher = externalTeacher;
+            await UserManager.UpdateAsync(unusedUser);
         }
     }
 }

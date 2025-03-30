@@ -1242,4 +1242,37 @@
   <data name="EmailInvalidFormat" xml:space="preserve">
     <value>Neplatný formát emailu.</value>
   </data>
+  <data name="InsertFile" xml:space="preserve">
+    <value>Vložiť súbor</value>
+  </data>
+  <data name="FileReadingError" xml:space="preserve">
+    <value>Chyba pri načítaní súboru.</value>
+  </data>
+  <data name="Import" xml:space="preserve">
+    <value>Importovať</value>
+  </data>
+  <data name="EmailEnter" xml:space="preserve">
+    <value>Zadajte svoj e-mail.</value>
+  </data>
+  <data name="PasswordReset" xml:space="preserve">
+    <value>Obnoviť heslo</value>
+  </data>
+  <data name="ForgotPasswordConfirmation" xml:space="preserve">
+    <value>Potvrdenie zabudnutého hesla</value>
+  </data>
+  <data name="ForgotPasswordConfirmationInfo" xml:space="preserve">
+    <value>Skontrolujte si e-mail a obnovte svoje heslo.</value>
+  </data>
+  <data name="Resend" xml:space="preserve">
+    <value>Zaslať znovu</value>
+  </data>
+  <data name="EmailResendMessage" xml:space="preserve">
+    <value>Overovací e-mail bol odoslaný. Skontrolujte si prosím svoj e-mail.</value>
+  </data>
+  <data name="EmailResend" xml:space="preserve">
+    <value>Znovu zaslať potvrdzovací e-mail</value>
+  </data>
+  <data name="ImportPandora" xml:space="preserve">
+    <value>Importovať z Pandory</value>
+  </data>
 </root>

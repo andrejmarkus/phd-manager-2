@@ -87,7 +87,7 @@
         @foreach (var thesis in _theses)
         {
             <MudItem xs="12" md="6" lg="3">
-                <MudPaper Class="pa-2">
+                <MudPaper Class="pa-2 height-full">
                     <MudLink Color="Color.Default" Underline="Underline.None" Href="@($"/theses/{thesis.Guid}")">
                         <MudText Typo="Typo.h6">@thesis.Title</MudText>
                         <MudText Typo="Typo.body2"><b>@Localizer["Supervisor"]: </b>@thesis.Supervisor.User.DisplayName</MudText>

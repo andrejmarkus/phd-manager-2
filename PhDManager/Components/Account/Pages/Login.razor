@@ -132,27 +132,12 @@
         var user = await UserManager.FindByNameAsync(Input.Username);
         if (user is null)
         {
-            if (UserManager.Users.Count() == 0)
+            user = await UsersService.RegisterLdapUserAsync(entry, Input.Password, UserManager.Users.Count() == 0 ? Admin.Role : Student.Role);
+            if (user is null)
             {
-                user = await UsersService.RegisterLdapUserAsync(entry, Input.Password, Admin.Role);
-                if (user is null)
-                {
-                    errorMessage = "Error: Cannot create a user.";
-                    return;
-                }
-                await UsersService.AddAdminToUser(user, new());
+                errorMessage = "Error: Cannot create a user.";
+                return;
             }
-            else
-            {
-                user = await UsersService.RegisterLdapUserAsync(entry, Input.Password, Student.Role);
-                if (user is null)
-                {
-                    errorMessage = "Error: Cannot create a user.";
-                    return;
-                }
-                await UsersService.AddStudentToUser(user, new());
-            }
-            await UnitOfWork.CompleteAsync();
         }
         else
         {

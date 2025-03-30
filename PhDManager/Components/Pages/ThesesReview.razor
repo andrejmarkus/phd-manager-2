@@ -23,9 +23,10 @@
 
 <PageTitle>@Localizer["DissertationThesesPending"]</PageTitle>
 
+<MudText Typo="Typo.h5" GutterBottom>@Localizer["DissertationThesesPending"]</MudText>
+
 <MudDataGrid T="Thesis" Items="_theses" Hover SortMode="SortMode.Multiple" QuickFilter="_quickFilter" Elevation="0">
-    <ToolBarContent>
-        <MudText Typo="Typo.h6" GutterBottom="false">@Localizer["DissertationThesesPending"]</MudText>
+    <ToolBarContent>     
         <MudSpacer />
         <MudTextField Class="ml-4" Variant="Variant.Outlined" Placeholder="@Localizer["Search"]" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" @bind-Value="_search" />
     </ToolBarContent>
@@ -35,8 +36,8 @@
         <PropertyColumn Property="t => t.Supervisor.User.Email" Title="@Localizer["SupervisorEmail"]" />
         <PropertyColumn Property="t => t.StudyProgram.Name" Title="@Localizer["StudyProgram"]" />
         <PropertyColumn Property="t => t.ResearchType" Title="@Localizer["ResearchType"]" />
-        <PropertyColumn Property="@(t => t.DailyStudy ? "Áno" : "Nie")" Title="@EnumLocalizer["StudyFormDaily"]" />
-        <PropertyColumn Property="@(t => t.ExternalStudy ? "Áno" : "Nie")" Title="@EnumLocalizer["StudyFormExternal"]" />
+        <PropertyColumn Property="@(t => t.DailyStudy ? Localizer["Yes"] : Localizer["No"])" Title="@EnumLocalizer["StudyFormDaily"]" />
+        <PropertyColumn Property="@(t => t.ExternalStudy ? Localizer["Yes"] : Localizer["No"])" Title="@EnumLocalizer["StudyFormExternal"]" />
         <PropertyColumn Property="t => t.Comments.Count" Title="@Localizer["CommentsCount"]" />
         <TemplateColumn Title="@Localizer["DisserationThesisEdit"]">
             <CellTemplate>
@@ -61,6 +62,9 @@
             </CellTemplate>
         </TemplateColumn>
     </Columns>
+    <PagerContent>
+        <MudDataGridPager T="Thesis" />
+    </PagerContent>
 </MudDataGrid>
 
 @code {

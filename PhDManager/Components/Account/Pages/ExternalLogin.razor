@@ -145,49 +145,14 @@
 
     private async Task OnValidSubmitAsync()
     {
-        var emailStore = GetEmailStore();
-        var user = CreateUser();
+        var user = await UsersService.RegisterUserAsync(Input.Email, externalLoginInfo);
 
-        await UserStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
-        await emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
-
-        // TODO: Make it work for all providers
-        user.IsExternal = true;
-        user.DisplayName = externalLoginInfo.Principal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
-
-        var result = await UserManager.CreateAsync(user);
-        var invitation = await UnitOfWork.Invitations.GetByEmailAsync(Input.Email);
-        if (invitation is null) return;
-
-        await UserManager.AddToRoleAsync(user, invitation.Role);
-
-        switch (invitation.Role) 
+        IdentityResult? result;
+        if (user is null)
         {
-            case Student.Role:
-                {
-                    await UsersService.AddStudentToUser(user, new());
-                    break;
-                }
-            case Admin.Role:
-                {
-                    await UsersService.AddAdminToUser(user, new());
-                    break;
-                }
-            case Teacher.Role:
-                {
-                    await UsersService.AddTeacherToUser(user, new());
-                    break;
-                }
-            case ExternalTeacher.Role:
-                {
-                    await UsersService.AddExternalToUser(user, new());
-                    break;
-                }
-            default:
-                break;
+            result = IdentityResult.Failed(new IdentityErrorDescriber().DefaultError());
         }
-
-        if (result.Succeeded)
+        else
         {
             result = await UserManager.AddLoginAsync(user, externalLoginInfo);
             if (result.Succeeded)
@@ -215,28 +180,6 @@
         }
 
         message = $"Error: {string.Join(",", result.Errors.Select(error => error.Description))}";
-    }
-
-    private ApplicationUser CreateUser()
-    {
-        try
-        {
-            return Activator.CreateInstance<ApplicationUser>();
-        }
-        catch
-        {
-            throw new InvalidOperationException($"Can't create an instance of '{nameof(ApplicationUser)}'. " +
-                $"Ensure that '{nameof(ApplicationUser)}' is not an abstract class and has a parameterless constructor");
-        }
-    }
-
-    private IUserEmailStore<ApplicationUser> GetEmailStore()
-    {
-        if (!UserManager.SupportsUserEmail)
-        {
-            throw new NotSupportedException("The default UI requires a user store with email support.");
-        }
-        return (IUserEmailStore<ApplicationUser>)UserStore;
     }
 
     private sealed class InputModel

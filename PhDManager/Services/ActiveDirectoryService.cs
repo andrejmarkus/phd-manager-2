@@ -66,6 +66,23 @@ namespace PhDManager.Services
             return entry;
         }
 
+        public async Task<LdapEntry?> SearchUserByDisplayNameAsync(string displayName)
+        {
+            LdapEntry? entry;
+
+            try
+            {
+                var connection = await CreateConnection(_options.Username, _options.Password);
+                entry = (await connection.SearchAsync(_options.LdapDomain, $"(displayName=*{displayName}*)")).FirstOrDefault();
+            }
+            catch
+            {
+                return null;
+            }
+
+            return entry;
+        }
+
         private async Task<LdapConnection> CreateConnection(string username, string password)
         {
             var connection = new LdapConnection();

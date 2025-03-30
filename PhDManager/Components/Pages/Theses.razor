@@ -3,6 +3,7 @@
 @using Hangfire
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.Extensions.Localization
+@using PhDManager.Components.Dialogs
 @using PhDManager.Locales
 @using PhDManager.Models
 @using PhDManager.Models.Roles
@@ -32,19 +33,20 @@
         <MudStack Row>
             <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="/management/theses/add">@Localizer["Add"]</MudButton>
             <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="/management/theses/review">@Localizer["Approve"]</MudButton>
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="ImportTheses">@Localizer["Import"]</MudButton>
         </MudStack>
         <MudSpacer />
         <MudTextField Variant="Variant.Outlined" Placeholder="@Localizer["Search"]" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" @bind-Value="_search" />
     </ToolBarContent>
     <Columns>
         <PropertyColumn Property="t => t.Title" Title="@Localizer["DissertationThesisTitle"]" />
-        <PropertyColumn Property="@(t => t.IsApproved ? "Áno" : "Nie")" Title="@Localizer["Approved"]" />
+        <PropertyColumn Property="@(t => t.IsApproved ? Localizer["Yes"] : Localizer["No"])" Title="@Localizer["Approved"]" />
         <PropertyColumn Property="t => t.Supervisor.User.DisplayName" Title="@Localizer["SupervisorName"]" />
         <PropertyColumn Property="t => t.Supervisor.User.Email" Title="@Localizer["SupervisorEmail"]" />
         <PropertyColumn Property="t => t.StudyProgram.Name" Title="@Localizer["StudyProgram"]" />
         <PropertyColumn Property="t => t.ResearchType" Title="@Localizer["ResearchType"]" />
-        <PropertyColumn Property="@(t => t.DailyStudy ? "Áno" : "Nie")" Title="@EnumLocalizer["StudyFormDaily"]" />
-        <PropertyColumn Property="@(t => t.ExternalStudy ? "Áno" : "Nie")" Title="@EnumLocalizer["StudyFormExternal"]" />
+        <PropertyColumn Property="@(t => t.DailyStudy ? Localizer["Yes"] : Localizer["No"])" Title="@EnumLocalizer["StudyFormDaily"]" />
+        <PropertyColumn Property="@(t => t.ExternalStudy ? Localizer["Yes"] : Localizer["No"])" Title="@EnumLocalizer["StudyFormExternal"]" />
         <PropertyColumn Property="t => t.Comments.Count" Title="@Localizer["CommentsCount"]" />
         <TemplateColumn Title="@Localizer["DisserationThesisEdit"]">
             <CellTemplate>
@@ -62,6 +64,9 @@
             </CellTemplate>
         </TemplateColumn>
     </Columns>
+    <PagerContent>
+        <MudDataGridPager T="Thesis" />
+    </PagerContent>
 </MudDataGrid>
 
 <AuthorizeView Roles="@($"{Admin.Role}")">
@@ -193,10 +198,29 @@
     private async Task LoadTheses()
     {
         _theses = await UnitOfWork.Theses.GetAllAsync();
-        
+
         if (_currentUserRole == Teacher.Role || _currentUserRole == ExternalTeacher.Role)
         {
             _theses = _theses?.Where(t => t.Supervisor.User.Id == _currentUserId);
         }
+    }
+
+    private async Task ImportTheses()
+    {
+        var dialog = await DialogService.ShowAsync<ImportThesesDialog>(Localizer["ThesisAdd"], new DialogOptions() { FullWidth = true, MaxWidth = MaxWidth.Small });
+        var result = await dialog.Result;
+
+        if (result is null || result.Canceled) return;
+
+        var theses = result.Data as List<Thesis>;
+
+        if (theses is null) return;
+
+        foreach (var thesis in theses)
+        {
+            await UnitOfWork.Theses.AddAsync(thesis);
+        }
+        await UnitOfWork.CompleteAsync();
+        await LoadTheses();
     }
 }

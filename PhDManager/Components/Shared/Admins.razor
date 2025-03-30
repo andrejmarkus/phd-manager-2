@@ -90,9 +90,6 @@
 
         if (user is null) return;
 
-        await UsersService.AddAdminToUser(user, new());
-        await UnitOfWork.CompleteAsync();
-
         _admins = await UnitOfWork.Admins.GetAllAsync();
     }
 

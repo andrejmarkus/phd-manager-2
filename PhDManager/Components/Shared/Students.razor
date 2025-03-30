@@ -110,9 +110,6 @@
 
         if (user is null) return;
 
-        await UsersService.AddStudentToUser(user, new() { StartSchoolYear = SchoolYearService.CurrentSchoolYear, EndSchoolYear = SchoolYearService.GetSchoolYear(DateTime.Today.AddYears(3)) });
-        await UnitOfWork.CompleteAsync();
-
         var student = (await UnitOfWork.Students.GetAllAsync())?.FirstOrDefault(s => s.User.Id == user.Id);
         if (student is null)
         {

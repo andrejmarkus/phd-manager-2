@@ -11,11 +11,24 @@ namespace PhDManager.Services.Repositories
         {
             try
             {
-                return await _dbSet.FirstOrDefaultAsync(sp => sp.Code == code);
+                return await _dbSet.FirstOrDefaultAsync(sp => sp.Code.ToLower().Equals(code.ToLower()));
             }
             catch (Exception e)
             {
                 _logger.LogError(e, "Error while getting entity with code: {Code}", code);
+                return null;
+            }
+        }
+
+        public async Task<StudyProgram?> GetByNameAsync(string name)
+        {
+            try
+            {
+                return await _dbSet.FirstOrDefaultAsync(sp => sp.Name.ToLower().Equals(name.ToLower()));
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "Error while getting entity with name: {Name}", name);
                 return null;
             }
         }

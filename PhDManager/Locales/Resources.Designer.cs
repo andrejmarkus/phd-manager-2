@@ -1051,6 +1051,15 @@ namespace PhDManager.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Enter your email..
+        /// </summary>
+        public static string EmailEnter {
+            get {
+                return ResourceManager.GetString("EmailEnter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The email was not successfully sent..
         /// </summary>
         public static string EmailFailed {
@@ -1074,6 +1083,24 @@ namespace PhDManager.Locales {
         public static string EmailInvalidFormat {
             get {
                 return ResourceManager.GetString("EmailInvalidFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Resend the confirmation email.
+        /// </summary>
+        public static string EmailResend {
+            get {
+                return ResourceManager.GetString("EmailResend", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Verification email sent. Please check your email..
+        /// </summary>
+        public static string EmailResendMessage {
+            get {
+                return ResourceManager.GetString("EmailResendMessage", resourceCulture);
             }
         }
         
@@ -1411,6 +1438,15 @@ namespace PhDManager.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Error while reading the file..
+        /// </summary>
+        public static string FileReadingError {
+            get {
+                return ResourceManager.GetString("FileReadingError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Find thesis.
         /// </summary>
         public static string FindThesis {
@@ -1425,6 +1461,24 @@ namespace PhDManager.Locales {
         public static string FirstName {
             get {
                 return ResourceManager.GetString("FirstName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Forgot password confirmation.
+        /// </summary>
+        public static string ForgotPasswordConfirmation {
+            get {
+                return ResourceManager.GetString("ForgotPasswordConfirmation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please check your email to reset your password..
+        /// </summary>
+        public static string ForgotPasswordConfirmationInfo {
+            get {
+                return ResourceManager.GetString("ForgotPasswordConfirmationInfo", resourceCulture);
             }
         }
         
@@ -1497,6 +1551,24 @@ namespace PhDManager.Locales {
         public static string HouseNumber {
             get {
                 return ResourceManager.GetString("HouseNumber", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Import.
+        /// </summary>
+        public static string Import {
+            get {
+                return ResourceManager.GetString("Import", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Import from Pandora.
+        /// </summary>
+        public static string ImportPandora {
+            get {
+                return ResourceManager.GetString("ImportPandora", resourceCulture);
             }
         }
         
@@ -1807,6 +1879,15 @@ namespace PhDManager.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Insert file.
+        /// </summary>
+        public static string InsertFile {
+            get {
+                return ResourceManager.GetString("InsertFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Interest.
         /// </summary>
         public static string Interest {
@@ -2104,6 +2185,15 @@ namespace PhDManager.Locales {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Reset password.
+        /// </summary>
+        public static string PasswordReset {
+            get {
+                return ResourceManager.GetString("PasswordReset", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Set password.
         /// </summary>
         public static string PasswordSet {
@@ -2389,6 +2479,15 @@ namespace PhDManager.Locales {
         public static string ResearchTypeInfo {
             get {
                 return ResourceManager.GetString("ResearchTypeInfo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Resend.
+        /// </summary>
+        public static string Resend {
+            get {
+                return ResourceManager.GetString("Resend", resourceCulture);
             }
         }
         

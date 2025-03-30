@@ -111,59 +111,9 @@
     public async Task RegisterUser(EditContext editContext)
     {
         if (_invitation is null) return;
+        var user = await UsersService.RegisterUserAsync(_invitation.Email, Input.Username, Input.DisplayName, Input.Password);
 
-        var emailStore = GetEmailStore();
-        var user = CreateUser();
-
-        if ((await UserManager.FindByEmailAsync(_invitation.Email)) is not null)
-        {
-            var errorDescriber = new IdentityErrorDescriber();
-            _identityErrors = [ errorDescriber.DuplicateEmail(_invitation.Email) ];
-            return;
-        }
-
-        await UserStore.SetUserNameAsync(user, Input.Username, CancellationToken.None);
-        await emailStore.SetEmailAsync(user, _invitation.Email, CancellationToken.None);
-
-        user.IsExternal = true;
-        user.DisplayName = Input.DisplayName;
-
-        var result = await UserManager.CreateAsync(user, Input.Password);
-
-        if (!result.Succeeded)
-        {
-            _identityErrors = result.Errors;
-            return;
-        }
-
-        await UserManager.AddToRoleAsync(user, _invitation.Role);
-
-        switch (_invitation.Role) 
-        {
-            case Student.Role:
-                {
-                    await UsersService.AddStudentToUser(user, new());
-                    break;
-                }
-            case Admin.Role:
-                {
-                    await UsersService.AddAdminToUser(user, new());
-                    break;
-                }
-            case Teacher.Role:
-                {
-                    await UsersService.AddTeacherToUser(user, new());
-                    break;
-                }
-            case ExternalTeacher.Role:
-                {
-                    await UsersService.AddExternalToUser(user, new());
-                    break;
-                }
-            default:
-                break;
-        }
-        await UnitOfWork.CompleteAsync();
+        if (user is null) return;
 
         Logger.LogInformation("User created a new account with password.");
 

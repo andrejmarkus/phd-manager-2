@@ -81,22 +81,6 @@
         if (entry is null || userInfo.Role is null) return;
 
         var newUser = await UsersService.RegisterLdapUserWithoutPasswordAsync(entry, userInfo.Role);
-        switch (userInfo.Role)
-        {
-            case Admin.Role:
-                if (userInfo.User.Admin is not null) await UsersService.AddAdminToUser(newUser, userInfo.User.Admin);
-                break;
-            case Teacher.Role:
-                if (userInfo.User.Teacher is not null) await UsersService.AddTeacherToUser(newUser, userInfo.User.Teacher);
-                break;
-            case Student.Role:
-                var student = userInfo.User.Students.FirstOrDefault(s => s.State == StudentState.Study);
-                if (student is not null) await UsersService.AddStudentToUser(newUser, student);
-                break;
-            case ExternalTeacher.Role:
-                if (userInfo.User.Teacher is not null) await UsersService.AddExternalToUser(newUser, (ExternalTeacher)userInfo.User.Teacher);
-                break;
-        }
         await UsersService.DeleteUserAsync(userInfo.User);
     }
 

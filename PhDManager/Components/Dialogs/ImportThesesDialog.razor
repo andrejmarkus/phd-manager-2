@@ -1,0 +1,183 @@
+﻿@using DocumentFormat.OpenXml.Packaging
+@using DocumentFormat.OpenXml.Spreadsheet
+@using Microsoft.Extensions.Localization
+@using PhDManager.Locales
+@using PhDManager.Models
+@using PhDManager.Models.Roles
+@using PhDManager.Services
+@using PhDManager.Services.IRepositories
+@using System.Text.RegularExpressions
+
+@rendermode InteractiveServer
+
+@inject IUnitOfWork UnitOfWork
+@inject IStringLocalizer<Resources> Localizer
+@inject ISnackbar Snackbar
+@inject ActiveDirectoryService ActiveDirectoryService
+@inject UsersService UsersService
+
+<MudDialog>
+    <TitleContent>
+        <MudText Typo="Typo.h6"></MudText>
+    </TitleContent>
+    <DialogContent>
+        <MudGrid>
+            <MudItem xs="12" md="6">
+                <MudText>@Localizer["ImportPandora"]</MudText>
+                <MudFileUpload T="IBrowserFile" Accept=".xlsx" @bind-Files="@_filePandora">
+                    <ActivatorContent>
+                        <MudButton Variant="Variant.Filled" Color="MudBlazor.Color.Primary" StartIcon="@Icons.Material.Filled.CloudUpload">@Localizer["InsertFile"]</MudButton>
+                    </ActivatorContent>
+                    <SelectedTemplate>
+                        @if (context is not null)
+                        {
+                            <MudText>@context.Name</MudText>
+                        }
+                    </SelectedTemplate>
+                </MudFileUpload>
+            </MudItem>
+            <MudItem xs="12" md="6">
+                <MudText>@Localizer["Import"]</MudText>
+                <MudFileUpload T="IBrowserFile" Accept=".xlsx" @bind-Files="@_file">
+                    <ActivatorContent>
+                        <MudButton Variant="Variant.Filled" Color="MudBlazor.Color.Primary" StartIcon="@Icons.Material.Filled.CloudUpload">@Localizer["InsertFile"]</MudButton>
+                    </ActivatorContent>
+                    <SelectedTemplate>
+                        @if (context is not null)
+                        {
+                            <MudText>@context.Name</MudText>
+                        }
+                    </SelectedTemplate>
+                </MudFileUpload>
+            </MudItem>
+        </MudGrid>
+    </DialogContent>
+    <DialogActions>
+        <MudButton Color="MudBlazor.Color.Primary" OnClick="@HandleDialog">@Localizer["Add"]</MudButton>
+        <MudButton Color="MudBlazor.Color.Secondary" OnClick="@(() => MudDialog.Cancel())">@Localizer["Cancel"]</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter]
+    private IMudDialogInstance MudDialog { get; set; } = default!;
+
+    private IBrowserFile _filePandora = default!;
+    private IBrowserFile _file = default!;
+
+    private async Task<List<Thesis>> ImportPandora()
+    {
+        var theses = new List<Thesis>();
+
+        using var stream = new MemoryStream();
+        await _filePandora.OpenReadStream().CopyToAsync(stream);
+
+        using var document = SpreadsheetDocument.Open(stream, false);
+        var workbookPart = document.WorkbookPart;
+        var sheet = workbookPart?.Workbook.Descendants<Sheet>().FirstOrDefault();
+
+        if (workbookPart is null || sheet is null) return [];
+
+        var worksheetPart = (WorksheetPart)workbookPart.GetPartById(sheet.Id!);
+        var sheetData = worksheetPart.Worksheet.Elements<SheetData>().FirstOrDefault();
+
+        if (sheetData is null) return [];
+
+        foreach (var row in sheetData.Elements<Row>().Skip(1))
+        {
+            var cells = row.Elements<Cell>();
+            try
+            {
+                var schoolYear = GetCellValue(workbookPart, cells.ElementAt(0));
+                var rawDisplayNames = GetCellValue(workbookPart, cells.ElementAt(1));
+                var studyProgramName = GetCellValue(workbookPart, cells.ElementAt(21));
+                var dailyStudy = GetCellValue(workbookPart, cells.ElementAt(3)).Equals("1");
+                var externalStudy = GetCellValue(workbookPart, cells.ElementAt(4)).Equals("1");
+                var researchType = GetCellValue(workbookPart, cells.ElementAt(5));
+                var description = GetCellValue(workbookPart, cells.ElementAt(10));
+                var scientificContribution = GetCellValue(workbookPart, cells.ElementAt(11));
+                var researchTask = GetCellValue(workbookPart, cells.ElementAt(12));
+                var title = GetCellValue(workbookPart, cells.ElementAt(13));
+                var solutionResults = GetCellValue(workbookPart, cells.ElementAt(20));
+                var scientificProgress = GetCellValue(workbookPart, cells.ElementAt(23));
+
+                string pattern = @"(?<=\b(?:prof\.\s*|školiteľ\sšpecialista\s*)?\w+\.?\s*\w+\.\s*)(\w+\s\w+)";
+                var displayNames = Regex.Matches(rawDisplayNames, pattern).Cast<Match>().Select(m => m.Value).ToArray();
+
+                var studyProgram = await UnitOfWork.StudyPrograms.GetByNameAsync(studyProgramName);
+
+                if (displayNames.Length == 0) break;
+                var supervisor = await GetTeacherAsync(displayNames[0]);
+                Teacher? supervisorSpecialist = null;
+                if (displayNames.Length > 1)
+                {
+                    supervisorSpecialist = await GetTeacherAsync(displayNames[1]);
+                }
+
+                if (supervisor is null || studyProgram is null) throw new Exception("Supervisor or study program wasn't found.");
+
+                theses.Add(new()
+                    {
+                        SchoolYear = schoolYear,
+                        Supervisor = supervisor,
+                        SupervisorSpecialist = supervisorSpecialist,
+                        StudyProgram = studyProgram,
+                        DailyStudy = dailyStudy,
+                        ExternalStudy = externalStudy,
+                        ResearchType = researchType,
+                        Description = description,
+                        ScientificContribution = scientificContribution,
+                        ResearchTask = researchTask,
+                        Title = title,
+                        SolutionResults = solutionResults,
+                        ScientificProgress = scientificProgress,
+                        IsApproved = true
+                    });
+            }
+            catch (Exception ex)
+            {
+                SentrySdk.CaptureException(ex);
+                Snackbar.Add(Localizer["FileReadingError"], Severity.Error);
+                return [];
+            }
+        }
+        return theses;
+    }
+
+    private async Task HandleDialog()
+    {
+        var theses = await ImportPandora();
+        MudDialog.Close(DialogResult.Ok(theses));
+    }
+
+    private static string GetCellValue(WorkbookPart workbookPart, Cell cell)
+    {
+        if (cell.CellValue == null)
+            return string.Empty;
+
+        string value = cell.CellValue.Text;
+
+        if (cell.DataType != null && cell.DataType.Value == CellValues.SharedString)
+        {
+            return workbookPart.SharedStringTablePart?.SharedStringTable.Elements<SharedStringItem>()
+                .ElementAt(int.Parse(value)).InnerText ?? string.Empty;
+        }
+
+        return value;
+    }
+
+    private async Task<Teacher?> GetTeacherAsync(string displayName)
+    {
+        var teacher = await UnitOfWork.Teachers.GetByDisplayNameAsync(displayName);
+
+        if (teacher is not null) return teacher;
+
+        var entry = await ActiveDirectoryService.SearchUserByDisplayNameAsync(displayName);
+        if (entry is null) return null;
+        var user = await UsersService.RegisterLdapUserWithoutPasswordAsync(entry, Teacher.Role);
+        if (user is null) return null;
+        teacher = await UnitOfWork.Teachers.GetByDisplayNameAsync(displayName);
+
+        return teacher;
+    }
+}

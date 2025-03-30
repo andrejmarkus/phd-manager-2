@@ -1243,4 +1243,37 @@ account so you can log in without an external login.</value>
   <data name="EmailInvalidFormat" xml:space="preserve">
     <value>Invalid email format.</value>
   </data>
+  <data name="InsertFile" xml:space="preserve">
+    <value>Insert file</value>
+  </data>
+  <data name="FileReadingError" xml:space="preserve">
+    <value>Error while reading the file.</value>
+  </data>
+  <data name="Import" xml:space="preserve">
+    <value>Import</value>
+  </data>
+  <data name="EmailEnter" xml:space="preserve">
+    <value>Enter your email.</value>
+  </data>
+  <data name="PasswordReset" xml:space="preserve">
+    <value>Reset password</value>
+  </data>
+  <data name="ForgotPasswordConfirmation" xml:space="preserve">
+    <value>Forgot password confirmation</value>
+  </data>
+  <data name="ForgotPasswordConfirmationInfo" xml:space="preserve">
+    <value>Please check your email to reset your password.</value>
+  </data>
+  <data name="Resend" xml:space="preserve">
+    <value>Resend</value>
+  </data>
+  <data name="EmailResendMessage" xml:space="preserve">
+    <value>Verification email sent. Please check your email.</value>
+  </data>
+  <data name="EmailResend" xml:space="preserve">
+    <value>Resend the confirmation email</value>
+  </data>
+  <data name="ImportPandora" xml:space="preserve">
+    <value>Import from Pandora</value>
+  </data>
 </root>

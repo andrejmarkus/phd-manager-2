@@ -11,7 +11,7 @@ namespace PhDManager.Services.Repositories
         {
             try
             {
-                return await _dbSet.FirstOrDefaultAsync(t => t.User.DisplayName != null && t.User.DisplayName.ToLower().Contains(displayName.ToLower()));
+                return await _dbSet.FirstOrDefaultAsync(t => t.User.DisplayName != null && EF.Functions.Like(t.User.DisplayName, $"%{displayName}%"));
             }
             catch (Exception ex)
             {

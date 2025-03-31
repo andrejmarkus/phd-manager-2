@@ -7,6 +7,7 @@ namespace PhDManager.Services.Repositories
     public class UnitOfWork : IUnitOfWork
     {
         private readonly ApplicationDbContext _context;
+        private bool _disposed = false;
 
         public IThesisRepository Theses { get; private set; }
         public IInvitationRepository Invitations { get; private set; }
@@ -59,9 +60,21 @@ namespace PhDManager.Services.Repositories
             await _context.SaveChangesAsync();
         }
 
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!_disposed)
+            {
+                if (disposing)
+                {
+                    _context.Dispose();
+                }
+                _disposed = true;
+            }
+        }
+
         public void Dispose()
         {
-            _context.Dispose();
+            Dispose(true);
             GC.SuppressFinalize(this);
         }
     }

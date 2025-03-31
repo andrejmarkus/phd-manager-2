@@ -11,12 +11,11 @@ namespace PhDManager.Services
         {
             string[] roles = [Admin.Role, ExternalTeacher.Role, Student.Role, Teacher.Role];
 
-            foreach (string role in roles)
+            var rolesToCreate = roles.Where(role => _roleManager.FindByNameAsync(role).Result is null);
+
+            foreach (string role in rolesToCreate)
             {
-                if (await _roleManager.FindByNameAsync(role) is null)
-                {
-                    await _roleManager.CreateAsync(new IdentityRole(role));
-                }
+                await _roleManager.CreateAsync(new IdentityRole(role));
             }
         }
     }

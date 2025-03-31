@@ -29,7 +29,7 @@ namespace PhDManager.Services
             }
             catch (Exception ex)
             {
-                throw new Exception($"Error creating email: {ex.Message}", ex);
+                throw new InvalidOperationException($"Error creating email: {ex.Message}", ex);
             }
 
             using var client = new SmtpClient();

@@ -4,7 +4,6 @@ namespace PhDManager.Models
 {
     public class Comment : BaseModel
     {
-        // public bool IsResolved { get; set; } = false;
         public string Text { get; set; } = default!;
         public DateTime Created { get; set; }
 

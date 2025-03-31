@@ -1,9 +1,7 @@
-﻿using DocumentFormat.OpenXml.Packaging;
-using LdapForNet;
+﻿using LdapForNet;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using PhDManager.Data;
-using PhDManager.Data.Migrations;
 using PhDManager.Models.Roles;
 using PhDManager.Services.IRepositories;
 using System.Security.Claims;

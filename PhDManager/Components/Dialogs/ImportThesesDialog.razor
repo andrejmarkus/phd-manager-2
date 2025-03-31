@@ -18,27 +18,12 @@
 
 <MudDialog>
     <TitleContent>
-        <MudText Typo="Typo.h6"></MudText>
+        <MudText Typo="Typo.h6">@Localizer["Import"]</MudText>
     </TitleContent>
     <DialogContent>
         <MudGrid>
-            <MudItem xs="12" md="6">
-                <MudText>@Localizer["ImportPandora"]</MudText>
+            <MudItem xs="12">
                 <MudFileUpload T="IBrowserFile" Accept=".xlsx" @bind-Files="@_filePandora">
-                    <ActivatorContent>
-                        <MudButton Variant="Variant.Filled" Color="MudBlazor.Color.Primary" StartIcon="@Icons.Material.Filled.CloudUpload">@Localizer["InsertFile"]</MudButton>
-                    </ActivatorContent>
-                    <SelectedTemplate>
-                        @if (context is not null)
-                        {
-                            <MudText>@context.Name</MudText>
-                        }
-                    </SelectedTemplate>
-                </MudFileUpload>
-            </MudItem>
-            <MudItem xs="12" md="6">
-                <MudText>@Localizer["Import"]</MudText>
-                <MudFileUpload T="IBrowserFile" Accept=".xlsx" @bind-Files="@_file">
                     <ActivatorContent>
                         <MudButton Variant="Variant.Filled" Color="MudBlazor.Color.Primary" StartIcon="@Icons.Material.Filled.CloudUpload">@Localizer["InsertFile"]</MudButton>
                     </ActivatorContent>
@@ -63,31 +48,31 @@
     private IMudDialogInstance MudDialog { get; set; } = default!;
 
     private IBrowserFile _filePandora = default!;
-    private IBrowserFile _file = default!;
 
     private async Task<List<Thesis>> ImportPandora()
     {
         var theses = new List<Thesis>();
 
-        using var stream = new MemoryStream();
-        await _filePandora.OpenReadStream().CopyToAsync(stream);
-
-        using var document = SpreadsheetDocument.Open(stream, false);
-        var workbookPart = document.WorkbookPart;
-        var sheet = workbookPart?.Workbook.Descendants<Sheet>().FirstOrDefault();
-
-        if (workbookPart is null || sheet is null) return [];
-
-        var worksheetPart = (WorksheetPart)workbookPart.GetPartById(sheet.Id!);
-        var sheetData = worksheetPart.Worksheet.Elements<SheetData>().FirstOrDefault();
-
-        if (sheetData is null) return [];
-
-        foreach (var row in sheetData.Elements<Row>().Skip(1))
+        try
         {
-            var cells = row.Elements<Cell>();
-            try
+            using var stream = new MemoryStream();
+            await _filePandora.OpenReadStream().CopyToAsync(stream);
+
+            using var document = SpreadsheetDocument.Open(stream, false);
+            var workbookPart = document.WorkbookPart;
+            var sheet = workbookPart?.Workbook.Descendants<Sheet>().FirstOrDefault();
+
+            if (workbookPart is null || sheet is null) return [];
+
+            var worksheetPart = (WorksheetPart)workbookPart.GetPartById(sheet.Id!);
+            var sheetData = worksheetPart.Worksheet.Elements<SheetData>().FirstOrDefault();
+
+            if (sheetData is null) return [];
+
+            foreach (var row in sheetData.Elements<Row>().Skip(1))
             {
+                var cells = row.Elements<Cell>();
+
                 var schoolYear = GetCellValue(workbookPart, cells.ElementAt(0));
                 var rawDisplayNames = GetCellValue(workbookPart, cells.ElementAt(1));
                 var studyProgramName = GetCellValue(workbookPart, cells.ElementAt(21));
@@ -114,32 +99,32 @@
                     supervisorSpecialist = await GetTeacherAsync(displayNames[1]);
                 }
 
-                if (supervisor is null || studyProgram is null) throw new Exception("Supervisor or study program wasn't found.");
+                if (supervisor is null || studyProgram is null) continue;
 
                 theses.Add(new()
-                    {
-                        SchoolYear = schoolYear,
-                        Supervisor = supervisor,
-                        SupervisorSpecialist = supervisorSpecialist,
-                        StudyProgram = studyProgram,
-                        DailyStudy = dailyStudy,
-                        ExternalStudy = externalStudy,
-                        ResearchType = researchType,
-                        Description = description,
-                        ScientificContribution = scientificContribution,
-                        ResearchTask = researchTask,
-                        Title = title,
-                        SolutionResults = solutionResults,
-                        ScientificProgress = scientificProgress,
-                        IsApproved = true
-                    });
+                {
+                    SchoolYear = schoolYear,
+                    Supervisor = supervisor,
+                    SupervisorSpecialist = supervisorSpecialist,
+                    StudyProgram = studyProgram,
+                    DailyStudy = dailyStudy,
+                    ExternalStudy = externalStudy,
+                    ResearchType = researchType,
+                    Description = description,
+                    ScientificContribution = scientificContribution,
+                    ResearchTask = researchTask,
+                    Title = title,
+                    SolutionResults = solutionResults,
+                    ScientificProgress = scientificProgress,
+                    IsApproved = true
+                });
             }
-            catch (Exception ex)
-            {
-                SentrySdk.CaptureException(ex);
-                Snackbar.Add(Localizer["FileReadingError"], Severity.Error);
-                return [];
-            }
+        }
+        catch (Exception ex)
+        {
+            SentrySdk.CaptureException(ex);
+            Snackbar.Add(Localizer["FileReadingError"], Severity.Error);
+            return [];
         }
         return theses;
     }

@@ -73,7 +73,7 @@ namespace PhDManager.Services
             try
             {
                 var connection = await CreateConnection(_options.Username, _options.Password);
-                entry = (await connection.SearchAsync(_options.LdapDomain, $"(displayName=*{displayName}*)")).FirstOrDefault();
+                entry = (await connection.SearchAsync(_options.LdapDomain, $"(&(displayName=*{displayName}*)(mail=*))")).FirstOrDefault();
             }
             catch
             {

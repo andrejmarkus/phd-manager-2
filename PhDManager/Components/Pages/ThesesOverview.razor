@@ -9,6 +9,8 @@
 @using PhDManager.Models.Roles
 @using PhDManager.Services
 @using PhDManager.Services.IRepositories
+@using System.Text
+@using System.Globalization
 
 @rendermode InteractiveServer
 
@@ -72,9 +74,10 @@
         @if (_schoolYears is not null)
         {
             <MudSelect T="string" @bind-Value="@_selectedSchoolYear" @bind-Value:after="UpdateSearch" Immediate Label="@Localizer["SchoolYear"]" Variant="Variant.Outlined">
+                <MudSelectItem T="string" Value="null">@Localizer["All"]</MudSelectItem>
                 @foreach (var schoolYear in _schoolYears)
                 {
-                    <MudSelectItem Value="@schoolYear">@schoolYear</MudSelectItem>
+                    <MudSelectItem T="string" Value="@schoolYear">@schoolYear</MudSelectItem>
                 }
             </MudSelect>
         }
@@ -129,45 +132,35 @@
 
     protected override async Task OnInitializedAsync()
     {
-        _theses = await UnitOfWork.Theses.GetAllAsync();
-        _theses = _theses?.Where(t => t.IsApproved).ToArray();
         _studyPrograms = await UnitOfWork.StudyPrograms.GetAllAsync();
         _teachers = await UnitOfWork.Teachers.GetAllAsync();
         _schoolYears = await UnitOfWork.Theses.GetAllSchoolYearsAsync();
         _currentUserId = await UsersService.GetCurrentUserIdAsync();
 
-        _selectedSchoolYear = SchoolYearService.CurrentSchoolYear;
+        await UpdateSearch();
     }
 
     private async Task UpdateSearch()
     {
         var theses = await UnitOfWork.Theses.GetAllAsync();
-        _theses = theses?.Where(t => t.IsApproved).Where(t => t.Title.ToLower().Contains(_search.ToLower()) || t.TitleEnglish?.ToLower().Contains(_search.ToLower()) == true).ToArray();
-        if (_selectedStudyProgram is not null)
-        {
-            _theses = _theses?.Where(t => t.StudyProgram == _selectedStudyProgram).ToArray();
-        }
-        if (_selectedTeacher is not null)
-        {
-            _theses = _theses?.Where(t => t.Supervisor == _selectedTeacher).ToArray();
-        }
-        if (_selectedSchoolYear is not null) {
-            _theses = _theses?.Where(t => t.SchoolYear == _selectedSchoolYear).ToArray();
-        }
-        if (_available is not null)
-        {
-            _theses = _theses?.Where(t => t.Student is not null == _available).ToArray();
-        }
-        if (_studyForm is not null)
-        {
-            if (_studyForm == true)
-            {
-                _theses = _theses?.Where(t => t.DailyStudy).ToArray();
-            }
-            else
-            {
-                _theses = _theses?.Where(t => t.ExternalStudy).ToArray();
-            }
-        }
+        _theses = theses?.Where(t =>
+        t.IsApproved &&
+        (string.IsNullOrEmpty(_search) || RemoveDiacritics(t.Title)?.Contains(RemoveDiacritics(_search), StringComparison.OrdinalIgnoreCase) == true ||
+        RemoveDiacritics(t.TitleEnglish ?? "")?.Contains(RemoveDiacritics(_search), StringComparison.OrdinalIgnoreCase) == true) &&
+        (_selectedStudyProgram == null || t.StudyProgram == _selectedStudyProgram) &&
+        (_selectedTeacher == null || t.Supervisor == _selectedTeacher) &&
+        (_selectedSchoolYear == null || t.SchoolYear == _selectedSchoolYear) &&
+        (_available == null || (t.Student != null) == _available) &&
+        (_studyForm == null || (_studyForm == true ? t.DailyStudy : t.ExternalStudy))
+        ).ToArray();
+    }
+
+    private string RemoveDiacritics(string text)
+    {
+        if (string.IsNullOrEmpty(text)) return text;
+        return string.Concat(
+            text.Normalize(NormalizationForm.FormD)
+                .Where(c => CharUnicodeInfo.GetUnicodeCategory(c) != UnicodeCategory.NonSpacingMark)
+        ).Normalize(NormalizationForm.FormC);
     }
 }

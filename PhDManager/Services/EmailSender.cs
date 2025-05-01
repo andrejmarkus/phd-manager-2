@@ -47,11 +47,11 @@ namespace PhDManager.Services
             }
             catch (SmtpCommandException ex)
             {
-                throw new SmtpCommandException(ex.ErrorCode, ex.StatusCode, $"SMTP Command Error: {ex.Message}", ex);
+                throw new InvalidOperationException($"SMTP Command Error: {ex.Message}", ex);
             }
             catch (SmtpProtocolException ex)
             {
-                throw new SmtpProtocolException($"SMTP Protocol Error: {ex.Message}", ex);
+                throw new InvalidOperationException($"SMTP Protocol Error: {ex.Message}", ex);
             }
             catch (Exception ex)
             {

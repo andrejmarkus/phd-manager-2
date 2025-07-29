@@ -1,5 +1,4 @@
-﻿@using LdapForNet
-@using Microsoft.Extensions.Localization
+﻿@using Microsoft.Extensions.Localization
 @using PhDManager.Components.Dialogs
 @using PhDManager.Locales
 @using PhDManager.Models
@@ -11,12 +10,11 @@
 @inject IDialogService DialogService
 @inject IStringLocalizer<Resources> Localizer
 @inject IUnitOfWork UnitOfWork
-@inject UsersService UsersService
 @inject EnumService EnumService
 
 <MudText Class="mt-2" Typo="Typo.h5" GutterBottom>@Localizer["Subjects"]</MudText>
 
-<MudDataGrid T="Subject" Items="@_subjects" Hover SortMode="SortMode.Multiple" QuickFilter="@_quickFilter" Elevation="0">
+<MudDataGrid T="Subject" Items="@_subjects" Hover SortMode="SortMode.Multiple" QuickFilter="@QuickFilter" Elevation="0">
     <ToolBarContent>
         <MudButton class="mx-4" Variant="Variant.Filled" Color="Color.Primary" OnClick="AddSubject">@Localizer["Add"]</MudButton>
         <MudSpacer />
@@ -54,18 +52,12 @@
         await LoadSubjects();
     }
 
-    private Func<Subject, bool> _quickFilter => s =>
+    private Func<Subject, bool> QuickFilter => s =>
     {
         if (string.IsNullOrWhiteSpace(_search))
             return true;
 
-        if (s.Name.Contains(_search, StringComparison.OrdinalIgnoreCase) == true)
-            return true;
-
-        if ($"{s.Name}".Contains(_search))
-            return true;
-
-        return false;
+        return s.Name.Contains(_search, StringComparison.OrdinalIgnoreCase) || $"{s.Name}".Contains(_search);
     };
 
     private async Task AddSubject()
@@ -75,9 +67,7 @@
 
         if (result is null || result.Canceled) return;
 
-        var subject = result.Data as Subject;
-
-        if (subject is null) return;
+        if (result.Data is not Subject subject) return;
 
         await UnitOfWork.Subjects.AddAsync(subject);
         await UnitOfWork.CompleteAsync();
@@ -87,14 +77,12 @@
     private async Task UpdateSubject(Subject subject)
     {
         var parameters = new DialogParameters<ManageSubjectDialog> { { d => d.Subject, subject } };
-        var dialog = await DialogService.ShowAsync<ManageSubjectDialog>(Localizer["SubjectEdit"], parameters, new() { FullWidth = true, MaxWidth = MaxWidth.Medium });
+        var dialog = await DialogService.ShowAsync<ManageSubjectDialog>(Localizer["SubjectEdit"], parameters, new DialogOptions { FullWidth = true, MaxWidth = MaxWidth.Medium });
         var result = await dialog.Result;
 
         if (result is null || result.Canceled) return;
 
-        var updatedSubject = result.Data as Subject;
-
-        if (updatedSubject is null) return;
+        if (result.Data is not Subject updatedSubject) return;
 
         await UnitOfWork.Subjects.UpdateAsync(updatedSubject);
         await UnitOfWork.CompleteAsync();
@@ -103,7 +91,7 @@
 
     private async Task DeleteSubject(Subject subject)
     {
-        bool? result = await DialogService.ShowMessageBox(Localizer["SubjectDelete"], Localizer["SubjectDeleteConfirmation"], Localizer["Yes"], Localizer["No"]);
+        var result = await DialogService.ShowMessageBox(Localizer["SubjectDelete"], Localizer["SubjectDeleteConfirmation"], Localizer["Yes"], Localizer["No"]);
         if (result == false) return;
 
         UnitOfWork.Subjects.Delete(subject);

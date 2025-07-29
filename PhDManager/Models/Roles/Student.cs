@@ -1,4 +1,5 @@
 ﻿using PhDManager.Data;
+using PhDManager.Models.Documents;
 using PhDManager.Models.Enums;
 using System.ComponentModel.DataAnnotations.Schema;
 

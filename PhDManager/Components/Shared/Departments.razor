@@ -1,9 +1,7 @@
-﻿@using LdapForNet
-@using Microsoft.Extensions.Localization
+﻿@using Microsoft.Extensions.Localization
 @using PhDManager.Components.Dialogs
 @using PhDManager.Locales
 @using PhDManager.Models
-@using PhDManager.Services
 @using PhDManager.Services.IRepositories
 
 @rendermode InteractiveServer
@@ -11,11 +9,10 @@
 @inject IDialogService DialogService
 @inject IStringLocalizer<Resources> Localizer
 @inject IUnitOfWork UnitOfWork
-@inject UsersService UsersService
 
 <MudText Class="mt-2" Typo="Typo.h5" GutterBottom>@Localizer["Departments"]</MudText>
 
-<MudDataGrid T="Department" Items="@_departments" Hover SortMode="SortMode.Multiple" QuickFilter="@_quickFilter" Elevation="0">
+<MudDataGrid T="Department" Items="@_departments" Hover SortMode="SortMode.Multiple" QuickFilter="@QuickFilter" Elevation="0">
     <ToolBarContent>
         <MudButton class="mx-4" Variant="Variant.Filled" Color="Color.Primary" OnClick="AddDepartment">@Localizer["Add"]</MudButton>
         <MudSpacer />
@@ -52,21 +49,15 @@
         await LoadDepartments();
     }
 
-    private Func<Department, bool> _quickFilter => d =>
+    private Func<Department, bool> QuickFilter => d =>
     {
         if (string.IsNullOrWhiteSpace(_search))
             return true;
 
-        if (d.Name.Contains(_search, StringComparison.OrdinalIgnoreCase) == true)
+        if (d.Name.Contains(_search, StringComparison.OrdinalIgnoreCase))
             return true;
 
-        if (d.Code.Contains(_search, StringComparison.OrdinalIgnoreCase) == true)
-            return true;
-
-        if ($"{d.Name} {d.Code}".Contains(_search))
-            return true;
-
-        return false;
+        return d.Code.Contains(_search, StringComparison.OrdinalIgnoreCase) || $"{d.Name} {d.Code}".Contains(_search);
     };
 
     private async Task AddDepartment()
@@ -76,9 +67,7 @@
 
         if (result is null || result.Canceled) return;
 
-        var department = result.Data as Department;
-
-        if (department is null) return;
+        if (result.Data is not Department department) return;
 
         await UnitOfWork.Departments.AddAsync(department);
         await UnitOfWork.CompleteAsync();
@@ -88,14 +77,12 @@
     private async Task UpdateDepartment(Department department)
     {
         var parameters = new DialogParameters<ManageDepartmentDialog> { { d => d.Department, department } };
-        var dialog = await DialogService.ShowAsync<ManageDepartmentDialog>(Localizer["DepartmentEdit"], parameters, new() { FullWidth = true, MaxWidth = MaxWidth.Medium });
+        var dialog = await DialogService.ShowAsync<ManageDepartmentDialog>(Localizer["DepartmentEdit"], parameters, new DialogOptions { FullWidth = true, MaxWidth = MaxWidth.Medium });
         var result = await dialog.Result;
 
         if (result is null || result.Canceled) return;
 
-        var updatedDepartment = result.Data as Department;
-
-        if (updatedDepartment is null) return;
+        if (result.Data is not Department updatedDepartment) return;
 
         await UnitOfWork.Departments.UpdateAsync(updatedDepartment);
         await UnitOfWork.CompleteAsync();
@@ -104,7 +91,7 @@
 
     private async Task DeleteDepartment(Department department)
     {
-        bool? result = await DialogService.ShowMessageBox(Localizer["DepartmentDelete"], Localizer["DepartmentDeleteConfirmation"], Localizer["Yes"], Localizer["No"]);
+        var result = await DialogService.ShowMessageBox(Localizer["DepartmentDelete"], Localizer["DepartmentDeleteConfirmation"], Localizer["Yes"], Localizer["No"]);
         if (result == false) return;
 
         UnitOfWork.Departments.Delete(department);

@@ -1,16 +1,13 @@
 ﻿@using Microsoft.Extensions.Localization
 @using PhDManager.Locales
 @using PhDManager.Models
-@using PhDManager.Models.Enums
 @using PhDManager.Models.Roles
-@using PhDManager.Services
 @using PhDManager.Services.IRepositories
 
 @rendermode InteractiveServer
 
 @inject IUnitOfWork UnitOfWork
 @inject IStringLocalizer<Resources> Localizer
-@inject EnumService EnumService
 
 <MudDialog>
     <TitleContent>
@@ -38,12 +35,12 @@
 
 @code {
     [CascadingParameter]
-    private IMudDialogInstance MudDialog { get; set; } = default!;
+    private IMudDialogInstance MudDialog { get; set; } = null!;
 
     [Parameter]
-    public Teacher Teacher { get; set; } = default!;
+    public Teacher Teacher { get; set; } = null!;
 
-    private MudForm _form = default!;
+    private MudForm _form = null!;
     private IEnumerable<Department>? _departments;
 
     protected override async Task OnInitializedAsync()

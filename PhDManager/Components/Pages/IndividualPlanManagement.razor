@@ -2,11 +2,10 @@
 @page "/management/individual-plans/edit/{IndividualPlanGuid}"
 
 @using Microsoft.AspNetCore.Authorization
-@using Microsoft.AspNetCore.Identity
 @using Microsoft.Extensions.Localization
-@using PhDManager.Data
 @using PhDManager.Locales
 @using PhDManager.Models
+@using PhDManager.Models.Documents
 @using PhDManager.Models.Enums
 @using PhDManager.Models.Roles
 @using PhDManager.Services
@@ -15,10 +14,8 @@
 @rendermode InteractiveServer
 
 @inject ISnackbar Snackbar
-@inject IServiceProvider ServiceProvider
 @inject IUnitOfWork UnitOfWork
 @inject IStringLocalizer<Resources> Localizer
-@inject UserManager<ApplicationUser> UserManager
 @inject NavigationManager NavigationManager
 @inject UsersService UsersService
 @inject EnumService EnumService
@@ -30,8 +27,8 @@
 <MudText Typo="Typo.h4">@Localizer["IndividualPlanTitle"]</MudText>
 
 <MudForm @ref="_form">
-    <MudAutocomplete T="Student" Clearable Required RequiredError="@Localizer["Required"]" Label="@Localizer["IndividualPlanStudent"]" ToStringFunc="@(s => s is null ? null : s.User.DisplayName)" SearchFunc="SearchStudents" Variant="Variant.Outlined" @bind-Value="@_individualPlan.Student" @bind-Value:after="HandleStudentChange" />
-    @if (_individualPlan.Student is not null && _individualPlan.Student.Thesis is not null)
+    <MudAutocomplete T="Student" Clearable Required RequiredError="@Localizer["Required"]" Label="@Localizer["IndividualPlanStudent"]" ToStringFunc="@(s => s?.User.DisplayName)" SearchFunc="SearchStudents" Variant="Variant.Outlined" @bind-Value="@_individualPlan.Student" @bind-Value:after="HandleStudentChange" />
+    @if (_individualPlan.Student?.Thesis != null)
     {
         <MudDatePicker ShowToolbar="false" Label="@Localizer["Birthdate"]" Variant="Variant.Outlined" @bind-Date="_individualPlan.Student.User.Birthdate" ReadOnly />
         <MudField Label="@Localizer["Address"]" Variant="Variant.Outlined">@_individualPlan.Student.Address?.FullAddress</MudField>
@@ -68,7 +65,7 @@
         @foreach (var subject in _selectedSubjects.Select((e, i) => new { Element = e, Index = i }))
         {
             <MudStack Row AlignItems="AlignItems.Center">
-                <MudSelect T="Subject" Required RequiredError="@Localizer["Required"]" Label="@($"{Localizer["Subject"]} {subject.Index + 1}")" ToStringFunc="@(s => s is null ? null : s.Name)" Variant="Variant.Outlined" @bind-Value="_selectedSubjects[subject.Index]">
+                <MudSelect T="Subject" Required RequiredError="@Localizer["Required"]" Label="@($"{Localizer["Subject"]} {subject.Index + 1}")" ToStringFunc="@(s => s?.Name)" Variant="Variant.Outlined" @bind-Value="_selectedSubjects[subject.Index]">
                     @if (_subjects is not null)
                     {
                         @foreach (var subject in _subjects.Where(s => s.RequirementLevel == RequirementLevel.Compulsory))
@@ -110,7 +107,7 @@
         }
         <MudStack Class="my-2" Row Justify="Justify.Center">
             <MudTooltip Text="@Localizer["AdditionalSubjectAdd"]">
-                <MudFab Size="Size.Small" Color="Color.Info" StartIcon="@Icons.Material.Filled.Add" OnClick="@(() => _selectedOptionalSubjects.Add(new()))" />
+                <MudFab Size="Size.Small" Color="Color.Info" StartIcon="@Icons.Material.Filled.Add" OnClick="@(() => _selectedOptionalSubjects.Add(new Subject()))" />
             </MudTooltip>
         </MudStack>
     }
@@ -166,7 +163,7 @@
     private string? _currentUserRole;
     private string? _currentUserId;
 
-    private MudForm _form = default!;
+    private MudForm _form = null!;
     private IEnumerable<Student>? _students;
     private IEnumerable<Subject>? _subjects;
 
@@ -211,7 +208,7 @@
 
         _students = await UnitOfWork.Students.GetAllAsync();
 
-        if (_currentUserRole == Teacher.Role || _currentUserRole == ExternalTeacher.Role)
+        if (_currentUserRole is Teacher.Role or ExternalTeacher.Role)
         {
             _students = _students?.Where(s => s.Thesis?.Supervisor.User.Id == _currentUserId);
         }
@@ -220,21 +217,7 @@
     private Task<IEnumerable<Student>?> SearchStudents(string search, CancellationToken token)
     {
         var students = _students?.Where(s => s.IndividualPlan is null);
-        if (string.IsNullOrWhiteSpace(search))
-            return Task.FromResult(students);
-
-        return Task.FromResult(students?.Where(s => s.User.DisplayName is not null && s.User.DisplayName.Contains(search, StringComparison.OrdinalIgnoreCase)));
-    }
-
-    private Task<IEnumerable<Subject>> SearchSubjects(string search, CancellationToken token)
-    {
-        if (_subjects is null) return Task.FromResult(Enumerable.Empty<Subject>());
-
-        var subjects = _subjects.Where(t => t.StudyProgram == _individualPlan.Student?.StudyProgram);
-        if (string.IsNullOrWhiteSpace(search))
-            return Task.FromResult(subjects);
-
-        return Task.FromResult(subjects.Where(s => s.Name.Contains(search, StringComparison.OrdinalIgnoreCase)));
+        return string.IsNullOrWhiteSpace(search) ? Task.FromResult(students) : Task.FromResult(students?.Where(s => s.User.DisplayName is not null && s.User.DisplayName.Contains(search, StringComparison.OrdinalIgnoreCase)));
     }
 
     private async Task HandleIndividualPlan()

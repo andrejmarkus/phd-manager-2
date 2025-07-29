@@ -1,9 +1,7 @@
 ﻿@using LdapForNet
-@using Microsoft.AspNetCore.Authorization
 @using Microsoft.Extensions.Localization
 @using PhDManager.Components.Dialogs
 @using PhDManager.Locales
-@using PhDManager.Models
 @using PhDManager.Models.Enums
 @using PhDManager.Models.Roles
 @using PhDManager.Services
@@ -15,12 +13,11 @@
 @inject IStringLocalizer<Resources> Localizer
 @inject IUnitOfWork UnitOfWork
 @inject UsersService UsersService
-@inject SchoolYearService SchoolYearService
 @inject EnumService EnumService
 
 <MudText Class="mt-2" Typo="Typo.h5" GutterBottom>@Localizer["Students"]</MudText>
 
-<MudDataGrid @ref="_dataGrid" T="Student" Items="@_students" Hover SortMode="SortMode.Multiple" QuickFilter="@_quickFilter" Elevation="0">
+<MudDataGrid @ref="_dataGrid" T="Student" Items="@_students" Hover SortMode="SortMode.Multiple" QuickFilter="@QuickFilter" Elevation="0">
     <ToolBarContent>
         <MudStack Row>
             <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="AddStudent">@Localizer["Add"]</MudButton>
@@ -65,8 +62,7 @@
 </MudDataGrid>
 
 @code {
-    private MudDataGrid<Student> _dataGrid = default!;
-
+    private MudDataGrid<Student> _dataGrid = null!;
     private IEnumerable<Student>? _students;
     private List<(StudentState, string)> _studentStates = [];
 
@@ -79,7 +75,7 @@
         _studentStates = EnumService.GetLocalizedEnumValues<StudentState>();
     }
 
-    private Func<Student, bool> _quickFilter => ds =>
+    private Func<Student, bool> QuickFilter => ds =>
     {
         if (_studentState is not null && ds.State != _studentState)
             return false;
@@ -87,7 +83,7 @@
         if (string.IsNullOrWhiteSpace(_search))
             return true;
 
-        string searchLower = _search.ToLower();
+        var searchLower = _search.ToLower();
 
         return (ds.User.UserName?.Contains(searchLower, StringComparison.OrdinalIgnoreCase) == true ||
             ds.User.DisplayName?.Contains(searchLower, StringComparison.OrdinalIgnoreCase) == true ||
@@ -102,9 +98,7 @@
 
         if (result is null || result.Canceled) return;
 
-        var entry = result.Data as LdapEntry;
-
-        if (entry is null) return;
+        if (result.Data is not LdapEntry entry) return;
 
         var user = await UsersService.RegisterLdapUserWithoutPasswordAsync(entry, Student.Role);
 
@@ -124,7 +118,7 @@
 
     private async Task DeleteStudent(Student student)
     {
-        bool? result = await DialogService.ShowMessageBox(Localizer["UserDelete"], Localizer["UserDeleteConfirmation"], Localizer["Yes"], Localizer["No"]);
+        var result = await DialogService.ShowMessageBox(Localizer["UserDelete"], Localizer["UserDeleteConfirmation"], Localizer["Yes"], Localizer["No"]);
         if (result == false) return;
 
         var user = student.User;
@@ -148,9 +142,7 @@
 
         if (result is null || result.Canceled) return;
 
-        var updatedStudent = result.Data as Student;
-
-        if (updatedStudent is null) return;
+        if (result.Data is not Student updatedStudent) return;
 
         await UnitOfWork.Students.UpdateAsync(updatedStudent);
         await UnitOfWork.CompleteAsync();
@@ -159,14 +151,12 @@
     private async Task AssignThesis(Student student)
     {
         var parameters = new DialogParameters<AssignThesisDialog> { { d => d.Student, student } };
-        var dialog = await DialogService.ShowAsync<AssignThesisDialog>(Localizer["DissertationThesisAssign"], parameters, new() { FullWidth = true, MaxWidth = MaxWidth.Medium });
+        var dialog = await DialogService.ShowAsync<AssignThesisDialog>(Localizer["DissertationThesisAssign"], parameters, new DialogOptions { FullWidth = true, MaxWidth = MaxWidth.Medium });
         var result = await dialog.Result;
 
         if (result is null || result.Canceled) return;
 
-        var updatedStudent = result.Data as Student;
-
-        if (updatedStudent is null) return;
+        if (result.Data is not Student updatedStudent) return;
 
         await UnitOfWork.Students.UpdateAsync(updatedStudent);
         await UnitOfWork.CompleteAsync();
@@ -175,6 +165,6 @@
     private async Task AddStudentRegistration()
     {
         var parameters = new DialogParameters<InvitationLinkDialog> { { d => d.Role, Student.Role } };
-        await DialogService.ShowAsync<InvitationLinkDialog>(Localizer["UserRegister"], parameters, new() { FullWidth = true, MaxWidth = MaxWidth.Medium });
+        await DialogService.ShowAsync<InvitationLinkDialog>(Localizer["UserRegister"], parameters, new DialogOptions { FullWidth = true, MaxWidth = MaxWidth.Medium });
     }
 }

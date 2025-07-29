@@ -4,8 +4,7 @@
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.Extensions.Localization
 @using PhDManager.Locales
-@using PhDManager.Models
-@using PhDManager.Models.Enums
+@using PhDManager.Models.Documents
 @using PhDManager.Models.Roles
 @using PhDManager.Services
 @using PhDManager.Services.IRepositories
@@ -17,8 +16,6 @@
 @inject NavigationManager NavigationManager
 @inject UsersService UsersService
 @inject EnumService EnumService
-@inject SchoolYearService SchoolYearService
-
 @attribute [Authorize(Roles = $"{Admin.Role}, {Teacher.Role}, {ExternalTeacher.Role}")]
 
 <PageTitle>@Localizer["DissertationDefenseSupervisorTitle"]</PageTitle>
@@ -26,7 +23,7 @@
 <MudText Typo="Typo.h4">@Localizer["DissertationDefenseSupervisorTitle"]</MudText>
 
 <MudForm @ref="_form">
-    <MudAutocomplete Clearable ReadOnly="@(DissertationDefenseSupervisorGuid is not null)" T="Student" Required RequiredError="@Localizer["Required"]" Label="@Localizer["Student"]" ToStringFunc="@(s => s is null ? null : s.User.DisplayName)" SearchFunc="SearchStudents" Variant="Variant.Outlined" @bind-Value="@_dissertationDefenseSupervisor.Student" />
+    <MudAutocomplete Clearable ReadOnly="@(DissertationDefenseSupervisorGuid is not null)" T="Student" Required RequiredError="@Localizer["Required"]" Label="@Localizer["Student"]" ToStringFunc="@(s => s?.User.DisplayName)" SearchFunc="SearchStudents" Variant="Variant.Outlined" @bind-Value="@_dissertationDefenseSupervisor.Student" />
     @if (_dissertationDefenseSupervisor.Student is not null)
     {
         <MudField Label="@Localizer["StudyForm"]" Variant="Variant.Outlined">@(EnumService.GetLocalizedEnumValue(_dissertationDefenseSupervisor.Student.StudyForm))</MudField>
@@ -87,7 +84,7 @@
     private string? _currentUserRole;
     private string? _currentUserId;
 
-    private MudForm _form = default!;
+    private MudForm _form = null!;
     private IEnumerable<Student>? _students;
 
     private DissertationDefenseSupervisor _dissertationDefenseSupervisor = new();
@@ -115,7 +112,7 @@
 
         _students = await UnitOfWork.Students.GetAllAsync();
 
-        if (_currentUserRole == Teacher.Role || _currentUserRole == ExternalTeacher.Role)
+        if (_currentUserRole is Teacher.Role or ExternalTeacher.Role)
         {
             _students = _students?.Where(s => s.Thesis?.Supervisor.User.Id == _currentUserId);
         }
@@ -124,10 +121,7 @@
     private Task<IEnumerable<Student>?> SearchStudents(string search, CancellationToken token)
     {
         var students = _students?.Where(s => s.IndividualPlan is not null);
-        if (string.IsNullOrWhiteSpace(search))
-            return Task.FromResult(students);
-
-        return Task.FromResult(students?.Where(s => s.User.DisplayName is not null && s.User.DisplayName.Contains(search, StringComparison.OrdinalIgnoreCase)));
+        return Task.FromResult(string.IsNullOrWhiteSpace(search) ? students : students?.Where(s => s.User.DisplayName is not null && s.User.DisplayName.Contains(search, StringComparison.OrdinalIgnoreCase)));
     }
 
     private async Task HandleDissertationDefenseSupervisor()

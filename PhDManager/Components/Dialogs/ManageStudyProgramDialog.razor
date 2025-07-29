@@ -44,21 +44,21 @@
 
 @code {
     [CascadingParameter]
-    private IMudDialogInstance MudDialog { get; set; } = default!;
+    private IMudDialogInstance MudDialog { get; set; } = null!;
 
     [Parameter]
     public StudyProgram? StudyProgram { get; set; }
 
-    private MudForm _form = default!;
+    private MudForm _form = null!;
     private bool _add;
-    private List<string> _thesisSubjects = new();
+    private List<string> _thesisSubjects = [];
 
     protected override void OnInitialized()
     {
         _add = StudyProgram is null;
         if (StudyProgram is null)
         {
-            StudyProgram = new();
+            StudyProgram = new StudyProgram();
         }
         else
         {

@@ -4,7 +4,7 @@
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.Extensions.Localization
 @using PhDManager.Locales
-@using PhDManager.Models
+@using PhDManager.Models.Documents
 @using PhDManager.Models.Enums
 @using PhDManager.Models.Roles
 @using PhDManager.Services
@@ -15,10 +15,7 @@
 @inject IUnitOfWork UnitOfWork
 @inject IStringLocalizer<Resources> Localizer
 @inject NavigationManager NavigationManager
-@inject UsersService UsersService
 @inject EnumService EnumService
-@inject SchoolYearService SchoolYearService
-
 @attribute [Authorize(Roles = $"{Admin.Role}, {Teacher.Role}, {ExternalTeacher.Role}")]
 
 <PageTitle>@Localizer["StudentEvaluation"]</PageTitle>
@@ -26,8 +23,8 @@
 <MudText Typo="Typo.h4">@Localizer["StudentEvaluation"]</MudText>
 
 <MudForm @ref="_form">
-    <MudAutocomplete Clearable ReadOnly="@(StudentEvaluationGuid is not null)" T="Student" Required RequiredError="@Localizer["Required"]" Label="@Localizer["Student"]" ToStringFunc="@(s => s is null ? null : s.User.DisplayName)" SearchFunc="SearchStudents" Variant="Variant.Outlined" @bind-Value="@_studentEvaluation.Student" />
-    @if (_studentEvaluation.Student is not null && _studentEvaluation.Student.IndividualPlan is not null && _studentEvaluation.Student.Thesis is not null)
+    <MudAutocomplete Clearable ReadOnly="@(StudentEvaluationGuid is not null)" T="Student" Required RequiredError="@Localizer["Required"]" Label="@Localizer["Student"]" ToStringFunc="@(s => s?.User.DisplayName)" SearchFunc="SearchStudents" Variant="Variant.Outlined" @bind-Value="@_studentEvaluation.Student" />
+    @if (_studentEvaluation.Student is { IndividualPlan: not null, Thesis: not null })
     {
         <MudField Label="@Localizer["StudyForm"]" Variant="Variant.Outlined">@(EnumService.GetLocalizedEnumValue(_studentEvaluation.Student.StudyForm))</MudField>
         <MudField Label="@Localizer["StudyProgram"]" Variant="Variant.Outlined">@_studentEvaluation.Student.StudyProgram?.Name</MudField>
@@ -120,19 +117,13 @@
     [Parameter]
     public string? StudentEvaluationGuid { get; set; }
 
-    private string? _currentUserRole;
-    private string? _currentUserId;
-
-    private MudForm _form = default!;
+    private MudForm _form = null!;
     private IEnumerable<Student>? _students;
 
     private StudentEvaluation _studentEvaluation = new();
 
     protected override async Task OnInitializedAsync()
     {
-        _currentUserRole = await UsersService.GetCurrentUserRoleAsync();
-        _currentUserId = await UsersService.GetCurrentUserIdAsync();
-
         _students = await UnitOfWork.Students.GetAllAsync();
 
         if (StudentEvaluationGuid is not null)
@@ -148,16 +139,13 @@
     private Task<IEnumerable<Student>?> SearchStudents(string search, CancellationToken token)
     {
         var students = _students?.Where(s => s.IndividualPlan is not null);
-        if (string.IsNullOrWhiteSpace(search))
-            return Task.FromResult(students);
-
-        return Task.FromResult(students?.Where(s => s.User.DisplayName is not null && s.User.DisplayName.Contains(search, StringComparison.OrdinalIgnoreCase)));
+        return Task.FromResult(string.IsNullOrWhiteSpace(search) ? students : students?.Where(s => s.User.DisplayName is not null && s.User.DisplayName.Contains(search, StringComparison.OrdinalIgnoreCase)));
     }
 
     private async Task HandleStudentEvaluation()
     {
         await _form.Validate();
-        if (!_form.IsValid || _studentEvaluation is null) return;
+        if (!_form.IsValid) return;
 
         _studentEvaluation.PlannedDissertationExamDate = _studentEvaluation.PlannedDissertationExamDate?.ToUniversalTime();
         _studentEvaluation.PlannedDissertationSubmissionDate = _studentEvaluation.PlannedDissertationSubmissionDate?.ToUniversalTime();
@@ -167,7 +155,7 @@
 
         if (StudentEvaluationGuid is null)
         {
-            _studentEvaluation.SchoolYear = SchoolYearService.CurrentSchoolYear;
+            _studentEvaluation.SchoolYear = SchoolYearService.Instance.CurrentSchoolYear;
             await UnitOfWork.StudentEvaluations.AddAsync(_studentEvaluation);
         }
         else

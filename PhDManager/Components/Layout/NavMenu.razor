@@ -1,12 +1,11 @@
 ﻿@using Microsoft.Extensions.Localization
 @using PhDManager.Locales
-@using PhDManager.Models
 @using PhDManager.Models.Roles
 
 @implements IDisposable
 
 @inject NavigationManager NavigationManager
-@inject IJSRuntime JSRuntime
+@inject IJSRuntime JsRuntime
 @inject IStringLocalizer<Resources> Localizer
 
 <MudNavMenu>
@@ -59,7 +58,7 @@
 
             <form id="logoutForm" action="Account/Logout" method="post">
                 <AntiforgeryToken />
-                <input type="hidden" name="ReturnUrl" value="@currentUrl" />
+                <input type="hidden" name="ReturnUrl" value="@_currentUrl" />
             </form>
         </Authorized>
         <NotAuthorized>
@@ -70,22 +69,22 @@
 
 
 @code {
-    private string? currentUrl;
+    private string? _currentUrl;
 
     protected override void OnInitialized()
     {
-        currentUrl = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
+        _currentUrl = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
         NavigationManager.LocationChanged += OnLocationChanged;
     }
 
     private async Task Logout()
     {
-        await JSRuntime.InvokeVoidAsync("logout");
+        await JsRuntime.InvokeVoidAsync("logout");
     }
 
     private void OnLocationChanged(object? sender, LocationChangedEventArgs e)
     {
-        currentUrl = NavigationManager.ToBaseRelativePath(e.Location);
+        _currentUrl = NavigationManager.ToBaseRelativePath(e.Location);
         StateHasChanged();
     }
 

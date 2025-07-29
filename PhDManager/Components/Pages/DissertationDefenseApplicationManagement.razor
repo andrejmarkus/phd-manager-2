@@ -3,7 +3,7 @@
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.Extensions.Localization
 @using PhDManager.Locales
-@using PhDManager.Models
+@using PhDManager.Models.Documents
 @using PhDManager.Models.Roles
 @using PhDManager.Services
 @using PhDManager.Services.IRepositories
@@ -23,7 +23,7 @@
 <MudText Typo="Typo.h4">@Localizer["DissertationDefenseApplication"]</MudText>
 
 <MudForm @ref="_form">
-    @if (_student is not null && _student.IndividualPlan is not null && _student.Thesis is not null)
+    @if (_student is { IndividualPlan: not null, Thesis: not null })
     {
         <MudField Label="@Localizer["Student"]" Variant="Variant.Outlined">@_student.User.DisplayName</MudField>
         <MudDatePicker ReadOnly Label="@Localizer["Birthdate"]" Variant="Variant.Outlined" @bind-Date="_student.User.Birthdate" />
@@ -53,7 +53,7 @@
     [Parameter]
     public string? DissertationDefenseApplicationGuid { get; set; }
 
-    private MudForm _form = default!;
+    private MudForm _form = null!;
     private DissertationDefenseApplication _dissertationDefenseApplication = new();
     private Student? _student;
     private bool _add;
@@ -72,6 +72,9 @@
 
     private async Task HandleDissertationDefenseApplication()
     {
+        await _form.Validate();
+        if (!_form.IsValid) return;
+
         if (_student is null) return;
 
         _dissertationDefenseApplication.Student = _student;

@@ -7,9 +7,7 @@
 
 @rendermode InteractiveServer
 
-@inject IServiceProvider ServiceProvider
 @inject IStringLocalizer<Resources> Localizer
-@inject UsersService UsersService
 @inject UserManager<ApplicationUser> UserManager
 @inject ActiveDirectoryService ActiveDirectoryService
 
@@ -45,7 +43,7 @@
 
 @code {
     [CascadingParameter]
-    private IMudDialogInstance MudDialog { get; set; } = default!;
+    private IMudDialogInstance MudDialog { get; set; } = null!;
 
     private IEnumerable<LdapEntry>? _users = [];
     private LdapEntry? _selectedUser;

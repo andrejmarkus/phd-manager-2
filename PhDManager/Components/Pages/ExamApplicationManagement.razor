@@ -4,6 +4,7 @@
 @using Microsoft.Extensions.Localization
 @using PhDManager.Locales
 @using PhDManager.Models
+@using PhDManager.Models.Documents
 @using PhDManager.Models.Enums
 @using PhDManager.Models.Roles
 @using PhDManager.Services
@@ -24,7 +25,7 @@
 <MudText Typo="Typo.h4">@Localizer["ExamApplication"]</MudText>
 
 <MudForm @ref="_form">
-    @if (_student is not null && _student.IndividualPlan is not null)
+    @if (_student?.IndividualPlan != null)
     {
         <MudField Label="@Localizer["Student"]" Variant="Variant.Outlined">@_student.User.DisplayName</MudField>
         <MudField Label="@Localizer["StudyForm"]" Variant="Variant.Outlined">@(EnumService.GetLocalizedEnumValue(_student.StudyForm))</MudField>
@@ -71,7 +72,7 @@
 </MudForm>
 
 @code {
-    private MudForm? _form;
+    private MudForm _form = null!;
     private Student? _student;
     private IEnumerable<Subject>? _subjects;
 
@@ -96,6 +97,10 @@
 
     private async Task HandleExamApplication()
     {
+        await _form.Validate();
+        if (!_form.IsValid) return;
+
+
         if (_student is null) return;
 
         _examApplication.Student = _student;

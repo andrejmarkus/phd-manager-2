@@ -50,22 +50,19 @@
 
 @code {
     [CascadingParameter]
-    private IMudDialogInstance MudDialog { get; set; } = default!;
+    private IMudDialogInstance MudDialog { get; set; } = null!;
 
     [Parameter]
     public Subject? Subject { get; set; }
 
-    private MudForm _form = default!;
+    private MudForm _form = null!;
     private bool _add;
     private IEnumerable<StudyProgram>? _studyPrograms;
 
     protected override async Task OnInitializedAsync()
     {
         _add = Subject is null;
-        if (Subject is null)
-        {
-            Subject = new();
-        }
+        Subject ??= new Subject();
 
         _studyPrograms = await UnitOfWork.StudyPrograms.GetAllAsync();
     }

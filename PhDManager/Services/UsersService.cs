@@ -5,60 +5,55 @@ using PhDManager.Data;
 using PhDManager.Models.Roles;
 using PhDManager.Services.IRepositories;
 using System.Security.Claims;
+using PhDManager.Services.UserRoles;
+using PhDManager.Services.Users;
 
 namespace PhDManager.Services
 {
     public class UsersService(
-        IUnitOfWork UnitOfWork,
-        IUserStore<ApplicationUser> UserStore,
-        UserManager<ApplicationUser> UserManager,
-        RoleManager<IdentityRole> RoleManager,
-        AuthenticationStateProvider AuthenticationStateProvider,
-        ActiveDirectoryService ActiveDirectoryService
+        IUnitOfWork unitOfWork,
+        IUserStore<ApplicationUser> userStore,
+        UserManager<ApplicationUser> userManager,
+        RoleManager<IdentityRole> roleManager,
+        AuthenticationStateProvider authenticationStateProvider,
+        ActiveDirectoryService activeDirectoryService
         )
     {
-        public IEnumerable<IdentityRole> Roles => RoleManager.Roles;
+        private readonly UserRoleStrategyFactory _roleStrategyFactory = new(userManager);
+        private readonly UserFactory _userFactory = new(userStore);
 
-        public IEnumerable<ApplicationUser>? GetAll()
+        public IEnumerable<IdentityRole> Roles => roleManager.Roles;
+
+        public IEnumerable<ApplicationUser> GetAll()
         {
-            return UserManager.Users;
+            return userManager.Users;
         }
 
         public async Task<ApplicationUser?> GetCurrentUserAsync()
         {
-            var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-            return await UserManager.GetUserAsync(authState.User);
+            var authState = await authenticationStateProvider.GetAuthenticationStateAsync();
+            return await userManager.GetUserAsync(authState.User);
         }
 
         public ApplicationUser? GetUserByUsernameAsync(string username)
         {
-            return UserManager.Users.Where(u => u.UserName == username).FirstOrDefault();
-        }
-
-        public async Task<string?> GetUserIdAsync(ApplicationUser user)
-        {
-            return await UserManager.GetUserIdAsync(user);
-        }
-
-        public ApplicationUser? GetUserById(string userId)
-        {
-            return UserManager.Users.Where(u => u.Id == userId).FirstOrDefault();
+            return userManager.Users.FirstOrDefault(u => u.UserName == username);
         }
 
         public async Task<string?> GetCurrentUserIdAsync()
         {
-            var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-            return (await UserManager.GetUserAsync(authState.User))?.Id;
+            var authState = await authenticationStateProvider.GetAuthenticationStateAsync();
+            return (await userManager.GetUserAsync(authState.User))?.Id;
         }
 
         public async Task<ApplicationUser?> GetUserByEmailAsync(string email)
         {
-            return await UserManager.FindByEmailAsync(email);
+            return await userManager.FindByEmailAsync(email);
         }
 
         public async Task<string?> GetUserRoleAsync(ApplicationUser user)
         {
-            var roles = await UserManager.GetRolesAsync(user);
+            var roles = await userManager.GetRolesAsync(user);
             return roles[0];
         }
 
@@ -69,58 +64,43 @@ namespace PhDManager.Services
             return await GetUserRoleAsync(currentUser);
         }
 
-        public async Task UpdateUserRoleAsync(ApplicationUser user, string role)
-        {
-            var unusedUser = await UserManager.FindByIdAsync(user.Id);
-            if (unusedUser is not null)
-            {
-                var userRoles = await UserManager.GetRolesAsync(unusedUser);
-                await UserManager.RemoveFromRolesAsync(unusedUser, userRoles);
-                await UserManager.AddToRoleAsync(unusedUser, role);
-            }
-        }
-
         public async Task UpdateUsers()
         {
-            var users = UserManager.Users.Where(u => !u.IsExternal).ToList();
+            var users = userManager.Users.Where(u => !u.IsExternal).ToList();
             foreach (var user in users)
             {
-                if (user.UserName is null) continue;
-
-                var entry = await ActiveDirectoryService.SearchUserAsync(user.UserName);
-
-                if (entry is null) continue;
-
-                user.Email = entry.DirectoryAttributes["mail"].GetValue<string>();
-                user.UserName = entry.DirectoryAttributes["uid"].GetValue<string>();
-                user.DisplayName = entry.DirectoryAttributes["displayName"].GetValue<string>();
-
-                await UserManager.UpdateAsync(user);
+                await UpdateLdapUserData(user);
             }
         }
 
         public async Task DeleteUserAsync(ApplicationUser user)
         {
-            var unusedUser = await UserManager.FindByIdAsync(user.Id);
+            var unusedUser = await userManager.FindByIdAsync(user.Id);
 
-            if (unusedUser is null) return;
-
-            if (unusedUser.IsExternal && unusedUser.Email is not null)
+            switch (unusedUser)
             {
-                var invitation = await UnitOfWork.Invitations.GetByEmailAsync(unusedUser.Email);
-                if (invitation is not null)
+                case null:
+                    return;
+                case { IsExternal: true, Email: not null }:
                 {
-                    UnitOfWork.Invitations.Delete(invitation);
-                    await UnitOfWork.CompleteAsync();
+                    var invitation = await unitOfWork.Invitations.GetByEmailAsync(unusedUser.Email);
+                    if (invitation is not null)
+                    {
+                        unitOfWork.Invitations.Delete(invitation);
+                        await unitOfWork.CompleteAsync();
+                    }
+
+                    break;
                 }
             }
-            await UserManager.DeleteAsync(unusedUser);
+
+            await userManager.DeleteAsync(unusedUser);
         }
 
         public async Task<ApplicationUser?> RegisterLdapUserWithoutPasswordAsync(LdapEntry entry, string role)
         {
-            var user = await CreateLdapUserAsync(entry);
-            var result = await UserManager.CreateAsync(user);
+            var user = await _userFactory.CreateUserAsync(entry);
+            var result = await userManager.CreateAsync(user);
             if (!result.Succeeded) return null;
 
             await AssignRole(user, role);
@@ -130,8 +110,8 @@ namespace PhDManager.Services
 
         public async Task<ApplicationUser?> RegisterLdapUserAsync(LdapEntry entry, string password, string role)
         {
-            var user = await CreateLdapUserAsync(entry);
-            var result = await UserManager.CreateAsync(user, password);
+            var user = await _userFactory.CreateUserAsync(entry);
+            var result = await userManager.CreateAsync(user, password);
             if (!result.Succeeded) return null;
 
             await AssignRole(user, role);
@@ -141,11 +121,11 @@ namespace PhDManager.Services
 
         public async Task<ApplicationUser?> RegisterUserAsync(string email, string username, string displayName, string password)
         {
-            var invitation = await UnitOfWork.Invitations.GetByEmailAsync(email);
+            var invitation = await unitOfWork.Invitations.GetByEmailAsync(email);
             if (invitation is null) return null;
 
-            var user = await CreateUserAsync(email, username, displayName);
-            var result = await UserManager.CreateAsync(user, password);
+            var user = await _userFactory.CreateUserAsync(email, username, displayName);
+            var result = await userManager.CreateAsync(user, password);
             if (!result.Succeeded) return null;
 
             await AssignRole(user, invitation.Role);
@@ -155,11 +135,11 @@ namespace PhDManager.Services
 
         public async Task<ApplicationUser?> RegisterUserAsync(string email, ExternalLoginInfo externalLoginInfo)
         {
-            var invitation = await UnitOfWork.Invitations.GetByEmailAsync(email);
+            var invitation = await unitOfWork.Invitations.GetByEmailAsync(email);
             if (invitation is null) return null;
 
-            var user = await CreateUserAsync(email, externalLoginInfo);
-            var result = await UserManager.CreateAsync(user);
+            var user = await _userFactory.CreateUserAsync(email, externalLoginInfo);
+            var result = await userManager.CreateAsync(user);
             if (!result.Succeeded) return null;
 
             await AssignRole(user, invitation.Role);
@@ -167,135 +147,26 @@ namespace PhDManager.Services
             return user;
         }
 
-
-        private async Task<ApplicationUser> CreateLdapUserAsync(LdapEntry entry)
-        {
-            var user = CreateUser();
-            var mail = entry.DirectoryAttributes["mail"].GetValue<string>();
-            var username = entry.DirectoryAttributes["uid"].GetValue<string>();
-
-            await UserStore.SetUserNameAsync(user, username, CancellationToken.None);
-            var emailStore = GetEmailStore();
-            await emailStore.SetEmailAsync(user, mail, CancellationToken.None);
-            user.EmailConfirmed = true;
-            user.DisplayName = entry.DirectoryAttributes["displayName"].GetValue<string>();
-
-            return user;
-        }
-
-        private async Task<ApplicationUser> CreateUserAsync(string email, string username, string displayName)
-        {
-            var user = CreateUser();
-
-            await UserStore.SetUserNameAsync(user, username, CancellationToken.None);
-            var emailStore = GetEmailStore();
-            await emailStore.SetEmailAsync(user, email, CancellationToken.None);
-            user.IsExternal = true;
-            user.DisplayName = displayName;
-
-            return user;
-        }
-
-        private async Task<ApplicationUser> CreateUserAsync(string email, ExternalLoginInfo externalLoginInfo)
-        {
-            var user = CreateUser();
-
-            await UserStore.SetUserNameAsync(user, email, CancellationToken.None);
-            var emailStore = GetEmailStore();
-            await emailStore.SetEmailAsync(user, email, CancellationToken.None);
-            user.IsExternal = true;
-            user.DisplayName = externalLoginInfo.Principal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
-
-            return user;
-        }
-
-        private IUserEmailStore<ApplicationUser> GetEmailStore()
-        {
-            if (!UserManager.SupportsUserEmail)
-            {
-                throw new NotSupportedException("The default UI requires a user store with email support.");
-            }
-            return (IUserEmailStore<ApplicationUser>)UserStore;
-        }
-
-        private static ApplicationUser CreateUser()
-        {
-            try
-            {
-                return Activator.CreateInstance<ApplicationUser>();
-            }
-            catch
-            {
-                throw new InvalidOperationException($"Can't create an instance of '{nameof(ApplicationUser)}'. " +
-                    $"Ensure that '{nameof(ApplicationUser)}' is not an abstract class and has a parameterless constructor.");
-            }
-        }
-
         private async Task AssignRole(ApplicationUser user, string role)
         {
-            await UserManager.AddToRoleAsync(user, role);
-
-            switch (role)
-            {
-                case Admin.Role:
-                    {
-                        await AddAdminToUser(user, new());
-                        break;
-                    }
-                case Student.Role:
-                    {
-                        await AddStudentToUser(user, new());
-                        break;
-                    }
-                case Teacher.Role:
-                    {
-                        await AddTeacherToUser(user, new());
-                        break;
-                    }
-                case ExternalTeacher.Role:
-                    {
-                        await AddExternalTeacherToUser(user, new());
-                        break;
-                    }
-                default: break;
-            }
-            await UnitOfWork.CompleteAsync();
+            await userManager.AddToRoleAsync(user, role);
+            var strategy = _roleStrategyFactory.GetStrategy(role);
+            await strategy.ApplyRole(user);
+            await unitOfWork.CompleteAsync();
         }
 
-        private async Task AddStudentToUser(ApplicationUser user, Student student)
+        private async Task UpdateLdapUserData(ApplicationUser user)
         {
-            var unusedUser = await UserManager.FindByIdAsync(user.Id);
-            if (unusedUser is null) return;
+            if (user.UserName is null) return;
 
-            unusedUser.Students.Add(student);
-            await UserManager.UpdateAsync(unusedUser);
-        }
+            var entry = await activeDirectoryService.SearchUserAsync(user.UserName);
+            if (entry is null) return;
 
-        private async Task AddAdminToUser(ApplicationUser user, Admin admin)
-        {
-            var unusedUser = await UserManager.FindByIdAsync(user.Id);
-            if (unusedUser is null) return;
+            user.Email = entry.DirectoryAttributes["mail"].GetValue<string>();
+            user.UserName = entry.DirectoryAttributes["uid"].GetValue<string>();
+            user.DisplayName = entry.DirectoryAttributes["displayName"].GetValue<string>();
 
-            unusedUser.Admin = admin;
-            await UserManager.UpdateAsync(unusedUser);
-        }
-
-        private async Task AddTeacherToUser(ApplicationUser user, Teacher teacher)
-        {
-            var unusedUser = await UserManager.FindByIdAsync(user.Id);
-            if (unusedUser is null) return;
-
-            unusedUser.Teacher = teacher;
-            await UserManager.UpdateAsync(unusedUser);
-        }
-
-        private async Task AddExternalTeacherToUser(ApplicationUser user, ExternalTeacher externalTeacher)
-        {
-            var unusedUser = await UserManager.FindByIdAsync(user.Id);
-            if (unusedUser is null) return;
-
-            unusedUser.Teacher = externalTeacher;
-            await UserManager.UpdateAsync(unusedUser);
+            await userManager.UpdateAsync(user);
         }
     }
 }

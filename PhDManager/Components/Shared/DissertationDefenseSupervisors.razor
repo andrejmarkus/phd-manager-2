@@ -1,14 +1,12 @@
-﻿@using Microsoft.AspNetCore.Authorization
-@using Microsoft.Extensions.Localization
+﻿@using Microsoft.Extensions.Localization
 @using PhDManager.Locales
-@using PhDManager.Models
+@using PhDManager.Models.Documents
 @using PhDManager.Models.Roles
 @using PhDManager.Services
 @using PhDManager.Services.IRepositories
 
 @rendermode InteractiveServer
 
-@inject IJSRuntime JSRuntime
 @inject IUnitOfWork UnitOfWork
 @inject IDialogService DialogService
 @inject IStringLocalizer<Resources> Localizer
@@ -17,7 +15,7 @@
 
 <MudText Class="mt-2" Typo="Typo.h5" GutterBottom>@Localizer["DissertationDefenseSupervisor"]</MudText>
 
-<MudDataGrid T="DissertationDefenseSupervisor" Items="_dissertationDefenseSupervisors" Hover SortMode="SortMode.Multiple" QuickFilter="_quickFilter" Elevation="0">
+<MudDataGrid T="DissertationDefenseSupervisor" Items="_dissertationDefenseSupervisors" Hover SortMode="SortMode.Multiple" QuickFilter="QuickFilter" Elevation="0">
     <ToolBarContent>
         <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="management/dissertation-defense-supervisors/add">@Localizer["Add"]</MudButton>
         <MudSpacer />
@@ -38,7 +36,7 @@
                         <MudIconButton Size="@Size.Small" Color="Color.Info" Icon="@Icons.Material.Outlined.Edit" Href="@($"management/dissertation-defense-supervisors/edit/{context.Item.Guid}")" />
                     </MudTooltip>
                     <MudTooltip Text="@Localizer["DissertationDefenseSupervisorGenerate"]">
-                        <MudIconButton Size="@Size.Small" Color="Color.Info" Icon="@Icons.Material.Outlined.Print" OnClick="@(async () => await DocumentService.DownloadDissertationDefenseSupervisorDocument(context.Item))" />
+                        <MudIconButton Size="@Size.Small" Color="Color.Info" Icon="@Icons.Material.Outlined.Print" OnClick="@(async () => await DocumentService.Download(context.Item))" />
                     </MudTooltip>
                 </MudStack>
             </CellTemplate>
@@ -64,32 +62,26 @@
         await LoadDissertationDefenseSupervisor();
     }
 
-    private Func<DissertationDefenseSupervisor, bool> _quickFilter => dds =>
+    private Func<DissertationDefenseSupervisor, bool> QuickFilter => dds =>
     {
         if (string.IsNullOrWhiteSpace(_search))
             return true;
 
-        if (dds.Student?.User.DisplayName?.Contains(_search, StringComparison.OrdinalIgnoreCase) == true)
+        if (dds.Student.User.DisplayName?.Contains(_search, StringComparison.OrdinalIgnoreCase) == true)
             return true;
 
-        if (dds.OpponentDisplayNames[0].Contains(_search, StringComparison.OrdinalIgnoreCase) == true)
+        if (dds.OpponentDisplayNames[0].Contains(_search, StringComparison.OrdinalIgnoreCase))
             return true;
 
-        if (dds.OpponentDisplayNames[1].Contains(_search, StringComparison.OrdinalIgnoreCase) == true)
+        if (dds.OpponentDisplayNames[1].Contains(_search, StringComparison.OrdinalIgnoreCase))
             return true;
 
-        if (dds.OpponentDisplayNames[2].Contains(_search, StringComparison.OrdinalIgnoreCase) == true)
-            return true;
-
-        if ($"{dds.Student?.User.DisplayName} {dds.OpponentDisplayNames[0]} {dds.OpponentDisplayNames[1]} {dds.OpponentDisplayNames[2]}".Contains(_search))
-            return true;
-
-        return false;
+        return dds.OpponentDisplayNames[2].Contains(_search, StringComparison.OrdinalIgnoreCase) || $"{dds.Student?.User.DisplayName} {dds.OpponentDisplayNames[0]} {dds.OpponentDisplayNames[1]} {dds.OpponentDisplayNames[2]}".Contains(_search);
     };
 
     private async Task DeleteDissertationDefenseSupervisor(DissertationDefenseSupervisor dissertationDefenseSupervisor)
     {
-        bool? result = await DialogService.ShowMessageBox(Localizer["DissertationDefenseSupervisorDelete"], Localizer["DissertationDefenseSupervisorDeleteConfirmation"], Localizer["Yes"], Localizer["No"]);
+        var result = await DialogService.ShowMessageBox(Localizer["DissertationDefenseSupervisorDelete"], Localizer["DissertationDefenseSupervisorDeleteConfirmation"], Localizer["Yes"], Localizer["No"]);
         if (result == false) return;
 
         UnitOfWork.DissertationDefenseSupervisors.Delete(dissertationDefenseSupervisor);

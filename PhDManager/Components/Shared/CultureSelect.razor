@@ -1,7 +1,6 @@
 ﻿@inject NavigationManager Navigation
 
 @using System.Globalization
-@using Microsoft.AspNetCore.Localization
 
 <MudSelect Underline="false" @bind-Value="Culture">
     @foreach (var culture in _cultures)
@@ -14,9 +13,9 @@
 
 @code
 {
-    private Dictionary<CultureInfo, string> _cultures = new() {
-        { new ("sk-SK"), "https://flagicons.lipis.dev/flags/4x3/sk.svg" },
-        { new ("en-US"), "https://flagicons.lipis.dev/flags/4x3/us.svg" }
+    private readonly Dictionary<CultureInfo, string> _cultures = new() {
+        { new CultureInfo("sk-SK"), "https://flagicons.lipis.dev/flags/4x3/sk.svg" },
+        { new CultureInfo("en-US"), "https://flagicons.lipis.dev/flags/4x3/us.svg" }
     };
 
     protected override void OnInitialized()
@@ -29,16 +28,15 @@
         get => CultureInfo.CurrentCulture;
         set
         {
-            if (CultureInfo.CurrentCulture != value)
-            {
-                var uri = new Uri(Navigation.Uri)
-                    .GetComponents(UriComponents.PathAndQuery, UriFormat.Unescaped);
-                var cultureEscaped = Uri.EscapeDataString(value.Name);
-                var uriEscaped = Uri.EscapeDataString(uri);
+            if (Equals(CultureInfo.CurrentCulture, value)) return;
 
-                var fullUri = $"Culture/Set?culture={cultureEscaped}&redirectUri={uriEscaped}";
-                Navigation.NavigateTo(fullUri, forceLoad: true);
-            }
+            var uri = new Uri(Navigation.Uri)
+                .GetComponents(UriComponents.PathAndQuery, UriFormat.Unescaped);
+            var cultureEscaped = Uri.EscapeDataString(value.Name);
+            var uriEscaped = Uri.EscapeDataString(uri);
+
+            var fullUri = $"Culture/Set?culture={cultureEscaped}&redirectUri={uriEscaped}";
+            Navigation.NavigateTo(fullUri, forceLoad: true);
         }
     }
 }

@@ -2,7 +2,6 @@
 @using Microsoft.Extensions.Localization
 @using PhDManager.Components.Dialogs
 @using PhDManager.Locales
-@using PhDManager.Models
 @using PhDManager.Models.Roles
 @using PhDManager.Services
 @using PhDManager.Services.IRepositories
@@ -13,11 +12,10 @@
 @inject IStringLocalizer<Resources> Localizer
 @inject IUnitOfWork UnitOfWork
 @inject UsersService UsersService
-@inject NavigationManager NavigationManager
 
 <MudText Class="mt-2" Typo="Typo.h5" GutterBottom>@Localizer["Teachers"]</MudText>
 
-<MudDataGrid T="Teacher" Items="@_teachers" Hover SortMode="SortMode.Multiple" QuickFilter="@_quickFilter" Elevation="0">
+<MudDataGrid T="Teacher" Items="@_teachers" Hover SortMode="SortMode.Multiple" QuickFilter="@QuickFilter" Elevation="0">
     <ToolBarContent>
         <MudStack Row>
             <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="AddTeacher">@Localizer["Add"]</MudButton>
@@ -59,7 +57,7 @@
         await LoadTeachers();
     }
 
-    private Func<Teacher, bool> _quickFilter => e =>
+    private Func<Teacher, bool> QuickFilter => e =>
     {
         if (string.IsNullOrWhiteSpace(_search))
             return true;
@@ -70,13 +68,7 @@
         if (e.User.DisplayName?.Contains(_search, StringComparison.OrdinalIgnoreCase) == true)
             return true;
 
-        if (e.User.Email?.Contains(_search, StringComparison.OrdinalIgnoreCase) == true)
-            return true;
-
-        if ($"{e.User.UserName} {e.User.DisplayName} {e.User.Email}".Contains(_search))
-            return true;
-
-        return false;
+        return e.User.Email?.Contains(_search, StringComparison.OrdinalIgnoreCase) == true || $"{e.User.UserName} {e.User.DisplayName} {e.User.Email}".Contains(_search);
     };
 
     private async Task AddTeacher()
@@ -86,9 +78,7 @@
 
         if (result is null || result.Canceled) return;
 
-        var entry = result.Data as LdapEntry;
-
-        if (entry is null) return;
+        if (result.Data is not LdapEntry entry) return;
 
         var user = await UsersService.RegisterLdapUserWithoutPasswordAsync(entry, Teacher.Role);
 
@@ -98,12 +88,12 @@
     private async Task CreateTeacherRegistration()
     {
         var parameters = new DialogParameters<InvitationLinkDialog> { { d => d.Role, Teacher.Role } };
-        await DialogService.ShowAsync<InvitationLinkDialog>(Localizer["UserRegister"], parameters, new() { FullWidth = true, MaxWidth = MaxWidth.Medium });
+        await DialogService.ShowAsync<InvitationLinkDialog>(Localizer["UserRegister"], parameters, new DialogOptions { FullWidth = true, MaxWidth = MaxWidth.Medium });
     }
 
     private async Task DeleteTeacher(Teacher teacher)
     {
-        bool? result = await DialogService.ShowMessageBox(Localizer["UserDelete"], Localizer["UserDeleteConfirmation"], Localizer["Yes"], Localizer["No"]);
+        var result = await DialogService.ShowMessageBox(Localizer["UserDelete"], Localizer["UserDeleteConfirmation"], Localizer["Yes"], Localizer["No"]);
         if (result == false) return;
 
         var user = teacher.User;
@@ -118,7 +108,7 @@
     private async Task UpdateTeacher(Teacher teacher)
     {
         var parameters = new DialogParameters<EditTeacherDialog> { { d => d.Teacher, teacher } };
-        var dialog = await DialogService.ShowAsync<EditTeacherDialog>(Localizer["UserEdit"], parameters, new() { FullWidth = true, MaxWidth = MaxWidth.Medium });
+        var dialog = await DialogService.ShowAsync<EditTeacherDialog>(Localizer["UserEdit"], parameters, new DialogOptions { FullWidth = true, MaxWidth = MaxWidth.Medium });
         var result = await dialog.Result;
 
         if (result is null || result.Canceled) return;

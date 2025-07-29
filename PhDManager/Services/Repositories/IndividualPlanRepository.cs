@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PhDManager.Data;
-using PhDManager.Models;
+using PhDManager.Models.Documents;
 using PhDManager.Services.IRepositories;
 
 namespace PhDManager.Services.Repositories

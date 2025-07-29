@@ -5,8 +5,6 @@
 @using PhDManager.Models
 @using PhDManager.Services
 @using PhDManager.Services.IRepositories
-@using PhDManager.Services.Repositories
-@using System.Text.RegularExpressions
 
 @rendermode InteractiveServer
 
@@ -46,7 +44,7 @@
 
 @code {
     [CascadingParameter]
-    private IMudDialogInstance MudDialog { get; set; } = default!;
+    private IMudDialogInstance MudDialog { get; set; } = null!;
 
     [Parameter]
     public string Role { get; set; } = string.Empty;
@@ -66,7 +64,7 @@
         _invitation = (await UnitOfWork.Invitations.GetAllAsync())?.FirstOrDefault(i => i.Email == _email);
         if (_invitation is null)
         {
-            _invitation = new()
+            _invitation = new Invitation
             {
                 Email = _email,
                 Guid = guid,
@@ -124,9 +122,6 @@
         if (string.IsNullOrWhiteSpace(value))
             return Localizer["Required"];
 
-        if (!System.Text.RegularExpressions.Regex.IsMatch(value, @"^[^@\s]+@[^@\s]+\.[^@\s]+$"))
-            return Localizer["EmailInvalidFormat"];
-
-        return null!;
+        return !System.Text.RegularExpressions.Regex.IsMatch(value, @"^[^@\s]+@[^@\s]+\.[^@\s]+$") ? Localizer["EmailInvalidFormat"] : null!;
     }
 }

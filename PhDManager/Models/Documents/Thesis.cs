@@ -1,9 +1,12 @@
-﻿using PhDManager.Models.Roles;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
+using Microsoft.JSInterop;
+using PhDManager.Models.Roles;
+using PhDManager.Services;
+using PhDManager.Services.Documents;
 
-namespace PhDManager.Models
+namespace PhDManager.Models.Documents
 {
-    public class Thesis : BaseModel
+    public class Thesis : BaseModel, IDocumentable
     {
         public bool IsApproved { get; set; } = false;
         public string Title { get; set; } = string.Empty;
@@ -25,12 +28,17 @@ namespace PhDManager.Models
         [JsonIgnore]
         public virtual Student? Student { get; set; }
         [JsonIgnore]
-        public virtual Teacher Supervisor { get; set; } = default!;
+        public virtual Teacher Supervisor { get; set; } = null!;
         [JsonIgnore]
         public virtual Teacher? SupervisorSpecialist { get; set; }
         public int StudyProgramId { get; set; }
-        public virtual StudyProgram StudyProgram { get; set; } = default!;
+        public virtual StudyProgram StudyProgram { get; set; } = null!;
 
         public virtual List<Comment> Comments { get; set; } = [];
+
+        public DocumentTemplate CreateDocument(IJSRuntime jsRuntime, EnumService enumService)
+        {
+            return new ThesisDocument(jsRuntime, enumService, this);
+        }
     }
 }

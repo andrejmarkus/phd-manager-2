@@ -3,21 +3,18 @@
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.Extensions.Localization
 @using PhDManager.Locales
-@using PhDManager.Models
+@using PhDManager.Models.Documents
 @using PhDManager.Models.Roles
 @using PhDManager.Services
 @using PhDManager.Services.IRepositories
 
 @rendermode InteractiveServer
 
-@inject IJSRuntime JSRuntime
 @inject IUnitOfWork UnitOfWork
 @inject IDialogService DialogService
 @inject IStringLocalizer<Resources> Localizer
 @inject IStringLocalizer<Enums> EnumLocalizer
-@inject DocumentService DocumentService
 @inject UsersService UsersService
-@inject SchoolYearService SchoolYearService
 
 @attribute [Authorize(Roles = $"{Admin.Role}, {Teacher.Role}, {ExternalTeacher.Role}")]
 
@@ -25,7 +22,7 @@
 
 <MudText Typo="Typo.h5" GutterBottom>@Localizer["DissertationThesesPending"]</MudText>
 
-<MudDataGrid T="Thesis" Items="_theses" Hover SortMode="SortMode.Multiple" QuickFilter="_quickFilter" Elevation="0">
+<MudDataGrid T="Thesis" Items="_theses" Hover SortMode="SortMode.Multiple" QuickFilter="QuickFilter" Elevation="0">
     <ToolBarContent>     
         <MudSpacer />
         <MudTextField Class="ml-4" Variant="Variant.Outlined" Placeholder="@Localizer["Search"]" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" @bind-Value="_search" />
@@ -82,7 +79,7 @@
         await LoadTheses();
     }
 
-    private Func<Thesis, bool> _quickFilter => t =>
+    private Func<Thesis, bool> QuickFilter => t =>
     {
         if (string.IsNullOrWhiteSpace(_search))
             return true;
@@ -93,13 +90,7 @@
         if (t.Supervisor.User.DisplayName?.Contains(_search, StringComparison.OrdinalIgnoreCase) == true)
             return true;
 
-        if (t.Supervisor.User.Email?.Contains(_search, StringComparison.OrdinalIgnoreCase) == true)
-            return true;
-
-        if ($"{t.Title} {t.Supervisor.User.DisplayName} {t.Supervisor.User.Email}".Contains(_search))
-            return true;
-
-        return false;
+        return t.Supervisor.User.Email?.Contains(_search, StringComparison.OrdinalIgnoreCase) == true || $"{t.Title} {t.Supervisor.User.DisplayName} {t.Supervisor.User.Email}".Contains(_search);
     };
 
     private async Task ApproveThesis(Thesis thesis)
@@ -116,7 +107,7 @@
 
     private async Task DeleteThesis(Thesis thesis)
     {
-        bool? result = await DialogService.ShowMessageBox(Localizer["DissertationThesisDelete"], Localizer["DissertationThesisDeleteConfirmation"], Localizer["Yes"], Localizer["No"]);
+        var result = await DialogService.ShowMessageBox(Localizer["DissertationThesisDelete"], Localizer["DissertationThesisDeleteConfirmation"], Localizer["Yes"], Localizer["No"]);
         if (result == false) return;
 
         foreach (var comment in thesis.Comments)

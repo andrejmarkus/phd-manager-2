@@ -1,24 +1,20 @@
 ﻿@page "/management/evaluations"
 
-@using Hangfire
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.Extensions.Localization
 @using PhDManager.Locales
-@using PhDManager.Models
+@using PhDManager.Models.Documents
 @using PhDManager.Models.Roles
 @using PhDManager.Services
 @using PhDManager.Services.IRepositories
 
 @rendermode InteractiveServer
 
-@inject IJSRuntime JSRuntime
 @inject IUnitOfWork UnitOfWork
 @inject IDialogService DialogService
 @inject IStringLocalizer<Resources> Localizer
 @inject DocumentService DocumentService
 @inject UsersService UsersService
-@inject SchoolYearService SchoolYearService
-@inject JobService JobService
 
 @attribute [Authorize(Roles = $"{Admin.Role}, {Teacher.Role}, {ExternalTeacher.Role}")]
 
@@ -26,7 +22,7 @@
 
 <MudText Typo="Typo.h5" GutterBottom>@Localizer["Evaluations"]</MudText>
 
-<MudDataGrid T="StudentEvaluation" Items="_studentEvaluations" Hover SortMode="SortMode.Multiple" QuickFilter="_quickFilter" Elevation="0">
+<MudDataGrid T="StudentEvaluation" Items="_studentEvaluations" Hover SortMode="SortMode.Multiple" QuickFilter="QuickFilter" Elevation="0">
     <ToolBarContent>
         <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="/management/evaluations/add">@Localizer["Add"]</MudButton>
         <MudSpacer />
@@ -46,7 +42,7 @@
                         <MudIconButton Size="@Size.Small" Color="Color.Info" Icon="@Icons.Material.Outlined.Edit" Href="@($"/management/evaluations/edit/{context.Item.Guid}")" />
                     </MudTooltip>
                     <MudTooltip Text="@Localizer["StudentEvaluationGenerate"]">
-                        <MudIconButton Size="@Size.Small" Color="Color.Info" Icon="@Icons.Material.Outlined.Print" OnClick="@(async () => await DocumentService.DownloadStudentEvaluationDocument(context.Item))" />
+                        <MudIconButton Size="@Size.Small" Color="Color.Info" Icon="@Icons.Material.Outlined.Print" OnClick="@(async () => await DocumentService.Download(context.Item))" />
                     </MudTooltip>
                 </MudStack>
             </CellTemplate>
@@ -75,7 +71,7 @@
         await LoadStudentEvaluations();
     }
 
-    private Func<StudentEvaluation, bool> _quickFilter => se =>
+    private Func<StudentEvaluation, bool> QuickFilter => se =>
     {
         if (string.IsNullOrWhiteSpace(_search))
             return true;
@@ -86,18 +82,12 @@
         if (se.Student?.IndividualPlan?.WrittenThesisTitle.Contains(_search, StringComparison.OrdinalIgnoreCase) == true)
             return true;
 
-        if (se.Student?.Thesis?.Title.Contains(_search, StringComparison.OrdinalIgnoreCase) == true)
-            return true;
-
-        if ($"{se.Student?.User.DisplayName} {se.Student?.IndividualPlan?.WrittenThesisTitle} {se.Student?.Thesis?.Title}".Contains(_search))
-            return true;
-
-        return false;
+        return se.Student?.Thesis?.Title.Contains(_search, StringComparison.OrdinalIgnoreCase) == true || $"{se.Student?.User.DisplayName} {se.Student?.IndividualPlan?.WrittenThesisTitle} {se.Student?.Thesis?.Title}".Contains(_search);
     };
 
     private async Task DeleteStudentEvaluation(StudentEvaluation studentEvaluation)
     {
-        bool? result = await DialogService.ShowMessageBox(Localizer["StudentEvaluationDelete"], Localizer["StudentEvaluationDeleteConfirmation"], Localizer["Yes"], Localizer["No"]);
+        var result = await DialogService.ShowMessageBox(Localizer["StudentEvaluationDelete"], Localizer["StudentEvaluationDeleteConfirmation"], Localizer["Yes"], Localizer["No"]);
         if (result == false) return;
 
         UnitOfWork.StudentEvaluations.Delete(studentEvaluation);
@@ -109,7 +99,7 @@
     {
         _studentEvaluations = await UnitOfWork.StudentEvaluations.GetAllAsync();
 
-        if (_currentUserRole == Teacher.Role || _currentUserRole == ExternalTeacher.Role)
+        if (_currentUserRole is Teacher.Role or ExternalTeacher.Role)
         {
             _studentEvaluations = _studentEvaluations?.Where(se => se.Student?.Thesis?.Supervisor.User.Id == _currentUserId);
         }

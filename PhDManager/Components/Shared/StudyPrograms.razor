@@ -1,9 +1,7 @@
-﻿@using LdapForNet
-@using Microsoft.Extensions.Localization
+﻿@using Microsoft.Extensions.Localization
 @using PhDManager.Components.Dialogs
 @using PhDManager.Locales
 @using PhDManager.Models
-@using PhDManager.Services
 @using PhDManager.Services.IRepositories
 
 @rendermode InteractiveServer
@@ -11,11 +9,10 @@
 @inject IDialogService DialogService
 @inject IStringLocalizer<Resources> Localizer
 @inject IUnitOfWork UnitOfWork
-@inject UsersService UsersService
 
 <MudText Class="mt-2" Typo="Typo.h5" GutterBottom>@Localizer["StudyPrograms"]</MudText>
 
-<MudDataGrid T="StudyProgram" Items="@_studyPrograms" Hover SortMode="SortMode.Multiple" QuickFilter="@_quickFilter" Elevation="0">
+<MudDataGrid T="StudyProgram" Items="@_studyPrograms" Hover SortMode="SortMode.Multiple" QuickFilter="@QuickFilter" Elevation="0">
     <ToolBarContent>
         <MudButton class="mx-4" Variant="Variant.Filled" Color="Color.Primary" OnClick="AddStudyProgram">@Localizer["Add"]</MudButton>
         <MudSpacer />
@@ -53,18 +50,12 @@
         await LoadStudyPrograms();
     }
 
-    private Func<StudyProgram, bool> _quickFilter => sp =>
+    private Func<StudyProgram, bool> QuickFilter => sp =>
     {
         if (string.IsNullOrWhiteSpace(_search))
             return true;
 
-        if (sp.Name.Contains(_search, StringComparison.OrdinalIgnoreCase) == true)
-            return true;
-
-        if ($"{sp.Name}".Contains(_search))
-            return true;
-
-        return false;
+        return sp.Name.Contains(_search, StringComparison.OrdinalIgnoreCase) || $"{sp.Name}".Contains(_search);
     };
 
     private async Task AddStudyProgram()
@@ -74,9 +65,7 @@
 
         if (result is null || result.Canceled) return;
 
-        var studyProgram = result.Data as StudyProgram;
-
-        if (studyProgram is null) return;
+        if (result.Data is not StudyProgram studyProgram) return;
 
         await UnitOfWork.StudyPrograms.AddAsync(studyProgram);
         await UnitOfWork.CompleteAsync();
@@ -86,14 +75,12 @@
     private async Task UpdateStudyProgram(StudyProgram studyProgram)
     {
         var parameters = new DialogParameters<ManageStudyProgramDialog> { { d => d.StudyProgram, studyProgram } };
-        var dialog = await DialogService.ShowAsync<ManageStudyProgramDialog>(Localizer["StudyProgramEdit"], parameters, new() { FullWidth = true, MaxWidth = MaxWidth.Medium });
+        var dialog = await DialogService.ShowAsync<ManageStudyProgramDialog>(Localizer["StudyProgramEdit"], parameters, new DialogOptions { FullWidth = true, MaxWidth = MaxWidth.Medium });
         var result = await dialog.Result;
 
         if (result is null || result.Canceled) return;
 
-        var updatedStudyProgram = result.Data as StudyProgram;
-
-        if (updatedStudyProgram is null) return;
+        if (result.Data is not StudyProgram updatedStudyProgram) return;
 
         await UnitOfWork.StudyPrograms.UpdateAsync(updatedStudyProgram);
         await UnitOfWork.CompleteAsync();
@@ -102,7 +89,7 @@
 
     private async Task DeleteStudyProgram(StudyProgram studyProgram)
     {
-        bool? result = await DialogService.ShowMessageBox(Localizer["StudyProgramDelete"], Localizer["StudyProgramDeleteConfirmation"], Localizer["Yes"], Localizer["No"]);
+        var result = await DialogService.ShowMessageBox(Localizer["StudyProgramDelete"], Localizer["StudyProgramDeleteConfirmation"], Localizer["Yes"], Localizer["No"]);
         if (result == false) return;
 
         foreach (var subject in studyProgram.Subjects)

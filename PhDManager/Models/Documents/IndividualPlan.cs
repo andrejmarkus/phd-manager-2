@@ -1,9 +1,12 @@
 ﻿using PhDManager.Models.Roles;
 using System.Text.Json.Serialization;
+using Microsoft.JSInterop;
+using PhDManager.Services;
+using PhDManager.Services.Documents;
 
-namespace PhDManager.Models
+namespace PhDManager.Models.Documents
 {
-    public class IndividualPlan : BaseModel
+    public class IndividualPlan : BaseModel, IDocumentable
     {
         public string Guid { get; set; } = System.Guid.NewGuid().ToString();
         public DateTime? DissertationApplicationDate { get; set; }
@@ -20,8 +23,13 @@ namespace PhDManager.Models
         public DateTime CurrentDate { get; set; } = DateTime.UtcNow;
 
         [JsonIgnore]
-        public virtual Student? Student { get; set; } = default!;
+        public virtual Student? Student { get; set; } = null!;
         public virtual List<Subject> Subjects { get; set; } = [];
         public virtual List<IndividualPlanSubject> IndividualPlanSubjects { get; set; } = [];
+
+        public DocumentTemplate CreateDocument(IJSRuntime jsRuntime, EnumService enumService)
+        {
+            return new IndividualPlanDocument(jsRuntime, enumService, this);
+        }
     }
 }

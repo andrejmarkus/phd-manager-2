@@ -7,7 +7,7 @@
 
 @inject IStringLocalizer<Resources> Localizer
 
-<MudDialog Options="@(new() { FullWidth = true })">
+<MudDialog Options="@(new DialogOptions { FullWidth = true })">
     <TitleContent>
         <MudText Typo="Typo.h6">@Localizer["CommentEdit"]</MudText>
     </TitleContent>
@@ -22,7 +22,7 @@
 
 @code {
     [CascadingParameter]
-    private IMudDialogInstance MudDialog { get; set; } = default!;
+    private IMudDialogInstance MudDialog { get; set; } = null!;
 
     [Parameter]
     public Comment Comment { get; set; } = new();

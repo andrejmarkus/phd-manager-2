@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using PhDManager.Models;
+using PhDManager.Models.Documents;
 using PhDManager.Models.Enums;
 using PhDManager.Models.Roles;
 

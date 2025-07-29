@@ -2,7 +2,6 @@
 @using Microsoft.Extensions.Localization
 @using PhDManager.Components.Dialogs
 @using PhDManager.Locales
-@using PhDManager.Models
 @using PhDManager.Models.Roles
 @using PhDManager.Services
 @using PhDManager.Services.IRepositories
@@ -16,7 +15,7 @@
 
 <MudText Class="mt-2" Typo="Typo.h5" GutterBottom>@Localizer["Admins"]</MudText>
 
-<MudDataGrid T="Admin" Items="@_admins" Hover SortMode="SortMode.Multiple" QuickFilter="@_quickFilter" Elevation="0">
+<MudDataGrid T="Admin" Items="@_admins" Hover SortMode="SortMode.Multiple" QuickFilter="@QuickFilter" Elevation="0">
     <ToolBarContent>
         <MudStack Row>
             <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="AddAdmin">@Localizer["Add"]</MudButton>
@@ -55,7 +54,7 @@
         _admins = await UnitOfWork.Admins.GetAllAsync();
     }
 
-    private Func<Admin, bool> _quickFilter => a =>
+    private Func<Admin, bool> QuickFilter => a =>
     {
         if (string.IsNullOrWhiteSpace(_search))
             return true;
@@ -66,13 +65,7 @@
         if (a.User.DisplayName?.Contains(_search, StringComparison.OrdinalIgnoreCase) == true)
             return true;
 
-        if (a.User.Email?.Contains(_search, StringComparison.OrdinalIgnoreCase) == true)
-            return true;
-
-        if ($"{a.User.UserName} {a.User.DisplayName} {a.User.Email}".Contains(_search))
-            return true;
-
-        return false;
+        return a.User.Email?.Contains(_search, StringComparison.OrdinalIgnoreCase) == true || $"{a.User.UserName} {a.User.DisplayName} {a.User.Email}".Contains(_search);
     };
 
     private async Task AddAdmin()
@@ -82,9 +75,7 @@
 
         if (result is null || result.Canceled) return;
 
-        var entry = result.Data as LdapEntry;
-
-        if (entry is null) return;
+        if (result.Data is not LdapEntry entry) return;
 
         var user = await UsersService.RegisterLdapUserWithoutPasswordAsync(entry, Admin.Role);
 
@@ -95,7 +86,7 @@
 
     private async Task DeleteAdmin(Admin admin)
     {
-        bool? result = await DialogService.ShowMessageBox(Localizer["UserDelete"], Localizer["UserDeleteConfirmation"], Localizer["Yes"], Localizer["No"]);
+        var result = await DialogService.ShowMessageBox(Localizer["UserDelete"], Localizer["UserDeleteConfirmation"], Localizer["Yes"], Localizer["No"]);
         if (result == false) return;
 
         var user = admin.User;
@@ -110,6 +101,6 @@
     private async Task CreateAdminRegistration()
     {
         var parameters = new DialogParameters<InvitationLinkDialog> { { d => d.Role, Admin.Role } };
-        await DialogService.ShowAsync<InvitationLinkDialog>(Localizer["UserRegister"], parameters, new() { FullWidth = true, MaxWidth = MaxWidth.Medium });
+        await DialogService.ShowAsync<InvitationLinkDialog>(Localizer["UserRegister"], parameters, new DialogOptions { FullWidth = true, MaxWidth = MaxWidth.Medium });
     }
 }

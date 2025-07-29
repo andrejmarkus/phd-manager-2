@@ -1,6 +1,6 @@
 ﻿@inherits LayoutComponentBase
 
-<MudThemeProvider @rendermode="InteractiveServer" Theme="FriTheme" />
+<MudThemeProvider @rendermode="InteractiveServer" Theme="_friTheme" />
 <MudPopoverProvider @rendermode="InteractiveServer" />
 <MudDialogProvider @rendermode="InteractiveServer" />
 <MudSnackbarProvider @rendermode="InteractiveServer" />
@@ -20,9 +20,10 @@
 </div>
 
 @code {
-    MudTheme FriTheme = new MudTheme()
+
+    private readonly MudTheme _friTheme = new()
     {
-        PaletteLight = new PaletteLight()
+        PaletteLight = new PaletteLight
         {
             Primary = Colors.Yellow.Darken2,
             AppbarBackground = Colors.Yellow.Darken1

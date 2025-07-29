@@ -1,14 +1,12 @@
-﻿@using Microsoft.AspNetCore.Authorization
-@using Microsoft.Extensions.Localization
+﻿@using Microsoft.Extensions.Localization
 @using PhDManager.Locales
-@using PhDManager.Models
+@using PhDManager.Models.Documents
 @using PhDManager.Models.Roles
 @using PhDManager.Services
 @using PhDManager.Services.IRepositories
 
 @rendermode InteractiveServer
 
-@inject IJSRuntime JSRuntime
 @inject IUnitOfWork UnitOfWork
 @inject IDialogService DialogService
 @inject IStringLocalizer<Resources> Localizer
@@ -17,7 +15,7 @@
 
 <MudText Class="mt-2" Typo="Typo.h5" GutterBottom>@Localizer["DissertationSupervisor"]</MudText>
 
-<MudDataGrid T="ExamSupervisor" Items="_examSupervisors" Hover SortMode="SortMode.Multiple" QuickFilter="_quickFilter" Elevation="0">
+<MudDataGrid T="ExamSupervisor" Items="_examSupervisors" Hover SortMode="SortMode.Multiple" QuickFilter="QuickFilter" Elevation="0">
     <ToolBarContent>
         <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="management/exam-supervisors/add">@Localizer["Add"]</MudButton>
         <MudSpacer />
@@ -40,7 +38,7 @@
                         <MudIconButton Size="@Size.Small" Color="Color.Info" Icon="@Icons.Material.Outlined.Edit" Href="@($"management/exam-supervisors/edit/{context.Item.Guid}")" />
                     </MudTooltip>
                     <MudTooltip Text="@Localizer["ExamSupervisorGenerate"]">
-                        <MudIconButton Size="@Size.Small" Color="Color.Info" Icon="@Icons.Material.Outlined.Print" OnClick="@(async () => await DocumentService.DownloadExamSupervisorDocument(context.Item))" />
+                        <MudIconButton Size="@Size.Small" Color="Color.Info" Icon="@Icons.Material.Outlined.Print" OnClick="@(async () => await DocumentService.Download(context.Item))" />
                     </MudTooltip>
                 </MudStack>
             </CellTemplate>
@@ -66,7 +64,7 @@
         await LoadExamSupervisors();
     }
 
-    private Func<ExamSupervisor, bool> _quickFilter => es =>
+    private Func<ExamSupervisor, bool> QuickFilter => es =>
     {
         if (string.IsNullOrWhiteSpace(_search))
             return true;
@@ -86,18 +84,12 @@
         if (es.AcademicCommitteeMember.User.DisplayName?.Contains(_search, StringComparison.OrdinalIgnoreCase) == true)
             return true;
 
-        if (es.AdditionalMember.User.DisplayName?.Contains(_search, StringComparison.OrdinalIgnoreCase) == true)
-            return true;
-
-        if ($"{es.Student?.User.DisplayName} {es.Examiner.User.DisplayName} {es.Chairperson.User.DisplayName} {es.ExternalMember.User.DisplayName} {es.AcademicCommitteeMember.User.DisplayName} {es.AdditionalMember.User.DisplayName}".Contains(_search))
-            return true;
-
-        return false;
+        return es.AdditionalMember.User.DisplayName?.Contains(_search, StringComparison.OrdinalIgnoreCase) == true || $"{es.Student?.User.DisplayName} {es.Examiner.User.DisplayName} {es.Chairperson.User.DisplayName} {es.ExternalMember.User.DisplayName} {es.AcademicCommitteeMember.User.DisplayName} {es.AdditionalMember.User.DisplayName}".Contains(_search);
     };
 
     private async Task DeleteExamSupervisor(ExamSupervisor examSupervisor)
     {
-        bool? result = await DialogService.ShowMessageBox(Localizer["DissertationThesisDelete"], Localizer["DissertationThesisDeleteConfirmation"], Localizer["Yes"], Localizer["No"]);
+        var result = await DialogService.ShowMessageBox(Localizer["DissertationThesisDelete"], Localizer["DissertationThesisDeleteConfirmation"], Localizer["Yes"], Localizer["No"]);
         if (result == false) return;
 
         UnitOfWork.ExamSupervisors.Delete(examSupervisor);
@@ -110,7 +102,7 @@
     {
         _examSupervisors = await UnitOfWork.ExamSupervisors.GetAllAsync();
 
-        if (_currentUserRole == Teacher.Role || _currentUserRole == ExternalTeacher.Role)
+        if (_currentUserRole is Teacher.Role or ExternalTeacher.Role)
         {
             _examSupervisors = _examSupervisors?.Where(se => se.Student?.Thesis?.Supervisor.User.Id == _currentUserId);
         }

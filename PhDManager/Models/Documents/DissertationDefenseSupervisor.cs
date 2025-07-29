@@ -1,8 +1,11 @@
-﻿using PhDManager.Models.Roles;
+﻿using Microsoft.JSInterop;
+using PhDManager.Models.Roles;
+using PhDManager.Services;
+using PhDManager.Services.Documents;
 
-namespace PhDManager.Models
+namespace PhDManager.Models.Documents
 {
-    public class DissertationDefenseSupervisor : BaseModel
+    public class DissertationDefenseSupervisor : BaseModel, IDocumentable
     {
         public string Guid { get; set; } = System.Guid.NewGuid().ToString();
         public DateTime CurrentDate { get; set; } = DateTime.Now;
@@ -12,7 +15,11 @@ namespace PhDManager.Models
         public string[] OpponentWorkplaceAddresses { get; set; } = [];
         public string[] OpponentPhoneNumbers { get; set; } = [];
         public string[] OpponentEmails { get; set; } = [];
+        public virtual Student Student { get; set; } = null!;
 
-        public virtual Student Student { get; set; } = default!;
+        public DocumentTemplate CreateDocument(IJSRuntime jsRuntime, EnumService enumService)
+        {
+            return new DissertationDefenseSupervisorDocument(jsRuntime, enumService, this);
+        }
     }
 }

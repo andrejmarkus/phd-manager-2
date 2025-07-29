@@ -25,21 +25,18 @@
 
 @code {
     [CascadingParameter]
-    private IMudDialogInstance MudDialog { get; set; } = default!;
+    private IMudDialogInstance MudDialog { get; set; } = null!;
 
     [Parameter]
     public Department? Department { get; set; }
 
-    private MudForm _form = default!;
+    private MudForm _form = null!;
     private bool _add;
 
     protected override void OnInitialized()
     {
         _add = Department is null;
-        if (Department is null)
-        {
-           Department = new();
-        }
+        Department ??= new Department();
     }
 
     private async Task HandleDialog()

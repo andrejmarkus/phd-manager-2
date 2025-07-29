@@ -3,27 +3,19 @@ using PhDManager.Locales;
 
 namespace PhDManager.Services
 {
-    public class EnumService(IStringLocalizer<Enums> Localizer)
+    public class EnumService(IStringLocalizer<Enums> localizer)
     {
         public List<(TEnum, string)> GetLocalizedEnumValues<TEnum>() where TEnum : struct, Enum
         {
             var values = Enum.GetValues<TEnum>();
-            var result = new List<(TEnum, string)>();
 
-            foreach (var value in values)
-            {
-                var key = $"{typeof(TEnum).Name}{value}";
-                var localized = Localizer[key];
-                result.Add((value, localized.ResourceNotFound ? value.ToString() : localized));
-            }
-
-            return result;
+            return values.Select(value => (value, GetLocalizedEnumValue(value))).ToList();
         }
 
-        public string GetLocalizedEnumValue<TEnum>(TEnum value) where TEnum : struct, Enum
+        public string GetLocalizedEnumValue<TEnum>(TEnum value)
         {
             var key = $"{typeof(TEnum).Name}{value}";
-            var localized = Localizer[key];
+            var localized = localizer[key];
 
             return localized.ResourceNotFound ? value.ToString() : localized;
         }

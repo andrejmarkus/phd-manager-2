@@ -1,4 +1,5 @@
 ﻿using PhDManager.Data;
+using PhDManager.Models.Documents;
 
 namespace PhDManager.Models.Roles
 {

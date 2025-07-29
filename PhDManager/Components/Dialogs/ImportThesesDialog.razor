@@ -2,11 +2,11 @@
 @using DocumentFormat.OpenXml.Spreadsheet
 @using Microsoft.Extensions.Localization
 @using PhDManager.Locales
-@using PhDManager.Models
 @using PhDManager.Models.Roles
 @using PhDManager.Services
 @using PhDManager.Services.IRepositories
 @using System.Text.RegularExpressions
+@using PhDManager.Models.Documents
 
 @rendermode InteractiveServer
 
@@ -45,9 +45,9 @@
 
 @code {
     [CascadingParameter]
-    private IMudDialogInstance MudDialog { get; set; } = default!;
+    private IMudDialogInstance MudDialog { get; set; } = null!;
 
-    private IBrowserFile _filePandora = default!;
+    private IBrowserFile _filePandora = null!;
 
     private async Task<List<Thesis>> ImportPandora()
     {
@@ -86,7 +86,7 @@
                 var solutionResults = GetCellValue(workbookPart, cells.ElementAt(20));
                 var scientificProgress = GetCellValue(workbookPart, cells.ElementAt(23));
 
-                string pattern = @"(?<=\b(?:prof\.\s*|školiteľ\sšpecialista\s*)?\w+\.?\s*\w+\.\s*)(\w+\s\w+)";
+                const string pattern = @"(?<=\b(?:prof\.\s*|školiteľ\sšpecialista\s*)?\w+\.?\s*\w+\.\s*)(\w+\s\w+)";
                 var displayNames = Regex.Matches(rawDisplayNames, pattern).Cast<Match>().Select(m => m.Value).ToArray();
 
                 var studyProgram = await UnitOfWork.StudyPrograms.GetByNameAsync(studyProgramName);
@@ -101,7 +101,7 @@
 
                 if (supervisor is null || studyProgram is null) continue;
 
-                theses.Add(new()
+                theses.Add(new Thesis
                 {
                     SchoolYear = schoolYear,
                     Supervisor = supervisor,
@@ -140,7 +140,7 @@
         if (cell.CellValue == null)
             return string.Empty;
 
-        string value = cell.CellValue.Text;
+        var value = cell.CellValue.Text;
 
         if (cell.DataType != null && cell.DataType.Value == CellValues.SharedString)
         {

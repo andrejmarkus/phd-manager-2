@@ -1,4 +1,5 @@
-﻿using PhDManager.Models.Enums;
+﻿using PhDManager.Models.Documents;
+using PhDManager.Models.Enums;
 
 namespace PhDManager.Models
 {

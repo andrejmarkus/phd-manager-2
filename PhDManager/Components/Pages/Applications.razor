@@ -2,9 +2,7 @@
 
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.Extensions.Localization
-@using PhDManager.Components.Shared
 @using PhDManager.Locales
-@using PhDManager.Models
 @using PhDManager.Models.Roles
 @using PhDManager.Services
 @using PhDManager.Services.IRepositories
@@ -49,7 +47,7 @@
                     </MudItem>
                     <MudItem xs="2">
                         <MudTooltip Text="@Localizer["ExamApplicationGenerate"]">
-                            <MudIconButton Size="Size.Medium" Color="Color.Info" Icon="@Icons.Material.Filled.Print" OnClick="@(() => DocumentService.DownloadSubjectsExamApplicationDocument(_student.SubjectsExamApplication))" />
+                            <MudIconButton Size="Size.Medium" Color="Color.Info" Icon="@Icons.Material.Filled.Print" OnClick="@(() => DocumentService.Download(_student.SubjectsExamApplication))" />
                         </MudTooltip>
                     </MudItem>
                 }
@@ -75,7 +73,7 @@
                     </MudItem>
                     <MudItem xs="2">
                         <MudTooltip Text="@Localizer["ExamApplicationGenerate"]">
-                            <MudIconButton Size="Size.Medium" Color="Color.Info" Icon="@Icons.Material.Filled.Print" OnClick="@(() => DocumentService.DownloadExamApplicationDocument(_student.ExamApplication))" />
+                            <MudIconButton Size="Size.Medium" Color="Color.Info" Icon="@Icons.Material.Filled.Print" OnClick="@(() => DocumentService.Download(_student.ExamApplication))" />
                         </MudTooltip>
                     </MudItem>
                 }
@@ -103,7 +101,7 @@
                     </MudItem>
                     <MudItem xs="2">
                         <MudTooltip Text="@Localizer["ExamApplicationGenerate"]">
-                            <MudIconButton Size="Size.Medium" Color="Color.Info" Icon="@Icons.Material.Filled.Print" OnClick="@(() => DocumentService.DownloadDissertationDefenseApplicationDocument(_student.DissertationDefenseApplication))" />
+                            <MudIconButton Size="Size.Medium" Color="Color.Info" Icon="@Icons.Material.Filled.Print" OnClick="@(() => DocumentService.Download(_student.DissertationDefenseApplication))" />
                         </MudTooltip>
                     </MudItem>
                 }

@@ -92,7 +92,6 @@ builder.Services.AddIdentityCore<ApplicationUser>(options => options.SignIn.Requ
 
 builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityEmailSender>();
 builder.Services.AddSingleton<InformationEmailSender>();
-builder.Services.AddSingleton<SchoolYearService>();
 builder.Services.AddSingleton<EnumService>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<ActiveDirectoryService>();

@@ -2,9 +2,8 @@
 
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.Extensions.Localization
-@using PhDManager.Data
 @using PhDManager.Locales
-@using PhDManager.Models
+@using PhDManager.Models.Documents
 @using PhDManager.Models.Enums
 @using PhDManager.Models.Roles
 @using PhDManager.Services
@@ -20,7 +19,7 @@
 
 <MudText GutterBottom Typo="Typo.h4">@Localizer["IndividualPlan"]</MudText>
 
-@if (_individualPlan is not null && _individualPlan.Student?.Thesis is not null)
+@if (_individualPlan?.Student?.Thesis != null)
 {
     <MudStack Spacing="5">
         <MudStack>

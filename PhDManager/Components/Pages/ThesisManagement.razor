@@ -4,23 +4,19 @@
 @rendermode InteractiveServer
 
 @using Microsoft.AspNetCore.Authorization
-@using Microsoft.AspNetCore.Identity
 @using Microsoft.Extensions.Localization
-@using PhDManager.Data
 @using PhDManager.Locales
 @using PhDManager.Models
+@using PhDManager.Models.Documents
 @using PhDManager.Models.Roles
 @using PhDManager.Services
 @using PhDManager.Services.IRepositories
 
 @inject ISnackbar Snackbar
-@inject IServiceProvider ServiceProvider
 @inject IUnitOfWork UnitOfWork
 @inject IStringLocalizer<Resources> Localizer
 @inject IStringLocalizer<Enums> EnumLocalizer
 @inject NavigationManager NavigationManager
-@inject UserManager<ApplicationUser> UserManager
-@inject SchoolYearService SchoolYearService
 @inject UsersService UsersService
 
 @attribute [Authorize(Roles = $"{Admin.Role}, {Teacher.Role}, {ExternalTeacher.Role}")]
@@ -39,14 +35,14 @@
         {
             <MudTextField T="string" Label="Dissertation thesis title" Variant="Variant.Outlined" @bind-Value="_thesis.TitleEnglish" />
         }
-        <MudAutocomplete T="Teacher" Clearable Required RequiredError="@Localizer["Required"]" Label="@Localizer["Supervisor"]" ToStringFunc="@(t => t is null ? null : t.User.DisplayName)" SearchFunc="SearchTeachers" Variant="Variant.Outlined" @bind-Value="_thesis.Supervisor" @bind-Value:after="HandleSupervisorChange" />
-        <MudAutocomplete T="Teacher" Clearable Label="@Localizer["SupervisorSpecialist"]" ToStringFunc="@(t => t is null ? null : t.User.DisplayName)" SearchFunc="SearchTeachers" Variant="Variant.Outlined" @bind-Value="_thesis.SupervisorSpecialist" @bind-Value:after="HandleSupervisorSpecialistChange" />
+        <MudAutocomplete T="Teacher" Clearable Required RequiredError="@Localizer["Required"]" Label="@Localizer["Supervisor"]" ToStringFunc="@(t => t?.User.DisplayName)" SearchFunc="SearchTeachers" Variant="Variant.Outlined" @bind-Value="_thesis.Supervisor" @bind-Value:after="HandleSupervisorChange" />
+        <MudAutocomplete T="Teacher" Clearable Label="@Localizer["SupervisorSpecialist"]" ToStringFunc="@(t => t?.User.DisplayName)" SearchFunc="SearchTeachers" Variant="Variant.Outlined" @bind-Value="_thesis.SupervisorSpecialist" @bind-Value:after="HandleSupervisorSpecialistChange" />
 
         <MudDivider Class="my-3" />
         <MudText Typo="Typo.h5">@Localizer["DissertationThesisClassification"]</MudText>
         @if (_studyPrograms is not null)
         {
-            <MudSelect T="StudyProgram" Required RequiredError="@Localizer["Required"]" Label="@Localizer["StudyProgram"]" ToStringFunc="@(sp => sp is null ? null : sp.Name)" Variant="Variant.Outlined" @bind-Value="_thesis.StudyProgram">
+            <MudSelect T="StudyProgram" Required RequiredError="@Localizer["Required"]" Label="@Localizer["StudyProgram"]" ToStringFunc="@(sp => sp?.Name)" Variant="Variant.Outlined" @bind-Value="_thesis.StudyProgram">
                 @foreach (var studyProgram in _studyPrograms)
                 {
                     <MudSelectItem Value="studyProgram">@studyProgram.Name</MudSelectItem>
@@ -147,14 +143,14 @@ else
         }
         else
         {
-            _thesis.SchoolYear = SchoolYearService.CurrentSchoolYear;
+            _thesis.SchoolYear = SchoolYearService.Instance.CurrentSchoolYear;
         }
 
         _teachers = await UnitOfWork.Teachers.GetAllAsync();
         _studyPrograms = await UnitOfWork.StudyPrograms.GetAllAsync();
         _systemState = await UnitOfWork.SystemState.GetAsync();
 
-        if (_currentUserRole == Teacher.Role || _currentUserRole == ExternalTeacher.Role)
+        if (_currentUserRole is Teacher.Role or ExternalTeacher.Role)
         {
             _teachers = _teachers?.Where(t => t.User.Id == _currentUserId);
         }
@@ -162,12 +158,7 @@ else
 
     private Task<IEnumerable<Teacher>> SearchTeachers(string search, CancellationToken token)
     {
-        if (_teachers is null) return Task.FromResult(Enumerable.Empty<Teacher>());
-
-        if (string.IsNullOrWhiteSpace(search))
-            return Task.FromResult(_teachers);
-
-        return Task.FromResult(_teachers.Where(t => t.User.UserName is not null && t.User.UserName.Contains(search, StringComparison.OrdinalIgnoreCase)));
+        return _teachers is null ? Task.FromResult(Enumerable.Empty<Teacher>()) : Task.FromResult(string.IsNullOrWhiteSpace(search) ? _teachers : _teachers.Where(t => t.User.UserName is not null && t.User.UserName.Contains(search, StringComparison.OrdinalIgnoreCase)));
     }
 
     private void HideStudyTypeError()
@@ -177,15 +168,15 @@ else
 
     private void HandleSupervisorChange()
     {
-        if (_thesis.Supervisor?.Id != _thesis.SupervisorSpecialist?.Id) return;
+        if (_thesis.Supervisor.Id != _thesis.SupervisorSpecialist?.Id) return;
 
         Snackbar.Add(Localizer["TeacherChangeError"], Severity.Error);
-        _thesis.Supervisor = default!;
+        _thesis.Supervisor = null!;
     }
 
     private void HandleSupervisorSpecialistChange()
     {
-        if (_thesis.Supervisor?.Id != _thesis.SupervisorSpecialist?.Id) return;
+        if (_thesis.Supervisor.Id != _thesis.SupervisorSpecialist?.Id) return;
 
         Snackbar.Add(Localizer["TeacherChangeError"], Severity.Error);
         _thesis.SupervisorSpecialist = null;
@@ -197,7 +188,7 @@ else
 
         await _form.Validate();
 
-        if (!_thesis.DailyStudy && !_thesis.ExternalStudy)
+        if (_thesis is { DailyStudy: false, ExternalStudy: false })
         {
             _studyTypeError = true;
             return;

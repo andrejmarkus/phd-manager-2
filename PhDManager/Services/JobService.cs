@@ -4,32 +4,31 @@ using PhDManager.Services.IRepositories;
 
 namespace PhDManager.Services
 {
-    public class JobService(UsersService UsersService, IUnitOfWork UnitOfWork)
+    public class JobService(UsersService usersService, IUnitOfWork unitOfWork)
     {
-        public string UpdateLdapUserId { get; } = "updateLdapUser";
-        public string OpenSystemId { get; } = "openSystem";
-        public string CloseSystemId { get; } = "closeSystem";
+        public string UpdateLdapUserId => "updateLdapUser";
+        public string OpenSystemId => "openSystem";
+        public string CloseSystemId => "closeSystem";
 
         public void Initialize()
         {
-            RecurringJob.AddOrUpdate(UpdateLdapUserId, () => UsersService.UpdateUsers(), Cron.Daily);
+            RecurringJob.AddOrUpdate(UpdateLdapUserId, () => usersService.UpdateUsers(), Cron.Daily);
         }
 
         public async Task SetSystemOpenAsync(bool open)
         {
-            var systemState = await UnitOfWork.SystemState.GetAsync();
+            var systemState = await unitOfWork.SystemState.GetAsync();
             if (systemState is null)
             {
                 systemState = new SystemState { IsOpen = open };
-                await UnitOfWork.SystemState.SetAsync(systemState);
-                await UnitOfWork.CompleteAsync();
             }
             else
             {
                 systemState.IsOpen = open;
-                await UnitOfWork.SystemState.SetAsync(systemState);
-                await UnitOfWork.CompleteAsync();
             }
+
+            await unitOfWork.SystemState.SetAsync(systemState);
+            await unitOfWork.CompleteAsync();
         }
     }
 }

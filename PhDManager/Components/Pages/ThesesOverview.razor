@@ -1,28 +1,19 @@
 ﻿@page "/theses"
 
-@using Microsoft.AspNetCore.Authorization
-@using Microsoft.AspNetCore.Identity
 @using Microsoft.Extensions.Localization
-@using PhDManager.Data
 @using PhDManager.Locales
 @using PhDManager.Models
 @using PhDManager.Models.Roles
-@using PhDManager.Services
 @using PhDManager.Services.IRepositories
 @using System.Text
 @using System.Globalization
+@using PhDManager.Models.Documents
 
 @rendermode InteractiveServer
 
 @inject IUnitOfWork UnitOfWork
-@inject IServiceProvider ServiceProvider
-@inject IDialogService DialogService
 @inject IStringLocalizer<Resources> Localizer
 @inject IStringLocalizer<Enums> EnumLocalizer
-@inject UsersService UsersService
-@inject DocumentService DocumentService
-@inject UserManager<ApplicationUser> UserManager
-@inject SchoolYearService SchoolYearService
 
 <PageTitle>@Localizer["DissertationTheses"]</PageTitle>
 
@@ -100,7 +91,7 @@
                             {
                                 <span>@EnumLocalizer["StudyFormDaily"]</span>
                             }
-                            @if (thesis.DailyStudy && thesis.ExternalStudy)
+                            @if (thesis is { DailyStudy: true, ExternalStudy: true })
                             {
                                 <span>, </span>
                             }
@@ -122,7 +113,6 @@
     private IEnumerable<Teacher>? _teachers;
     private IEnumerable<string>? _schoolYears;
 
-    private string? _currentUserId;
     private StudyProgram? _selectedStudyProgram;
     private Teacher? _selectedTeacher;
     private string? _selectedSchoolYear;
@@ -135,7 +125,6 @@
         _studyPrograms = await UnitOfWork.StudyPrograms.GetAllAsync();
         _teachers = await UnitOfWork.Teachers.GetAllAsync();
         _schoolYears = await UnitOfWork.Theses.GetAllSchoolYearsAsync();
-        _currentUserId = await UsersService.GetCurrentUserIdAsync();
 
         await UpdateSearch();
     }
@@ -155,7 +144,7 @@
         ).ToArray();
     }
 
-    private string RemoveDiacritics(string text)
+    private static string RemoveDiacritics(string text)
     {
         if (string.IsNullOrEmpty(text)) return text;
         return string.Concat(

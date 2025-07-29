@@ -24,12 +24,7 @@ namespace PhDManager.Services
             }
 
             var entry = entries.FirstOrDefault();
-            if (entry is null)
-            {
-                return null;
-            }
-
-            return entry;
+            return entry ?? null;
         }
 
         public async Task<IEnumerable<LdapEntry>?> SearchUsersAsync(string username)

@@ -9,7 +9,6 @@
 @using PhDManager.Data
 @using PhDManager.Locales
 @using PhDManager.Models
-@using PhDManager.Models.Roles
 @using PhDManager.Services
 @using PhDManager.Services.IRepositories
 
@@ -49,22 +48,22 @@
                         <MudStaticTextField For="@(() => Input.DisplayName)" @bind-Value="Input.DisplayName"
                         Variant="Variant.Outlined"
                         Label="@Localizer["FullName"]"
-                        UserAttributes="@(new() { { "autocomplete", "true" }, { "aria-required", "true" } } )" />
+                        UserAttributes="@(new Dictionary<string, object?> { { "autocomplete", "true" }, { "aria-required", "true" } } )" />
 
                         <MudStaticTextField For="@(() => Input.Username)" @bind-Value="Input.Username"
                         Variant="Variant.Outlined"
                         Label="@Localizer["Username"]"
-                        UserAttributes="@(new() { { "autocomplete", "true" }, { "aria-required", "true" } } )" />
+                        UserAttributes="@(new Dictionary<string, object?> { { "autocomplete", "true" }, { "aria-required", "true" } } )" />
 
                         <MudStaticTextField For="@(() => Input.Password)" @bind-Value="Input.Password"
                         Variant="Variant.Outlined"
                         Label="@Localizer["Password"]" InputType="InputType.Password"
-                        UserAttributes="@(new() { { "autocomplete", "new-password" }, { "aria-required", "true" } } )" />
+                        UserAttributes="@(new Dictionary<string, object?> { { "autocomplete", "new-password" }, { "aria-required", "true" } } )" />
 
                         <MudStaticTextField For="@(() => Input.ConfirmPassword)" @bind-Value="Input.ConfirmPassword"
                         Variant="Variant.Outlined"
                         Label="@Localizer["ConfirmPassword"]" InputType="InputType.Password"
-                        UserAttributes="@(new() { { "autocomplete", "new-password" }, { "aria-required", "true" } } )" />
+                        UserAttributes="@(new Dictionary<string, object?> { { "autocomplete", "new-password" }, { "aria-required", "true" } } )" />
 
                         <MudStaticButton Variant="Variant.Filled" Color="Color.Primary" FullWidth="true" FormAction="FormAction.Submit">@Localizer["SignUp"]</MudStaticButton>
                     </MudStack>
@@ -79,7 +78,7 @@
 
 @code {
     [Parameter]
-    public string InvitationGuid { get; set; } = default!;
+    public string InvitationGuid { get; set; } = null!;
 
     [SupplyParameterFromForm]
     private InputModel Input { get; set; } = new();
@@ -87,7 +86,7 @@
     [SupplyParameterFromQuery]
     private string? ReturnUrl { get; set; }
 
-    private IEnumerable<IdentityError>? _identityErrors;
+    private readonly IEnumerable<IdentityError>? _identityErrors = null;
     private Invitation? _invitation;
     private bool _invitationExpired = false;
     private bool _userExists = false;
@@ -130,7 +129,7 @@
         {
             RedirectManager.RedirectTo(
                 "Account/RegisterConfirmation",
-                new() { ["email"] = _invitation.Email, ["returnUrl"] = ReturnUrl });
+                new Dictionary<string, object?> { ["email"] = _invitation.Email, ["returnUrl"] = ReturnUrl });
         }
 
         await SignInManager.SignInAsync(user, isPersistent: false);

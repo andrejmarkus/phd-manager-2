@@ -3,9 +3,9 @@
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.Extensions.Localization
 @using PhDManager.Components.Dialogs
-@using PhDManager.Data
 @using PhDManager.Locales
 @using PhDManager.Models
+@using PhDManager.Models.Documents
 @using PhDManager.Models.Roles
 @using PhDManager.Services
 @using PhDManager.Services.IRepositories
@@ -24,7 +24,7 @@
 
 <MudText Typo="Typo.h5" GutterBottom>@Localizer["IndividualPlans"]</MudText>
 
-<MudDataGrid T="IndividualPlan" Items="_individualPlans" Hover SortMode="SortMode.Multiple" QuickFilter="_quickFilter" Elevation="0">
+<MudDataGrid T="IndividualPlan" Items="_individualPlans" Hover SortMode="SortMode.Multiple" QuickFilter="QuickFilter" Elevation="0">
     <ToolBarContent>
         <MudButton Variant="Variant.Filled" Color="Color.Primary" Href="/management/individual-plans/add">@Localizer["Add"]</MudButton>
         <MudSpacer />
@@ -48,7 +48,7 @@
                             <MudIconButton Size="@Size.Small" Color="Color.Info" Icon="@Icons.Material.Outlined.Edit" Href="@($"/management/individual-plans/edit/{context.Item.Guid}")" />
                         </MudTooltip>
                         <MudTooltip Text="@Localizer["IndividualPlanGenerate"]">
-                            <MudIconButton Size="@Size.Small" Color="Color.Info" Icon="@Icons.Material.Outlined.Print" OnClick="@(async () => await DocumentService.DownloadIndividualPlanDocument(context.Item))" />
+                            <MudIconButton Size="@Size.Small" Color="Color.Info" Icon="@Icons.Material.Outlined.Print" OnClick="@(async () => await DocumentService.Download(context.Item))" />
                         </MudTooltip>
                         <MudTooltip Text="@Localizer["GradesEdit"]">
                             <MudIconButton Size="@Size.Small" Color="Color.Info" Icon="@Icons.Material.Outlined.Grading" OnClick="@(async () => await UpdateGrades(context.Item))" />
@@ -78,7 +78,7 @@
         await LoadIndividualPlans();
     }
 
-    private Func<IndividualPlan, bool> _quickFilter => ip =>
+    private Func<IndividualPlan, bool> QuickFilter => ip =>
     {
         if (ip.Student?.Thesis is null)
             return false;
@@ -98,18 +98,12 @@
         if (ip.Student.User.DisplayName?.Contains(_search, StringComparison.OrdinalIgnoreCase) == true)
             return true;
 
-        if (ip.Student.User.Email?.Contains(_search, StringComparison.OrdinalIgnoreCase) == true)
-            return true;
-
-        if ($"{ip.Student.Thesis.Title} {ip.Student.Thesis.Supervisor.User.DisplayName} {ip.Student.Thesis.Supervisor.User.Email} {ip.Student.User.DisplayName} {ip.Student.User.Email}".Contains(_search))
-            return true;
-
-        return false;
+        return ip.Student.User.Email?.Contains(_search, StringComparison.OrdinalIgnoreCase) == true || $"{ip.Student.Thesis.Title} {ip.Student.Thesis.Supervisor.User.DisplayName} {ip.Student.Thesis.Supervisor.User.Email} {ip.Student.User.DisplayName} {ip.Student.User.Email}".Contains(_search);
     };
 
     private async Task DeleteIndividualPlan(IndividualPlan individualPlan)
     {
-        bool? result = await DialogService.ShowMessageBox(Localizer["IndividualPlanDelete"], Localizer["IndividualPlanDeleteConfirmation"], Localizer["Yes"], Localizer["No"]);
+        var result = await DialogService.ShowMessageBox(Localizer["IndividualPlanDelete"], Localizer["IndividualPlanDeleteConfirmation"], Localizer["Yes"], Localizer["No"]);
         if (result == false) return;
 
         UnitOfWork.IndividualPlans.Delete(individualPlan);
@@ -121,14 +115,12 @@
     {
         var subjectGrades = individualPlan.Student?.IndividualPlan?.IndividualPlanSubjects;
         var parameters = new DialogParameters<ManageGradesDialog> { { d => d.IndividualPlanSubjects, subjectGrades } };
-        var dialog = await DialogService.ShowAsync<ManageGradesDialog>(Localizer["UserEdit"], parameters, new() { FullWidth = true, MaxWidth = MaxWidth.Medium });
+        var dialog = await DialogService.ShowAsync<ManageGradesDialog>(Localizer["UserEdit"], parameters, new DialogOptions { FullWidth = true, MaxWidth = MaxWidth.Medium });
         var result = await dialog.Result;
 
         if (result is null || result.Canceled) return;
 
-        var updatedIndividualPlanSubjects = result.Data as IEnumerable<IndividualPlanSubject>;
-
-        if (updatedIndividualPlanSubjects is null) return;
+        if (result.Data is not IEnumerable<IndividualPlanSubject> updatedIndividualPlanSubjects) return;
 
         foreach (var individualPlanSubject in updatedIndividualPlanSubjects)
         {
@@ -142,7 +134,7 @@
         _individualPlans = await UnitOfWork.IndividualPlans.GetAllAsync();
         _individualPlans = _individualPlans?.Where(ip => ip.Student?.Thesis is not null);
 
-        if (_currentUserRole == Teacher.Role || _currentUserRole == ExternalTeacher.Role)
+        if (_currentUserRole is Teacher.Role or ExternalTeacher.Role)
         {
             _individualPlans = _individualPlans?.Where(ip => ip.Student!.Thesis!.Supervisor.User.Id == _currentUserId);
         }

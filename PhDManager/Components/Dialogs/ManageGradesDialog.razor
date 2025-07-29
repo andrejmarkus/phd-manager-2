@@ -8,7 +8,6 @@
 @rendermode InteractiveServer
 
 @inject IStringLocalizer<Resources> Localizer
-@inject IUnitOfWork UnitOfWork
 @inject EnumService EnumService
 
 <MudDialog>
@@ -43,12 +42,12 @@
 
 @code {
     [CascadingParameter]
-    private IMudDialogInstance MudDialog { get; set; } = default!;
+    private IMudDialogInstance MudDialog { get; set; } = null!;
 
     [Parameter]
     public IEnumerable<IndividualPlanSubject> IndividualPlanSubjects { get; set; } = [];
 
-    private MudForm _form = default!;
+    private MudForm _form = null!;
 
     private async Task HandleDialog()
     {

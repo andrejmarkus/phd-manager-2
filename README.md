@@ -57,7 +57,7 @@ Fire up the entire environment with a single command:
 docker compose up --build
 ```
 > [!TIP]
-> Once the containers are healthy, the application will be live at: **`http://localhost:8081`**
+> Once the containers are healthy, the application will be live at: **`http://localhost:8080`**
 
 ### 🔑 Gaining Admin Access
 For the initial setup:
